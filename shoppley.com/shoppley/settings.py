@@ -66,7 +66,7 @@ STATIC_URL = '/site_media/static/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
-    ('flashon_web', os.path.join(PROJECT_ROOT, 'media')),
+    ('shoppley', os.path.join(PROJECT_ROOT, 'media')),
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
@@ -98,7 +98,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
 )
 
-ROOT_URLCONF = 'flashon_web.urls'
+ROOT_URLCONF = 'shoppley.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
@@ -120,7 +120,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "account.context_processors.account",
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
-    "flashon_web.context_processors.combined_inbox_count",
+    "shoppley.context_processors.combined_inbox_count",
 )
 
 COMBINED_INBOX_COUNT_SOURCES = (
@@ -187,6 +187,8 @@ INSTALLED_APPS = (
     
     'django.contrib.admin',
 
+	# Our own apps
+	'offer',
 )
 
 ABSOLUTE_URL_OVERRIDES = {
