@@ -54,7 +54,9 @@ MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'media')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
-MEDIA_URL = '/site_media/media/'
+#MEDIA_URL = '/site_media/media/'
+MEDIA_URL = "http://media.shoppley.com/site_media/media/"
+
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
