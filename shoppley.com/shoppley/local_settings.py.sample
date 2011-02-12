@@ -1,0 +1,12 @@
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+# tells Pinax to serve media through django.views.static.serve.
+SERVE_MEDIA = DEBUG
+EMAIL_DEBUG = DEBUG
+
+DATABASE_ENGINE = 'postgresql_psycopg2'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+DATABASE_NAME = 'flashon'       # Or path to database file if using sqlite3.
+DATABASE_USER = 'flashon'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'flashonnohsalf'         # Not used with sqlite3.
+DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
