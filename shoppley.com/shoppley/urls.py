@@ -65,6 +65,7 @@ urlpatterns = patterns('',
     (r'^locations/', include('locations.urls')),
 
     (r'^offer/', include('offer.urls')),
+    (r'^shoppleyuser/', include('shoppleyuser.urls')),
     
     (r'^feeds/tweets/(.*)/$', 'django.contrib.syndication.views.feed', tweets_feed_dict),
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),

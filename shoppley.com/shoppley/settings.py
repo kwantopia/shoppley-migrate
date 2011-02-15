@@ -75,7 +75,7 @@ STATICFILES_DIRS = (
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
+AdiuDMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*fr3=eu%#r1zr#zbj@7wjj@*y^48d60rb1f!f+pgzq$=-_d1@='
@@ -132,65 +132,66 @@ COMBINED_INBOX_COUNT_SOURCES = (
 )
 
 INSTALLED_APPS = (
-    # included
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.humanize',
-    'django.contrib.markup',
-    'pinax.templatetags',
-    
-    # external
-    'notification', # must be first
-    'django_openid',
-    'emailconfirmation',
-    'django_extensions',
-    'robots',
-    'friends',
-    'mailer',
-    'messages',
-    'announcements',
-    'oembed',
-    'djangodblog',
-    'pagination',
-#    'gravatar',
-    'threadedcomments',
-    'threadedcomments_extras',
-    'wiki',
-    'swaps',
-    'timezones',
-    'voting',
-    'voting_extras',
-    'tagging',
-    'bookmarks',
-    'blog',
-    'ajax_validation',
-    'photologue',
-    'avatar',
-    'flag',
-    'microblogging',
-    'locations',
-    'uni_form',
-    'django_sorting',
-    'django_markup',
-    'staticfiles',
-    
-    # internal (for now)
-    'analytics',
-    'profiles',
-    'account',
-    'signup_codes',
-    'tribes',
-    'photos',
-    'tag_app',
-    'topics',
-    'groups',
-    
-    'django.contrib.admin',
+	# included
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.sites',
+	'django.contrib.humanize',
+	'django.contrib.markup',
+	'pinax.templatetags',
+
+	# external
+	'notification', # must be first
+	'django_openid',
+	'emailconfirmation',
+	'django_extensions',
+	'robots',
+	'friends',
+	'mailer',
+	'messages',
+	'announcements',
+	'oembed',
+	'djangodblog',
+	'pagination',
+	#    'gravatar',
+	'threadedcomments',
+	'threadedcomments_extras',
+	'wiki',
+	'swaps',
+	'timezones',
+	'voting',
+	'voting_extras',
+	'tagging',
+	'bookmarks',
+	'blog',
+	'ajax_validation',
+	'photologue',
+	'avatar',
+	'flag',
+	'microblogging',
+	'locations',
+	'uni_form',
+	'django_sorting',
+	'django_markup',
+	'staticfiles',
+
+	# internal (for now)
+	'analytics',
+	'profiles',
+	'account',
+	'signup_codes',
+	'tribes',
+	'photos',
+	'tag_app',
+	'topics',
+	'groups',
+
+	'django.contrib.admin',
 
 	# Our own apps
 	'offer',
+	'shoppleyuser',
 )
 
 ABSOLUTE_URL_OVERRIDES = {
@@ -210,8 +211,8 @@ AUTH_PROFILE_MODULE = 'profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
 ACCOUNT_OPEN_SIGNUP = True
-ACCOUNT_REQUIRED_EMAIL = False
-ACCOUNT_EMAIL_VERIFICATION = False
+ACCOUNT_REQUIRED_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = True
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
