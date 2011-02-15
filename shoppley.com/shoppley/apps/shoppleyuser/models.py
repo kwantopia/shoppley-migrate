@@ -4,20 +4,32 @@ from datetime import datetime, timedelta
 
 # Create your models here.
 
-class State(models.Model):
+class Country(models.Model):
+	name      = models.CharField(max_length=64)
+	code      = models.CharField(max_length=10)
+
+class Region(models.Model):
 	name			= models.CharField(max_length=32)
+	code			= models.CharField(max_length=10)
+	country			= models.ForeignKey(Country)
 	
 	def __unicode__(self):
 		return self.name
-
 
 class City(models.Model):
 	name			= models.CharField(max_length=32)
-	state			= models.ForeignKey(State)
+	region			= models.ForeignKey(Region)
 	
 	def __unicode__(self):
 		return self.name
 
+class ZipCode(models.Model):
+
+	code			= models.CharField(max_length=32)
+	city			= models.ForeignKey(City)
+
+	def __unicode(self):
+		return "%s in %s"%(self.code, self.city.name)
 
 class Category(models.Model):
 	name			= models.CharField(max_length=32)
