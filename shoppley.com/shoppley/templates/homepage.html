@@ -8,40 +8,59 @@
 {% block tab_id %}id="home_tab"{% endblock %}
 
 {% block body %}
-    <h1>{% trans "Welcome to Pinax" %}</h1>
+    <h1>{% trans "Shoppley brings you real-time offers" %}</h1>
     
     <p>
         {% blocktrans %}
-        <b>Pinax</b> is a <a href="http://djangoproject.com/">Django</a>
-        project intended to provide a starting point for websites. By
-        integrating numerous reusable Django apps to take care of the
-        things that many sites have in common, it lets you focus on what
-        makes your site different.
+        By signing up you will be getting local coupons that you can redeem in the next 90 minutes. Great for last minute lunch or dinner.
         {% endblocktrans %}
     </p>
     
     <p>
         {% blocktrans %}
-        For more information about Pinax, see
-        <a href="http://pinaxproject.com/">http://pinaxproject.com/</a>.
+        <table id="features">
+          <tbody>
+            <tr>
+              <td>
+                <div class="feature">
+                  <h4>Register</h4>
+                  <p>
+                    Register your primary address and create an account.
+                  </P>
+                </div>
+              </td>
+              <td class="left-indent">
+                <div class="feature left-indent">
+                  <h4>Ready your phone</h4>
+                  <p>
+                    Register your phone number where you can receive txt messages. (Mobile app coming soon) 
+                  </P>
+                </div>
+              </td>
+              <td class="left-indent">
+                <div class="feature">
+                  <h4>Start receiving offers</h4>
+                  <p>
+                    Decide how many offers you want on a day. 
+                  </P>
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
         {% endblocktrans %}
     </p>
     
-    <h2>{% trans "About this project" %}</h2>
+    <h2>{% trans "About Shoppley" %}</h2>
     
     <p>
         {% blocktrans %}
-        This project demonstrates a social networking site. It provides
-        profiles, friends, photos, blogs, tribes, wikis, tweets, bookmarks,
-        swaps, locations and user-to-user messaging.
+          Shoppley allows you to receive the offers you want in your local area.
         {% endblocktrans %}
     </p>
-    <p>
-        {% blocktrans %}
-        In 0.5 this was called "complete_project".
-        {% endblocktrans %}
-    </p>
-    
+
     <hr />
     {% if user.is_authenticated %}
         {% url what_next as what_next_url %}
@@ -50,9 +69,9 @@
         {% url acct_login as login_url %}
         {% ifsetting ACCOUNT_OPEN_SIGNUP %}
             {% url acct_signup as signup_url %}
-            <p>{% blocktrans %}You can <a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">Log in</a> to try out the site.{% endblocktrans %}</p>
+            <p>{% blocktrans %}You can <a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">Log in</a> to try out.{% endblocktrans %}</p>
         {% else %}
-            <p>{% blocktrans %}You can <a href="{{ login_url }}">Log in</a> to try out the site.{% endblocktrans %}</p>
+            <p>{% blocktrans %}You can <a href="{{ login_url }}">Log in</a> to try out.{% endblocktrans %}</p>
         {% endifsetting %}
     {% endif %}
     
