@@ -8,6 +8,8 @@ import pinax
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q0bgOQMK8ZOKjSUhquxiiodbA"
+
 # tells Pinax to use the default theme
 PINAX_THEME = 'default'
 
@@ -123,6 +125,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
     "shoppley.context_processors.combined_inbox_count",
+	"shoppley.context_processors.current_site",
 )
 
 COMBINED_INBOX_COUNT_SOURCES = (

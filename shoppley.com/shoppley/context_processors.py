@@ -53,3 +53,11 @@ def footer(request):
         'latest_bookmarks': Bookmark.objects.all().order_by('-added')[:5],
         'latest_blogs': Post.objects.filter(status=2).order_by('-publish')[:5],
     }
+
+def current_site(request):
+	data = {}
+
+	data["GOOGLE_API_KEY"] = settings.GOOGLE_API_KEY
+
+	return data
+
