@@ -26,7 +26,7 @@ from account.utils import get_default_redirect
 from shoppleyuser.forms import MerchantSignupForm
 
 def merchant_signup(request, form_class=MerchantSignupForm,
-	template_name="account/signup.html", success_url=None):
+	template_name="shoppleyuser/signup.html", success_url=None):
 	if success_url is None:
 		success_url = get_default_redirect(request)
 	if request.method == "POST":

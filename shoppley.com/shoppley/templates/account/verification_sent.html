@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify your e-mail address" %}{% endblock %}
+
+{% block body %}
+	<h1>{% trans "Verify your e-mail address" %}</h1>
+	<p> 
+		{% blocktrans %}
+			Thank you for registering with {{ SITE_NAME }}.
+		{% endblocktrans %}
+	</p>
+	<p>{% blocktrans %}We have sent you an e-mail to <b>{{ email }}</b> for verification. Plesae follow the link provided in the email to finalize the signup process. If you do not receive it within a few minutes, contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.{% endblocktrans %}</p>
+	<p>
+		See you soon!
+	</p>
+{% endblock %}
