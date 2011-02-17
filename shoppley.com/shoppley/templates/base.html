@@ -15,6 +15,18 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/announcements.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/accounts.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}uni_form/uni-form.css" />
+
+		<!-- [template css] begin -->
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/screen.css" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/960.css" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" type="text/css" media="print" /> 
+		<!--[if IE]>
+			<link rel="stylesheet" href="css/ie.css" type="text/css" media="screen, projection" />
+		<![endif]-->
+		
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/project.css" type="text/css" media="screen, projection" />
+		<!-- [template css] end -->
+
         {% if LANGUAGE_BIDI %}
         <style type="text/css" media="screen">
             div.right_panel {
@@ -28,6 +40,7 @@
     </head>
     
     <body class="{% block body_class %}{% endblock %}">
+	  <div class="container">	
         {% if site_wide_announcements %}
             <div id="site_wide_announcements">
                 <ul>
@@ -59,6 +72,7 @@
                 </ul>
             {% endif %}
             
+			<hr class="space">
             {% block body %}
             {% endblock %}
             
@@ -77,5 +91,6 @@
         {% block extra_body_base %}
             {% block extra_body %}{% endblock %}
         {% endblock %}
+	  </div>
     </body>
 </html>

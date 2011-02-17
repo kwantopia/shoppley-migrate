@@ -39,16 +39,17 @@ h1 {
 #body {
     clear: both;
     margin: 0 auto;
-    padding: 10px;
-    width: 800px;
 }
+
+/*
 #footer {
-    color: #999; /* footer text colour */
+    color: #999; 
     margin: 50px auto;
     padding: 10px;
     clear: both;
     width: 800px;
 }
+*/
 #footer a, #footer a:visited {
     color: #444; /* footer link colour */
 }
@@ -105,14 +106,9 @@ h1 {
     position: absolute;
     top: 6px;
     right: 15px;
-    color: #6F61B2; /* login bar text colour */
+	/*text-shadow: 1px 1px -1px black;*/
 }
-#tabhead .login a, #tabhead .login a:visited {
-    color: #6F61B2; /* login bar link colour */
-}
-#tabhead .login a:hover {
-    color: #DEF; /* login bar link hover colour */
-}
+
 
 #locale_switcher {
     display: inline;

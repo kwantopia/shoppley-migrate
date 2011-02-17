@@ -9,12 +9,29 @@ table#features tr td .feature {
   border-bottom-left-radius: 3px 3px;
 }
 
+table#features tr td .feature .feature-content {
+  height: 60px;
+}
+
+
 table#features tr td {
   width: 33%;
   line-height: 1.43em;
   font-size: 14px;
+  vertical-align: top;
 }
 
 .left-indent {
   padding-left: 15px;
 }  
+
+#short-description {
+  font-size: 1.2em;
+}
+
+#video-intro {
+  margin-top: 20px;
+}
+
+#user-sign-up-form {
+}

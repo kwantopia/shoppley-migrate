@@ -5,16 +5,32 @@
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
 
-{% block tab_id %}id="home_tab"{% endblock %}
+{% block not_used %}
+		<!-- START NAVIGATION -->
+   	  	<div class="span-16 header last">
+   	  		<div id="navigation">
+				<ul id="nav">
+					<li id="home"><a href="{% url home %}" title="Home page"class="currentPage">Home</a></li>
+					<li id="portfolio"><a href="" title="Portfolio">Dash Board</a></li>
+					<li id="contact"><a href="" title="Contact">Contact</a></li>
+					<li id="about"><a href="{% url about %}" title="About">About</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- END NAVIGATION -->
+{% endblock %}
 
 {% block body %}
     <h1>{% trans "Shoppley brings you real-time offers" %}</h1>
     
     <p>
         {% blocktrans %}
+		<div id="short-description">
         By signing up you will be getting local coupons that you can redeem in the next 90 minutes. Great for last minute lunch or dinner.
+		</div>
         {% endblocktrans %}
     </p>
+
     
     <p>
         {% blocktrans %}
@@ -23,26 +39,30 @@
             <tr>
               <td>
                 <div class="feature">
-                  <h4>Register</h4>
-                  <p>
-                    Register your primary address and create an account.
-                  </P>
-                </div>
-              </td>
-              <td class="left-indent">
-                <div class="feature left-indent">
-                  <h4>Ready your phone</h4>
-                  <p>
-                    Register your phone number where you can receive txt messages. (Mobile app coming soon) 
-                  </P>
+				<h2>Register <span class="orange">address</span></h2>
+				
+				<div class="feature-content">
+						Register your primary address and create an account.
+				</div>
+
                 </div>
               </td>
               <td class="left-indent">
                 <div class="feature">
-                  <h4>Start receiving offers</h4>
-                  <p>
+				<h2>Ready <span class="orange">your phone</span></h2>
+				
+				<div class="feature-content">
+					Register your phone number where you can receive txt messages.
+					<span class="greyRight">[Mobile App coming soon.]</span>
+				</div>
+                </div>
+              </td>
+              <td class="left-indent">
+                <div class="feature">
+				<h2>Start <span class="orange">receiving offers</span></h2>
+				<div class="feature-content">
                     Decide how many offers you want on a day. 
-                  </P>
+				</div>
                 </div>
               </td>
 
@@ -53,26 +73,46 @@
         {% endblocktrans %}
     </p>
     
-    <h2>{% trans "About Shoppley" %}</h2>
-    
-    <p>
-        {% blocktrans %}
-          Shoppley allows you to receive the offers you want in your local area.
-        {% endblocktrans %}
-    </p>
 
-    <hr />
-    {% if user.is_authenticated %}
-        {% url what_next as what_next_url %}
-        <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}">What Next</a>?{% endblocktrans %}</p>
-    {% else %}
-        {% url acct_login as login_url %}
-        {% ifsetting ACCOUNT_OPEN_SIGNUP %}
-            {% url acct_signup as signup_url %}
-            <p>{% blocktrans %}You can <a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">Log in</a> to try out.{% endblocktrans %}</p>
-        {% else %}
-            <p>{% blocktrans %}You can <a href="{{ login_url }}">Log in</a> to try out.{% endblocktrans %}</p>
-        {% endifsetting %}
-    {% endif %}
+	<div class="span-24 bottom last">
+	<!-- START BOTTOM SECTION -->
+	
+		<!-- START TWITTER SECTION -->
+		<div class="span-8">
+		
+	   	</div>
+	   	<!-- END REGISTER SECTION -->
+
+   		<!-- START TESTIMONIAL SECTION -->
+   		<div class="span-8">
+   		
+	   		
+   		</div>
+		<!-- END TESTIMONIAL SECTION -->		
+   	
+		<!-- START CONTACT SECTION -->
+	   	<div class="span-8 last">
+	   	</div>
+	   	<!-- END CONTACT SECTION -->
+	   	
+	   	<div class="clear"></div>
+   	<!-- END BOTTOM SECTION -->
+   
+	</div>
+
+	<div id="user-sign-up-form" class="span-24 last">
+
+		<h4>Sign up to get started</h4>
+		<form id="">
+		  <input type="text">
+		  <input type="text">
+		  <input type="text">
+		  <input type="text">
+		</form>
+	</div>
+
+	<div id="video-intro" class="span-24 last">
+		<h4>Quick Intro Video</h4>
+	</div>
     
 {% endblock %}

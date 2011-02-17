@@ -1,0 +1,25 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "About" %}{% endblock %}
+
+{% block body %}
+
+<hr class="space">
+
+<div class="span-24 last">
+
+<h2>{% trans "About Shoppley" %}</h2>
+    
+    <p>
+        {% blocktrans %}
+          Shoppley brings you real time offers you want in your local area.
+        {% endblocktrans %}
+    </p>
+
+</div>
+
+
+{% endblock %}
