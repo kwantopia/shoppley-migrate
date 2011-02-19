@@ -90,7 +90,7 @@ h1 {
 
 #tabhead {
     background: #FFF url('../../images/heading.png') left top repeat-x;
-    border-bottom: 1px solid #000; /* tab border */
+    /*border-bottom: 1px solid #000;*/ /* tab border */
     position: relative;
 }
 #tabhead .logo {
