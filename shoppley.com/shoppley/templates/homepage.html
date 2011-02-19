@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
+
 {% load ifsetting_tag %}
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
@@ -102,13 +103,8 @@
 
 	<div id="user-sign-up-form" class="span-24 last">
 
-		<h4>Sign up to get started</h4>
-		<form id="">
-		  <input type="text">
-		  <input type="text">
-		  <input type="text">
-		  <input type="text">
-		</form>
+	  {% include "shoppleyuser/customer_signup_form.html" %}
+
 	</div>
 
 	<div id="video-intro" class="span-24 last">

@@ -10,6 +10,7 @@ from blog.feeds import BlogFeedAll, BlogFeedUser
 from bookmarks.feeds import BookmarkFeed
 from microblogging.feeds import TweetFeedAll, TweetFeedUser, TweetFeedUserWithFriends
 
+from shoppleyuser.forms import CustomerSignupForm
 
 tweets_feed_dict = {"feed_dict": {
     'all': TweetFeedAll,
@@ -33,7 +34,7 @@ else:
 
 urlpatterns = patterns('',
     url(r'^$', direct_to_template, {
-        "template": "homepage.html",
+        "template": "homepage.html", "extra_context": {"form": CustomerSignupForm},
     }, name="home"),
     
     url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),

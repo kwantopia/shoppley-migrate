@@ -219,7 +219,7 @@ ACCOUNT_EMAIL_VERIFICATION = True
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "feedback@example.com"
+CONTACT_EMAIL = "support@shoppley.com"
 SITE_NAME = "Shoppley"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
@@ -231,6 +231,8 @@ INTERNAL_IPS = (
 ugettext = lambda s: s
 LANGUAGES = (
     ('en', u'English'),
+    ('kr', u'Korean'),
+    ('cn', u'Chinese'),
 )
 
 # URCHIN_ID = "ua-..."
