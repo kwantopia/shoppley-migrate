@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 import re
 
 from emailconfirmation.models import EmailAddress
-alnum_re = re.compile(r'^[a-zA-Z0-9_\-\.]+$')
+from shoppleyuser.models import Merchant, Customer
+alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
 phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
 
 class MerchantSignupForm(forms.Form):
@@ -34,7 +35,8 @@ class MerchantSignupForm(forms.Form):
 
 	def clean_username(self):
 		if not alnum_re.search(self.cleaned_data["username"]):
-			raise forms.ValidationError(_("Usernames can only contain letters, numbers and underscores."))
+			raise forms.ValidationError(_("Usernames can only contain letters(a-z), numbers(0-9),\
+				periods(.), and underscores(_)."))
 		try:
 			user = User.objects.get(username__iexact=self.cleaned_data["username"])
 		except User.DoesNotExist:
@@ -44,6 +46,7 @@ class MerchantSignupForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
+		return self.cleaned_data["phone"]
 
 	def clean(self):
 		if "password1" in self.cleaned_data and "password2" in self.cleaned_data:
@@ -90,7 +93,12 @@ class MerchantSignupForm(forms.Form):
 		if settings.ACCOUNT_EMAIL_VERIFICATION:
 			new_user.is_active = False
 			new_user.save()
-				
+
+		new_merchant = Merchant(user=new_user,
+						address_1=self.cleaned_data["address_1"],
+						phone=self.cleaned_data["phone"],
+						business_name=self.cleaned_data["business_name"]
+					).save()
 		return username, password # required for authenticate()
 
 class CustomerSignupForm(forms.Form):
@@ -119,6 +127,7 @@ class CustomerSignupForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
+		return self.cleaned_data["phone"]
 
 	def clean(self):
 		if "password1" in self.cleaned_data and "password2" in self.cleaned_data:
@@ -146,19 +155,19 @@ class CustomerSignupForm(forms.Form):
 		
 		if confirmed:
 			if email == join_invitation.contact.email:
-				new_user = User.objects.create_user(username, email, password)
+				new_user = Merchant.objects.create_user(username, email, password)
 				join_invitation.accept(new_user) # should go before creation of EmailAddress below
 				new_user.message_set.create(message=ugettext(u"Your email address has already been verified"))
 				# already verified so can just create
 				EmailAddress(user=new_user, email=email, verified=True, primary=True).save()
 			else:
-				new_user = User.objects.create_user(username, "", password)
+				new_user = Merchant.objects.create_user(username, "", password)
 				join_invitation.accept(new_user) # should go before creation of EmailAddress below
 				if email:
 					new_user.message_set.create(message=ugettext(u"Confirmation email sent to %(email)s") % {'email': email})
 					EmailAddress.objects.add_email(new_user, email)
 		else:
-			new_user = User.objects.create_user(username, "", password)
+			new_user = Merchant.objects.create_user(username, "", password)
 			if email:
 				new_user.message_set.create(message=ugettext(u"Confirmation email sent to %(email)s") % {'email': email})
 				EmailAddress.objects.add_email(new_user, email)
