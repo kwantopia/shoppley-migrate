@@ -53,12 +53,14 @@ class SimpleTest(TestCase):
 		params = {"email": "kool@mit.edu",
 					"password1": "hello",
 					"password2": "hello",
-					"confirmation_key": "234234",
+					"confirmation_key": "",
 					"address_1": "02139",
+					"address_2": "",
+					"zip_code": "02142",
 					"phone": "617-909-2101"}
 
 		response = self.post_web(cmd, params)
-		#print response.content
+		print response.content
 		self.failUnlessEqual(Message.objects.filter(to_address="kool@mit.edu").count(), 1) 
 
 	

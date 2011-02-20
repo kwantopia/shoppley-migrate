@@ -6,42 +6,36 @@ from django.contrib.auth.models import User
 import re
 
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.models import Merchant, Customer
+from shoppleyuser.models import Merchant, Customer, ZipCode, City
 alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
 phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
 
 class MerchantSignupForm(forms.Form):
-	username = forms.CharField(label=_("Username"), max_length=30, widget=forms.TextInput())
+	email = forms.EmailField(label = _("Email"), required = True, widget=forms.TextInput())
 	password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(render_value=False))
 	password2 = forms.CharField(label=_("Password (again)"), widget=forms.PasswordInput(render_value=False))
 
-	if settings.ACCOUNT_REQUIRED_EMAIL or settings.ACCOUNT_EMAIL_VERIFICATION:
-		email = forms.EmailField(
-			label = _("Email"),
-			required = True,
-			widget = forms.TextInput()
-		)
-	else:
-		email = forms.EmailField(
-			label = _("Email (optional)"),
-			required = False,
-			widget = forms.TextInput()
-		)
-
 	confirmation_key = forms.CharField(max_length=40, required=False, widget=forms.HiddenInput())
 	business_name	= forms.CharField(max_length=64)
-	address_1		= forms.CharField(max_length=64)
+	address_1		= forms.CharField(label=_("Street address"), max_length=64, required=False)
+	# address_2		= forms.CharField(label=_("line 2"), max_length=64, required=False)
+	zip_code		= forms.CharField(max_length=10)
 	phone			= forms.CharField(max_length=20)
 
-	def clean_username(self):
-		if not alnum_re.search(self.cleaned_data["username"]):
-			raise forms.ValidationError(_("Usernames can only contain letters(a-z), numbers(0-9),\
-				periods(.), and underscores(_)."))
+	def clean_zip_code(self):
 		try:
-			user = User.objects.get(username__iexact=self.cleaned_data["username"])
+			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+			return self.cleaned_data["zip_code"]
+		except ZipCode.DoesNotExist:
+			raise forms.ValidationError(_("Not a valid zip code."))
+
+	def clean_email(self):
+		email = self.cleaned_data["email"]
+		try:
+			user = User.objects.get(username__iexact=email)
 		except User.DoesNotExist:
-			return self.cleaned_data["username"]
-		raise forms.ValidationError(_("This username is already taken. Please choose another."))
+			return self.cleaned_data["email"]
+		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 	
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
@@ -55,8 +49,8 @@ class MerchantSignupForm(forms.Form):
 		return self.cleaned_data
 
 	def save(self):
-		username = self.cleaned_data["username"]
-		email = self.cleaned_data["email"]
+		username = self.cleaned_data["email"].lower()
+		email = self.cleaned_data["email"].lower()
 		password = self.cleaned_data["password1"]
 		
 		if self.cleaned_data["confirmation_key"]:
@@ -94,35 +88,42 @@ class MerchantSignupForm(forms.Form):
 			new_user.is_active = False
 			new_user.save()
 
+		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		new_merchant = Merchant(user=new_user,
 						address_1=self.cleaned_data["address_1"],
+						# address_2=self.cleaned_data["address_2"],
 						phone=self.cleaned_data["phone"],
+						city=zipcode_obj.city,
 						business_name=self.cleaned_data["business_name"]
 					).save()
 		return username, password # required for authenticate()
 
 class CustomerSignupForm(forms.Form):
 
-	if settings.ACCOUNT_REQUIRED_EMAIL or settings.ACCOUNT_EMAIL_VERIFICATION:
-		email = forms.EmailField(
-			label = _("Email"),
-			required = True,
-			widget = forms.TextInput()
-		)
-	else:
-		email = forms.EmailField(
-			label = _("Email (optional)"),
-			required = False,
-			widget = forms.TextInput()
-		)
-
-
+	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
 	password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(render_value=False))
 	password2 = forms.CharField(label=_("Password (again)"), widget=forms.PasswordInput(render_value=False))
-
 	confirmation_key = forms.CharField(max_length=40, required=False, widget=forms.HiddenInput())
-	address_1		= forms.CharField(max_length=64)
+	address_1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
+	# address_2		= forms.CharField(max_length=64, required=False)
+	zip_code		= forms.CharField(max_length=10)
 	phone			= forms.CharField(max_length=20)
+
+	def clean_zip_code(self):
+		try:
+			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+			return self.cleaned_data["zip_code"]
+		except ZipCode.DoesNotExist:
+			raise forms.ValidationError(_("Not a valid zip code."))
+
+	def clean_email(self):
+		email = self.cleaned_data["email"]
+		try:
+			user = User.objects.get(username__iexact=email)
+		except User.DoesNotExist:
+			return self.cleaned_data["email"]
+		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
+		
 
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
@@ -137,8 +138,8 @@ class CustomerSignupForm(forms.Form):
 
 	def save(self):
 		# assign email as user name
-		username = self.cleaned_data["email"]
-		email = self.cleaned_data["email"]
+		username = self.cleaned_data["email"].lower()
+		email = self.cleaned_data["email"].lower()
 		password = self.cleaned_data["password1"]
 		
 		if self.cleaned_data["confirmation_key"]:
@@ -175,6 +176,14 @@ class CustomerSignupForm(forms.Form):
 		if settings.ACCOUNT_EMAIL_VERIFICATION:
 			new_user.is_active = False
 			new_user.save()
+
+		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+		new_customer = Customer(user=new_user,
+						address_1=self.cleaned_data["address_1"],
+						# address_2=self.cleaned_data["address_2"],
+						phone=self.cleaned_data["phone"],
+						city=zipcode_obj.city,
+					).save()
 				
 		return username, password # required for authenticate()
 

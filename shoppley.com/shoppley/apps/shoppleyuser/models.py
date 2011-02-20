@@ -28,6 +28,9 @@ class ZipCode(models.Model):
 	code			= models.CharField(max_length=32)
 	city			= models.ForeignKey(City)
 
+	latitude		= models.FloatField(blank=True, null=True)
+	longitude		= models.FloatField(blank=True, null=True)
+
 	def __unicode(self):
 		return "%s in %s"%(self.code, self.city.name)
 

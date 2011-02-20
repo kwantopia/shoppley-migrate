@@ -8,10 +8,14 @@ def load_zipcodes():
 	zip_reader = csv.reader(f, delimiter="\t")
 	for row in zip_reader:
 		country_obj, created = Country.objects.get_or_create(name="United States", code=row[0])			
+		zip_code = row[1]
+		city = row[2] 
 		region = row[3]
 		region_code = row[4]
-		city = row[2] 
-		zip_code = row[1]
-		region_obj, created = Region.objects.get_or_create(name=region, code=region_code, country=country_obj)			
+		latitude = row[9]
+		longitude = row[10]
+		region_obj, created = Region.objects.get_or_create(name=region, 
+				code=region_code, country=country_obj)			
 		city_obj, created = City.objects.get_or_create(name=city, region=region_obj)					
-		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, city=city_obj)	  
+		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, 
+				city=city_obj, latitude=latitude, longitude=longitude)
