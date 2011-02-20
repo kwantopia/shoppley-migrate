@@ -94,13 +94,15 @@ h1 {
     position: relative;
 }
 #tabhead .logo {
-    height: 80px;
+    height: 125px;
     padding-left: 5px;
     padding-top: 0;
 }
 #tabhead .logo img {
-    width: 328;
-    height: 72px;
+    /*width: 280px;*/
+	margin-left: -5px;
+	margin-top: 5px;
+    height: 120px;
 }
 #tabhead .login {
     position: absolute;
