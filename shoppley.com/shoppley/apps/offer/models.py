@@ -32,6 +32,7 @@ class OfferCode(models.Model):
 	code			= models.CharField(max_length=32)
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)
+	expiration_time = models.DateTimeField()
 
 	def is_valid(self):
 		return datetime.now() < time_stamp + timedelta(minutes=self.offer.duration)
@@ -60,10 +61,7 @@ class Transaction(models.Model):
 	src				= models.ForeignKey(ShoppleyUser, null=True, blank=True, related_name="transactions_originated")
 	dst				= models.ForeignKey(ShoppleyUser, null=True, blank=True, related_name="transctions_received")
 
-
 	def __unicode__(self):
 		return "%d points from %s to %s" % (self.amount, self.src, self.dst)
-
-
 
 
