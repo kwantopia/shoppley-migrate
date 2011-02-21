@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
+from offer.utils import gen_offer_code
 
 # Create your models here.
 
@@ -24,6 +25,21 @@ class Offer(models.Model):
 
 	def num_received(self):
 		return self.offercode_set.count()
+
+	def gen_offer_code(self, customer):
+		gen_code = gen_offer_code()
+		while self.offercode_set.filter(code__iexact=gen_code):
+			gen_code = gen_offer_code()
+		self.offercode_set.create (
+			user=customer,
+			code=gen_code,
+			time_stamp=self.time_stamp,
+			expiration_time=self.time_stamp+timedelta(minutes=self.duration)
+		)
+	
+	def gen_offer_codes(self, customers):
+		for customer in customers:
+			self.gen_offer_code(customer)
 
 
 class OfferCode(models.Model):
