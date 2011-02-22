@@ -51,7 +51,7 @@ class ShoppleyUser(models.Model):
 	address_1		= models.CharField(max_length=64, blank=True)
 	address_2		= models.CharField(max_length=64, blank=True)
 	city			= models.ForeignKey(City)
-	phone			= models.CharField(max_length=20, blank=True)
+	phone			= models.CharField(max_length=20, blank=True, unique=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
 

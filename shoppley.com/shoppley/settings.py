@@ -266,6 +266,9 @@ WIKI_REQUIRES_LOGIN = True
 # following URL: https://developer.yahoo.com/wsregapp/
 # YAHOO_MAPS_API_KEY = ''
 
+# Shoppley-specific settings
+OFFER_CODE_LENGTH = 5
+
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:

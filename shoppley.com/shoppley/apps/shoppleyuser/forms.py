@@ -7,6 +7,7 @@ import re
 
 from emailconfirmation.models import EmailAddress
 from shoppleyuser.models import Merchant, Customer, ZipCode, City
+from shoppleyuser.utils import parse_phone_number
 alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
 phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
 
@@ -89,10 +90,11 @@ class MerchantSignupForm(forms.Form):
 			new_user.save()
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 		new_merchant = Merchant(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
-						phone=self.cleaned_data["phone"],
+						phone=phone,
 						city=zipcode_obj.city,
 						business_name=self.cleaned_data["business_name"]
 					).save()
@@ -178,10 +180,11 @@ class CustomerSignupForm(forms.Form):
 			new_user.save()
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 		new_customer = Customer(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
-						phone=self.cleaned_data["phone"],
+						phone=phone,
 						city=zipcode_obj.city,
 					).save()
 				

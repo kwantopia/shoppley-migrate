@@ -1,4 +1,4 @@
-from shoppleyuser.models import Country, Region, City, ZipCode
+from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
 import os, csv
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -19,3 +19,20 @@ def load_zipcodes():
 		city_obj, created = City.objects.get_or_create(name=city, region=region_obj)					
 		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, 
 				city=city_obj, latitude=latitude, longitude=longitude)
+
+def parse_phone_number(raw_number, country_code="US"):
+	cleaned_number = filter(lambda x: x.isdigit(), raw_number)
+	if country_code == "US":
+		if len(cleaned_number) >= 10:
+			return cleaned_number[-10:]
+	return cleaned_number
+
+def map_phone_to_user(raw_number):
+	cleaned_phone = parse_phone_number(raw_number)
+	try:
+		su = ShoppleyUser.objects.get(phone=cleaned_phone)
+		# What's returned is a ShoppleyUser, not a User
+		return su
+	except Exception, e:
+		return None
+	
