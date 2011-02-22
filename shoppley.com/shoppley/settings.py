@@ -198,15 +198,15 @@ INSTALLED_APPS = (
 )
 
 ABSOLUTE_URL_OVERRIDES = {
-    "auth.user": lambda o: "/profiles/profile/%s/" % o.username,
+	"auth.user": lambda o: "/profiles/profile/%s/" % o.username,
 }
 
 MARKUP_FILTER_FALLBACK = 'none'
 MARKUP_CHOICES = (
-    ('restructuredtext', u'reStructuredText'),
-    ('textile', u'Textile'),
-    ('markdown', u'Markdown'),
-    ('creole', u'Creole'),
+	('restructuredtext', u'reStructuredText'),
+	('textile', u'Textile'),
+	('markdown', u'Markdown'),
+	('creole', u'Creole'),
 )
 WIKI_MARKUP_CHOICES = MARKUP_CHOICES
 
@@ -267,7 +267,7 @@ WIKI_REQUIRES_LOGIN = True
 # YAHOO_MAPS_API_KEY = ''
 
 # Shoppley-specific settings
-OFFER_CODE_LENGTH = 5
+OFFER_CODE_LENGTH = 4
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

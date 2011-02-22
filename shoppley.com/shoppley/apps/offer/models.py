@@ -41,6 +41,11 @@ class Offer(models.Model):
 		for customer in customers:
 			self.gen_offer_code(customer)
 
+	def distribute(self):
+		# TODO
+		# identify all customers that this offer should go to
+		# Generate messages, and send messages to them
+		pass
 
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)

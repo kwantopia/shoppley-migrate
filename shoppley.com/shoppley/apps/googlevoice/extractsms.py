@@ -16,10 +16,10 @@ def extractsms(htmlsms) :
 		rows = conversation.findAll(attrs={"class" : "gc-message-sms-row"})
 		for row in rows :								# for all rows
 		#	For each row, which is one message, extract all the fields.
-		msgitem = {"id" : conversation["id"]}		# tag this message with conversation ID
-		spans = row.findAll("span",attrs={"class" : True}, recursive=False)
-		for span in spans :							# for all spans in row
-			cl = span["class"].replace('gc-message-sms-', '')
-			msgitem[cl] = (" ".join(span.findAll(text=True))).strip()	# put text in dict
-		msgitems.append(msgitem)					# add msg dictionary to list
+			msgitem = {"id" : conversation["id"]}		# tag this message with conversation ID
+			spans = row.findAll("span",attrs={"class" : True}, recursive=False)
+			for span in spans :							# for all spans in row
+				cl = span["class"].replace('gc-message-sms-', '')
+				msgitem[cl] = (" ".join(span.findAll(text=True))).strip()	# put text in dict
+			msgitems.append(msgitem)					# add msg dictionary to list
 	return msgitems

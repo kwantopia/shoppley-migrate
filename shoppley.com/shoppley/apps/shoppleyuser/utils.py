@@ -1,5 +1,6 @@
 from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
 import os, csv
+from googlevoice import Voice
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -19,6 +20,17 @@ def load_zipcodes():
 		city_obj, created = City.objects.get_or_create(name=city, region=region_obj)					
 		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, 
 				city=city_obj, latitude=latitude, longitude=longitude)
+
+def sms_notify(number, text):
+	voice = Voice()
+	voice.login()
+	voice.send_sms(number, text) 
+	
+def sms_notify_list(number_list, text):
+	voice = Voice()
+	voice.login() 
+	for number in number_list:
+		voice.send_sms(number, text)
 
 def parse_phone_number(raw_number, country_code="US"):
 	cleaned_number = filter(lambda x: x.isdigit(), raw_number)
