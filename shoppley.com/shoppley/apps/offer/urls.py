@@ -4,6 +4,7 @@ from offer.views import *
 
 urlpatterns = patterns('',
     url(r'^$', offer_home, name="offer_home"),
+	url(r'^start/$', start_offer, name="start_offer"),
 )
 
 

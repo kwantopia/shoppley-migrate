@@ -10,8 +10,8 @@ class Offer(models.Model):
 	merchant		= models.ForeignKey(Merchant, related_name="offers_published")
 	name			= models.CharField(max_length=128, blank=True)
 	description		= models.TextField(blank=True)
-	percentage		= models.IntegerField(blank=True, null=True)
-	dollar_off		= models.FloatField(blank=True, null=True)
+	percentage		= models.IntegerField(verbose_name="Percent off (%)", blank=True, null=True)
+	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", blank=True, null=True)
 	
 	time_stamp		= models.DateTimeField()
 	starting_time	= models.DateTimeField()

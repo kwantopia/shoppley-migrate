@@ -1,0 +1,101 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form %}
+
+{% block head_title %}{% trans "Start Offer" %}{% endblock %}
+
+{% block body %}
+	{% if user.is_authenticated %}
+		<p>{% trans "You are already logged in." %}</p>
+	{% else %}
+		<p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
+	{% endif %}
+
+	<h1>{% trans "Start Offers" %}</h1>
+
+	<div class="merchant-incentive-explation">
+	<b>10 points</b> are deducted for every person who receives the offer.<br>
+	You will be charged <b>$1 or 1%</b> whichever is less when people redeem your offers.<br>
+	You will credited <b>50 points</b> for each person redeemed.<br>
+	</div>
+	<div class="span-24 last">
+
+	  <div class="span-12">
+		<div class="span-12 last">
+		  <!-- new offers -->
+		  <form class="sendoffer uniForm" id="sendoffer_form" method="post" action="{% url start_offer %}">
+			  <fieldset class="inlineLabels">
+				  {{ form|as_uni_form }}
+				  <div class="form_blick">
+					  <input type="submit" value="{% trans "Start Offer &raquo;" %}" />
+				  </div>
+			  </fieldset>
+		  </form>
+		</div>
+
+		<div id="start-offer-result" class="success span-12 last">
+		</div>
+	  </div>
+
+	  <div class="prepend-1 span-11 last">
+		<div class="past-offers span-11 last">
+		  <!-- past offers -->
+		  <div class="heading span-11 last">  
+			<div class="span-8">
+				Name
+			</div>
+			<div class="span-3 last">
+				Redeemed
+			</div>
+		  </div>
+		  <div class="item span-11 last">
+			<div class="span-8">
+				Offer 1
+			</div>
+			<div class="span-8 last">
+				Redeemed
+			</div>
+		  </div>
+		</div>
+	  </div>
+	
+	</div> <!-- span-24 last -->
+
+	<div class="current-offers span-24 last">
+		<!-- current active offers -->
+	  <div class="heading span-24 last">	
+		<div class="span-18">
+			Current Offer Name
+		</div>
+		<div class="span-6 last">
+			Currently Redeemed
+		</div>
+      </div>
+	  <div class="item span-24 last">
+		<div class="span-18">
+			Offer 1
+		</div>
+		<div class="span-6 last">
+			Num offers redeemed
+		</div>
+      </div>
+	  <div class="span-24 last">
+		  <!-- list of redeemers -->
+		  <div class="span-24 last">
+			  <div class="span-2">
+				  <!-- favorite icon -->
+			  </div>
+			  <div class="span-12">
+				  <!-- user information -->	
+			  </div>
+			  <div class="span-10 last">
+				  <!-- past activities  -->
+			  </div>
+		  </div>
+	  </div>
+	</div>
+	
+	
+
+{% endblock %}

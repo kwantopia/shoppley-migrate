@@ -26,7 +26,33 @@ import logging
 from datetime import datetime
 from datetime import timedelta
 import simplejson
+from offer.forms import StartOfferForm
 
 @login_required
 def offer_home(request):
 	return HttpResponse("This is the hoome")
+
+def offer_send():
+	print "Sending out offers"
+
+@login_required
+def start_offer(request):
+
+	data = {}
+
+	if request.method == "POST":
+		form = StartOfferForm(request.POST)
+		if form.is_valid():
+			form.save()	
+			# send out the offer
+			offer_send()			
+			data["result"] = "1"
+			
+			return JSONHttpResponse(data)
+	else:
+		form = StartOfferForm()
+
+	data["form"] = form 
+	return render_to_response("offer/start_offer.html", data,
+						context_instance=RequestContext(request))
+

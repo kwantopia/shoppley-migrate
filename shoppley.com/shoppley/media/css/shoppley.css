@@ -40,3 +40,27 @@ table#features tr td {
 
 #user-sign-up-form {
 }
+
+.past-offers {
+  background-color: #BBB;
+}
+
+.past-offers .heading {
+  font-weight: bold;
+}
+
+.past-offers .item {
+  font-size: 0.9em;
+}
+
+.current-offers {
+  background-color: #ABAB55;
+}
+
+.current-offers .heading {
+  font-weight: bold;
+}
+
+.current-offers .item {
+  font-size: 0.9em;
+}
