@@ -1,0 +1,28 @@
+== Download ==
+
+Download all packages in 
+
+"package/"
+
+by calling 
+
+"./download.sh"
+
+run "python setup.py install" on the python packages
+
+== syncdb ==
+
+If models have changed we need to delete dev.db and syncdb
+
+== test data ==
+
+We can run "python manage.py shell"
+
+>> run apps/shoppleyuser/tests.py
+
+>> s = SimpleTest()
+>> s.setUp()
+
+to prepopulate with a merchant (user: kool2@mit.edu, pw: hello) and customer (user: kool@mit.edu, pw: hello).
+
+Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
