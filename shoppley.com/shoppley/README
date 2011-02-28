@@ -10,6 +10,13 @@ by calling
 
 run "python setup.py install" on the python packages
 
+== patches ==
+
+patches profiles and microblogging apps in pinax to take e-mail as part of url
+
+# cd patches
+# ./patch.sh
+
 == syncdb ==
 
 If models have changed we need to delete dev.db and syncdb
