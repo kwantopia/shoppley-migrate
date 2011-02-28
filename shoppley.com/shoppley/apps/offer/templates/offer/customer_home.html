@@ -1,0 +1,127 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form %}
+
+{% block head_title %}{% trans "My Offers" %}{% endblock %}
+
+{% block body %}
+	{% if user.is_authenticated %}
+		<p>{% trans "You are already logged in." %}</p>
+	{% else %}
+		<p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
+	{% endif %}
+
+	<h1>{% trans "My Offers" %}</h1>
+
+	<div class="customer-incentive-explation">
+	Every time you redeem an offer you get <b>50 points</b>.<br> 
+	<b>500 points</b> will give you <b>$5</b> to spend on any of our stores.<br>
+	<b>1500 points</b> will give you <b>$20</b> to spend.<br>
+	</div>
+
+	<div class="top-dash span-24 last">
+		<div class="left-dash span-12">
+			<div class="heading span-12 last">
+				Received Offers
+			</div>
+			{% for o in offers_received %}
+			<div class="item span-12 last">
+			  <div class="span-3">
+				{{ o.offer.merchant.business_name }}
+			  </div>
+			  <div class="span-3">
+				{{ o.offer.name }}
+			  </div>
+			  <div class="span-3">
+				{{ o.offer.description }}
+			  </div>
+			  <div class="span-3 last">
+				{{ o.expiration_time }}
+			  </div>
+			</div>
+			{% endfor %}
+		</div>
+
+		<div class="right-dash span-12 last">
+			<div class="heading span-12 last">
+				Redeemed Offers
+			</div>
+			{% for o in offers_redeemed %}
+			<div class="item span-12 last">
+			  <div class="span-3">
+				{{ o.offer.merchant.business_name }}
+			  </div>
+			  <div class="span-3">
+				{{ o.offer.name }}
+			  </div>
+			  <div class="span-3">
+				{{ o.offer.description }}
+			  </div>
+			  <div class="span-3 last">
+				{{ o.redeem_time }}
+			  </div>
+			</div>
+			{% endfor %}
+		</div>
+	</div> <!-- top-dash -->
+
+	<div class="bottom-dash span-24 last">
+		<div class="left-dash span-12">
+			<div class="heading span-12 last">
+				Featured: Would you like to add to your offers?	
+			</div>
+			<div class="features span-12 last">
+				{% for f in featured %}
+				  {% if forloop.first %}
+					<div class="span-12 last">
+					  <div class="span-4">
+						Image
+					  </div>
+					  <div class="span-8 last">
+						<div class="merchant-name span-8 last">
+						  {{ f.merchant.business_name }}
+						</div>
+						<div class="merchant-highlight span-8 last">
+						  {{ f.description }}
+						</div>
+					  </div>
+					</div>
+				  {% else %}
+					<div class="span-12 last">
+					  <div class="span-4">
+						Small Image
+					  </div>
+					  <div class="merchant-name span-8 last">
+						{{ f.merchant.business_name }}
+					  </div>
+					</div>
+				  {% endif %}
+				{% endfor %}
+			</div>
+
+		</div>
+
+		<div class="right-dash span-12 last">
+			<div class="heading span-12 last">
+				Link your credit card for more personalized offers. (Receive 50 points)
+			</div>
+			<div class="buxfer-form span-12 last">
+			  <form class="linkbuxfer uniForm" id="linkbuxfer-form" method="post" action="{% url link_buxfer %}">
+
+				{{ buxfer_form|as_uni_form }}
+				  <div class="form_blick">
+					  <input type="submit" value="{% trans "Link Buxfer &raquo;" %}" />
+				  </div>
+			  </form>
+
+			</div>
+		</div>
+
+
+	</div> <!-- bottom-dash -->
+
+
+	
+
+{% endblock %}

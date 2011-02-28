@@ -95,7 +95,7 @@ class MerchantSignupForm(forms.Form):
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
 						phone=phone,
-						city=zipcode_obj.city,
+						zipcode=zipcode_obj,
 						business_name=self.cleaned_data["business_name"]
 					).save()
 		return username, password # required for authenticate()
@@ -185,7 +185,7 @@ class CustomerSignupForm(forms.Form):
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
 						phone=phone,
-						city=zipcode_obj.city,
+						zipcode=zipcode_obj,
 					).save()
 				
 		return username, password # required for authenticate()

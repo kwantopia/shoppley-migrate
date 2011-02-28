@@ -6,6 +6,20 @@ from offer.utils import gen_offer_code
 
 # Create your models here.
 
+class Feature(models.Model):
+	"""
+		Featured location that users can see in their offer
+		home page so that they may add to their preferred merchants
+	"""
+	merchant		= models.ForeignKey(Merchant, related_name="featured")
+
+	time_stamp		= models.DateField()
+	description		= models.TextField()
+
+	def __unicode__(self):
+		return self.merchant.name
+	
+
 class Offer(models.Model):
 	merchant		= models.ForeignKey(Merchant, related_name="offers_published")
 	name			= models.CharField(max_length=128, blank=True)
@@ -16,10 +30,14 @@ class Offer(models.Model):
 	time_stamp		= models.DateTimeField()
 	starting_time	= models.DateTimeField()
 	duration		= models.IntegerField(default=90)
+	max_offers		= models.IntegerField(default=50)
 
 	def __unicode__(self):
 		return self.name
 	
+	def is_active(self):
+		return self.starting_time+timedelta(minutes=duration) < datetime.now()
+
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
 
@@ -31,10 +49,10 @@ class Offer(models.Model):
 		while self.offercode_set.filter(code__iexact=gen_code):
 			gen_code = gen_offer_code()
 		self.offercode_set.create (
-			user=customer,
+			customer=customer,
 			code=gen_code,
 			time_stamp=self.time_stamp,
-			expiration_time=self.time_stamp+timedelta(minutes=self.duration)
+			expiration_time=self.starting_time+timedelta(minutes=self.duration)
 		)
 	
 	def gen_offer_codes(self, customers):
@@ -42,10 +60,50 @@ class Offer(models.Model):
 			self.gen_offer_code(customer)
 
 	def distribute(self):
-		# TODO
-		# identify all customers that this offer should go to
-		# Generate messages, and send messages to them
-		pass
+		"""
+			identify all customers that this offer should go to
+			Generate messages, and send messages to them
+
+			Send out offers by generating offer codes
+
+			This should be ideally an asynchronous process
+			
+			Need to select the users that it will send out to
+
+			- first check for users that are following the merchant
+			- then select some extra people that are not following, who
+			have not black listed the merchant
+			- report back the number of customers being reached
+			
+		"""
+		num_reached = 0
+		print "Sending out offers"
+
+		# 70 percent of old customers, 30 percent of new
+		max_offers = self.max_offers
+		existing_num = int(round(0.7*max_offers))
+
+		merchant = self.merchant
+		fans = merchant.fans.order_by('?').values('pk')
+		antifans = merchant.antifans.all().values('pk')
+		# TODO: geographically filter
+		nonfans = Customer.objects.exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values('pk')
+
+		target = set(list(fans)+list(nonfans))
+		if len(target) > max_offers:
+			target_list = random.sample(target, max_offers)
+		else:
+			target_list = list(target)
+
+		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
+		
+		return len(target_list) 
+
+	def redeemers(self):
+		"""
+			return list of redeemers
+		"""
+		return self.offercode_set.filter(redeem_time__isnull=False)
 
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)

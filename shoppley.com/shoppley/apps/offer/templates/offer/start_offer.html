@@ -19,6 +19,7 @@
 	You will be charged <b>$1 or 1%</b> whichever is less when people redeem your offers.<br>
 	You will credited <b>50 points</b> for each person redeemed.<br>
 	</div>
+
 	<div class="span-24 last">
 
 	  <div class="span-12">
@@ -34,29 +35,48 @@
 		  </form>
 		</div>
 
+		{% if offer %}
 		<div id="start-offer-result" class="success span-12 last">
+			Offer has been sent out to {{ num_sent }}.
 		</div>
+		{% endif %}
 	  </div>
 
 	  <div class="prepend-1 span-11 last">
 		<div class="past-offers span-11 last">
 		  <!-- past offers -->
 		  <div class="heading span-11 last">  
-			<div class="span-8">
+			<div class="span-4">
 				Name
 			</div>
-			<div class="span-3 last">
+			<div class="span-3">
+				Description
+			</div>
+			<div class="span-2">
+				Received
+			</div>
+			<div class="span-2 last">
 				Redeemed
 			</div>
 		  </div>
-		  <div class="item span-11 last">
-			<div class="span-8">
-				Offer 1
-			</div>
-			<div class="span-8 last">
-				Redeemed
-			</div>
-		  </div>
+		  {% for f in offers %}
+			{% if not f.is_active %}
+			  <div class="item span-11 last">
+				<div class="span-4">
+					{{ f.name }}	
+				</div>
+				<div class="span-3">
+					{{ f.description }}
+				</div>
+				<div class="span-2">
+					{{ f.num_received }}	
+				</div>
+				<div class="span-2 last">
+					{{ f.num_redeemed }}
+				</div>
+			  </div>
+			{% endif %}	
+		  {% endfor %}
 		</div>
 	  </div>
 	
@@ -65,36 +85,55 @@
 	<div class="current-offers span-24 last">
 		<!-- current active offers -->
 	  <div class="heading span-24 last">	
-		<div class="span-18">
-			Current Offer Name
+		<div class="span-8">
+			Offer Name
 		</div>
-		<div class="span-6 last">
+		<div class="span-8">
+			Offer Description 
+		</div>
+		<div class="span-4 last">
+			Total Received 
+		</div>
+		<div class="span-4 last">
 			Currently Redeemed
 		</div>
       </div>
-	  <div class="item span-24 last">
-		<div class="span-18">
-			Offer 1
-		</div>
-		<div class="span-6 last">
-			Num offers redeemed
-		</div>
-      </div>
-	  <div class="span-24 last">
-		  <!-- list of redeemers -->
-		  <div class="span-24 last">
-			  <div class="span-2">
-				  <!-- favorite icon -->
-			  </div>
-			  <div class="span-12">
-				  <!-- user information -->	
-			  </div>
-			  <div class="span-10 last">
-				  <!-- past activities  -->
-			  </div>
+		{% for f in offers %}
+		  <div class="item span-24 last">
+			<div class="span-8">
+				{{ f.name }}	
+			</div>
+			<div class="span-8">
+				{{ f.description }}
+			</div>
+			<div class="span-4">
+				{{ f.num_received }}
+			</div>
+			<div class="span-4 last">
+				{{ f.num_redeemed }}
+			</div>
 		  </div>
-	  </div>
-	</div>
+		  <div class="span-24 last">
+			{% for c in f.redeemers %}		
+			  <!-- list of redeemers -->
+			  <div class="span-24 last">
+				  <div class="span-2">
+					  <!-- favorite icon -->
+					  <a href="">Favorite</a>
+				  </div>
+				  <div class="span-12">
+					  <!-- user information -->	
+					{{c.customer.user.username}}
+				  </div>
+				  <div class="span-10 last">
+					  <!-- past activities  -->
+					  Show past redemptions
+				  </div>
+			  </div>
+			{% endfor %}
+		  </div>
+		{% endfor %}
+	</div> <!-- current-offers -->
 	
 	
 

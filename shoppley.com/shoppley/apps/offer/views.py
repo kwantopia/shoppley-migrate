@@ -15,6 +15,9 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 from django.core.exceptions import MultipleObjectsReturned
 
+from random import randint
+from shoppleyuser.models import Customer 
+
 if "mailer" in settings.INSTALLED_APPS:
     from mailer import send_mail
 else:
@@ -23,32 +26,63 @@ else:
 # Python libraries
 import os
 import logging
-from datetime import datetime
-from datetime import timedelta
-import simplejson
+from datetime import datetime, timedelta
 from offer.forms import StartOfferForm
+from buxfer.forms import BuxferLoginForm
+from offer.models import *
 
 @login_required
 def offer_home(request):
-	return HttpResponse("This is the hoome")
+	"""
+		Allow customer to view list of received offers
+	"""
+	data = {}
 
-def offer_send():
-	print "Sending out offers"
+	u = request.user
+
+	if u.shoppleyuser.is_merchant():
+		return HttpResponseRedirect(reverse("offer.views.start_offer"))
+
+	data["offers_received"] = OfferCode.objects.filter(customer=u.shoppleyuser.customer, redeem_time__isnull=True)	
+	data["offers_redeemed"] = OfferCode.objects.filter(customer=u.shoppleyuser.customer, redeem_time__isnull=False)	
+
+	# top 5 featured places
+	data["featured"] = Feature.objects.all().order_by("time_stamp")[:5]
+	data["buxfer_form"] = BuxferLoginForm()
+
+	return render_to_response("offer/customer_home.html", data,
+					context_instance=RequestContext(request))
 
 @login_required
 def start_offer(request):
 
 	data = {}
+	
+	u = request.user
+
+	if u.shoppleyuser.is_customer():
+		return HttpResponseRedirect( reverse("offer.views.offer_home") )
 
 	if request.method == "POST":
 		form = StartOfferForm(request.POST)
 		if form.is_valid():
-			form.save()	
+			offer = form.save(commit=False)	
+			offer.merchant = u.merchant
+			offer.time_stamp = datetime.now()
+			offer.starting_time = datetime.now()+timedelta(minutes=5)
+			offer.save()
 			# send out the offer
-			offer_send()			
+			num_sent = offer.distribute()			
 			data["result"] = "1"
+			data["offer"] = offer
+			data["num_sent"] = num_sent
+			# past and current offers
+			# TODO: would be more efficient if there was a way to filter active and past offers separately instead of doing it on template
+			data["offers"] = Offer.objects.filter(merchant=u.merchant).order_by("-time_stamp")
+			data["form"] = StartOfferForm()
 			
-			return JSONHttpResponse(data)
+			return render_to_response("offer/start_offer.html", data,
+						context_instance=RequestContext(request))
 	else:
 		form = StartOfferForm()
 
