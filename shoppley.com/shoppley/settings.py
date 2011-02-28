@@ -70,8 +70,8 @@ STATIC_URL = '/site_media/static/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
-    ('shoppley', os.path.join(PROJECT_ROOT, 'media')),
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+	('shoppley', os.path.join(PROJECT_ROOT, 'media')),
+	('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
@@ -84,54 +84,54 @@ SECRET_KEY = '*fr3=eu%#r1zr#zbj@7wjj@*y^48d60rb1f!f+pgzq$=-_d1@='
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+	'django.template.loaders.filesystem.load_template_source',
+	'django.template.loaders.app_directories.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_openid.consumer.SessionConsumer',
-    'account.middleware.LocaleMiddleware',
-    'django.middleware.doc.XViewMiddleware',
-    'pagination.middleware.PaginationMiddleware',
-    'django_sorting.middleware.SortingMiddleware',
-    'djangodblog.middleware.DBLogMiddleware',
-    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django_openid.consumer.SessionConsumer',
+	'account.middleware.LocaleMiddleware',
+	'django.middleware.doc.XViewMiddleware',
+	'pagination.middleware.PaginationMiddleware',
+	'django_sorting.middleware.SortingMiddleware',
+	'djangodblog.middleware.DBLogMiddleware',
+	'pinax.middleware.security.HideSensistiveFieldsMiddleware',
+	'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'shoppley.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, "templates"),
-    os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
+	os.path.join(PROJECT_ROOT, "templates"),
+	os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    
-    "pinax.core.context_processors.pinax_settings",
-    
-    "notification.context_processors.notification",
-    "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
-    "messages.context_processors.inbox",
-    "friends_app.context_processors.invitations",
-    "shoppley.context_processors.combined_inbox_count",
+	"django.core.context_processors.auth",
+	"django.core.context_processors.debug",
+	"django.core.context_processors.i18n",
+	"django.core.context_processors.media",
+	"django.core.context_processors.request",
+
+	"pinax.core.context_processors.pinax_settings",
+
+	"notification.context_processors.notification",
+	"announcements.context_processors.site_wide_announcements",
+	"account.context_processors.openid",
+	"account.context_processors.account",
+	"messages.context_processors.inbox",
+	"friends_app.context_processors.invitations",
+	"shoppley.context_processors.combined_inbox_count",
 	"shoppley.context_processors.current_site",
 )
 
 COMBINED_INBOX_COUNT_SOURCES = (
-    "messages.context_processors.inbox",
-    "friends_app.context_processors.invitations",
-    "notification.context_processors.notification",
+	"messages.context_processors.inbox",
+	"friends_app.context_processors.invitations",
+	"notification.context_processors.notification",
 )
 
 INSTALLED_APPS = (
@@ -225,14 +225,14 @@ LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
 
 INTERNAL_IPS = (
-    '127.0.0.1',
+	'127.0.0.1',
 )
 
 ugettext = lambda s: s
 LANGUAGES = (
-    ('en', u'English'),
-    ('kr', u'Korean'),
-    ('cn', u'Chinese'),
+	('en', u'English'),
+	('kr', u'Korean'),
+	('cn', u'Chinese'),
 )
 
 # URCHIN_ID = "ua-..."
@@ -240,17 +240,17 @@ LANGUAGES = (
 YAHOO_MAPS_API_KEY = "..."
 
 class NullStream(object):
-    def write(*args, **kwargs):
-        pass
-    writeline = write
-    writelines = write
+	def write(*args, **kwargs):
+		pass
+	writeline = write
+	writelines = write
 
 RESTRUCTUREDTEXT_FILTER_SETTINGS = {
-    'cloak_email_addresses': True,
-    'file_insertion_enabled': False,
-    'raw_enabled': False,
-    'warning_stream': NullStream(),
-    'strip_comments': True,
+	'cloak_email_addresses': True,
+	'file_insertion_enabled': False,
+	'raw_enabled': False,
+	'warning_stream': NullStream(),
+	'strip_comments': True,
 }
 
 # if Django is running behind a proxy, we need to do things like use
@@ -272,6 +272,6 @@ OFFER_CODE_LENGTH = 4
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
-    from local_settings import *
+	from local_settings import *
 except ImportError:
-    pass
+	pass

@@ -49,7 +49,7 @@ class Offer(models.Model):
 
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)
-	user			= models.ForeignKey(Customer)
+	customer		= models.ForeignKey(Customer)
 	code			= models.CharField(max_length=32)
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)
