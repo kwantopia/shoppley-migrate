@@ -105,6 +105,7 @@ class Offer(models.Model):
 		"""
 		return self.offercode_set.filter(redeem_time__isnull=False)
 
+
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)
 	customer		= models.ForeignKey(Customer)
@@ -122,6 +123,27 @@ class OfferCode(models.Model):
 	def __unicode__(self):
 		return self.code
 	
+
+class OfferCodeAbnormal(models.Model):
+	ABNORMAL_TYPE = (
+		("IV", "Invalid Code"),
+		("DR", "Double redemption"),
+		("IR", "Internal referral"), 
+		("ER", "External referral"),
+	)
+	time_stamp		= models.DateTimeField()
+	ab_type			= models.CharField(max_length=2, choices="ABNORMAL_TYPE")
+	offercode		= models.ForeignKey(OfferCode, blank=True, null=True)
+	invalid_code	= models.CharField(max_length=32, blank=True)
+	referred_customer	= models.ForeignKey(Customer, blank=True, null=True)
+	referred_phone	= models.CharField(max_length=20, blank=True, null=True)
+	
+	def __unicode__(self):
+		if self.ab_type == "IV":
+			return "Invalid code: %s" % self.invalid_code
+		else:
+			return self.ab_type
+
 
 class Transaction(models.Model):
 	TRANS_TYPE = (

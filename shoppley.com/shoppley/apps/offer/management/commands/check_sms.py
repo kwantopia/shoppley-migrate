@@ -57,7 +57,7 @@ class Command(NoArgsCommand):
 											"time": offercode_obj.redeem_time,
 										}
 										sms_notify(su.phone, receipt_msg)
-										# TODO Save the reuse behaviors
+										OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="DR", offercode=offercode_obj).save()
 								else:
 									receipt_msg = _("Code referral! %(offer_code)s was transferred from %(sender)s to %(receiver)s.") % {
 										"offer_code": offer_code,
@@ -65,7 +65,7 @@ class Command(NoArgsCommand):
 										"receiver": customer,
 									}
 									sms_notify(su.phone, receipt_msg)
-									#TODO Save the referral information
+									OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IR", offercode=offercode_obj,referred_customer=customer).save()
 							except ObjectDoesNotExist:
 								# Such phone number doesn't exist in customers' profiles, save it
 								receipt_msg = _("Code referral! %(offer_code)s was transferred from %(sender)s to %(phone)s.") % {
@@ -75,6 +75,7 @@ class Command(NoArgsCommand):
 								}
 								sms_notify(su.phone, receipt_msg)
 								#TODO Save the referral information
+								OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="ER", offercode=offercode_obj,referred_phone=phone).save()
 							except MultipleObjectsReturned, e:
 								# Multiple customers registered with the same phone number, should be prevented
 								print e
@@ -85,6 +86,7 @@ class Command(NoArgsCommand):
 								"offer_code": offer_code,
 							}
 							sms_notify(su.phone, receipt_msg)
+							OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offer_code).save()
 						except MultipleObjectsReturned, e:
 							# Multiple offer codes found, which indicates a programming error
 							print e
