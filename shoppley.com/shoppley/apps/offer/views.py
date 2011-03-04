@@ -67,9 +67,9 @@ def start_offer(request):
 		form = StartOfferForm(request.POST)
 		if form.is_valid():
 			offer = form.save(commit=False)	
-			offer.merchant = u.merchant
+			offer.merchant = u.shoppleyuser.merchant
 			offer.time_stamp = datetime.now()
-			if offer.now:
+			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
 			offer.save()
 			# send out the offer
@@ -79,7 +79,7 @@ def start_offer(request):
 			data["num_sent"] = num_sent
 			# past and current offers
 			# TODO: would be more efficient if there was a way to filter active and past offers separately instead of doing it on template
-			data["offers"] = Offer.objects.filter(merchant=u.merchant).order_by("-time_stamp")
+			data["offers"] = Offer.objects.filter(merchant=u.shoppleyuser.merchant).order_by("-time_stamp")
 			data["form"] = StartOfferForm()
 			
 			return render_to_response("offer/start_offer.html", data,

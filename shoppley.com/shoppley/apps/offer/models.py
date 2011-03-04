@@ -36,7 +36,7 @@ class Offer(models.Model):
 		return self.name
 	
 	def is_active(self):
-		return self.starting_time+timedelta(minutes=duration) < datetime.now()
+		return self.starting_time+timedelta(minutes=self.duration) < datetime.now()
 
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
@@ -84,12 +84,16 @@ class Offer(models.Model):
 		existing_num = int(round(0.7*max_offers))
 
 		merchant = self.merchant
-		fans = merchant.fans.order_by('?').values('pk')
-		antifans = merchant.antifans.all().values('pk')
+		fans = merchant.fans.order_by('?').values_list('pk', flat=True)
+		antifans = merchant.antifans.all().values_list('pk', flat=True)
 		# TODO: geographically filter
-		nonfans = Customer.objects.exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values('pk')
+		nonfans = Customer.objects.exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
-		target = set(list(fans)+list(nonfans))
+		print "Num fans:",fans.count()
+		print "Num nonfans:",nonfans.count()
+		fan_target = set(list(fans))
+		nonfan_target = set(list(nonfans))	
+		target = fan_target | nonfan_target
 		if len(target) > max_offers:
 			target_list = random.sample(target, max_offers)
 		else:

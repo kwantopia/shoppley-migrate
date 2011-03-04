@@ -37,6 +37,7 @@ class SimpleTest(TestCase):
 	def post_json(self, command, params={}):
 		print "CALL JSON", command
 		response = self.client.post(command, params)
+		self.assertEqual(response.status_code, 200)
 		print response
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
@@ -44,6 +45,7 @@ class SimpleTest(TestCase):
 	def get_json(self, command, params={}):
 		print "CALL JSON", command
 		response = self.client.get(command, params)
+		self.assertEqual(response.status_code, 200)
 		print response
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)

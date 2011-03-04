@@ -65,6 +65,9 @@ class SimpleTest(TestCase):
 	def post_json(self, command, params={}):
 		print "CALL JSON", command
 		response = self.client.post(command, params)
+		if response.status_code == 302:
+			print "Shouldn't be redirecting to: %s"%response["Location"]
+		self.assertEqual(response.status_code, 200)
 		print response
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
@@ -72,6 +75,9 @@ class SimpleTest(TestCase):
 	def get_json(self, command, params={}):
 		print "CALL JSON", command
 		response = self.client.get(command, params)
+		if response.status_code == 302:
+			print "Shouldn't be redirecting to: %s"%response["Location"]
+		self.assertEqual(response.status_code, 200)
 		print response
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
@@ -112,6 +118,7 @@ class SimpleTest(TestCase):
 		later = datetime.now()+timedelta(minutes=60)		
 
 		cmd = reverse("offer.views.test_offer")	
+		cmd = "/offer/test/"
 
 		params = {'name': '$10 off entrees over $30',
 					'description': 'You get $10 off entrees next 90 minutes',

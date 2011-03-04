@@ -7,7 +7,7 @@ class StartOfferForm(forms.ModelForm):
 	now = forms.BooleanField(label="Activate immediately")
 
 	def __init__(self, *args, **kw):
-		super(ModelForm, self).__init__(*args, **kw)
+		super(forms.ModelForm, self).__init__(*args, **kw)
 		self.fields.keyOrder = [
 			'name',
 			'description',
@@ -27,7 +27,7 @@ class StartOfferForm(forms.ModelForm):
 		now = self.cleaned_data["now"]
 		if not now and starting_time is None:
 			raise forms.ValidationError(u"Choose")
-		return cleaned_data
+		return self.cleaned_data
 
 	def save(self, force_insert=False, force_update=False, commit=True):
 		m = super(StartOfferForm, self).save(commit=False)
