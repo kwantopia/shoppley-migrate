@@ -12,6 +12,8 @@ from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 
 if "mailer" in settings.INSTALLED_APPS:
     from mailer import send_mail
