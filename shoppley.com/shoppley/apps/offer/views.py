@@ -84,7 +84,10 @@ def start_offer(request):
 			
 			return render_to_response("offer/start_offer.html", data,
 						context_instance=RequestContext(request))
+		else:
+			data["result"] = "-1"
 	else:
+		data["offers"] = Offer.objects.filter(merchant=u.shoppleyuser.merchant).order_by("-time_stamp")
 		form = StartOfferForm()
 
 	data["form"] = form 
@@ -110,7 +113,7 @@ def test_offer(request):
 			offer = form.save(commit=False)	
 			offer.merchant = u.merchant
 			offer.time_stamp = datetime.now()
-			if offer.now:
+			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
 			offer.save()
 			# send out the offer

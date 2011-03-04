@@ -36,7 +36,7 @@ class Offer(models.Model):
 		return self.name
 	
 	def is_active(self):
-		return self.starting_time+timedelta(minutes=self.duration) < datetime.now()
+		return self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
