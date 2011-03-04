@@ -3,8 +3,7 @@ from offer.models import Offer
 
 class StartOfferForm(forms.ModelForm):
 
-
-	now = forms.BooleanField(label="Activate immediately")
+	now = forms.BooleanField(label="Activate immediately", required=False)
 
 	def __init__(self, *args, **kw):
 		super(forms.ModelForm, self).__init__(*args, **kw)
@@ -23,10 +22,11 @@ class StartOfferForm(forms.ModelForm):
 		name = self.cleaned_data["name"]
 		if len(description) == 0 and len(name) == 0:
 			raise forms.ValidationError(u"Name and/or Description needs to be filled out")
+
 		starting_time = self.cleaned_data["starting_time"]
-		now = self.cleaned_data["now"]
+		now = self.cleaned_data.get("now", None)
 		if not now and starting_time is None:
-			raise forms.ValidationError(u"Choose")
+			raise forms.ValidationError(u"Choose a starting time or set it to activate immediately")
 		return self.cleaned_data
 
 	def save(self, force_insert=False, force_update=False, commit=True):

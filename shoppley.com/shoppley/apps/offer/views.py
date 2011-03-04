@@ -30,6 +30,7 @@ from datetime import datetime, timedelta
 from offer.forms import StartOfferForm
 from buxfer.forms import BuxferLoginForm
 from offer.models import *
+from common.helpers import JSONHttpResponse
 
 @login_required
 def offer_home(request):
@@ -97,12 +98,13 @@ def start_offer(request):
 
 from django.core import serializers
 
-@login_required
+#@login_required
 def test_offer(request):
 
 	data = {}
 	
-	u = request.user
+	#u = request.user
+	u = User.objects.get(email="kool@mit.edu")
 
 	if u.shoppleyuser.is_customer():
 		return HttpResponseRedirect( reverse("offer.views.offer_home") )
@@ -111,7 +113,7 @@ def test_offer(request):
 		form = StartOfferForm(request.POST)
 		if form.is_valid():
 			offer = form.save(commit=False)	
-			offer.merchant = u.merchant
+			offer.merchant = u.shoppleyuser.merchant
 			offer.time_stamp = datetime.now()
 			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
@@ -128,9 +130,7 @@ def test_offer(request):
 		data["result"] = "-2"
 		form = StartOfferForm()
 
-	data["form"] = serializers.serialize("json", form)
-	print form
-
+	data["form"] = str(form)
 
 	return JSONHttpResponse(data)
 

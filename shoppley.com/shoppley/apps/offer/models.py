@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
 from offer.utils import gen_offer_code
+import random
 
 # Create your models here.
 
