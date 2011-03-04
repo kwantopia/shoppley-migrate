@@ -28,9 +28,9 @@ class Offer(models.Model):
 	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", blank=True, null=True)
 	
 	time_stamp		= models.DateTimeField()
-	starting_time	= models.DateTimeField()
+	starting_time	= models.DateTimeField(blank=True, null=True)
 	duration		= models.IntegerField(default=90)
-	max_offers		= models.IntegerField(default=50)
+	max_offers		= models.IntegerField(verbose_name="Maximum customers to send to", default=50)
 
 	def __unicode__(self):
 		return self.name
@@ -132,7 +132,7 @@ class OfferCodeAbnormal(models.Model):
 		("ER", "External referral"),
 	)
 	time_stamp		= models.DateTimeField()
-	ab_type			= models.CharField(max_length=2, choices="ABNORMAL_TYPE")
+	ab_type			= models.CharField(max_length=2, choices=ABNORMAL_TYPE)
 	offercode		= models.ForeignKey(OfferCode, blank=True, null=True)
 	invalid_code	= models.CharField(max_length=32, blank=True)
 	referred_customer	= models.ForeignKey(Customer, blank=True, null=True)

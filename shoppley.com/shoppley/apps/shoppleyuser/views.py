@@ -23,6 +23,7 @@ else:
 # Python libraries
 import os, logging, simplejson
 from datetime import datetime, timedelta
+from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm
@@ -79,3 +80,23 @@ def customer_signup(request, form_class=CustomerSignupForm,
 		"form": form,
 	}, context_instance=RequestContext(request))
 
+def login_modal(request):
+	"""
+		For simple user login
+	"""
+
+	data = {}
+
+	username = request.POST.get("username", None)
+	password = request.POST.get("password", None)
+	user = authenticate(username=username, password=password)
+	if user is not None:
+		if user.is_active:
+			auth_login(request, user)
+			data["result"] = "1"
+		else:
+			data["result"] = "-2"
+	else:
+		data["result"] = "-1"
+
+	return JSONHttpResponse(data) 

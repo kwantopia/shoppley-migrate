@@ -69,7 +69,8 @@ def start_offer(request):
 			offer = form.save(commit=False)	
 			offer.merchant = u.merchant
 			offer.time_stamp = datetime.now()
-			offer.starting_time = datetime.now()+timedelta(minutes=5)
+			if offer.now:
+				offer.starting_time = datetime.now()+timedelta(minutes=5)
 			offer.save()
 			# send out the offer
 			num_sent = offer.distribute()			
@@ -89,4 +90,44 @@ def start_offer(request):
 	data["form"] = form 
 	return render_to_response("offer/start_offer.html", data,
 						context_instance=RequestContext(request))
+
+
+from django.core import serializers
+
+@login_required
+def test_offer(request):
+
+	data = {}
+	
+	u = request.user
+
+	if u.shoppleyuser.is_customer():
+		return HttpResponseRedirect( reverse("offer.views.offer_home") )
+
+	if request.method == "POST":
+		form = StartOfferForm(request.POST)
+		if form.is_valid():
+			offer = form.save(commit=False)	
+			offer.merchant = u.merchant
+			offer.time_stamp = datetime.now()
+			if offer.now:
+				offer.starting_time = datetime.now()+timedelta(minutes=5)
+			offer.save()
+			# send out the offer
+			num_sent = offer.distribute()			
+			data["result"] = "1"
+			data["offer_id"] = offer.id
+			data["num_sent"] = num_sent
+			return JSONHttpResponse(data)	
+		else:
+			data["result"] = "-1"
+	else:
+		data["result"] = "-2"
+		form = StartOfferForm()
+
+	data["form"] = serializers.serialize("json", form)
+	print form
+
+
+	return JSONHttpResponse(data)
 
