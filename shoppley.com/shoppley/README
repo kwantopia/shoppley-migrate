@@ -33,3 +33,11 @@ We can run "python manage.py shell"
 to prepopulate with a merchant (user: kool2@mit.edu, pw: hello) and customer (user: kool@mit.edu, pw: hello).
 
 Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
+
+== DEPLOYMENT ==
+
+source /home/pinax/pinax-env/bin/activate
+cd /home/www/shoppley.com/shoppley
+python manage.py build_media --all --interactive 
+cd site_media/static/css/
+ln -s ../../../packages/blueprint-css/blueprint
