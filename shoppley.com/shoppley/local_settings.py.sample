@@ -1,4 +1,4 @@
-DEBUG = False
+DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
 SERVE_MEDIA = DEBUG
@@ -10,3 +10,5 @@ DATABASE_USER = 'flashon'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'flashonnohsalf'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
+
+STATIC_URL = "http://media.shoppley.com/site_media/static/"
