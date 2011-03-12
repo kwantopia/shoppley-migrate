@@ -11,4 +11,5 @@ DATABASE_PASSWORD = 'flashonnohsalf'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
 
+MEDIA_URL = "http://media.shoppley.com/site_media/static/"
 STATIC_URL = "http://media.shoppley.com/site_media/static/"
