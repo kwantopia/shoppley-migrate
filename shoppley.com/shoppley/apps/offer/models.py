@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
 from offer.utils import gen_offer_code
 import random
+from shoppleyuser.utils import sms_notify
 
 # Create your models here.
 

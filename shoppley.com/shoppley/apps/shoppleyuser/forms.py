@@ -41,6 +41,11 @@ class MerchantSignupForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
+		try: 
+			Merchant.objects.get(phone=self.cleaned_data["phone"])
+			raise forms.ValidationError(_("This phone number is being used by another merchant"))
+		except Exception, e:
+			pass
 		return self.cleaned_data["phone"]
 
 	def clean(self):
@@ -129,8 +134,12 @@ class CustomerSignupForm(forms.Form):
 
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
-			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
-		return self.cleaned_data["phone"]
+			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
+		try: 
+			customer = Customer.objects.get(phone__icontains=self.cleaned_data["phone"])
+		except Customer.DoesNotExist:
+			return self.cleaned_data["phone"]
+		raise forms.ValidationError(_("This phone number is being used by another customer"))
 
 	def clean(self):
 		if "password1" in self.cleaned_data and "password2" in self.cleaned_data:

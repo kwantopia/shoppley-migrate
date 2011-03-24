@@ -14,7 +14,7 @@ from googlevoice.extractsms import extractsms
 from datetime import datetime
 import re
 
-pattern = "([\w]{%d})[ ]+\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})") % (settings.OFFER_CODE_LENGTH)
+pattern = "([\w]{%d})[ ]+\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})" % (settings.OFFER_CODE_LENGTH)
 redemption_code_re = re.compile(pattern)
 
 class Command(NoArgsCommand):
@@ -103,7 +103,7 @@ class Command(NoArgsCommand):
 						sms_notify(su.phone, receipt_msg)
 				else:
 					# TODO: We should save all messages
-					pass
+					print "This message is not from a registered merchant %s" % (msg["from"])
 		for message in voice.sms().messages:
 			message.delete()
 	

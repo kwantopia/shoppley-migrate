@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # TODO: adjust paths for production and crontab should indicate how often sms's are checked
-PROAREA=/var/Production
-WORKON_HOME=$PROAREA/socialmobility/pinax
-PROJECT_ROOT=$PROAREA/socialmobility/knowledge/pylib/knowledge/knowledge_web
+PROAREA=/home/www/shoppley.com
+WORKON_HOME=/home/pinax
+PROJECT_ROOT=$PROAREA/shoppley
 
 # activate virtual environment
 . $WORKON_HOME/pinax-env/bin/activate

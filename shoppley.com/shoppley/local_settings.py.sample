@@ -13,3 +13,8 @@ DATABASE_PORT = '5432'             # Set to empty string for default. Not used w
 
 MEDIA_URL = "http://media.shoppley.com/site_media/static/"
 STATIC_URL = "http://media.shoppley.com/site_media/static/"
+
+DEFAULT_FROM_EMAIL = "support@shoppley.com"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_SUBJECT_PREFIX = "[ Shoppley ] "
+
