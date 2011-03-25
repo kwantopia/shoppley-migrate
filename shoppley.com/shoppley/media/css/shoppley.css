@@ -41,8 +41,18 @@ table#features tr td {
 #user-sign-up-form {
 }
 
+.offers-min-height {
+  height: 300px;
+}
+
 .past-offers {
-  background-color: #BBB;
+  /*background-color: #BBB;*/
+  height: 300px;
+}
+
+.shift-left-20 {
+  position: relative;
+  left: -20px;
 }
 
 .past-offers .heading {
@@ -54,7 +64,7 @@ table#features tr td {
 }
 
 .current-offers {
-  background-color: #ABAB55;
+  height: 200px;
 }
 
 .current-offers .heading {

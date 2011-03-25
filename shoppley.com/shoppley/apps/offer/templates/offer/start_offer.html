@@ -6,33 +6,34 @@
 {% block head_title %}{% trans "Start Offer" %}{% endblock %}
 
 {% block body %}
-	{% if user.is_authenticated %}
-		<p>{% trans "You are already logged in." %}</p>
-	{% else %}
-		<p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
-	{% endif %}
-
 	<h1>{% trans "Start Offers" %}</h1>
 
-	<div class="merchant-incentive-explation">
+	<div class="merchant-incentive-explanation">
 	<b>10 points</b> are deducted for every person who receives the offer.<br>
 	You will be charged <b>$1 or 1%</b> whichever is less when people redeem your offers.<br>
 	You will credited <b>50 points</b> for each person redeemed.<br>
 	</div>
 
+	<hr class="space">
+
 	<div class="span-24 last">
 
 	  <div class="span-12">
-		<div class="span-12 last">
-		  <!-- new offers -->
-		  <form class="sendoffer uniForm" id="sendoffer_form" method="post" action="{% url start_offer %}">
-			  <fieldset class="inlineLabels">
-				  {{ form|as_uni_form }}
-				  <div class="form_blick">
-					  <input type="submit" value="{% trans "Start Offer &raquo;" %}" />
-				  </div>
-			  </fieldset>
-		  </form>
+		<div class="ui-widget-header span-12 last">
+		  Send Offer
+		</div>
+		<div class="ui-widget-content span-12 last">
+		  <p>
+			<!-- new offers -->
+			<form class="sendoffer uniForm" id="sendoffer-form" method="post" action="{% url start_offer %}">
+				<fieldset class="inlineLabels">
+					{{ form|as_uni_form }}
+					<div class="form_blick">
+						<input type="submit" value="{% trans "Start Offer &raquo;" %}" />
+					</div>
+				</fieldset>
+			</form>
+		  </p>
 		</div>
 
 		{% if offer %}
@@ -40,32 +41,35 @@
 			Offer has been sent out to {{ num_sent }}.
 		</div>
 		{% endif %}
-	  </div>
 
-	  <div class="prepend-1 span-11 last">
-		<div class="past-offers span-11 last">
-		  <!-- past offers -->
-		  <div class="heading span-11 last">  
-			<div class="span-4">
-				Name
-			</div>
-			<div class="span-3">
-				Description
-			</div>
-			<div class="span-2">
-				Received
-			</div>
-			<div class="span-2 last">
-				Redeemed
-			</div>
+	  </div><!-- span-12 -->
+
+
+	  <!-- past offers -->
+	  <div class="span-12 last">
+		<div class="ui-widget-header span-12 last">
+		  <div class="span-3">
+			  Name
 		  </div>
+		  <div class="span-5">
+			  Description
+		  </div>
+		  <div class="span-2">
+			  <div class="shift-left-20">Received</div>
+		  </div>
+		  <div class="span-2 last">
+			  <div class="shift-left-20">Redeemed</div>
+		  </div>
+		</div>
+
+		<div class="past-offers ui-widget-content span-12 last">
 		  {% for f in offers %}
 			{% if not f.is_active %}
-			  <div class="item span-11 last">
-				<div class="span-4">
+			  <div class="item span-12 last">
+				<div class="span-3">
 					{{ f.name }}	
 				</div>
-				<div class="span-3">
+				<div class="span-5">
 					{{ f.description }}
 				</div>
 				<div class="span-2">
@@ -77,39 +81,41 @@
 			  </div>
 			{% endif %}	
 		  {% endfor %}
-		</div>
-	  </div>
-	
+		</div> <!-- past-offers span-12 last -->
+	  </div> <!-- span-12 last -->
 	</div> <!-- span-24 last -->
 
-	<div class="current-offers span-24 last">
+	<hr class="space">
+
+	<div class="ui-widget-header heading span-24 last">	
+	  <div class="span-6">
+		  Offer Name
+	  </div>
+	  <div class="span-9">
+		  Offer Description 
+	  </div>
+	  <div class="span-4">
+		  Total Received 
+	  </div>
+	  <div class="span-5 last">
+		  Currently Redeemed
+	  </div>
+	</div>
+
+	<div class="current-offers ui-widget-content span-24 last">
 		<!-- current active offers -->
-	  <div class="heading span-24 last">	
-		<div class="span-8">
-			Offer Name
-		</div>
-		<div class="span-8">
-			Offer Description 
-		</div>
-		<div class="span-4 last">
-			Total Received 
-		</div>
-		<div class="span-4 last">
-			Currently Redeemed
-		</div>
-      </div>
 		{% for f in offers %}
 		  <div class="item span-24 last">
-			<div class="span-8">
+			<div class="span-6">
 				{{ f.name }}	
 			</div>
-			<div class="span-8">
+			<div class="span-9">
 				{{ f.description }}
 			</div>
 			<div class="span-4">
 				{{ f.num_received }}
 			</div>
-			<div class="span-4 last">
+			<div class="span-5 last">
 				{{ f.num_redeemed }}
 			</div>
 		  </div>
