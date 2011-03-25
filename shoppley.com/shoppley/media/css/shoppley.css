@@ -45,6 +45,10 @@ table#features tr td {
   height: 300px;
 }
 
+.sub-comment {
+  color: #777;
+}
+
 .past-offers {
   /*background-color: #BBB;*/
   height: 300px;
