@@ -3,6 +3,20 @@
   border: 0px;
 }
 
+ul, li
+{
+  display: inline;
+  list-style-type: none;
+}
+
+li
+{
+  border: solid 1px white;
+  padding: 5px;
+  margin: 5px;
+  background-color: #DDDDB7;
+}
+
 table#features tr td .feature {
   padding: 10px;
   background-color: white;

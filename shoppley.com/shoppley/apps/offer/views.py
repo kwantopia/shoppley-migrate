@@ -70,8 +70,22 @@ def start_offer(request):
 			offer = form.save(commit=False)	
 			offer.merchant = u.shoppleyuser.merchant
 			offer.time_stamp = datetime.now()
+
 			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
+
+			offer.name = self.cleaned_data.get("name")
+			offer.description = self.cleaned_data.get("description")
+			if len(offer.name) == 0:
+				offer.name = description[:64] 
+
+			if form.cleaned_data.get("offer_radio") == 0:
+				offer.percentage = self.cleaned_data.get("percentage")	
+				offer.dollar_off = None
+			elif form.cleaned_data.get("offer_radio") == 1:
+				offer.dollar_off = self.cleaned_data.get("dollar_off")	
+				offer.percentage = None
+
 			offer.save()
 			# send out the offer
 			num_sent = offer.distribute()			
@@ -89,7 +103,7 @@ def start_offer(request):
 			data["result"] = "-1"
 	else:
 		data["offers"] = Offer.objects.filter(merchant=u.shoppleyuser.merchant).order_by("-time_stamp")
-		form = StartOfferForm()
+		form = StartOfferForm(initial={'offer_radio':0})
 
 	data["form"] = form 
 	return render_to_response("offer/start_offer.html", data,

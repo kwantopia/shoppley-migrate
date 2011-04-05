@@ -5,11 +5,19 @@ class StartOfferForm(forms.ModelForm):
 
 	now = forms.BooleanField(label="Activate immediately", required=False)
 
+	OFFER_TYPE = (
+			(0, '%'),
+			(1, '$')
+			)
+
+	offer_radio = forms.ChoiceField(choices=OFFER_TYPE, label="Offer Type", widget=forms.RadioSelect)
+
 	def __init__(self, *args, **kw):
 		super(forms.ModelForm, self).__init__(*args, **kw)
 		self.fields.keyOrder = [
 			'name',
 			'description',
+			'offer_radio',
 			'percentage',
 			'dollar_off',
 			'now',
@@ -37,7 +45,10 @@ class StartOfferForm(forms.ModelForm):
 		if len(name) == 0:
 			self.field['name'] = description[:64] 
 
-		# TODO: need to save timestamp		
+		if self.cleaned_data.get("offer_radio") == "percentage":
+			self.field['percentage'] = self.cleaned_data.get("percentage")	
+		elif self.cleaned_data.get("offer_radio") == "amount":
+			self.field['dollar_off'] = self.cleaned_data.get("dollar_off")	
 
 		if commit:
 			m.save()

@@ -155,11 +155,10 @@
 <script type="text/javascript">
 $(function () {
 	$("#div_id_dollar_off").hide();
-	$("#div_id_description").after("<div id='offer_radio' class='ctrlHolder'><input type='radio' id='offer_radio1' name='offer_radio' value='offer1' checked='checked' /><label for='offer_radio1'>Percentage</label><input type='radio' id='offer_radio2' name='offer_radio' value='offer2' /><label for='offer_radio2'>Amount</label></div>");
-	$("#offer_radio").buttonset();
+	/*$("#div_id_description").after("<div id='offer_radio' class='ctrlHolder'><input type='radio' id='offer_radio1' name='offer_radio' value='percentage' checked='checked' /><label for='offer_radio1'>Percentage</label><input type='radio' id='offer_radio2' name='offer_radio' value='dollar_amount' /><label for='offer_radio2'>Amount</label></div>");*/
 
-	$("#offer_radio").change( function () {
-		if ($("input[name=offer_radio]:checked").val() == "offer1") {
+	$(".radioselect").change( function () {
+		if ($("input[name=offer_radio]:checked").val() == "0") {
 			$("#div_id_dollar_off").hide();
 			$("#div_id_percentage").show();
 		} else {
