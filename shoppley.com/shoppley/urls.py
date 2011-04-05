@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     
     url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
     url(r'^account/signup/$', signup_view, name="acct_signup"),
+    url(r'^account/login/$', 'shoppleyuser.views.login', name="shoppleyuser_login"),
     
     (r'^about/', include('about.urls')),
     (r'^account/', include('account.urls')),
