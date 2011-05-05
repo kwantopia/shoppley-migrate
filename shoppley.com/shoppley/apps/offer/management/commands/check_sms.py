@@ -29,6 +29,8 @@ class Command(NoArgsCommand):
 				su = map_phone_to_user(msg["from"])
 				if su and su.is_merchant():
 					text = msg["text"].strip()
+					# offer code being redeemed by the customer
+					# merchant sends offer code and the customer's phone number
 					if redemption_code_re.search(text):
 						n = redemption_code_re.search(text)
 						offer_code = n.group(1) 
@@ -50,6 +52,10 @@ class Command(NoArgsCommand):
 											"customer": offercode_obj.customer
 										}
 										sms_notify(su.phone, receipt_msg)
+										customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
+											"merchant": su.business_name
+										}
+										sms_notify(phone, customer_msg)
 									else:
 										receipt_msg = _("Code reuse! %(offer_code)s was redeemed by %(customer)s at %(time)s.") % {
 											"offer_code": offer_code,
@@ -66,6 +72,10 @@ class Command(NoArgsCommand):
 									}
 									sms_notify(su.phone, receipt_msg)
 									OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IR", offercode=offercode_obj,referred_customer=customer).save()
+									customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
+										"merchant": su.business_name
+									}
+									sms_notify(phone, customer_msg)
 							except ObjectDoesNotExist:
 								# Such phone number doesn't exist in customers' profiles, save it
 								receipt_msg = _("Code referral! %(offer_code)s was transferred from %(sender)s to %(phone)s.") % {
@@ -76,6 +86,7 @@ class Command(NoArgsCommand):
 								sms_notify(su.phone, receipt_msg)
 								#TODO Save the referral information
 								OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="ER", offercode=offercode_obj,referred_phone=phone).save()
+								# TODO: send a msg to referred_phone to register with shoppley
 							except MultipleObjectsReturned, e:
 								# Multiple customers registered with the same phone number, should be prevented
 								print e
@@ -91,7 +102,7 @@ class Command(NoArgsCommand):
 							# Multiple offer codes found, which indicates a programming error
 							print e
 					else:
-						# This is an offer, not a redeption code
+						# This is an offer made by the merchant, not a redemption code
 						offer = Offer(merchant=su.merchant, name=text[:128],
 							description=text, time_stamp=datetime.now(),
 							starting_time=datetime.now())
