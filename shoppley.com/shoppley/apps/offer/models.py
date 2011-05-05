@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
 from offer.utils import gen_offer_code
 import random
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext, string_concat
 from shoppleyuser.utils import sms_notify
 
 # Create your models here.
@@ -103,6 +105,10 @@ class Offer(models.Model):
 
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
+		for o in self.offercode_set.all():
+			offer_msg = _("From %(merchant)s: %(name)s %(code)s")%{ "merchant":self.merchant.business_name, "name":self.name, "code":o.code }			
+			sms_notify(o.customer.phone, offer_msg)
+
 		return len(target_list) 
 
 	def redeemers(self):

@@ -7,6 +7,7 @@ from django.conf import settings
 from shoppleyuser.utils import parse_phone_number, map_phone_to_user, sms_notify, sms_notify_list
 from shoppleyuser.models import Customer
 from offer.models import Offer, OfferCode
+from offer.models import OfferCodeAbnormal
 from googlevoice import Voice
 from googlevoice.util import input
 from googlevoice.extractsms import extractsms
@@ -73,7 +74,7 @@ class Command(NoArgsCommand):
 									sms_notify(su.phone, receipt_msg)
 									OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IR", offercode=offercode_obj,referred_customer=customer).save()
 									customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
-										"merchant": su.business_name
+										"merchant": su.merchant.business_name
 									}
 									sms_notify(phone, customer_msg)
 							except ObjectDoesNotExist:
