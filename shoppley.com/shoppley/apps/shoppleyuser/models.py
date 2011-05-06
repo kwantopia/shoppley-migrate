@@ -79,6 +79,18 @@ class Merchant(ShoppleyUser):
 		return "%s (%s)" % (self.business_name, self.user.username)
 
 class Customer(ShoppleyUser):
+	FREQUENCY_CHOICES = (
+			( 0, 'Every Hour'),
+			( 1, 'Every 2 hrs'),
+			( 2, '3 times a day'),
+			( 3, 'Twice a day'),
+			( 4, 'Once a day'),
+			( 5, 'Once a week'),
+			)
+
+	frequency = models.IntegerField(choices=FREQUENCY_CHOICES, default=4)
+	weekdays_only = models.BooleanField(default=False)
+	weekends_only = models.BooleanField(default=False)
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
 	merchant_dislikes = models.ManyToManyField(Merchant, related_name="antifans")
 
