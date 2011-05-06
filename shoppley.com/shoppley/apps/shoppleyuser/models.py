@@ -70,17 +70,13 @@ class ShoppleyUser(models.Model):
 		else:
 			return "%s (%s)" % (self.merchant.business_name, self.user.username)
 	
-
-
-
 class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)
+	url				= models.URLField(null=True, blank=True)
 
 	def __unicode__(self):
 		return "%s (%s)" % (self.business_name, self.user.username)
-
-
 
 class Customer(ShoppleyUser):
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
