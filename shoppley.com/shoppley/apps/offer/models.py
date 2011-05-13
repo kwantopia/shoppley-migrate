@@ -106,7 +106,7 @@ class Offer(models.Model):
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
 		for o in self.offercode_set.all():
-			offer_msg = _("From %(merchant)s: %(name)s %(code)s")%{ "merchant":self.merchant.business_name, "name":self.name, "code":o.code }			
+			offer_msg = _("%(code)s: %(name)s by %(merchant)s")%{ "merchant":self.merchant.business_name, "name":self.name, "code":o.code }			
 			sms_notify(o.customer.phone, offer_msg)
 
 		return len(target_list) 
