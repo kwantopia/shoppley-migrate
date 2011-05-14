@@ -11,11 +11,6 @@ server {
     access_log /home/www/shoppley.com/nginx/logs/access.log;
     error_log /home/www/shoppley.com/nginx/logs/error.log;
 
-    location /phppgadmin {
-        root /usr/share/phppgadmin/;
-        index index.php;
-    }
-
     location / {
         #root /home/www/shoppley.com/htdocs/;
         #index index.html;
