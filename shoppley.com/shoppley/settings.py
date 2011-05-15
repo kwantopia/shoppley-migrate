@@ -200,6 +200,7 @@ INSTALLED_APPS = (
 	'debug_toolbar',
 	'autofixture',
 	'buxfer',
+	'south',
 )
 
 ABSOLUTE_URL_OVERRIDES = {
