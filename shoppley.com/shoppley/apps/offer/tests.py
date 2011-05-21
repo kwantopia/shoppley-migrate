@@ -17,6 +17,8 @@ from offer.models import *
 from django.contrib.auth.models import *
 from datetime import datetime, timedelta
 
+from offer.management.commands.check_sms import Command 
+
 class CustomerFixture(AutoFixture):
 	class Values:
 		cambridge = ZipCode.objects.get(code="02139")
@@ -79,6 +81,8 @@ class SimpleTest(TestCase):
 		#	u.user.set_password("hello")
 		#	u.user.is_active=True
 		#	u.user.save()
+
+
 		self.create_merchants()
 
 		fixture = CustomerFixture(Customer, generate_fk=True)
@@ -96,31 +100,53 @@ class SimpleTest(TestCase):
 		offers = fixture.create(10)
 	
 
-	def post_json(self, command, params={}):
-		print "CALL JSON", command
+	def post_json(self, command, params={}, comment="No comment"):
+		print "*************************************************"
+		print comment
+		print "-------------------------------------------------"
+		print "POST URL:", command
+		print "PARAMS:", self.pp.pprint(params) 
 		response = self.client.post(command, params)
+		#print response
+		print "-------------------------------------------------"
+		print "RESPONSE:"
 		if response.status_code == 302:
 			print "Shouldn't be redirecting to: %s"%response["Location"]
 		self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
-	def get_json(self, command, params={}):
-		print "CALL JSON", command
+	def get_json(self, command, params={}, comment="No comment"):
+		print "*************************************************"
+		print comment
+		print "-------------------------------------------------"
+		print "GET URL:", command
+		print "PARAMS:", self.pp.pprint(params)
 		response = self.client.get(command, params)
+		#print response
+		print "-------------------------------------------------"
+		print "RESPONSE:"
 		if response.status_code == 302:
 			print "Shouldn't be redirecting to: %s"%response["Location"]
 		self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
-	def get_web(self, command):
-		print "GET CALL WEB", command
-		response = self.client.get(command)
-		return response 
+	def get_web(self, command, params={}, comment="No comment"):
+		print "*************************************************"
+		print comment
+		print "-------------------------------------------------"
+		print "GET WEB URL", command
+		print "PARAMS:", self.pp.pprint(params)
+		response = self.client.get(command, params)
+		return response
 
-	def post_web(self, command, params={}):
-		print "CALL WEB", command
+	def post_web(self, command, params={}, comment="No comment"):
+		print "*************************************************"
+		print comment
+		print "-------------------------------------------------"
+		print "POST WEB URL", command
+		print "PARAMS:", self.pp.pprint(params)
 		response = self.client.post(command, params)
 		return response
 
@@ -245,6 +271,9 @@ class SimpleTest(TestCase):
 		offers3 = OfferCode.objects.filter(offer=offer_id3).count()
 		self.failIfEqual(offers3, 0)		
 		
+	def test_txt_messages(self):
+		cmd = Command()
+		cmd.handle_noargs()
 
 	def test_basic_addition(self):
 		"""

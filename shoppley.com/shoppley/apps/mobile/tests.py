@@ -75,6 +75,9 @@ class SimpleTest(TestCase):
 		#print response
 		print "-------------------------------------------------"
 		print "RESPONSE:"
+		if response.status_code == 302:
+			print "Shouldn't be redirecting to: %s"%response["Location"]
+		self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
@@ -88,6 +91,9 @@ class SimpleTest(TestCase):
 		#print response
 		print "-------------------------------------------------"
 		print "RESPONSE:"
+		if response.status_code == 302:
+			print "Shouldn't be redirecting to: %s"%response["Location"]
+		self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
