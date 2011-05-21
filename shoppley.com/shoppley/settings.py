@@ -25,30 +25,46 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'dev.db'       # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+import django
+
+if django.VERSION[1] == 1:
+	DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+	DATABASE_NAME = 'dev.db'       # Or path to database file if using sqlite3.
+	DATABASE_USER = ''             # Not used with sqlite3.
+	DATABASE_PASSWORD = ''         # Not used with sqlite3.
+	DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+	DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+else:
+	DATABASES = { 
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+			'NAME': 'shoppley',                      # Or path to database file if using sqlite3.
+			'USER': 'otnpostgres',                      # Not used with sqlite3.
+			'PASSWORD': 'aaa',                  # Not used with sqlite3.
+			'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+			'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+		}
+	}
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
 # although not all variations may be possible on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'US/Eastern'
+#TIME_ZONE = 'US/Eastern'
+TIME_ZONE = 'America/New_York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True 
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -91,6 +107,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
 	'django.middleware.common.CommonMiddleware',
+	'django.contrib.csrf.middleware.CsrfMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django_openid.consumer.SessionConsumer',
@@ -103,6 +120,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.transaction.TransactionMiddleware',
 	'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+# 'django.middleware.csrf.CsrfViewMiddleware' for django 1.2 and above
 
 ROOT_URLCONF = 'shoppley.urls'
 
@@ -200,7 +218,7 @@ INSTALLED_APPS = (
 	'debug_toolbar',
 	'autofixture',
 	'buxfer',
-	'south',
+	'mobile',
 )
 
 ABSOLUTE_URL_OVERRIDES = {
