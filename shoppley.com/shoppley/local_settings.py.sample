@@ -19,7 +19,7 @@ STATICFILES_DIRS = [
 DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
-SERVE_MEDIA = DEBUG
+SERVE_MEDIA = False 
 EMAIL_DEBUG = DEBUG
 
 DATABASES = {

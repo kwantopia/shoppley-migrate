@@ -116,9 +116,10 @@ urlpatterns += patterns('',
     url('^bookmarks/friends_bookmarks/$', 'friends_app.views.friends_objects', kwargs=friends_bookmarks_kwargs, name="friends_bookmarks"),
 )
 
-"""
-urlpatterns += staticfiles_urlpatterns()
+if settings.SERVE_MEDIA:
+	urlpatterns += staticfiles_urlpatterns()
 
+"""
 if settings.SERVE_MEDIA:
     urlpatterns += patterns('',
         (r'^site_media/', include('staticfiles.urls')),
