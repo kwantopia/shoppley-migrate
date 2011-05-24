@@ -40,12 +40,13 @@ django-messages
 django-microblogging
 django-notification
 django-oembed
-django-openid-consumer
+django-openid
 django-pagination
 django-robots
 django-swaps
 django-sorting
 django-tagging
+django-tagging-ext
 django-threadedcomments
 django-timezones
 django-uni-form
@@ -56,3 +57,5 @@ django-attachments
 django-markup
 template_utils
 django-autofixture
+django-groups
+sorl-thumbnail
