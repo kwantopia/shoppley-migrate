@@ -9,6 +9,7 @@ $ pip install virtualenvwrapper
 # create a virtual environment environment
 # home directory for you virtual environments, I just named it virtual 
 $ mkdir /home/virtual
+# For MAC with macports: /opt/local/bin/virtualenv-2.7 shoppley-env 
 $ /usr/local/bin/virtualenv shoppley-env
 $ source /home/virtual/shoppley-env/bin/activate
 
