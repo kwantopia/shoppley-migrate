@@ -7,7 +7,7 @@ PINAX_THEME = "default"
 
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-PYTHON_ROOT = os.path.abspath("/home/pinax/shoppley-env/lib/python2.7/site-packages")
+PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
 
 STATICFILES_DIRS = [
 	os.path.join(PROJECT_ROOT, "media"),

@@ -7,7 +7,7 @@ import pinax
 
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-PYTHON_ROOT = os.path.abspath("/Users/kwan/Documents/workspace/pinax/shoppley-env/lib/python2.7/site-packages")
+PYTHON_ROOT = os.path.abspath("/Users/kwan/Documents/workspace/virtual/shoppley-env/lib/python2.7/site-packages")
 
 
 GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q0bgOQMK8ZOKjSUhquxiiodbA"

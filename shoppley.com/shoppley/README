@@ -1,21 +1,30 @@
 == Download ==
 
-Download all packages in 
+Prerequisites: Python 2.7
 
-"package/"
+#Install latest virtualenv
+$ pip install virtualenv
+$ pip install virtualenvwrapper
 
-by calling 
+# create a virtual environment environment
+# home directory for you virtual environments, I just named it virtual 
+$ mkdir /home/virtual
+$ /usr/local/bin/virtualenv shoppley-env
+$ source /home/virtual/shoppley-env/bin/activate
 
-"./download.sh"
+# go to where you have checked out the shoppley code
+$ cd /home/www/shoppley.com/shoppley 
 
-run "python setup.py install" on the python packages
+# install requirements
+$ pip install -r requirements.txt
 
 == patches ==
 
+patches account/openid_consumer.py PinaxConsumer to have a __name__ attribute
 patches profiles and microblogging apps in pinax to take e-mail as part of url
 
-# cd patches
-# ./patch.sh
+$ cd patches
+$ ./patch.sh
 
 == syncdb ==
 
@@ -36,8 +45,6 @@ Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
 
 == DEPLOYMENT ==
 
-source /home/pinax/pinax-env/bin/activate
+source /home/virtual/shoppley-env/bin/activate
 cd /home/www/shoppley.com/shoppley
-python manage.py build_media --all --interactive 
-cd site_media/static/css/
-ln -s ../../../packages/blueprint-css/blueprint
+python manage.py collectstatic 

@@ -1,17 +1,39 @@
+# copy this file to local_settings.py on deployment server
+
+import os.path
+import pinax
+
+# tells Pinax to use the default theme
+PINAX_THEME = "default"
+
+PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
+
+STATICFILES_DIRS = [
+	os.path.join(PROJECT_ROOT, "media"),
+	os.path.join(PINAX_ROOT, "media", PINAX_THEME),
+	os.path.join(PYTHON_ROOT, "uni_form", "media"),
+]
+
 DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
 SERVE_MEDIA = DEBUG
 EMAIL_DEBUG = DEBUG
 
-DATABASE_ENGINE = 'postgresql_psycopg2'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'flashon'       # Or path to database file if using sqlite3.
-DATABASE_USER = 'flashon'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'flashonnohsalf'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
+        "NAME": "flashon",                       # Or path to database file if using sqlite3.
+        "USER": "flashon",                             # Not used with sqlite3.
+        "PASSWORD": "flashonnohsalf",                         # Not used with sqlite3.
+        "HOST": "",                             # Set to empty string for localhost. Not used with sqlite3.
+        "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
+    }
+}
 
-MEDIA_URL = "http://media.shoppley.com/site_media/static/"
+MEDIA_URL = "http://media.shoppley.com/site_media/media/"
 STATIC_URL = "http://media.shoppley.com/site_media/static/"
 
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
