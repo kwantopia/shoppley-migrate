@@ -254,6 +254,10 @@ LOGIN_REDIRECT_URLNAME = "what_next"
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 
+DEFAULT_FROM_EMAIL = "support@shoppley.com"
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/tmp/shoppley-messages'
+
 ugettext = lambda s: s
 LANGUAGES = [
     ("en", u"English"),

@@ -39,4 +39,4 @@ STATIC_URL = "http://media.shoppley.com/site_media/static/"
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_SUBJECT_PREFIX = "[ Shoppley ] "
-
+EMAIL_BACKEND = "mailer.backend.DbBackend"
