@@ -7,6 +7,7 @@ import pinax
 
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+# TODO: the following line needs to be updated when running from your local machine
 PYTHON_ROOT = os.path.abspath("/Users/kwan/Documents/workspace/virtual/shoppley-env/lib/python2.7/site-packages")
 
 
