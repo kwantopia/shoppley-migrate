@@ -1,0 +1,26 @@
+#server {
+#    listen 80; 
+#    server_name webuy-dev.mit.edu;
+#    #rewrite ^/(.*) http://webuy-dev.mit.edu/$1 permanent;
+#}
+
+server {
+    listen 80;
+    server_name webuy-dev.mit.edu;
+
+    access_log /home/www/webuy.mit.edu/nginx/logs/access.log;
+    error_log /home/www/webuy.mit.edu/nginx/logs/error.log;
+
+    location /site_media/ {
+        root /home/www/webuy.mit.edu/shoppley/;
+    }
+
+    location / {
+        #root /home/www/webuy.mit.edu/htdocs/;
+        #index index.html;
+        proxy_pass http://127.0.0.1:8089/;
+        include /etc/nginx/proxy.conf;
+    }
+
+
+}

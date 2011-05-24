@@ -2,8 +2,8 @@
 WSGIRestrictStdout Off
 
 <VirtualHost 127.0.0.1:8089>
-    ServerName www.shoppley.com
-    ServerAlias shoppley.com
+    ServerName webuy-dev.mit.edu 
+    ServerAlias webuy-dev.mit.edu 
     ServerAdmin webmaster@shoppley.com
 
     #<Directory /home/www/shoppley.com/shoppley/static>
@@ -16,22 +16,22 @@ WSGIRestrictStdout Off
     #    Allow from all
     #</Directory>
 
-	WSGIDaemonProcess shoppley.com processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/pinax-env/lib/python2.7/site-packages
-	WSGIProcessGroup shoppley.com
+	WSGIDaemonProcess webuy-dev.mit.edu processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/shoppley-env/lib/python2.7/site-packages
+	WSGIProcessGroup webuy-dev.mit.edu 
 
     #WSGIScriptAlias / /home/www/shoppley.com/shoppley/apache/shoppley.wsgi
-    WSGIScriptAlias / /home/www/shoppley.com/shoppley/deploy/pinax.wsgi
+    WSGIScriptAlias / /home/www/webuy.mit.edu/shoppley/deploy/pinax.wsgi
 
-	<Directory /home/www/shoppley.com/shoppley/deploy>
+	<Directory /home/www/webuy.mit.edu/shoppley/deploy>
 		Order allow,deny
 		Allow from all
 	</Directory>
 
-    ErrorLog /home/www/shoppley.com/logs/error.log	
+    ErrorLog /home/www/webuy.mit.edu/logs/error.log	
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
 	LogLevel warn
 
-	CustomLog /home/www/shoppley.com/logs/access.log combined
+	CustomLog /home/www/webuy.mit.edu/logs/access.log combined
 
 </VirtualHost>
