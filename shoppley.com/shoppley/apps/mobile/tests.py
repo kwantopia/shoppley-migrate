@@ -65,7 +65,7 @@ class SimpleTest(TestCase):
 		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="617-933-2342", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
 
 
-	def post_json(self, command, params={}, comment="No comment"):
+	def post_json(self, command, params={}, comment="No comment", redirect=False):
 		print "*************************************************"
 		print comment
 		print "-------------------------------------------------"
@@ -75,13 +75,18 @@ class SimpleTest(TestCase):
 		#print response
 		print "-------------------------------------------------"
 		print "RESPONSE:"
-		if response.status_code == 302:
-			print "Shouldn't be redirecting to: %s"%response["Location"]
-		self.assertEqual(response.status_code, 200)
+		if redirect:
+			if response.status_code == 302:
+				print "Should be redirecting to: %s"%response["Location"]
+				return "Redirect to:",response["Location"]
+			else:
+				return "Response code:", response.status_code
+		else:
+			self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
-	def get_json(self, command, params={}, comment="No comment"):
+	def get_json(self, command, params={}, comment="No comment", redirect=False):
 		print "*************************************************"
 		print comment
 		print "-------------------------------------------------"
@@ -91,9 +96,14 @@ class SimpleTest(TestCase):
 		#print response
 		print "-------------------------------------------------"
 		print "RESPONSE:"
-		if response.status_code == 302:
-			print "Shouldn't be redirecting to: %s"%response["Location"]
-		self.assertEqual(response.status_code, 200)
+		if redirect:
+			if response.status_code == 302:
+				print "Should be redirecting to: %s"%response["Location"]
+				return "Redirect to:",response["Location"]
+			else:
+				return "Response code:", response.status_code
+		else:
+			self.assertEqual(response.status_code, 200)
 		print json.dumps(json.loads(response.content), indent=2)
 		return json.loads(response.content)
 
@@ -169,7 +179,7 @@ class SimpleTest(TestCase):
 													'password': password}, comment)
 	
 		comment = "Customer logout"
-		response = self.get_json( reverse("m_logout"), {}, comment)
+		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
 
 		email = "user1@merchant.com"
 		password = "hello"
@@ -276,7 +286,7 @@ class SimpleTest(TestCase):
 													'password': password}, comment)
 
 		comment = "Merchant logout"
-		response = self.get_json( reverse("m_logout"), {}, comment)
+		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
 	
 	
 	def test_basic_addition(self):

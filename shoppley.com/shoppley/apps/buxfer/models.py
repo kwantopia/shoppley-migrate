@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import time
-from sorl.thumbnail.fields import ImageWithThumbnailsField
+from sorl.thumbnail import ImageField, get_thumbnail
 
 # Create your models here.
 class Category(models.Model):
@@ -90,8 +90,8 @@ class Memo(models.Model):
     latitude = models.FloatField(blank=True, default='42.373193')
     longitude = models.FloatField(blank=True, default='-71.094074')
 
-    icon = ImageWithThumbnailsField(upload_to="buxfer/locations/icons/", max_length=200, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
-    banner = ImageWithThumbnailsField(upload_to="buxfer/locations/banners/", max_length=200, thumbnail={'size': (320,50), 'options':['crop', 'upscale']}) 
+    icon = ImageField(upload_to="buxfer/locations/icons/", max_length=200) #, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
+    banner = ImageField(upload_to="buxfer/locations/banners/", max_length=200) #, thumbnail={'size': (320,50), 'options':['crop', 'upscale']}) 
 
     # TODO: Need to populate location types
     EATERY = 0
@@ -321,7 +321,7 @@ class Detail(models.Model):
     )
 
     sharing = models.IntegerField(choices=SHARING_CHOICES, default=PUBLIC)
-    image = ImageWithThumbnailsField(upload_to="buxfer/%Y/%m/%d", max_length=200, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
+    image = ImageField(upload_to="buxfer/%Y/%m/%d", max_length=200) #, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
     category = models.ForeignKey(Category)
     # indicates whether this receipt has been viewed or not
     new = models.BooleanField(default=True)
@@ -366,8 +366,8 @@ class Coupon(models.Model):
     number = models.CharField(max_length=12)
     # any details and restrictions
     details = models.TextField()
-    icon = ImageWithThumbnailsField(upload_to="buxfer/coupons/icons/%Y/%m/%d", max_length=200, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
-    banner = ImageWithThumbnailsField(upload_to="buxfer/coupons/banners/%Y/%m/%d", max_length=200, thumbnail={'size': (320,200), 'options':['crop', 'upscale']}) 
+    icon = ImageField(upload_to="buxfer/coupons/icons/%Y/%m/%d", max_length=200) #, thumbnail={'size': (50,50), 'options':['crop', 'upscale']}) 
+    banner = ImageField(upload_to="buxfer/coupons/banners/%Y/%m/%d", max_length=200) #, thumbnail={'size': (320,200), 'options':['crop', 'upscale']}) 
     expiry_date = models.DateField(null=True)
     posted = models.DateTimeField(auto_now_add=True)
 
