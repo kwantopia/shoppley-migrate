@@ -64,16 +64,15 @@ class SimpleTest(TestCase):
 
 		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="617-933-2342", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
 
-
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
-		print "*************************************************"
+		print "*"*100
 		print comment
-		print "-------------------------------------------------"
+		print "-"*100
 		print "POST URL:", command
 		print "PARAMS:", self.pp.pprint(params) 
 		response = self.client.post(command, params)
 		#print response
-		print "-------------------------------------------------"
+		print "-"*100
 		print "RESPONSE:"
 		if redirect:
 			if response.status_code == 302:
@@ -87,14 +86,14 @@ class SimpleTest(TestCase):
 		return json.loads(response.content)
 
 	def get_json(self, command, params={}, comment="No comment", redirect=False):
-		print "*************************************************"
+		print "*"*100
 		print comment
-		print "-------------------------------------------------"
+		print "-"*100
 		print "GET URL:", command
 		print "PARAMS:", self.pp.pprint(params)
 		response = self.client.get(command, params)
 		#print response
-		print "-------------------------------------------------"
+		print "-"*100
 		print "RESPONSE:"
 		if redirect:
 			if response.status_code == 302:
@@ -108,18 +107,18 @@ class SimpleTest(TestCase):
 		return json.loads(response.content)
 
 	def get_web(self, command, params={}, comment="No comment"):
-		print "*************************************************"
+		print "*"*100
 		print comment
-		print "-------------------------------------------------"
+		print "-"*100
 		print "GET WEB URL", command
 		print "PARAMS:", self.pp.pprint(params)
 		response = self.client.get(command, params)
 		return response
 
 	def post_web(self, command, params={}, comment="No comment"):
-		print "*************************************************"
+		print "*"*100
 		print comment
-		print "-------------------------------------------------"
+		print "-"*100
 		print "POST WEB URL", command
 		print "PARAMS:", self.pp.pprint(params)
 		response = self.client.post(command, params)
@@ -175,8 +174,7 @@ class SimpleTest(TestCase):
 		password = "hello"
 
 		comment = "Customer registration"
-		response = self.post_json( reverse("m_register_customer"), {'email': email,
-													'password': password}, comment)
+		response = self.post_json( reverse("m_register_customer"), {'email': email, 'phone': '617-885-2347', 'zipcode': '02139'}, comment)
 	
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
@@ -282,8 +280,7 @@ class SimpleTest(TestCase):
 		password = "hello"
 
 		comment = "Merchant registration"
-		response = self.post_json( reverse("m_register_merchant"), {'email': email,
-													'password': password}, comment)
+		response = self.post_json( reverse("m_register_merchant"), {'business': "Costumes from Mars", 'phone': '917-242-4243', 'email': email, 'password': password, 'zipcode': '02139'}, comment)
 
 		comment = "Merchant logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
