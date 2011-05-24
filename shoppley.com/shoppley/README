@@ -56,4 +56,5 @@ Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
 
 source /home/virtual/shoppley-env/bin/activate
 cd /home/www/shoppley.com/shoppley
+# this django command is used to assemble static files (part of django 1.3)
 python manage.py collectstatic 
