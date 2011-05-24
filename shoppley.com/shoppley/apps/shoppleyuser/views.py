@@ -38,14 +38,15 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 		success_url = get_default_redirect(request)
 	if request.method == "POST" and not url_required:
 		form = form_class(request.POST)
-		if form.login(request):
-			if associate_openid and association_model is not None:
-				for openid in request.session.get('openids', []):
-					assoc, created = UserOpenidAssociation.objects.get_or_create(
-						user=form.user, openid=openid.openid
-					)
-				success_url = openid_success_url or success_url
-			return HttpResponseRedirect(success_url)
+		if form.is_valid():
+			if form.login(request):
+				if associate_openid and association_model is not None:
+					for openid in request.session.get('openids', []):
+						assoc, created = UserOpenidAssociation.objects.get_or_create(
+							user=form.user, openid=openid.openid
+						)
+					success_url = openid_success_url or success_url
+				return HttpResponseRedirect(success_url)
 	else:
 		form = form_class()
 	ctx = {

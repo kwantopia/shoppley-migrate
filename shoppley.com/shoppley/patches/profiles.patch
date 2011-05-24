@@ -1,10 +1,17 @@
---- urls.py.orig	2011-02-28 10:53:34.000000000 -0500
-+++ urls.py	2011-02-28 10:46:03.000000000 -0500
-@@ -3,6 +3,6 @@
- urlpatterns = patterns('',
-     url(r'^username_autocomplete/$', 'autocomplete_app.views.username_autocomplete_friends', name='profile_username_autocomplete'),
-     url(r'^$', 'profiles.views.profiles', name='profile_list'),
--    url(r'^profile/(?P<username>[\w\._-]+)/$', 'profiles.views.profile', name='profile_detail'),
-+    url(r'^profile/(?P<username>[@\w\._-]+)/$', 'profiles.views.profile', name='profile_detail'),
-     url(r'^edit/$', 'profiles.views.profile_edit', name='profile_edit'),
- )
+*** urls.py.orig	2011-05-23 22:08:33.000000000 -0400
+--- urls.py	2011-05-23 22:07:44.000000000 -0400
+***************
+*** 5,10 ****
+  urlpatterns = patterns("",
+      url(r"^username_autocomplete/$", "pinax.apps.autocomplete_app.views.username_autocomplete_friends", name="profile_username_autocomplete"),
+      url(r"^$", "pinax.apps.profiles.views.profiles", name="profile_list"),
+!     url(r"^profile/(?P<username>[\w\._-]+)/$", "pinax.apps.profiles.views.profile", name="profile_detail"),
+      url(r"^edit/$", "pinax.apps.profiles.views.profile_edit", name="profile_edit"),
+  )
+--- 5,10 ----
+  urlpatterns = patterns("",
+      url(r"^username_autocomplete/$", "pinax.apps.autocomplete_app.views.username_autocomplete_friends", name="profile_username_autocomplete"),
+      url(r"^$", "pinax.apps.profiles.views.profiles", name="profile_list"),
+!     url(r"^profile/(?P<username>[@\w\._-]+)/$", "pinax.apps.profiles.views.profile", name="profile_detail"),
+      url(r"^edit/$", "pinax.apps.profiles.views.profile_edit", name="profile_edit"),
+  )

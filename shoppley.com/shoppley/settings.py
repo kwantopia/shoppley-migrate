@@ -114,10 +114,12 @@ MIDDLEWARE_CLASSES = [
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
+	"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
 	"groups.middleware.GroupAwareMiddleware",
 	"pinax.apps.account.middleware.LocaleMiddleware",
 	"django.middleware.doc.XViewMiddleware",
+	"pagination.middleware.PaginationMiddleware",
 	"django_sorting.middleware.SortingMiddleware",
 	"pinax.middleware.security.HideSensistiveFieldsMiddleware",
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -137,7 +139,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 	"django.core.context_processors.media",
 	"django.core.context_processors.request",
 	"django.contrib.messages.context_processors.messages",
-	"pinax.core.context_processors.pinax_settings",
 	"pinax.apps.account.context_processors.account",
 	"notification.context_processors.notification",
 	"announcements.context_processors.site_wide_announcements",
@@ -239,12 +240,12 @@ NOTIFICATION_LANGUAGE_MODULE = "account.Account"
 ACCOUNT_OPEN_SIGNUP = True
 ACCOUNT_REQUIRED_EMAIL = False
 ACCOUNT_EMAIL_VERIFICATION = False
-ACCOUNT_EMAIL_AUTHENTICATION = False
+ACCOUNT_EMAIL_AUTHENTICATION = False 
 ACCOUNT_UNIQUE_EMAIL = EMAIL_CONFIRMATION_UNIQUE_EMAIL = False
 
-AUTHENTICATION_BACKENDS = [
-    "pinax.apps.account.auth_backends.AuthenticationBackend",
-]
+#AUTHENTICATION_BACKENDS = [
+#    "pinax.apps.account.auth_backends.AuthenticationBackend",
+#]
 
 LOGIN_URL = "/account/login/" # @@@ any way this can be a url name?
 LOGIN_REDIRECT_URLNAME = "what_next"
