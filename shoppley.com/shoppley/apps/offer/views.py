@@ -32,6 +32,12 @@ from buxfer.forms import BuxferLoginForm
 from offer.models import *
 from common.helpers import JSONHttpResponse
 
+
+def index(request):
+	data = {}
+
+	return render_to_response("offer/homepage.html", data, context_instance=RequestContext(request))
+
 @login_required
 def offer_home(request):
 	"""
@@ -74,16 +80,16 @@ def start_offer(request):
 			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
 
-			offer.name = form.cleaned_data.get("name")
-			offer.description = form.cleaned_data.get("description")
+			offer.name = self.cleaned_data.get("name")
+			offer.description = self.cleaned_data.get("description")
 			if len(offer.name) == 0:
 				offer.name = description[:64] 
 
 			if form.cleaned_data.get("offer_radio") == 0:
-				offer.percentage = form.cleaned_data.get("percentage")	
+				offer.percentage = self.cleaned_data.get("percentage")	
 				offer.dollar_off = None
 			elif form.cleaned_data.get("offer_radio") == 1:
-				offer.dollar_off = form.cleaned_data.get("dollar_off")	
+				offer.dollar_off = self.cleaned_data.get("dollar_off")	
 				offer.percentage = None
 
 			offer.save()

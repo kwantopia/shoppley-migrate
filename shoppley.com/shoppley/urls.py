@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.views.generic.simple import direct_to_template
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from django.contrib import admin
 admin.autodiscover()
@@ -48,7 +49,6 @@ urlpatterns = patterns('',
     (r'^authsub/', include('authsub.urls')),
     (r'^profiles/', include('profiles.urls')),
     (r'^blog/', include('blog.urls')),
-    (r'^tags/', include('tag_app.urls')),
     (r'^invitations/', include('friends_app.urls')),
     (r'^notices/', include('notification.urls')),
     (r'^messages/', include('messages.urls')),
@@ -59,17 +59,17 @@ urlpatterns = patterns('',
     (r'^robots.txt$', include('robots.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^bookmarks/', include('bookmarks.urls')),
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', include(admin.site.urls)),
     (r'^photos/', include('photos.urls')),
     (r'^avatar/', include('avatar.urls')),
     (r'^swaps/', include('swaps.urls')),
     (r'^flag/', include('flag.urls')),
     (r'^locations/', include('locations.urls')),
 
-    (r'^offer/', include('offer.urls')),
-    (r'^shoppleyuser/', include('shoppleyuser.urls')),
+	(r'^offer/', include('offer.urls')),
+	(r'^shoppleyuser/', include('shoppleyuser.urls')),
 	(r'^m/', include('mobile.urls')),
-    (r'^buxfer/', include('buxfer.urls')),
+	(r'^buxfer/', include('buxfer.urls')),
     
     (r'^feeds/tweets/(.*)/$', 'django.contrib.syndication.views.feed', tweets_feed_dict),
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
@@ -116,7 +116,11 @@ urlpatterns += patterns('',
     url('^bookmarks/friends_bookmarks/$', 'friends_app.views.friends_objects', kwargs=friends_bookmarks_kwargs, name="friends_bookmarks"),
 )
 
+"""
+urlpatterns += staticfiles_urlpatterns()
+
 if settings.SERVE_MEDIA:
     urlpatterns += patterns('',
         (r'^site_media/', include('staticfiles.urls')),
     )
+"""

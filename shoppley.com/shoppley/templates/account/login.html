@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
-{% load uni_form %}
+{% load uni_form_tags %}
 {% load ifsetting_tag %}
 
 {% block head_title %}{% trans "Login" %}{% endblock %}
@@ -19,11 +19,12 @@
     {% else %}
         {% ifsetting ACCOUNT_OPEN_SIGNUP %}
         {% url acct_signup as signup_url %}
-        <p>{% blocktrans %}Don't have an account? <a href="/">Sign up</a>!{% endblocktrans %}</p>
+        <p>{% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>!{% endblocktrans %}</p>
         {% endifsetting %}
     {% endif %}
     
     <form class="login uniForm" method="POST" action="{% url acct_login %}">
+		{% csrf_token %}
         <fieldset class="inlineLabels">
             <div class="form_block">
                 <a href="{% url acct_passwd_reset %}">{% trans "Forgot password?" %}</a>

@@ -3,7 +3,7 @@
 
 # Get all requirements formerly known as "external_libs" explicitly
 # hashlib
-python-dateutil
+python-dateutil==1.5
 docutils
 elementtree
 
@@ -59,3 +59,4 @@ template_utils
 django-autofixture
 django-groups
 sorl-thumbnail
+django-wakawaka
