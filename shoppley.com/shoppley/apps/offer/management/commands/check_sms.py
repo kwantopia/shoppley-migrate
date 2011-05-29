@@ -62,28 +62,22 @@ class Command(NoArgsCommand):
 								"description":offercode.offer.description  ,
 								"dollar":offercode.offer.dollar_off,
 							}
-	def update_expired(self):
-		expired_offers = Offer.objects.filter(expiration__lt = datetime.now())
-		for offer in expired_offers:
-			sentto = offer.num_init_sentto
-			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
-			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
-			merchant_msg = _("Your offer %(offer)s was expired. It was sent to %(sentto)d customers and forwarded to %(forwarded)s other, a total of %(total) customers reached. It was redeemed %(redeem)s times") %{ "offer": offer,"sentto":sentto,"forwarded":forwarded,"total":int(sentto)+int(forwarded),"redeem":redeem,}
-			self.notify(offer.phone,merchant_msg)
+#	def update_expired(self):
+#		expired_offers = Offer.objects.filter(expiration_time__lt = datetime.now())
+#		for offer in expired_offers:
+#			sentto = offer.num_init_sentto
+#			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
+#			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
+#			merchant_msg = _("Your offer %(offer)s was expired. It was sent to %(sentto)d customers and forwarded to %(forwarded)s other, a total of %(total) customers reached. It was redeemed %(redeem)s times") %{ "offer": offer,"sentto":sentto,"forwarded":forwarded,"total":int(sentto)+int(forwarded),"redeem":redeem,}
+#			self.notify(offer.phone,merchant_msg)
 
 	def customer_help(self):
-		avail_commands = "- info<SPACE>offercode(s): list information about an offercode or offercodes (separated by <SPACE>)\n\
-											- forward<SPACE>offercode<SPACE>number(s): forward an offer to your friend or friends separated by <SPACE>\n\
-											- stop: stop receiving messages from us\n\
-											- start: restart receiving message from us\n\
-											- help: list available commands"
+		avail_commands = "- info<SPACE>offercode(s): list information about an offercode or offercodes (separated by <SPACE>)\n- forward<SPACE>offercode<SPACE>number(s): forward an offer to your friend or friends separated by <SPACE>\n- stop: stop receiving messages from us\n- start: restart receiving message from us\n- help: list available commands"
 		return avail_commands
 
 	def merchant_help(self):
-		avail_commands = "- redeem<SPACE>offercode<SPACE>number: redeem a customer's offercode\n\
-											- offer<SPACE>name<SPACE>description[<SPACE>howmany<SPACE>duration]: start an offer with your business name and offer's description. Duration and the max number of customer to be reached are optional (defaults are 90mins and 50 customers)\n\
-											- status<SPACE>trackingcode: check the status of an offer you started"
-		return avail_comands
+		avail_commands = "- redeem<SPACE>offercode<SPACE>number: redeem a customer's offercode\n- offer<SPACE>name<SPACE>description[<SPACE>howmany<SPACE>duration]: start an offer with your business name and offer's description. Duration and the max number of customer to be reached are optional (defaults are 90mins and 50 customers)\n- status<SPACE>trackingcode: check the status of an offer you started"
+		return avail_commands
 
 	def create_random_pw(self):
 		chars = string.letters + string.digits
@@ -463,7 +457,7 @@ class Command(NoArgsCommand):
 		voice = Voice()
 		voice.login()
 		smses = voice.sms()
-		self.update_expired()
+#		self.update_expired()
 		for msg in extractsms(voice.sms.html):
 			try:
 				self.test_handle(msg)

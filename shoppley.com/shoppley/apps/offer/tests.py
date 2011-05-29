@@ -50,6 +50,8 @@ class SimpleTest(TestCase):
 			cambridge = ZipCode.objects.get(code="02139")
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2])
 
+
+
 	def create_offers(self):
 
 		offer_reader = [["617-000-0001", "Kwan's Pizza1","$5 off everything in our menu","kool1@mit.edu",5,10,10,"00001",],
@@ -370,13 +372,13 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 3: STOP ***************"
-		msg5={"from":"0000000001", "text": "stop offer"}
+		msg5={"from":"0000000001", "text": "stop"}
 		cmd.test_handle(msg5)
 		c=Customer.objects.filter(phone__iexact=msg5["from"])
 		self.failUnlessEqual(c.count(), 1)
 		self.failUnlessEqual(c[0].active, False)
 		print "************* TEST 4: START ***************"
-		msg6={"from":"0000000001", "text": "start offer"}
+		msg6={"from":"0000000001", "text": "start"}
 		cmd.test_handle(msg6)
 		self.failUnlessEqual(c[0].active, True)
 
@@ -600,6 +602,31 @@ class SimpleTest(TestCase):
 		msg11b={"from":"6170000001", "text":"status %s" % track}
 		cmd.test_handle(msg11b)
 
+
+		print "************* TEST 10: DISTRIBUTE WITH NONACTIVE ***************"
+		#cmd.update_expired()
+#test expired
+# test distribute to nonactive
+		customer1= Customer.objects.get(phone="0000000001")
+		customer1= Customer.objects.get(phone="0000000002")
+		msg12={"from":"0000000001", "text": "stop"}
+		cmd.test_handle(msg12)
+		msg13={"from":"0000000002", "text": "stop"}
+		cmd.test_handle(msg13)
+		msg14={"from":"6170000002", "text":"offer All you can eat for $10"}
+		cmd.test_handle(msg14)
+		
+		offer = Offer.objects.get(description="All you can eat for $10")
+		self.failUnlessEqual(Customer.objects.all().count()-2, offer.num_init_sentto)
+		code = offer.offercode_set.filter(customer = customer1)
+		self.failUnlessEqual(code.count(),0)
+		code = offer.offercode_set.filter(customer = customer2)
+		self.failUnlessEqual(code.count(),0)
+
+
+		print "**************** TEST 11: Help ************************"
+		print cmd.customer_help()
+		print cmd.merchant_help()
 
 	def test_basic_addition(self):
 		"""
