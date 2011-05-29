@@ -1,4 +1,5 @@
 from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
+from offer.models import *
 import os, csv
 from googlevoice import Voice
 
@@ -33,6 +34,7 @@ def sms_notify_list(number_list, text):
 		voice.send_sms(number, text)
 
 def parse_phone_number(raw_number, country_code="US"):
+
 	cleaned_number = filter(lambda x: x.isdigit(), raw_number)
 	if country_code == "US":
 		if len(cleaned_number) >= 10:

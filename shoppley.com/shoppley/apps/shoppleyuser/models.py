@@ -54,7 +54,7 @@ class ShoppleyUser(models.Model):
 	phone			= models.CharField(max_length=20, blank=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
-
+	active 			= models.BooleanField(default=True)
 	def is_customer(self):
 		return hasattr(self, "customer")
 

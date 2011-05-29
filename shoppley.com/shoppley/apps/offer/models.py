@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
@@ -35,6 +36,8 @@ class Offer(models.Model):
 	starting_time	= models.DateTimeField(blank=True, null=True)
 	duration		= models.IntegerField(default=90)
 	max_offers		= models.IntegerField(verbose_name="Maximum customers to send to", default=50)
+	num_init_sentto		= models.IntegerField(default=0) # number of customers the offer was sent to
+
 
 	def __unicode__(self):
 		return self.name
@@ -42,11 +45,24 @@ class Offer(models.Model):
 	def is_active(self):
 		return self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 
+
+        def print_time_stamp(self):
+                return self.time_stamp.strftime("%Y-%m-%d,%I:%M%p")
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
 
 	def num_received(self):
 		return self.offercode_set.count()
+
+	def gen_tracking_code(self):
+		track_code = gen_offer_code()
+		while TrackingCode.objects.filter(code__iexact=track_code):
+			track_code = gen_offer_code()
+		TrackingCode.objects.create(
+			offer=self,
+			code = track_code
+		)
+		return track_code
 
 	def gen_offer_code(self, customer):
 		gen_code = gen_offer_code()
@@ -62,6 +78,36 @@ class Offer(models.Model):
 	def gen_offer_codes(self, customers):
 		for customer in customers:
 			self.gen_offer_code(customer)
+
+
+	def gen_forward_offercode(self,original_code,phone):
+	
+		gen_code = gen_offer_code()
+		users = ShoppleyUser.objects.all()
+		offers = Offer.objects.all()
+		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
+			gen_code = gen_offer_code()
+		try: 
+			friend = Customer.objects.get(phone__contains=phone)
+			o=self.offercode_set.create(
+				customer=friend,
+				phone = friend.phone,
+				code = gen_code,
+				forwarder=original_code.customer,
+				time_stamp=datetime.now(),
+				expiration_time=self.starting_time+timedelta(minutes=self.duration))
+			o.save()
+			return o, "C" # "C" is for customer
+
+		except Customer.DoesNotExist:
+			o=self.offercode_set.create(
+				phone = phone,
+				code = gen_code,
+				forwarder=original_code.customer,
+				time_stamp=datetime.now(),
+				expiration_time=self.starting_time+timedelta(minutes=self.duration))
+			o.save()
+			return o, "N" # "N" is for non-customer
 
 	def distribute(self):
 		"""
@@ -88,10 +134,10 @@ class Offer(models.Model):
 		existing_num = int(round(0.7*max_offers))
 
 		merchant = self.merchant
-		fans = merchant.fans.order_by('?').values_list('pk', flat=True)
+		fans = merchant.fans.exclude(active=False).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
 		# TODO: geographically filter
-		nonfans = Customer.objects.exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
+		nonfans = Customer.objects.exclude(active=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
 		print "Num fans:",fans.count()
 		print "Num nonfans:",nonfans.count()
@@ -110,6 +156,8 @@ class Offer(models.Model):
 			sms_notify(o.customer.phone, offer_msg)
 			print o.customer.phone
 
+		self.num_init_sentto =len(target_list)
+		self.save()
 		return len(target_list) 
 
 	def redeemers(self):
@@ -118,14 +166,37 @@ class Offer(models.Model):
 		"""
 		return self.offercode_set.filter(redeem_time__isnull=False)
 
+## keep track of how many forwardings a customer has initiated on an offer
+class ForwardState(models.Model):
+	offer 			= models.ForeignKey(Offer)
+	customer		= models.ForeignKey(Customer)
+	remaining		= models.IntegerField(default=settings.MAX_FORWARDS)
+	
+	def is_reach_limit(self):
+		return self.remaining<=0
+
+	def update(self):
+		self.remaining=self.remaining-1
+		self.save()
+
+	def allowed_forwards(self,requested_forwards):
+		if self.remaining >=requested_forwards:
+			return requested_forwards
+		else:	
+			if self.is_reach_limit():
+				return 0
+			else:
+				return self.remaining
 
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)
-	customer		= models.ForeignKey(Customer)
+	forwarder		= models.ForeignKey(Customer,related_name="forwarder", null=True)
+	customer		= models.ForeignKey(Customer,null=True)
+	phone			= models.CharField(max_length=20,blank=True)
 	code			= models.CharField(max_length=32)
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)
-	expiration_time = models.DateTimeField()
+	expiration_time 	= models.DateTimeField()
 
 	def is_valid(self):
 		return datetime.now() < time_stamp + timedelta(minutes=self.offer.duration)
@@ -134,7 +205,7 @@ class OfferCode(models.Model):
 		return not self.redeem_time
 
 	def __unicode__(self):
-		return self.code
+		return self.code + "\n -customer:" + str(self.customer)+"\n -description"+str(self.offer.description)
 	
 
 class OfferCodeAbnormal(models.Model):
@@ -178,4 +249,10 @@ class Transaction(models.Model):
 	def __unicode__(self):
 		return "%d points from %s to %s" % (self.amount, self.src, self.dst)
 
+class TrackingCode(models.Model):
+	offer 			= models.OneToOneField(Offer)
+	code			= models.CharField(max_length=32)
+
+	def __unicode__(self):
+		return "code: %s for offer: %s" (self.code, self.offer)
 
