@@ -8,7 +8,7 @@ import pinax
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # TODO: the following line needs to be updated when running from your local machine
-PYTHON_ROOT = os.path.abspath("/Users/kwan/Documents/workspace/virtual/shoppley-env/lib/python2.7/site-packages")
+PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
 
 
 GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q0bgOQMK8ZOKjSUhquxiiodbA"
@@ -257,6 +257,11 @@ EMAIL_DEBUG = DEBUG
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/tmp/shoppley-messages'
+
+OFFER_CODE_LENGTH = 6
+RANDOM_PASSWORD_LENGTH = 6
+
+MAX_FORWARDS = 2
 
 ugettext = lambda s: s
 LANGUAGES = [
