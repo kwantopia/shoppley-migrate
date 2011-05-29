@@ -43,11 +43,12 @@ class Offer(models.Model):
 		return self.name
 	
 	def is_active(self):
+		print "description: ",self.description
 		return self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 
+	def print_time_stamp(self):
+		return self.time_stamp.strftime("%Y-%m-%d,%I:%M%p")
 
-        def print_time_stamp(self):
-                return self.time_stamp.strftime("%Y-%m-%d,%I:%M%p")
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
 

@@ -142,14 +142,14 @@ class SimpleTest(TestCase):
 		self.create_merchants()
 
 		self.create_customers()
-		fixture = AutoFixture(Feature)
-		features = fixture.create(10)
+#		fixture = AutoFixture(Feature)
+#		features = fixture.create(10)
 
-		fixture = AutoFixture(Offer)
-		offers = fixture.create(10)
-		for o in offers:
-			fixture = AutoFixture(OfferCode)
-			codes = fixture.create(10)
+#		fixture = AutoFixture(Offer)
+#		offers = fixture.create(10)
+#		for o in offers:
+#			fixture = AutoFixture(OfferCode)
+#			codes = fixture.create(10)
 		self.create_offers()
 
 	def post_json(self, command, params={}, comment="No comment"):
@@ -627,6 +627,15 @@ class SimpleTest(TestCase):
 		print "**************** TEST 11: Help ************************"
 		print cmd.customer_help()
 		print cmd.merchant_help()
+
+		print "**************** TEST 12: Update_expired ************************"
+		m = Merchant.objects.get(phone="6170000002")
+		
+		o = Offer.objects.create(merchant = m, description="EXpIRED", name="EXPIRED",time_stamp=datetime.now(), starting_time=datetime.now(), duration=0)
+		self.failUnlessEqual(cmd.update_expired(),1)
+		o.distribute()
+		
+		self.failUnlessEqual(cmd.update_expired(),1)
 
 	def test_basic_addition(self):
 		"""
