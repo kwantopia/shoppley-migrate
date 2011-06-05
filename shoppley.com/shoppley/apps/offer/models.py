@@ -165,7 +165,7 @@ class Offer(models.Model):
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
 		for o in self.offercode_set.all():
-			offer_msg = _("%(code)s: %(title)s by %(merchant)s [more info: txt \"info %(code)s\"]")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
+			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
 			if not settings.DEBUG:
 				sms_notify(o.customer.phone, offer_msg)
 			print o.customer.phone
