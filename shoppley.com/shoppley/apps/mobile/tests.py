@@ -158,10 +158,10 @@ class SimpleTest(TestCase):
 
 		# test points
 		comment = "Shows a summary of accumulated points for customer"
-		response = self.get_json( reverse("m_point_summary"), {}, comment)
+		response = self.get_json( reverse("m_customer_point_summary"), {}, comment)
 
 		comment = "Shows a list of point offers one can use to redeem (details too)"
-		response = self.get_json( reverse("m_point_offers"), {}, comment)
+		response = self.get_json( reverse("m_customer_point_offers"), {}, comment)
 
 
 
@@ -250,9 +250,6 @@ class SimpleTest(TestCase):
 		comment = "Show a summary visualization for the merchants"
 		response = self.get_json( reverse("m_merchant_summary_viz"), {}, comment)
 
-		comment = "Show all offers, active, past"
-		response = self.get_json( reverse("m_offers_all"), {}, comment)
-
 		comment = "Start a new point based offer (units=2), point based offer durations are by days"
 		response = self.get_json( reverse("m_point_offer_start"), {
 								'title':'$10 off on pants',
@@ -267,8 +264,18 @@ class SimpleTest(TestCase):
 
 		offer_id = response["offer_id"]
 
-		comment = "Shows detail of a point offer" 
-		response = self.get_json( reverse("m_point_offer", args=[response["offer_id"]]), {}, comment)
+
+		comment = "Show active point offers" 
+		response = self.get_json( reverse("m_point_offers_active"), {}, comment)
+
+		comment = "Show past point offers" 
+		response = self.get_json( reverse("m_point_offers_past"), {}, comment)
+
+		comment = "Start a point offer" 
+		response = self.get_json( reverse("m_point_offer_start"), {}, comment)
+
+		comment = "Restart an existing point offer" 
+		response = self.get_json( reverse("m_point_offer_restart"), {}, comment)
 
 		comment = "Expire a point offer earlier than expiration" 
 		response = self.get_json( reverse("m_point_offer_expire", args=[offer_id]), {}, comment)
