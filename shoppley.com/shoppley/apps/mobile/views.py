@@ -258,13 +258,7 @@ def merchant_summary_viz(request):
 
 @csrf_exempt
 @login_required
-def offers_all(request):
-	data = {}
-	return JSONHttpResponse(data)	
-
-@csrf_exempt
-@login_required
-def point_summary(request):
+def customer_point_summary(request):
 	"""
 		for the customer
 	"""
@@ -273,25 +267,39 @@ def point_summary(request):
 
 @csrf_exempt
 @login_required
-def point_offers(request):
+def customer_point_offers(request):
 	"""
 		for the customer
 	"""
 	data = {}
 	return JSONHttpResponse(data)	
 
+
 @csrf_exempt
 @login_required
-def point_offer(request, offer_id):
-	"""
-		for the customer, details of a point offer
-	"""
+def point_offers_active(request):
 	data = {}
+	data["offer_id"] = 1
 	return JSONHttpResponse(data)	
+
+@csrf_exempt
+@login_required
+def point_offers_past(request):
+	data = {}
+	data["offer_id"] = 1
+	return JSONHttpResponse(data)	
+
 
 @csrf_exempt
 @login_required
 def point_offer_start(request):
+	data = {}
+	data["offer_id"] = 1
+	return JSONHttpResponse(data)	
+
+@csrf_exempt
+@login_required
+def point_offer_restart(request):
 	data = {}
 	data["offer_id"] = 1
 	return JSONHttpResponse(data)	
