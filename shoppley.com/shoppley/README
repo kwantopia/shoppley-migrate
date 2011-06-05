@@ -36,6 +36,13 @@ $ cd patches
 $ vi patch.sh
 $ ./patch.sh
 
+== external packaage ==
+
+You need to download blueprint css
+
+$ cd packages
+$ ./download.sh
+
 == syncdb ==
 
 If models have changed we need to delete dev.db and syncdb

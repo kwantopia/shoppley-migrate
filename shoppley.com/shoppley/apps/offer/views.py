@@ -80,10 +80,10 @@ def start_offer(request):
 			if form.cleaned_data["now"]:
 				offer.starting_time = datetime.now()+timedelta(minutes=5)
 
-			offer.name = self.cleaned_data.get("name")
+			offer.title = self.cleaned_data.get("title")
 			offer.description = self.cleaned_data.get("description")
-			if len(offer.name) == 0:
-				offer.name = description[:64] 
+			if len(offer.title) == 0:
+				offer.title = description[:64] 
 
 			if form.cleaned_data.get("offer_radio") == 0:
 				offer.percentage = self.cleaned_data.get("percentage")	

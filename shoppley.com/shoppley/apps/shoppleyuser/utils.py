@@ -1,9 +1,58 @@
 from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
-from offer.models import *
 import os, csv
 from googlevoice import Voice
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+def pretty_date(time=False, future=True):
+	"""
+	Get a datetime object or a int() Epoch timestamp and return a
+	pretty string like 'an hour ago', 'Yesterday', '3 months ago',
+	'just now', etc
+	"""
+
+	if not future:	
+		suffix = " ago"
+	else:
+		suffix = ""
+	from datetime import datetime, timedelta
+	now = datetime.now()
+	if type(time) is int:
+		diff = now - datetime.fromtimestamp(time)
+	elif isinstance(time,datetime):
+		diff = now - time 
+	elif isinstance(time,timedelta):
+		diff = time
+	elif not time:
+		diff = now - now
+	second_diff = diff.seconds
+	day_diff = diff.days
+
+	if day_diff < 0:
+		return ''
+
+	if day_diff == 0:
+		if second_diff < 10:
+			return "just now"
+		if second_diff < 60:
+			return str(second_diff) + " seconds" + suffix
+		if second_diff < 120:
+			return  "a minute" + suffix
+		if second_diff < 3600:
+			return str( second_diff / 60 ) + " minutes" + suffix
+		if second_diff < 7200:
+			return "an hour" + suffix
+		if second_diff < 86400:
+			return str( second_diff / 3600 ) + " hours" + suffix
+	if day_diff == 1:
+		return "Yesterday"
+	if day_diff < 7:
+		return str(day_diff) + " days" + suffix
+	if day_diff < 31:
+		return str(day_diff/7) + " weeks" + suffix
+	if day_diff < 365:
+		return str(day_diff/30) + " months" + suffix
+	return str(day_diff/365) + " years" + suffix
 
 def load_zipcodes():
 	f = open(FILE_ROOT+"/data/US.txt", "r")

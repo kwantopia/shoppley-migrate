@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+
 from datetime import datetime, timedelta
+from sorl.thumbnail import ImageField
+
 
 # Create your models here.
 
@@ -31,8 +35,12 @@ class ZipCode(models.Model):
 	latitude		= models.FloatField(blank=True, null=True)
 	longitude		= models.FloatField(blank=True, null=True)
 
-	def __unicode(self):
+	def __unicode__(self):
 		return "%s in %s"%(self.code, self.city.name)
+
+	def citystate(self):
+		return "%s, %s %s"%(self.city, self.city.region.code.upper(), self.code)
+
 
 class Category(models.Model):
 	name			= models.CharField(max_length=32)
@@ -55,6 +63,7 @@ class ShoppleyUser(models.Model):
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
 	active 			= models.BooleanField(default=True)
+
 	def is_customer(self):
 		return hasattr(self, "customer")
 
@@ -73,10 +82,17 @@ class ShoppleyUser(models.Model):
 class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)
+	banner			= ImageField(upload_to="banners/")
 	url				= models.URLField(null=True, blank=True)
 
 	def __unicode__(self):
 		return "%s (%s)" % (self.business_name, self.user.username)
+
+	def get_banner(self):
+		if self.banner:
+			return self.banner.url
+		else:
+			return settings.DEFAULT_MERCHANT_BANNER_URL
 
 class Customer(ShoppleyUser):
 	FREQUENCY_CHOICES = (

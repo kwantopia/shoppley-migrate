@@ -18,7 +18,40 @@ PARAMS:{ 'lat': 47.78799, 'lon': 98.9989}
 None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offers": [
+    {
+      "code": "hz3ktw", 
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 1, 
+      "lon": -24.2322, 
+      "phone": "804-332-9436", 
+      "expiration": "an hour", 
+      "citystatezip": "Boston, MA 02250", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$5 off shoes brands, Nike, Reebok"
+    }, 
+    {
+      "code": "3x2685", 
+      "description": "$1 off Chicken Sandwiches", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 3, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Boston, MA 02250", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$1 off Chicken Sandwiches"
+    }
+  ], 
+  "num_offers": 2, 
+  "result": 1
+}
 ****************************************************************************************************
 Show redeemed offers, it also returns offer details
 ----------------------------------------------------------------------------------------------------
@@ -94,7 +127,7 @@ None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": "-2"
+  "result": "-1"
 }
 ****************************************************************************************************
 Customer logout
@@ -343,7 +376,7 @@ None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": "-2"
+  "result": -1
 }
 ****************************************************************************************************
 Merchant logout

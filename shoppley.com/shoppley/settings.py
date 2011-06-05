@@ -96,6 +96,8 @@ STATICFILES_DIRS = [
 	os.path.join(PYTHON_ROOT, "uni_form", "media"),
 ]
 
+
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -307,3 +309,6 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+DEFAULT_OFFER_IMG_URL = STATIC_URL+"images/offers/offer-default.jpg"
+DEFAULT_MERCHANT_BANNER_URL = STATIC_URL+"images/merchant/restaurant_banner.png"

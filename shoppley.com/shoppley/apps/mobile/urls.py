@@ -9,6 +9,7 @@ urlpatterns = patterns('',
 	## customer
 	url(r'^customer/register/$', register_customer, name="m_register_customer"),
 	url(r'^customer/offers/current/$', offers_current, name="m_offers_current"),
+	url(r'^customer/offers/current/filter/$', offers_current_filter, name="m_offers_current_filter"),
 	url(r'^customer/offers/redeemed/$', offers_redeemed, name="m_offers_redeemed"),
 	url(r'^customer/offer/forward/$', offer_forward, name="m_offer_forward"),
 	url(r'^customer/offer/feedback/$', offer_feedback, name="m_offer_feedback"),

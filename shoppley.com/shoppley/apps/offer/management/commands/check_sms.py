@@ -217,7 +217,7 @@ class Command(NoArgsCommand):
 					# This is an offer made by the merchant, not a redemption code
 
 					description = ''.join([i+' ' for i in parsed[1:]]).strip()
-					offer = Offer(merchant=su.merchant, name=description[:10],
+					offer = Offer(merchant=su.merchant, title=description[:40],
 							description=description, time_stamp=datetime.now(),
 							starting_time=datetime.now())
 					offer.save()

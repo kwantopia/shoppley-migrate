@@ -32,8 +32,8 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = "/site_media/media/"
-STATIC_URL = "/site_media/static/"
+MEDIA_URL = "http://webuy-dev.mit.edu/site_media/media/"
+STATIC_URL = "http://webuy-dev.mit.edu/site_media/static/"
 
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL

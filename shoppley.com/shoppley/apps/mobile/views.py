@@ -22,11 +22,13 @@ else:
     from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from shoppleyuser.utils import sms_notify
+from shoppleyuser.utils import sms_notify, pretty_date
 from shoppleyuser.models import ZipCode, Merchant, Customer
+from offer.models import Offer, OfferCode
 
 # for generating random password
-import random, string
+import random, string, time
+from datetime import datetime
 
 @csrf_exempt
 def mobile_login(request):
@@ -103,13 +105,66 @@ def register_customer(request):
 		data["result"] = "-3"
 		return JSONHttpResponse(data)
 			
-
-
 @csrf_exempt
 @login_required
 def offers_current(request):
+	"""
+
+		:rtype: JSON
+
+		::
+
+		# if user is not a customer
+		{
+			"result": -1
+		}
+
+	"""
 	data = {}
+
+	u = request.user
+	if u.shoppleyuser.is_customer():
+		customer = u.shoppleyuser.customer
+		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
+		data["num_offers"] = user_offers.count()
+		data["offers"] = []
+
+
+		#"expiration": str(time.mktime(o.expiration_time.timetuple())),
+		for o in user_offers:
+			offer_detail = {"offer_id": o.id,
+								"code": o.code,
+								"name": o.offer.title,
+								"description": o.offer.description,
+								"expiration": pretty_date(o.expiration_time-datetime.now()),
+								"phone": o.offer.merchant.phone,
+								"address1": o.offer.merchant.address_1,
+								"citystatezip": o.offer.merchant.zipcode.citystate(),
+								"lat": -42.2342,
+								"lon": -24.2322,
+								"img": o.offer.get_image(),
+								"banner": o.offer.merchant.get_banner()
+							}
+			if o.offer.percentage:
+				offer_detail["percentage"] = o.offer.percentage
+			elif o.offer.dollar_off:
+				offer_detail["dollar_off"] = o.offer.dollar_off
+
+			data["offers"].append(offer_detail)	
+		data["result"] = 1
+	else:
+		data["result"] = -1
 	return JSONHttpResponse(data)	
+
+@csrf_exempt
+@login_required
+def offers_current_filter(request):
+	"""
+		Returns a filtered version by filtering to a reduced set of those in current location
+	"""
+	data = {}
+
+	return JSONHttpResponse(data)
 
 @csrf_exempt
 @login_required
@@ -159,7 +214,7 @@ def register_merchant(request):
 
 	if not ZipCode.objects.filter(code=zipcode).exists():
 		# ERROR: zip code is invalid
-		data["result"] = "-2"
+		data["result"] = -2
 		return JSONHttpResponse(data)	
 	else:
 		zipcode_obj = ZipCode.objects.get(code=zipcode)
@@ -183,7 +238,7 @@ def register_merchant(request):
 		#sms_notify(phone, txt_msg)
 	else:
 		# ERROR: User exists, ask user to login with their password 
-		data["result"] = "-1"
+		data["result"] = -1
 		return JSONHttpResponse(data)	
 
 	# you can start viewing offers	
@@ -195,7 +250,7 @@ def register_merchant(request):
 		return JSONHttpResponse(data)	 
 	else:
 		# ERROR: problem authenticating user
-		data["result"] = "-3"
+		data["result"] = -3
 		return JSONHttpResponse(data)
 
 

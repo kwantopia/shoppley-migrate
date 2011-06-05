@@ -8,6 +8,7 @@ import random
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 from shoppleyuser.utils import sms_notify
+from sorl.thumbnail import ImageField
 
 # Create your models here.
 
@@ -27,7 +28,7 @@ class Feature(models.Model):
 
 class Offer(models.Model):
 	merchant		= models.ForeignKey(Merchant, related_name="offers_published")
-	name			= models.CharField(max_length=128, blank=True)
+	title 			= models.CharField(max_length=128, blank=True, help_text="Sexy offer headline. Keep it under 100 characters.")
 	description		= models.TextField(blank=True)
 	percentage		= models.IntegerField(verbose_name="Percent off (%)", blank=True, null=True)
 	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", blank=True, null=True)
@@ -35,12 +36,13 @@ class Offer(models.Model):
 	time_stamp		= models.DateTimeField()
 	starting_time	= models.DateTimeField(blank=True, null=True)
 	duration		= models.IntegerField(default=90)
-	max_offers		= models.IntegerField(verbose_name="Maximum customers to send to", default=50)
+	max_offers		= models.IntegerField(verbose_name="Max # of customers", default=50, help_text="Maximum number of customers you want to send to")
 	num_init_sentto		= models.IntegerField(default=0) # number of customers the offer was sent to
 
+	img				= ImageField(upload_to='offers/')
 
 	def __unicode__(self):
-		return self.name
+		return self.title
 	
 	def is_active(self):
 		print "description: ",self.description
@@ -54,6 +56,12 @@ class Offer(models.Model):
 
 	def num_received(self):
 		return self.offercode_set.count()
+
+	def get_image(self):
+		if self.img:
+			return self.img.url
+		else:
+			return settings.DEFAULT_OFFER_IMG_URL	
 
 	def gen_tracking_code(self):
 		track_code = gen_offer_code()
@@ -77,6 +85,10 @@ class Offer(models.Model):
 		)
 	
 	def gen_offer_codes(self, customers):
+		"""
+			TODO: this part needs to be optimized so that the offer code generation
+				does not have a bottle neck
+		"""
 		for customer in customers:
 			self.gen_offer_code(customer)
 
@@ -153,8 +165,9 @@ class Offer(models.Model):
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
 		for o in self.offercode_set.all():
-			offer_msg = _("%(code)s: %(name)s by %(merchant)s")%{ "merchant":self.merchant.business_name, "name":self.name, "code":o.code }			
-			sms_notify(o.customer.phone, offer_msg)
+			offer_msg = _("%(code)s: %(title)s by %(merchant)s [more info: txt \"info %(code)s\"]")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
+			if not settings.DEBUG:
+				sms_notify(o.customer.phone, offer_msg)
 			print o.customer.phone
 
 		self.num_init_sentto =len(target_list)
@@ -192,8 +205,8 @@ class ForwardState(models.Model):
 class OfferCode(models.Model):
 	offer			= models.ForeignKey(Offer)
 	forwarder		= models.ForeignKey(Customer,related_name="forwarder", null=True)
-	customer		= models.ForeignKey(Customer,null=True)
-	phone			= models.CharField(max_length=20,blank=True)
+	# TODO: why is customer null=True
+	customer		= models.ForeignKey(Customer)
 	code			= models.CharField(max_length=32)
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)

@@ -13,6 +13,9 @@ import pprint
 from django.contrib.auth.models import User
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer
 import sqlite3
+from datetime import datetime
+
+from offer.models import Offer
 
 class SimpleTest(TestCase):
 
@@ -24,8 +27,11 @@ class SimpleTest(TestCase):
 
 		us, created = Country.objects.get_or_create(name="United States", code="us")
 		region, created = Region.objects.get_or_create(name="Massachusetts", code="ma", country=us)
+		city, created = City.objects.get_or_create(name="Cambridge", region=region)
+		zipcode, created = ZipCode.objects.get_or_create(code="02139", city=city)
 		city, created = City.objects.get_or_create(name="Boston", region=region)
 		zipcode, created = ZipCode.objects.get_or_create(code="02250", city=city)
+
 		# create users
 		try:
 			u, created = User.objects.get_or_create(username="user1@customer.com")
@@ -44,8 +50,26 @@ class SimpleTest(TestCase):
 			except sqlite3.InterfaceError:
 				u.save()
 			
+		c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="401-808-2420", balance=1000)
 
-		c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="617-988-2342", balance=1000)
+		try:
+			u, created = User.objects.get_or_create(username="user2@customer.com")
+			u.email="user2@customer.com"
+			u.set_password("hello")
+		except sqlite3.InterfaceError:
+			u, created = User.objects.get_or_create(username="user2@customer.com")
+			u.email="user2@customer.com"
+			u.set_password("hello")
+			
+		try:
+			u.save()
+		except sqlite3.InterfaceError:
+			try:
+				u.save()
+			except sqlite3.InterfaceError:
+				u.save()
+			
+		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode, phone="617-871-0710", balance=1000)
 
 		try:
 			u, created = User.objects.get_or_create(username="user1@merchant.com")
@@ -61,8 +85,23 @@ class SimpleTest(TestCase):
 		except sqlite3.InterfaceError:
 			u.save()
 
+		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="804-332-9436", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
 
-		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="617-933-2342", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
+		try:
+			u, created = User.objects.get_or_create(username="user2@merchant.com")
+			u.email="user2@merchant.com"
+			u.set_password("hello")
+		except sqlite3.InterfaceError:
+			u, created = User.objects.get_or_create(username="user2@merchant.com")
+			u.email="user2@merchant.com"
+			u.set_password("hello")
+
+		try:
+			u.save()
+		except sqlite3.InterfaceError:
+			u.save()
+
+		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode, phone="617-909-2101", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
 		print "*"*100
@@ -124,10 +163,43 @@ class SimpleTest(TestCase):
 		response = self.client.post(command, params)
 		return response
 
+	def create_test_offers(self):
+		"""
+			Generate several offers by multiple merchants that targets two different users in two different
+			zip codes
+		"""
+	
+		offers = ["$5 off shoes brands, Nike, Reebok"] #,
+				#"15% off big steak and 10% off small steak",
+				#				"Save $15 on your purchase of suit",
+				#				"$125 for tonight only at Marriott"]
+
+		m = Merchant.objects.get(user__email="user1@merchant.com")	
+		for o in offers:
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=datetime.now(), starting_time=datetime.now()) 
+			offer.save()
+			offer.distribute()
+
+		assert offer.offercode_set.all().count()==2
+
+		offers = ["$1 off Chicken Sandwiches"] #,
+				#"Free drink when you order $10 or more",
+				#				"Half priced cookies"]
+
+		m = Merchant.objects.get(user__email="user2@merchant.com")	
+		for o in offers:
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=datetime.now(), starting_time=datetime.now()) 
+			offer.save()
+			offer.distribute()
+
+		assert offer.offercode_set.all().count()==2
+
 	def test_mobile_api(self):
 		"""
 			Generate mobile API doc as it tests
 		"""
+
+		self.create_test_offers()
 
 		email = "user1@customer.com"
 		password = "hello"
@@ -162,9 +234,6 @@ class SimpleTest(TestCase):
 
 		comment = "Shows a list of point offers one can use to redeem (details too)"
 		response = self.get_json( reverse("m_customer_point_offers"), {}, comment)
-
-
-
 
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment)
