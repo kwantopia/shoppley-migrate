@@ -79,7 +79,7 @@ class SimpleTest(TestCase):
 			if created:
 				print "Cant find Kwan's pizza"
 			
-			o, created = Offer.objects.get_or_create(merchant=m,name=name,description=description, defaults={'dollar_off':dollar_off, 'time_stamp':time_stamp,'starting_time':time_stamp,'duration':duration,'max_offers':customers})
+			o, created = Offer.objects.get_or_create(merchant=m,title=name,description=description, defaults={'dollar_off':dollar_off, 'time_stamp':time_stamp,'starting_time':time_stamp,'duration':duration,'max_offers':customers})
 			c = Customer.objects.all()[0]
 			
 			oc, created = OfferCode.objects.get_or_create(code=code,
@@ -326,6 +326,7 @@ class SimpleTest(TestCase):
 	def test_txt_messages(self):
 		cmd = Command()
 		cmd.DEBUG = True
+		settings.DEBUG=True
 		self.failIfEqual(cmd.DEBUG,False)
 		msg1= {"from":"8043329436", "text":"signup smengl@mit.edu 02139"}
 		pattern = Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
@@ -383,7 +384,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(c[0].active, True)
 
 		print "************* TEST 5: FORWARD ***************"
-		msg7={"from":"0000000001", "text": "forward 00002 000000002"}
+		msg7={"from":"0000000001", "text": "forward 00002 000-000-002 000-000-0001"}
 		cmd.test_handle(msg7)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
@@ -404,7 +405,7 @@ class SimpleTest(TestCase):
 		self.failIfEqual(oc.code,oc_ori[0].code)
 		print "************* TEST 5a: FORWARD TO NON-CUSTOMER***************"
 
-		msg7a={"from":"0000000001", "text": "forward 00002 000000010"}
+		msg7a={"from":"0000000001", "text": "forward 00002 0000-000-10"}
 		cmd.test_handle(msg7a)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
@@ -418,7 +419,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(receiver.count(),1)
 		receiver = receiver[0]
 
-		oc2 = OfferCode.objects.filter(offer__id=oc_ori[0].offer.id,phone__iexact="000000010")
+		oc2 = OfferCode.objects.filter(offer__id=oc_ori[0].offer.id,customer__phone="000000010")
 		self.failUnlessEqual(oc2.count(),1)
 		oc2 = oc2[0]
 		self.failUnlessEqual(oc2.forwarder.id,forwarder.id)
@@ -514,7 +515,7 @@ class SimpleTest(TestCase):
 		print "************* TEST 6c: REDEEMER != CODE'S CUSTOMER***************"
 		offer = OfferCode.objects.get(code="00002").offer
 		customer2 = Customer.objects.get(phone="0000000002")
-		OfferCode(offer=offer,code="000X2",customer=customer2,phone="0000000002",time_stamp=datetime.now(),expiration_time=datetime.now() + timedelta(minutes=offer.duration)).save()
+		OfferCode(offer=offer,code="000X2",customer=customer2,time_stamp=datetime.now(),expiration_time=datetime.now() + timedelta(minutes=offer.duration)).save()
 		# redeemer and code's owner are different
 		msg8c={"from":"6170000002", "text": "redeem 000X2 0000000001"}
 		error = False
@@ -631,7 +632,7 @@ class SimpleTest(TestCase):
 		print "**************** TEST 12: Update_expired ************************"
 		m = Merchant.objects.get(phone="6170000002")
 		
-		o = Offer.objects.create(merchant = m, description="EXpIRED", name="EXPIRED",time_stamp=datetime.now(), starting_time=datetime.now(), duration=0)
+		o = Offer.objects.create(merchant = m, description="EXpIRED", title="EXPIRED",time_stamp=datetime.now(), starting_time=datetime.now(), duration=0)
 		self.failUnlessEqual(cmd.update_expired(),1)
 		o.distribute()
 		

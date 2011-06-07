@@ -16,6 +16,7 @@ SMS_DEBUG = True
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+
 def pretty_date(time=False, future=True):
 	"""
 	Get a datetime object or a int() Epoch timestamp and return a

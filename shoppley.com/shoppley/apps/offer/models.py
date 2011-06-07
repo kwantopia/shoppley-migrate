@@ -6,7 +6,7 @@ from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
-from offer.utils import gen_offer_code
+from offer.utils import gen_offer_code, gen_random_pw
 from sorl.thumbnail import ImageField
 
 from datetime import datetime, timedelta
@@ -50,8 +50,7 @@ class Offer(models.Model):
 		print "description: ",self.description
 		return self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 
-	def print_time_stamp(self):
-		return self.time_stamp.strftime("%Y-%m-%d,%I:%M%p")
+	
 
 	def num_redeemed(self):
 		return self.offercode_set.filter(redeem_time__isnull=False)
@@ -103,6 +102,7 @@ class Offer(models.Model):
 		offers = Offer.objects.all()
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
+		
 		try: 
 			friend = Customer.objects.get(phone__contains=phone)
 			o=self.offercode_set.create(
@@ -277,6 +277,7 @@ class OfferCodeAbnormal(models.Model):
 	invalid_code	= models.CharField(max_length=32, blank=True)
 	referred_customer	= models.ForeignKey(Customer, blank=True, null=True)
 	referred_phone	= models.CharField(max_length=20, blank=True, null=True)
+	
 	
 	def __unicode__(self):
 		if self.ab_type == "IV":

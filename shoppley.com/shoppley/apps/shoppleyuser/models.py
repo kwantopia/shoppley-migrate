@@ -70,6 +70,11 @@ class ShoppleyUser(models.Model):
 	def is_merchant(self):
 		return hasattr(self, "merchant")
 
+	def print_address(self):
+		if self.address_1=="":
+			return "No address given"
+		else:
+			return self.address_1 + "\n" + self.address_2
 	def __unicode__(self):
 		if self.is_customer():
 			if self.user.get_full_name():
@@ -86,7 +91,7 @@ class Merchant(ShoppleyUser):
 	url				= models.URLField(null=True, blank=True)
 
 	def __unicode__(self):
-		return "%s (%s)" % (self.business_name, self.user.username)
+		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
 
 	def get_banner(self):
 		if self.banner:
