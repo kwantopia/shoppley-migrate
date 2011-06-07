@@ -278,12 +278,6 @@ def offer_rate(request):
 	data = {}
 	return JSONHttpResponse(data)	
 
-@csrf_exempt
-@login_required
-def offer_rate(request):
-	data = {}
-	return JSONHttpResponse(data)	
-
 
 #####################################
 # Merchant mobile API
