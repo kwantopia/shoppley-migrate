@@ -110,12 +110,6 @@ class Customer(ShoppleyUser):
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
 	merchant_dislikes = models.ManyToManyField(Merchant, related_name="antifans")
 
-	def __unicode__(self):
-		if self.user.get_full_name():
-			return self.user.get_full_name()
-		else:
-			return self.user.username
-
 
 class MerchantOfTheDay(models.Model):
 	merchant		= models.ForeignKey(Merchant)

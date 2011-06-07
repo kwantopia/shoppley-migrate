@@ -2,40 +2,39 @@
 Customer login
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/login/
-PARAMS:{ 'email': 'user1@customer.com', 'password': 'hello'}
-None
+PARAMS:
+{ 'email': 'user1@customer.com', 'password': 'hello'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1
 }
-Login successful
 ****************************************************************************************************
 Show current offers, it also returns offer details
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offers/current/
-PARAMS:{ 'lat': 47.78799, 'lon': 98.9989}
-None
+PARAMS:
+{ 'lat': 47.78799, 'lon': 98.9989}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offers": [
     {
-      "code": "hz3ktw", 
+      "code": "be9odc", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
       "lon": -24.2322, 
-      "phone": "804-332-9436", 
+      "phone": "617-682-9784", 
       "expiration": "an hour", 
-      "citystatezip": "Boston, MA 02250", 
+      "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "3x2685", 
+      "code": "yn5j4p", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -43,40 +42,196 @@ RESPONSE:
       "lon": -24.2322, 
       "phone": "617-909-2101", 
       "expiration": "an hour", 
-      "citystatezip": "Boston, MA 02250", 
+      "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
+    }, 
+    {
+      "code": "tdjfuh", 
+      "description": "Free drink when you order $10 or more", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 5, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "Free drink when you order $10 or more"
+    }, 
+    {
+      "code": "udyp5y", 
+      "description": "Half priced cookies", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 7, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "Half priced cookies"
     }
   ], 
-  "num_offers": 2, 
+  "num_offers": 4, 
+  "result": 1
+}
+****************************************************************************************************
+Show narrow geogrphaical offers, st also returns offer details
+----------------------------------------------------------------------------------------------------
+POST URL: /m/customer/offers/current/
+PARAMS:
+{ 'lat': 47.78799, 'lon': 98.9989}
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offers": [
+    {
+      "code": "be9odc", 
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 1, 
+      "lon": -24.2322, 
+      "phone": "617-682-9784", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$5 off shoes brands, Nike, Reebok"
+    }, 
+    {
+      "code": "yn5j4p", 
+      "description": "$1 off Chicken Sandwiches", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 3, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$1 off Chicken Sandwiches"
+    }, 
+    {
+      "code": "tdjfuh", 
+      "description": "Free drink when you order $10 or more", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 5, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "Free drink when you order $10 or more"
+    }, 
+    {
+      "code": "udyp5y", 
+      "description": "Half priced cookies", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 7, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "Half priced cookies"
+    }
+  ], 
+  "num_offers": 4, 
   "result": 1
 }
 ****************************************************************************************************
 Show redeemed offers, it also returns offer details
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/customer/offers/redeemed/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offers": [
+    {
+      "code": "be9odc", 
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 1, 
+      "lon": -24.2322, 
+      "phone": "617-682-9784", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$5 off shoes brands, Nike, Reebok"
+    }
+  ], 
+  "num_offers": 1
+}
 ****************************************************************************************************
 Forward offer to a list of phone numbers
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/forward/
-PARAMS:{ 'note': 'This offer might interest you.',
-  'phones': ['617-877-2345', '857-678-7897']}
-None
+PARAMS:
+{ 'note': 'This offer might interest you.',
+  'offer_code': u'yn5j4p',
+  'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665']}
+Creating NEW user with username: 617-877-2345
+TXT: "71lubv: user1@customer.com has forwarded you this offer:
+ - merchant: Flour Bakery (user2@merchant.com)
+ - expiration: 2011-06-07 00:32:52.401477
+ - description: $1 off Chicken Sandwiches
+ - deal: None off
+Please use this code 71lubv to redeem the offer.
+" sent to 617-877-2345
+TXT: "Welcome to Shoppley! Here is your shoppley.com login info:
+ - username: 617-877-2345
+ - password: ZkBYqU" sent to 617-877-2345
+Creating NEW user with username: 857-678-7897
+TXT: "z9wd66: user1@customer.com has forwarded you this offer:
+ - merchant: Flour Bakery (user2@merchant.com)
+ - expiration: 2011-06-07 00:32:52.401477
+ - description: $1 off Chicken Sandwiches
+ - deal: None off
+Please use this code z9wd66 to redeem the offer.
+" sent to 857-678-7897
+TXT: "Welcome to Shoppley! Here is your shoppley.com login info:
+ - username: 857-678-7897
+ - password: jgeBX5" sent to 857-678-7897
+TXT: "qaosl1: user1@customer.com has forwarded you this offer:
+ - merchant: Flour Bakery (user2@merchant.com)
+ - expiration: 2011-06-07 00:32:52.401477
+ - description: $1 off Chicken Sandwiches
+ - deal: None off
+Please use this code qaosl1 to redeem the offer.
+" sent to 617-871-0710
+TXT: "enpjg6: user1@customer.com has forwarded you this offer:
+ - merchant: Flour Bakery (user2@merchant.com)
+ - expiration: 2011-06-07 00:32:52.401477
+ - description: $1 off Chicken Sandwiches
+ - deal: None off
+Please use this code enpjg6 to redeem the offer.
+" sent to 617-453-8665
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "confirm_msg": "Offer by \"yn5j4p\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "result": 1
+}
 ****************************************************************************************************
 Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
-PARAMS:{ 'feedback': 'The fish dish was amazing'}
-None
+PARAMS:
+{ 'feedback': 'The fish dish was amazing'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -84,8 +239,8 @@ RESPONSE:
 Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
-PARAMS:{ 'rating': 5}
-None
+PARAMS:
+{ 'rating': 5}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -93,8 +248,8 @@ RESPONSE:
 Shows a summary of accumulated points for customer
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/customer/point/summary/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -102,8 +257,8 @@ RESPONSE:
 Shows a list of point offers one can use to redeem (details too)
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/customer/point/offers/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -111,8 +266,59 @@ RESPONSE:
 Customer logout
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/logout/
-PARAMS:{ }
-None
+PARAMS:
+{ }
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "result": 1
+}
+****************************************************************************************************
+Customer login
+----------------------------------------------------------------------------------------------------
+POST URL: /m/login/
+PARAMS:
+{ 'email': 'user3@customer.com', 'password': 'hello'}
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "result": 1
+}
+****************************************************************************************************
+Show current offers, it also returns offer details (This one contains offer forwarded by another customer)
+----------------------------------------------------------------------------------------------------
+POST URL: /m/customer/offers/current/
+PARAMS:
+{ 'lat': 47.78799, 'lon': 98.9989}
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offers": [
+    {
+      "code": "enpjg6", 
+      "description": "$1 off Chicken Sandwiches", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 12, 
+      "lon": -24.2322, 
+      "phone": "617-909-2101", 
+      "forwarder": "user1@customer.com", 
+      "expiration": "an hour", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "banner": "/static/images/merchant/restaurant_banner.png", 
+      "name": "$1 off Chicken Sandwiches"
+    }
+  ], 
+  "num_offers": 1, 
+  "result": 1
+}
+****************************************************************************************************
+Customer logout
+----------------------------------------------------------------------------------------------------
+GET URL: /m/logout/
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -122,28 +328,28 @@ RESPONSE:
 Customer registration
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/register/
-PARAMS:{ 'email': 'user2@customer.com', 'phone': '617-885-2347', 'zipcode': '02139'}
-None
+PARAMS:
+{ 'email': 'user4@customer.com', 'phone': '617-885-2347', 'zipcode': '02139'}
+TXT: "9s27dq is temporary password from Shoppley" sent to 617-885-2347
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": "-1"
+  "result": 1
 }
 ****************************************************************************************************
 Customer logout
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/logout/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-Should be redirecting to: http://testserver/account/login/?next=/m/logout/
 ****************************************************************************************************
 Merchant login
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/login/
-PARAMS:{ 'email': 'user1@merchant.com', 'password': 'hello'}
-None
+PARAMS:
+{ 'email': 'user1@merchant.com', 'password': 'hello'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -153,8 +359,8 @@ RESPONSE:
 Splash view for the merchant
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/splash/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -162,8 +368,8 @@ RESPONSE:
 Show active offers for the merchant, returns offer details
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/offers/active/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -171,7 +377,8 @@ RESPONSE:
 Start a % off offer (units=0), duration if not specified will be next 60 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
-PARAMS:{ 'amount': 10,
+PARAMS:
+{ 'amount': 10,
   'date': '2011-05-18',
   'description': 'Come taste some great greek food next 30 minutes',
   'duration': 60,
@@ -179,7 +386,6 @@ PARAMS:{ 'amount': 10,
   'time': '06:00:00 PM',
   'title': '10% off on entree',
   'units': 0}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -189,7 +395,8 @@ RESPONSE:
 Start a $ off offer (units=1), duration if not specified will be next 60 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
-PARAMS:{ 'amount': 10,
+PARAMS:
+{ 'amount': 10,
   'date': '2011-05-18',
   'description': 'Come taste some great greek food next 30 minutes',
   'duration': 30,
@@ -197,7 +404,6 @@ PARAMS:{ 'amount': 10,
   'time': '06:00:00 PM',
   'title': '$10 off on entree',
   'units': 1}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -207,13 +413,13 @@ RESPONSE:
 Start a $ off offer NOW (units=1), duration if not specified will be next 60 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
-PARAMS:{ 'amount': 10,
+PARAMS:
+{ 'amount': 10,
   'description': 'Come taste some great greek food next 30 minutes',
   'duration': 90,
   'now': True,
   'title': '$10 off on entree',
   'units': 1}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -223,8 +429,8 @@ RESPONSE:
 Send more of the same offer
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/offer/send/more/1/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -234,14 +440,14 @@ RESPONSE:
 Restart a previous offer (it allows change of parameters)
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/restart/
-PARAMS:{ 'amount': 10,
+PARAMS:
+{ 'amount': 10,
   'description': 'Come taste some great greek food next 30 minutes',
   'duartion': 50,
   'now': True,
   'offer_id': 2,
   'title': '$10 off on entree',
   'units': 1}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -249,8 +455,8 @@ RESPONSE:
 Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
-PARAMS:{ 'amount': 38.05, 'code': 'YZ8HY'}
-None
+PARAMS:
+{ 'amount': 38.05, 'code': 'YZ8HY'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -258,8 +464,8 @@ RESPONSE:
 Show list of past offers and details
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/offers/past/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -267,8 +473,8 @@ RESPONSE:
 Show a summary for the merchants
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/summary/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -276,8 +482,8 @@ RESPONSE:
 Show a summary visualization for the merchants
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/summary/viz/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -285,7 +491,8 @@ RESPONSE:
 Start a new point based offer (units=2), point based offer durations are by days
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offer/start/
-PARAMS:{ 'amount': 1000,
+PARAMS:
+{ 'amount': 1000,
   'date': '2011-05-18',
   'days': 7,
   'description': 'Come get some new pair of pants',
@@ -293,7 +500,6 @@ PARAMS:{ 'amount': 1000,
   'time': '06:00:00 PM',
   'title': '$10 off on pants',
   'units': 2}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -303,8 +509,8 @@ RESPONSE:
 Show active point offers
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offers/active/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -314,8 +520,8 @@ RESPONSE:
 Show past point offers
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offers/past/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -325,8 +531,8 @@ RESPONSE:
 Start a point offer
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offer/start/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -336,8 +542,8 @@ RESPONSE:
 Restart an existing point offer
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offer/restart/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -347,8 +553,8 @@ RESPONSE:
 Expire a point offer earlier than expiration
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/merchant/point/offer/expire/1/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {}
@@ -356,8 +562,8 @@ RESPONSE:
 Merchant logout
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/logout/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -367,12 +573,12 @@ RESPONSE:
 Merchant registration
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/register/
-PARAMS:{ 'business': 'Costumes from Mars',
+PARAMS:
+{ 'business': 'Costumes from Mars',
   'email': 'user2@merchant.com',
   'password': 'hello',
   'phone': '917-242-4243',
   'zipcode': '02139'}
-None
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -382,8 +588,8 @@ RESPONSE:
 Merchant logout
 ----------------------------------------------------------------------------------------------------
 GET URL: /m/logout/
-PARAMS:{ }
-None
+PARAMS:
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 Should be redirecting to: http://testserver/account/login/?next=/m/logout/

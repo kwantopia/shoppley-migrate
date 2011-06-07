@@ -1,6 +1,18 @@
 from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
+
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext, string_concat
+from django.conf import settings
+
 import os, csv
 from googlevoice import Voice
+
+
+# uncomment when running
+#SMS_DEBUG = settings.DEBUG
+
+# uncomment following when testing using django test
+SMS_DEBUG = True 
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -72,10 +84,13 @@ def load_zipcodes():
 				city=city_obj, latitude=latitude, longitude=longitude)
 
 def sms_notify(number, text):
-	voice = Voice()
-	voice.login()
-	voice.send_sms(number, text) 
-	
+	if SMS_DEBUG:
+		print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":text, "phone":number,}
+	else:
+		voice = Voice()
+		voice.login()
+		voice.send_sms(number, text) 
+		
 def sms_notify_list(number_list, text):
 	voice = Voice()
 	voice.login() 

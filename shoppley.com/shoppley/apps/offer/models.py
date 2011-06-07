@@ -1,14 +1,16 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-from datetime import datetime, timedelta
-from shoppleyuser.models import Customer, Merchant, ShoppleyUser
-from offer.utils import gen_offer_code
-import random
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
-from shoppleyuser.utils import sms_notify
+
+from shoppleyuser.utils import sms_notify, pretty_date
+from shoppleyuser.models import Customer, Merchant, ShoppleyUser
+from offer.utils import gen_offer_code
 from sorl.thumbnail import ImageField
+
+from datetime import datetime, timedelta
+import random, string
 
 # Create your models here.
 
@@ -95,8 +97,9 @@ class Offer(models.Model):
 
 	def gen_forward_offercode(self,original_code,phone):
 	
+		forwarder = OfferCode.objects.filter(code__iexact=original_code)
+		
 		gen_code = gen_offer_code()
-		users = ShoppleyUser.objects.all()
 		offers = Offer.objects.all()
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
@@ -104,23 +107,38 @@ class Offer(models.Model):
 			friend = Customer.objects.get(phone__contains=phone)
 			o=self.offercode_set.create(
 				customer=friend,
-				phone = friend.phone,
 				code = gen_code,
 				forwarder=original_code.customer,
 				time_stamp=datetime.now(),
 				expiration_time=self.starting_time+timedelta(minutes=self.duration))
 			o.save()
-			return o, "C" # "C" is for customer
+			return o, None # for existing customer
 
 		except Customer.DoesNotExist:
+			# TODO: Need to replace the following with code below
+			# create a customer
+			# create a username with phone num and create random password
+
+			print "Creating NEW user with username:", phone
+			u, created = User.objects.get_or_create(username=phone)
+			u.email=""
+			s = string.letters+string.digits
+			rand_passwd = ''.join(random.sample(s,6))
+			u.set_password(rand_passwd)	
+			u.save()
+			
+			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone, balance=1000)
+				
+			# send out a new offercode
 			o=self.offercode_set.create(
-				phone = phone,
+				customer = friend,
 				code = gen_code,
 				forwarder=original_code.customer,
 				time_stamp=datetime.now(),
 				expiration_time=self.starting_time+timedelta(minutes=self.duration))
 			o.save()
-			return o, "N" # "N" is for non-customer
+
+			return o, rand_passwd  # for new customer
 
 	def distribute(self):
 		"""
@@ -166,9 +184,7 @@ class Offer(models.Model):
 		
 		for o in self.offercode_set.all():
 			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
-			if not settings.DEBUG:
-				sms_notify(o.customer.phone, offer_msg)
-			print o.customer.phone
+			sms_notify(o.customer.phone, offer_msg)
 
 		self.num_init_sentto =len(target_list)
 		self.save()
@@ -218,9 +234,35 @@ class OfferCode(models.Model):
 	def is_redeemed(self):
 		return not self.redeem_time
 
+	def redeem(self):
+		self.redeem_time = datetime.now()
+		self.save()
+
 	def __unicode__(self):
 		return self.code + "\n -customer:" + str(self.customer)+"\n -description"+str(self.offer.description)
 	
+	def offer_detail(self):
+		offer_detail = {"offer_id": self.id,
+							"code": self.code,
+							"name": self.offer.title,
+							"description": self.offer.description,
+							"expiration": pretty_date(self.expiration_time-datetime.now()),
+							"phone": self.offer.merchant.phone,
+							"address1": self.offer.merchant.address_1,
+							"citystatezip": self.offer.merchant.zipcode.citystate(),
+							"lat": -42.2342,
+							"lon": -24.2322,
+							"img": self.offer.get_image(),
+							"banner": self.offer.merchant.get_banner()
+						}
+		if self.offer.percentage:
+			offer_detail["percentage"] = self.offer.percentage
+		elif self.offer.dollar_off:
+			offer_detail["dollar_off"] = self.offer.dollar_off
+		if self.forwarder:
+			offer_detail["forwarder"] = str(self.forwarder)
+
+		return offer_detail
 
 class OfferCodeAbnormal(models.Model):
 	ABNORMAL_TYPE = (

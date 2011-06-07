@@ -12,10 +12,10 @@ import csv, json
 import pprint
 from django.contrib.auth.models import User
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer
-import sqlite3
+import sqlite3, random
 from datetime import datetime
 
-from offer.models import Offer
+from offer.models import Offer, OfferCode
 
 class SimpleTest(TestCase):
 
@@ -28,89 +28,56 @@ class SimpleTest(TestCase):
 		us, created = Country.objects.get_or_create(name="United States", code="us")
 		region, created = Region.objects.get_or_create(name="Massachusetts", code="ma", country=us)
 		city, created = City.objects.get_or_create(name="Cambridge", region=region)
-		zipcode, created = ZipCode.objects.get_or_create(code="02139", city=city)
+		zipcode1, created = ZipCode.objects.get_or_create(code="02139", city=city)
 		city, created = City.objects.get_or_create(name="Boston", region=region)
-		zipcode, created = ZipCode.objects.get_or_create(code="02250", city=city)
+		zipcode2, created = ZipCode.objects.get_or_create(code="02250", city=city)
 
 		# create users
-		try:
-			u, created = User.objects.get_or_create(username="user1@customer.com")
-			u.email="user1@customer.com"
-			u.set_password("hello")
-		except sqlite3.InterfaceError:
-			u, created = User.objects.get_or_create(username="user1@customer.com")
-			u.email="user1@customer.com"
-			u.set_password("hello")
-			
-		try:
-			u.save()
-		except sqlite3.InterfaceError:
-			try:
-				u.save()
-			except sqlite3.InterfaceError:
-				u.save()
-			
-		c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="401-808-2420", balance=1000)
+		u, created = User.objects.get_or_create(username="user1@customer.com")
+		u.email="user1@customer.com"
+		u.set_password("hello")
+		u.save()
+		
+		c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone="617-682-9602", balance=1000)
+		
+		u, created = User.objects.get_or_create(username="user2@customer.com")
+		u.email="user2@customer.com"
+		u.set_password("hello")
+		u.save()
+		
+		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone="617-871-0710", balance=1000)
 
-		try:
-			u, created = User.objects.get_or_create(username="user2@customer.com")
-			u.email="user2@customer.com"
-			u.set_password("hello")
-		except sqlite3.InterfaceError:
-			u, created = User.objects.get_or_create(username="user2@customer.com")
-			u.email="user2@customer.com"
-			u.set_password("hello")
-			
-		try:
-			u.save()
-		except sqlite3.InterfaceError:
-			try:
-				u.save()
-			except sqlite3.InterfaceError:
-				u.save()
-			
-		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode, phone="617-871-0710", balance=1000)
+		u, created = User.objects.get_or_create(username="user3@customer.com")
+		u.email="user3@customer.com"
+		u.set_password("hello")
+		u.save()
+		
+		#617-453-8665 Meng's googlevoice number
+		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone="617-453-8665", balance=1000)
 
-		try:
-			u, created = User.objects.get_or_create(username="user1@merchant.com")
-			u.email="user1@merchant.com"
-			u.set_password("hello")
-		except sqlite3.InterfaceError:
-			u, created = User.objects.get_or_create(username="user1@merchant.com")
-			u.email="user1@merchant.com"
-			u.set_password("hello")
+		u, created = User.objects.get_or_create(username="user1@merchant.com")
+		u.email="user1@merchant.com"
+		u.set_password("hello")
+		u.save()
 
-		try:
-			u.save()
-		except sqlite3.InterfaceError:
-			u.save()
+		
+		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone="617-682-9784", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
 
-		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode, phone="804-332-9436", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
+		u, created = User.objects.get_or_create(username="user2@merchant.com")
+		u.email="user2@merchant.com"
+		u.set_password("hello")
+		u.save()
 
-		try:
-			u, created = User.objects.get_or_create(username="user2@merchant.com")
-			u.email="user2@merchant.com"
-			u.set_password("hello")
-		except sqlite3.InterfaceError:
-			u, created = User.objects.get_or_create(username="user2@merchant.com")
-			u.email="user2@merchant.com"
-			u.set_password("hello")
-
-		try:
-			u.save()
-		except sqlite3.InterfaceError:
-			u.save()
-
-		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode, phone="617-909-2101", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
+		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone="617-909-2101", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
 		print "*"*100
 		print comment
 		print "-"*100
 		print "POST URL:", command
-		print "PARAMS:", self.pp.pprint(params) 
+		print "PARAMS:"
+		self.pp.pprint(params) 
 		response = self.client.post(command, params)
-		#print response
 		print "-"*100
 		print "RESPONSE:"
 		if redirect:
@@ -129,7 +96,8 @@ class SimpleTest(TestCase):
 		print comment
 		print "-"*100
 		print "GET URL:", command
-		print "PARAMS:", self.pp.pprint(params)
+		print "PARAMS:"
+		self.pp.pprint(params)
 		response = self.client.get(command, params)
 		#print response
 		print "-"*100
@@ -150,7 +118,8 @@ class SimpleTest(TestCase):
 		print comment
 		print "-"*100
 		print "GET WEB URL", command
-		print "PARAMS:", self.pp.pprint(params)
+		print "PARAMS:" 
+		self.pp.pprint(params)
 		response = self.client.get(command, params)
 		return response
 
@@ -159,7 +128,8 @@ class SimpleTest(TestCase):
 		print comment
 		print "-"*100
 		print "POST WEB URL", command
-		print "PARAMS:", self.pp.pprint(params)
+		print "PARAMS:" 
+		self.pp.pprint(params)
 		response = self.client.post(command, params)
 		return response
 
@@ -182,9 +152,9 @@ class SimpleTest(TestCase):
 
 		assert offer.offercode_set.all().count()==2
 
-		offers = ["$1 off Chicken Sandwiches"] #,
-				#"Free drink when you order $10 or more",
-				#				"Half priced cookies"]
+		offers = ["$1 off Chicken Sandwiches",
+				"Free drink when you order $10 or more",
+								"Half priced cookies"]
 
 		m = Merchant.objects.get(user__email="user2@merchant.com")	
 		for o in offers:
@@ -193,6 +163,26 @@ class SimpleTest(TestCase):
 			offer.distribute()
 
 		assert offer.offercode_set.all().count()==2
+
+	def redeem_offer(self):
+		"""
+			Redeems an offer of user1@customer.com 
+		"""
+
+		u = User.objects.get(email="user1@customer.com")
+		c = u.shoppleyuser.customer
+		o = random.sample( OfferCode.objects.filter(customer=c), 1 )
+		o[0].redeem()
+
+	def random_offer(self):
+
+		u = User.objects.get(email="user1@customer.com")
+		c = u.shoppleyuser.customer
+		
+		while o.redeem_time != None:
+			o = random.sample( OfferCode.objects.filter(customer=c), 1 )
+
+		return o
 
 	def test_mobile_api(self):
 		"""
@@ -208,19 +198,27 @@ class SimpleTest(TestCase):
 		response = self.post_json( reverse("m_login"), {'email': email,
 													'password': password}, comment)
 
+		"""
 		if self.client.login(username=email, password=password):
 			print "Login successful"
 		else:
 			print "Login failed"
+		"""
 		
 		comment = "Show current offers, it also returns offer details"
 		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
 
+		offer_code_to_forward = response["offers"][1]["code"]
+
+		comment = "Show narrow geographical offers, st also returns offer details"
+		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
+
+		self.redeem_offer()
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
 		comment = "Forward offer to a list of phone numbers"
-		response = self.post_json( reverse("m_offer_forward"), {'phones':['617-877-2345', '857-678-7897'], 'note': 'This offer might interest you.'}, comment)
+		response = self.post_json( reverse("m_offer_forward"), {'offer_code': offer_code_to_forward,'phones':['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'], 'note': 'This offer might interest you.'}, comment)
 
 		comment = "Provide feedback on an offer"
 		response = self.post_json( reverse("m_offer_feedback"), {'feedback':'The fish dish was amazing'}, comment)
@@ -238,8 +236,21 @@ class SimpleTest(TestCase):
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment)
 					
+		email = "user3@customer.com"
+		password = "hello"
 
-		email = "user2@customer.com"
+		comment = "Customer login"
+		response = self.post_json( reverse("m_login"), {'email': email,
+													'password': password}, comment)
+
+		comment = "Show current offers, it also returns offer details (This one contains offer forwarded by another customer)"
+		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
+
+
+		comment = "Customer logout"
+		response = self.get_json( reverse("m_logout"), {}, comment)
+	
+		email = "user4@customer.com"
 		password = "hello"
 
 		comment = "Customer registration"

@@ -22,7 +22,7 @@ else:
     from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from shoppleyuser.utils import sms_notify, pretty_date
+from shoppleyuser.utils import sms_notify
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
 
@@ -87,7 +87,7 @@ def register_customer(request):
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
 		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
-		#sms_notify(phone, txt_msg)
+		sms_notify(phone, txt_msg)
 	else:
 		# ERROR: User exists, ask user to login with their password 
 		data["result"] = "-1"
@@ -110,6 +110,9 @@ def register_customer(request):
 def offers_current(request):
 	"""
 
+		:param lat: current latitude
+		:param lon: current longitude
+
 		:rtype: JSON
 
 		::
@@ -124,33 +127,28 @@ def offers_current(request):
 
 	u = request.user
 	if u.shoppleyuser.is_customer():
+
+		# TODO: need to also dynamically generate offers based on current location
+		# TODO: notify the merchant that another user has seen (update sent offers)
+		# TODO: log the location it was seen from lat/lon, timestamp
+
+		lat = request.POST.get("lat", None)
+		lon = request.POST.get("lon", None)
+			
+		if lat == None or lon == None:
+			# invalid location specified
+			data["result"] = -2
+			return JSONHttpResponse(data) 
+			
+			
 		customer = u.shoppleyuser.customer
 		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
 		data["num_offers"] = user_offers.count()
 		data["offers"] = []
 
-
 		#"expiration": str(time.mktime(o.expiration_time.timetuple())),
 		for o in user_offers:
-			offer_detail = {"offer_id": o.id,
-								"code": o.code,
-								"name": o.offer.title,
-								"description": o.offer.description,
-								"expiration": pretty_date(o.expiration_time-datetime.now()),
-								"phone": o.offer.merchant.phone,
-								"address1": o.offer.merchant.address_1,
-								"citystatezip": o.offer.merchant.zipcode.citystate(),
-								"lat": -42.2342,
-								"lon": -24.2322,
-								"img": o.offer.get_image(),
-								"banner": o.offer.merchant.get_banner()
-							}
-			if o.offer.percentage:
-				offer_detail["percentage"] = o.offer.percentage
-			elif o.offer.dollar_off:
-				offer_detail["dollar_off"] = o.offer.dollar_off
-
-			data["offers"].append(offer_detail)	
+			data["offers"].append(o.offer_detail())	
 		data["result"] = 1
 	else:
 		data["result"] = -1
@@ -164,18 +162,108 @@ def offers_current_filter(request):
 	"""
 	data = {}
 
-	return JSONHttpResponse(data)
+	u = request.user
+	if u.shoppleyuser.is_customer():
+
+		# TODO: need to also dynamically generate offers based on current location
+		# TODO: notify the merchant that another user has seen (update sent offers)
+		# TODO: log the location it was seen from lat/lon, timestamp
+
+		lat = request.POST.get("lat", None)
+		lon = request.POST.get("lon", None)
+			
+		if lat == None or lon == None:
+			# invalid location specified
+			data["result"] = -2
+			return JSONHttpResponse(data) 
+			
+		customer = u.shoppleyuser.customer
+		# need to narrow this query to just return those very close to lat, lon
+		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
+		data["num_offers"] = user_offers.count()
+		data["offers"] = []
+
+		#"expiration": str(time.mktime(o.expiration_time.timetuple())),
+		for o in user_offers:
+			data["offers"].append(o.offer_detail())	
+		data["result"] = 1
+	else:
+		data["result"] = -1
+	return JSONHttpResponse(data)	
 
 @csrf_exempt
 @login_required
 def offers_redeemed(request):
 	data = {}
+
+	u = request.user
+	if u.shoppleyuser.is_customer():
+
+		customer = u.shoppleyuser.customer
+		# need to narrow this query to just return those very close to lat, lon
+		user_offers = OfferCode.objects.filter(customer=customer).exclude(redeem_time__isnull=True)
+		data["num_offers"] = user_offers.count()
+		data["offers"] = []
+		for o in user_offers:
+			data["offers"].append( o.offer_detail() )	
+	else:
+		data["result"] = -1
+
 	return JSONHttpResponse(data)	
 
 @csrf_exempt
 @login_required
 def offer_forward(request):
+	"""
+		:param offer_code: the code that is forwarded
+		:param phones: list of phone numbers
+		:param note: a note for the friend
+
+	"""
 	data = {}
+
+	u = request.user
+	customer = u.shoppleyuser.customer
+
+	offer_code = request.POST.get("offer_code", None)
+	phones = request.POST.getlist("phones")
+	notes = request.POST.get("note", "")
+	if offer_code and len(phones) > 0:
+		if OfferCode.objects.filter(code__iexact=offer_code).exists():
+			original_code = OfferCode.objects.filter(code__iexact=offer_code)[0]
+			offer = original_code.offer
+			for phone in phones:
+				new_code, random_pw = offer.gen_forward_offercode(original_code, phone)
+				# text the user the user name and password
+
+				customer_msg = _("%(code)s: %(customer)s has forwarded you this offer:\n - merchant: %(merchant)s\n - expiration: %(expiration)s\n - description: %(description)s\n - deal: %(dollar_off)s off\nPlease use this code %(code)s to redeem the offer.\n")%{
+						"customer": customer,
+						"merchant": offer.merchant,
+						"expiration": original_code.expiration_time,
+						"description": offer.description,
+						"dollar_off": offer.dollar_off,
+						"code": new_code.code,
+						}
+				#TODO: if the personal do not mind receiving txt
+				sms_notify(phone,customer_msg)
+
+				if random_pw:
+					new_customer = new_code.customer
+					#print "created a customer for %s" % friend_num
+					account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
+					sms_notify(phone,account_msg)
+
+			forwarder_msg= _('Offer by "%s" was forwarded to ') % offer_code
+			forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in phones]) + "\nYou will receive points when they redeem their offers."
+			data["confirm_msg"] = forwarder_msg 
+			data["result"] = 1
+		else:
+			# ERROR: offer code is invalid
+			data["result"] = -2
+	else:
+		# ERROR: no offer code POSTed
+		data["result"] = -1
+
 	return JSONHttpResponse(data)	
 
 @csrf_exempt

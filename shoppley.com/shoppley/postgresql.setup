@@ -1,0 +1,27 @@
+###########################################################
+# A startup item has been generated that will aid in
+# starting postgresql90-server with launchd. It is disabled
+# by default. Execute the following command to start it,
+# and to cause it to launch at startup:
+#
+# sudo port load postgresql90-server
+###########################################################
+--->  Installing postgresql90-server @9.0.4_0
+
+To create a database instance, after install do
+ sudo mkdir -p /opt/local/var/db/postgresql90/defaultdb
+ sudo chown postgres:postgres /opt/local/var/db/postgresql90/defaultdb
+ sudo su postgres -c '/opt/local/lib/postgresql90/bin/initdb -D /opt/local/var/db/postgresql90/defaultdb'
+
+To tweak your DBMS, consider increasing kern.sysv.shmmax by adding an increased kern.sysv.shmmax .. to /etc/sysctl.conf
+
+WARNING: enabling "trust" authentication for local connections
+You can change this by editing pg_hba.conf or using the -A option the
+next time you run initdb.
+
+Success. You can now start the database server using:
+
+    /opt/local/lib/postgresql90/bin/postgres -D /opt/local/var/db/postgresql90/defaultdb
+or
+    /opt/local/lib/postgresql90/bin/pg_ctl -D /opt/local/var/db/postgresql90/defaultdb -l logfile start
+

@@ -353,7 +353,7 @@ class Command(NoArgsCommand):
 							i = i+1
 							f_state.update()
 							friend_num = r
-							friend_code, status = ori_offer.gen_forward_offercode(ori_code,friend_num)	
+							friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)	
 							customer_msg = _("%(code)s: %(customer)s has forwarded you this offer:\n - merchant: %(merchant)s\n - expiration: %(expiration)s\n - description: %(description)s\n - deal: %(dollar_off)s off\nPlease use this code %(code)s to redeem the offer.\n")%{
 									"customer":su,
 									"merchant":ori_offer.merchant,
@@ -362,19 +362,17 @@ class Command(NoArgsCommand):
 									"dollar_off":ori_offer.dollar_off,
 									"code":friend_code.code,
 									}
-							# the phone number is not one of our customers
-							if status == "N": 
-								random_pw = self.create_random_pw()
-								new_user = User.objects.create(username=friend_num,password=random_pw)
-								new_customer = Customer.objects.create(user=new_user,phone=friend_num,zipcode=su.zipcode)
-								#print "created a customer for %s" % friend_num
-								customer_msg = customer_msg + _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":friend_num,"password":random_pw,}
-								friend_code.customer=new_customer
-								friend_code.save()
 							self.notify(friend_num,customer_msg)
+							# the phone number is not one of our customers
+							if random_pw:
+								new_customer = friend_code.customer
+								#print "created a customer for %s" % friend_num
+								account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
+								self.notify(friend_num,account_msg)
 
-						forwarder_msg= _('"%s" was forwarded to ') % ori_code.code
-						forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in valid_receivers]) + "\nYou have %d remaining forwardings for this offer" % f_state.remaining
+						forwarder_msg= _('Offer by "%s" was forwarded to ') % ori_code.code
+						forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in valid_receivers]) + "\nYou will receive points when they redeem." 
+						#% f_state.remaining
 						self.notify(su.phone,forwarder_msg)
 				# --------------------- HELP: "help" -------------------------
 				elif parsed[0].lower() == HELP:
