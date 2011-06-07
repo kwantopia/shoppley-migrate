@@ -8,6 +8,8 @@ Replace these with more appropriate tests for your application.
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
+from django.conf import settings
+
 import csv, json
 import pprint
 from django.contrib.auth.models import User
@@ -24,6 +26,7 @@ class SimpleTest(TestCase):
 
 	def setUp(self):
 		self.pp = pprint.PrettyPrinter(indent=2)
+		self.f = open("/tmp/shoppley.test.out.txt", "w")
 
 		us, created = Country.objects.get_or_create(name="United States", code="us")
 		region, created = Region.objects.get_or_create(name="Massachusetts", code="ma", country=us)
@@ -71,66 +74,75 @@ class SimpleTest(TestCase):
 		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone="617-909-2101", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
-		print "*"*100
-		print comment
-		print "-"*100
-		print "POST URL:", command
-		print "PARAMS:"
-		self.pp.pprint(params) 
+		output = []
+		output.append("*"*100+"\n")
+		output.append(comment+"\n")
+		output.append("-"*100+"\n")
+		output.append("POST URL: %s\n"%command)
+		output.append("PARAMS:\n")
+		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.post(command, params)
-		print "-"*100
-		print "RESPONSE:"
+		#print response
+		output.append("-"*100+"\n")
+		output.append("RESPONSE:\n")
 		if redirect:
 			if response.status_code == 302:
-				print "Should be redirecting to: %s"%response["Location"]
+				output.append("Should be redirecting to: %s"%response["Location"]+"\n")
 				return "Redirect to:",response["Location"]
 			else:
 				return "Response code:", response.status_code
 		else:
 			self.assertEqual(response.status_code, 200)
-		print json.dumps(json.loads(response.content), indent=2)
+		output.append(json.dumps(json.loads(response.content), indent=2)+"\n")
+		self.f.writelines(output)
 		return json.loads(response.content)
 
 	def get_json(self, command, params={}, comment="No comment", redirect=False):
-		print "*"*100
-		print comment
-		print "-"*100
-		print "GET URL:", command
-		print "PARAMS:"
-		self.pp.pprint(params)
+		output = []
+		output.append("*"*100+"\n")
+		output.append(comment+"\n")
+		output.append("-"*100+"\n")
+		output.append("GET URL: %s\n"%command)
+		output.append("PARAMS:\n")
+		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.get(command, params)
 		#print response
-		print "-"*100
-		print "RESPONSE:"
+		output.append("-"*100+"\n")
+		output.append("RESPONSE:\n")
 		if redirect:
 			if response.status_code == 302:
-				print "Should be redirecting to: %s"%response["Location"]
+				output.append("Should be redirecting to: %s"%response["Location"]+"\n")
 				return "Redirect to:",response["Location"]
 			else:
 				return "Response code:", response.status_code
 		else:
 			self.assertEqual(response.status_code, 200)
-		print json.dumps(json.loads(response.content), indent=2)
+		output.append(json.dumps(json.loads(response.content), indent=2)+"\n")
+		self.f.writelines(output)
 		return json.loads(response.content)
 
 	def get_web(self, command, params={}, comment="No comment"):
-		print "*"*100
-		print comment
-		print "-"*100
-		print "GET WEB URL", command
-		print "PARAMS:" 
-		self.pp.pprint(params)
+		output = []
+		output.append("*"*100+"\n")
+		output.append(comment+"\n")
+		output.append("-"*100+"\n")
+		output.append("GET WEB URL: %s\n"%command)
+		output.append("PARAMS:\n")
+		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.get(command, params)
+		self.f.writelines(output)
 		return response
 
 	def post_web(self, command, params={}, comment="No comment"):
-		print "*"*100
-		print comment
-		print "-"*100
-		print "POST WEB URL", command
-		print "PARAMS:" 
-		self.pp.pprint(params)
+		output = []
+		output.append("*"*100+"\n")
+		output.append(comment+"\n")
+		output.append("-"*100+"\n")
+		output.append("POST WEB URL: %s\n"%command)
+		output.append("PARAMS:\n")
+		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.post(command, params)
+		self.f.writelines(output)
 		return response
 
 	def create_test_offers(self):
@@ -189,6 +201,8 @@ class SimpleTest(TestCase):
 			Generate mobile API doc as it tests
 		"""
 
+		self.f = open(settings.PROJECT_ROOT+"/media/mobile.api.txt", "w")	
+
 		self.create_test_offers()
 
 		email = "user1@customer.com"
@@ -210,14 +224,14 @@ class SimpleTest(TestCase):
 
 		offer_code_to_forward = response["offers"][1]["code"]
 
-		comment = "Show narrow geographical offers, st also returns offer details"
+		comment = "Show narrow geographical offers, it also returns offer details"
 		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
 
 		self.redeem_offer()
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
-		comment = "Forward offer to a list of phone numbers"
+		comment = "Forward offer to a list of phone numbers (text messages are sent to them and new accounts created if they are not current users with text message showing random passwords)"
 		response = self.post_json( reverse("m_offer_forward"), {'offer_code': offer_code_to_forward,'phones':['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'], 'note': 'This offer might interest you.'}, comment)
 
 		comment = "Provide feedback on an offer"
@@ -371,7 +385,8 @@ class SimpleTest(TestCase):
 
 		comment = "Merchant logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
-	
+
+		self.f.close()
 	
 	def test_basic_addition(self):
 		"""
