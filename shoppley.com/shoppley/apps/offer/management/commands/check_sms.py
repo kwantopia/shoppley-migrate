@@ -47,10 +47,10 @@ class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
 	DEBUG = False
 	def notify(self, phone, msg):
-		if self.DEBUG:
-			print _("\"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
-		else:
-			sms_notify(phone,msg)
+#		if self.DEBUG:
+#			print _("\"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
+#		else:
+		sms_notify(phone,msg)
 
 
 	def info(self, offercode):
@@ -459,6 +459,7 @@ class Command(NoArgsCommand):
 		smses = voice.sms()
 		self.update_expired()
 		for msg in extractsms(voice.sms.html):
+			sms_notify(msg["from"], "hello")
 			try:
 				self.test_handle(msg)
 			except CommandError:
