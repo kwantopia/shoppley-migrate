@@ -1,3 +1,6 @@
+#tabhead .logo {
+	height: 73px !important;
+}
 #subnav {
   background: #F4911D;
   border: 0px;

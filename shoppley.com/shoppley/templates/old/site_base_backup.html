@@ -5,9 +5,37 @@
 {% load analytics %}
 
 {% block extra_head_base %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/site_tabs.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/avatar.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/blogs.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/comments.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/friends.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/groups.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/locations.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/messages.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/microblogging.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/pagination.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/photos.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/tabs.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/topics.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/wiki.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/jquery.autocomplete.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}bookmarks/css/bookmarks.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/screen.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/print.css" type="text/css" media="print" />
 	<!--[if IE]><link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]--> 
+
+	<!-- [template css] begin -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/screen.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/960.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" type="text/css" media="print" /> 
+	<!--[if IE]>
+		<link rel="stylesheet" href="css/ie.css" type="text/css" media="screen, projection" />
+	<![endif]-->
+	
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/project.css" type="text/css" media="screen, projection" />
+
+
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/redmond/jquery-ui.css" type="text/css"/>
   <!-- using google cdn above <link rel="stylesheet" href="{{ STATIC_URL }}css/redmond/jquery-ui-1.8.11.custom.css" type="text/css"/> -->
 	<!-- [template css] end -->
