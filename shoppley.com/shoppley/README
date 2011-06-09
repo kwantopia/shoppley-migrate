@@ -9,12 +9,25 @@ $ pip install virtualenvwrapper
 # create a virtual environment environment
 # home directory for you virtual environments, I just named it virtual 
 $ mkdir /home/virtual
-# For MAC with macports: /opt/local/bin/virtualenv-2.7 shoppley-env 
+# For MAC (if you develop in workspace directory use below, if you develop
+# on Documents directory use the second line
+$ mkdir ~/workspace/virtual 
+$ mkdir ~/Documents/virtual
+
+# For MAC with macports: 
+$ /opt/local/bin/virtualenv-2.7 shoppley-env 
+# For DEV or DEPLOYMENT
 $ /usr/local/bin/virtualenv shoppley-env
+
+# For MAC
+$ source ~/Document/virtual/shoppley-env/bin/activate
+# For DEV or DEPLOYMENT
 $ source /home/virtual/shoppley-env/bin/activate
 
-# go to where you have checked out the shoppley code
+# DEPLOYMENT: go to where you have checked out the shoppley code
 $ cd /home/www/shoppley.com/shoppley 
+# DEV SERVER
+$ cd /home/www/webuy.mit.edu/shoppley 
 
 # install requirements
 $ pip install Django (will install 1.3 the latest)
@@ -22,17 +35,18 @@ $ pip install Pinax (will install the latest 0.9)
 $ pip install -r requirements.txt
 
 == Dev server ==
-If you are on dev server create a softlink to easily access the project
+# If you are on dev server create a softlink to easily access the project
+# from your home directory after logging in
 
 ln -s /home/www/webuy.mit.edu/shoppley shoppley
 
 == patches ==
 
-patches account/openid_consumer.py PinaxConsumer to have a __name__ attribute
-patches profiles and microblogging apps in pinax to take e-mail as part of url
+# patches account/openid_consumer.py PinaxConsumer to have a __name__ attribute
+# patches profiles and microblogging apps in pinax to take e-mail as part of url
 
 $ cd patches
-# modify patch.sh to point to your PINAX_HOME
+# modify patch.sh to point to your PINAX_HOME, and necessary directories
 $ vi patch.sh
 $ ./patch.sh
 
@@ -45,10 +59,17 @@ $ ./download.sh
 
 == syncdb ==
 
+$ python manage.py syncdb
+
 If models have changed we need to delete dev.db and syncdb
 
 == test data ==
 
+# Updated by Meng
+python manage.py test_initialize
+
+#################################
+# Deprecated
 We can run "python manage.py shell"
 
 >> run apps/shoppleyuser/tests.py
@@ -59,6 +80,8 @@ We can run "python manage.py shell"
 to prepopulate with a merchant (user: kool2@mit.edu, pw: hello) and customer (user: kool@mit.edu, pw: hello).
 
 Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
+# Deprecated
+##################################
 
 == DEPLOYMENT ==
 
