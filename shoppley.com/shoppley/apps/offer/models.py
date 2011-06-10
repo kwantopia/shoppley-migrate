@@ -227,6 +227,9 @@ class OfferCode(models.Model):
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)
 	expiration_time 	= models.DateTimeField()
+	feedback		= models.TextField()
+	# 1 through 5, 0 is unrated
+	rating			= models.IntegerField(default=0)
 
 	def is_valid(self):
 		return datetime.now() < time_stamp + timedelta(minutes=self.offer.duration)

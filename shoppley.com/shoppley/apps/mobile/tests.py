@@ -231,14 +231,16 @@ class SimpleTest(TestCase):
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
+		review_offer_id = response["offers"][0]["offer_id"]
+
 		comment = "Forward offer to a list of phone numbers (text messages are sent to them and new accounts created if they are not current users with text message showing random passwords)"
 		response = self.post_json( reverse("m_offer_forward"), {'offer_code': offer_code_to_forward,'phones':['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'], 'note': 'This offer might interest you.'}, comment)
 
 		comment = "Provide feedback on an offer"
-		response = self.post_json( reverse("m_offer_feedback"), {'feedback':'The fish dish was amazing'}, comment)
+		response = self.post_json( reverse("m_offer_feedback"), {'offer_id': review_offer_id, 'feedback':'The fish dish was amazing'}, comment)
 
 		comment = "Rate an offer 1-5, 0 if unrated"
-		response = self.post_json( reverse("m_offer_rate"), {'rating':5}, comment)
+		response = self.post_json( reverse("m_offer_rate"), {'offer_id': review_offer_id, 'rating':5}, comment)
 
 		# test points
 		comment = "Shows a summary of accumulated points for customer"

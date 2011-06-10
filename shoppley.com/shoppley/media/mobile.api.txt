@@ -20,7 +20,7 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "pd7h3j", 
+      "code": "xbnkgx", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "", 
@@ -34,7 +34,7 @@ RESPONSE:
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "urxfd0", 
+      "code": "8kckmc", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -48,7 +48,7 @@ RESPONSE:
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "yhi0nj", 
+      "code": "pr1gtg", 
       "description": "Free drink when you order $10 or more", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -62,7 +62,7 @@ RESPONSE:
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "ar5rr3", 
+      "code": "qy4zkf", 
       "description": "Half priced cookies", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -90,7 +90,7 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "pd7h3j", 
+      "code": "xbnkgx", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "", 
@@ -104,7 +104,7 @@ RESPONSE:
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "urxfd0", 
+      "code": "8kckmc", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -118,7 +118,7 @@ RESPONSE:
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "yhi0nj", 
+      "code": "pr1gtg", 
       "description": "Free drink when you order $10 or more", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -132,7 +132,7 @@ RESPONSE:
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "ar5rr3", 
+      "code": "qy4zkf", 
       "description": "Half priced cookies", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -160,7 +160,7 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "urxfd0", 
+      "code": "8kckmc", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
@@ -182,12 +182,12 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'urxfd0',
+  'offer_code': u'8kckmc',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665']}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "confirm_msg": "Offer by \"urxfd0\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"8kckmc\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result": 1
 }
 ****************************************************************************************************
@@ -195,19 +195,23 @@ Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
 PARAMS:
-{ 'feedback': 'The fish dish was amazing'}
+{ 'feedback': 'The fish dish was amazing', 'offer_id': 3}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "result": 1
+}
 ****************************************************************************************************
 Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
 PARAMS:
-{ 'rating': 5}
+{ 'offer_id': 3, 'rating': 5}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "result": 1
+}
 ****************************************************************************************************
 Shows a summary of accumulated points for customer
 ----------------------------------------------------------------------------------------------------
@@ -259,7 +263,7 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "pl4u9u", 
+      "code": "abvys0", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 

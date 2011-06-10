@@ -269,13 +269,47 @@ def offer_forward(request):
 @csrf_exempt
 @login_required
 def offer_feedback(request):
+	"""
+		Provide feedback regarding a used offer
+	"""
 	data = {}
+
+	offer_code_id = request.POST["offer_id"]
+	feedback = request.POST["feedback"]
+
+	try:
+		offer_code = OfferCode.objects.get(id=offer_code_id)
+		offer_code.feedback = feedback
+		offer_code.save()
+		data["result"] = 1
+	except OfferCode.DoesNotExist:
+		# invalid offer code id
+		data["result"] = -1
+
 	return JSONHttpResponse(data)	
 
 @csrf_exempt
 @login_required
 def offer_rate(request):
+	"""
+		Provide rate regarding a used offer
+
+		:param rating: 1 to 5
+	"""
 	data = {}
+
+	offer_code_id = request.POST["offer_id"]
+	rating = request.POST["rating"]
+
+	try:
+		offer_code = OfferCode.objects.get(id=offer_code_id)
+		offer_code.rating = rating 
+		offer_code.save()
+		data["result"] = 1
+	except OfferCode.DoesNotExist:
+		# invalid offer code id
+		data["result"] = -1
+
 	return JSONHttpResponse(data)	
 
 
