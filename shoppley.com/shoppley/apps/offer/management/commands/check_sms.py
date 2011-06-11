@@ -11,6 +11,7 @@ from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user
 from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime
+from worldbank.models import Transaction
 from googlevoice import Voice
 from googlevoice.util import input
 from googlevoice.extractsms import extractsms
@@ -161,11 +162,27 @@ class Command(NoArgsCommand):
 										"offer_code": offer_code.code,
 										"customer": offercode_obj.customer
 									}
+									mtransaction = Transaction.objects.create(time_stamp = current_time,
+														dst = su.merchant,
+														ttype = "MOR")
+									mtransaction.offercodes.add(offercode_obj)
+									mtransaction.execute()
 									self.notify(su.phone, receipt_msg)
 									customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
 										"merchant": su.merchant.business_name
 									}
+									ctransaction = Transaction.objects.create(time_stamp = current_time,
+														dst=offercode_obj.customer,
+														ttype = "COR")
+									ctransaction.offercodes.add(offercode_ob)
+									ctransaction.execute()
 									self.notify(phone, customer_msg)
+									if offercode_obj.forwarder:
+										ftransaction=Transaction.objects.create(time_stamp=current_time,
+															dst=offercode_obj.forwarder,
+															ttype="CFR")	
+										ftransaction.offercodes.add(offercode_obj)
+										ftransaction.execute()
 								else:
 									receipt_msg = _("Code reuse! %(offer_code)s was redeemed by %(customer)s at %(time)s.") % {
 										"offer_code": offer_code.code,
@@ -217,37 +234,62 @@ class Command(NoArgsCommand):
 							starting_time=datetime.now())
 					offer.save()
 					offer.distribute()
+					
 					receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"status %(code)s\"") % {
 						"time": pretty_datetime(offer.time_stamp),
 						"offer": offer,
 						"number": offer.num_received(),
 						"code": offer.gen_tracking_code(),
 					}
+						
 					self.notify(su.phone, receipt_msg)
-
+					transaction = Transaction.objects.create(time_stamp=datetime.now(),
+										dst = su.merchant,
+										ttype = "MOD")
+					ocs = offer.offercode_set.all()
+					for oc in ocs:
+						transaction.offercodes.add(oc)
+					transaction.execute()
 				# --------------------- STATUS : "status<SPACE>trackingcode" ---------------
 				elif parsed[0].lower() == STATUS:
-					if (len(parsed)<2):
-						receipt_msg=_("Command Error! To track an offer, please use this command: status<SPACE>trackingcode")
-						self.notify(su.phone,receipt_msg)
-						raise CommandError("Incorrectly formed status command: %s" % msg["text"])
-					code = parsed[1].strip()
+					if (len(parsed)==1):
+						 
+						offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
+						if offers.count()>0:
+							offer=offers[0]
+							trackingcode = TrackingCode.objects.get(offer=offer)
+							sentto  = offer.num_init_sento
+							forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
+							total = sentto + forwarded
+							receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. To track the offer type \"status<SPACE>%(code)s\"") % {
+							"code":code,
+							"sentto":sentto,
+                                                	"forwarded":forwarded,
+	                                             	"total":total,
+                                                	}
+							self.notify(su.phone,receipt_msg)
+						else:
+							receipt_msg=_("Fail to get status! You have not started an offer yet. To start an offer, reply with \"offer<SPACE>description\"")
+							self.notify(su.phone,receipt_msg)
+							#raise CommandError("Incorrectly formed status command: %s" % msg["text"])
+					else:
+						code = parsed[1].strip()
 					
-					try:
-						trackingcode = TrackingCode.objects.get(code__iexact=code)
-					except TrackingCode.DoesNotExist:
-						receipt_msg = _("The tracking code can not be found. Please enter a correct tracking code.")
-						self.notify(su.phone,receipt_msg)
-						raise CommandError ("Tracking code not found")
-					offer = trackingcode.offer
-					people_sentto = offer.num_init_sentto
-					people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
-					receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached") % {
+						try:
+							trackingcode = TrackingCode.objects.get(code__iexact=code)
+						except TrackingCode.DoesNotExist:
+							receipt_msg = _("The tracking code can not be found. Please enter a correct tracking code.")
+							self.notify(su.phone,receipt_msg)
+							raise CommandError ("Tracking code not found")
+						offer = trackingcode.offer
+						people_sentto = offer.num_init_sentto
+						people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
+						receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached") % {
 												"code":code,"sentto":people_sentto,
 												"forwarded":people_forwarded,
 												"total":int(people_sentto)+int(people_forwarded),
 						}
-					self.notify(su.phone,receipt_msg)
+						self.notify(su.phone,receipt_msg)
 				# --------------------- RESIGNUP -------------------------
 				elif parsed[0].lower() == MERCHANT_SIGNUP:
 					receipt_msg = _("You are already a Shoppley merchant")
@@ -273,19 +315,26 @@ class Command(NoArgsCommand):
 
 				# ----------------- INFO : "info<SPACE>offercode+"----------------
 				if parsed[0].lower() == INFO:
-					if (len(parsed)<2):
-						receipt_msg=_("Command Error! Please type 'info <SPACE> your offercode'.")
-						self.notify(msg["from"],receipt_msg)
-						raise CommandError('Incorrectly formed info command: "%s"' % msg["text"])
+					if (len(parsed)==1):
+						offercodes = OfferCode.objects.filter(customer=su.customer).order_by("-time_stamp")
+						if offercodes.count()>0:
+							offercode = offercodes[0]
+							customer_msg = self.info(offercode)
+							self.notify(phone,customer_msg)
+						else:
+							receipt_msg=_("Fail to find your offer! You have not received an offer yet.")
+							self.notify(phone,receipt_msg)
+							#raise CommandError('Incorrectly formed info command: "%s"' % msg["text"])
 
-					customer_msg=""
-					for i in parsed[1:]:
-						parsed_offercode =i
-						offercode = self.check_offercode(parsed_offercode,phone)			
-						#print offercode		
-						customer_msg = customer_msg+ self.info(offercode)
+					else:
+						customer_msg=""
+						for i in parsed[1:]:
+							parsed_offercode =i
+							offercode = self.check_offercode(parsed_offercode,phone)			
+							#print offercode		
+							customer_msg = customer_msg+ self.info(offercode)
 	
-					self.notify(phone,customer_msg)
+						self.notify(phone,customer_msg)
 				# ------------------- STOP: "stop"----------------------
 				elif parsed[0].lower() == STOP:
 					

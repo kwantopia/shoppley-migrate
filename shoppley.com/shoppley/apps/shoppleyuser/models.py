@@ -44,8 +44,8 @@ class ZipCode(models.Model):
 
 class Category(models.Model):
 	name			= models.CharField(max_length=32)
-	parent			= models.ForeignKey("self")
-
+	parent			= models.ForeignKey("self",null=True)
+	tag			= models.CharField(max_length=32)
 	def __unicode__(self):
 		if self.parent:
 			return "%s: %s" % (self.parent.name, self.name)
@@ -124,4 +124,41 @@ class MerchantOfTheDay(models.Model):
 		return "%s - %s" % (self.date, self.merchant.business_name)
 
 
+###############
+# FOR BETA
+##############
+class BetaUser(models.Model):
+	email			= models.CharField(max_length=64) # must have
+	address_1		= models.CharField(max_length=64, blank=True)
+	address_2		= models.CharField(max_length=64, blank=True)
+	zipcode			= models.ForeignKey(ZipCode)
+	phone			= models.CharField(max_length=20, blank=True)
+	categories		= models.ManyToManyField(Category, null=True, blank=True)
+
+	def is_betacustomer(self):
+		return hasattr(self, "betacustomer")
+
+	def is_betamerchant(self):
+		return hasattr(self, "betamerchant")
+
+	def print_address(self):
+		if self.address_1=="":
+			return "No address given"
+		else:
+			return self.address_1 + "\n" + self.address_2
+	def __unicode__(self):
+		if self.is_customer():
+			return self.email
+		else:
+			return "%s (%s)" % (self.merchant.business_name, self.email)
+
+class BetaCustomer(BetaUser):
+	pass
+
+
+class BetaMerchant(BetaUser):
+	business_name	= models.CharField(max_length=64, blank=True)
+	url				= models.URLField(null=True, blank=True)
+	def __unicode__(self):
+		return "%s (%s %s)" % (self.business_name,self.email)
 

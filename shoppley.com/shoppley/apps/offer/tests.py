@@ -21,6 +21,7 @@ from offer.management.commands.check_sms import Command
 from shoppleyuser.models import *
 from offer.models import OfferCode, Offer, ForwardState, Feature, OfferCodeAbnormal, TrackingCode
 from shoppleyuser.utils import parse_phone_number
+from worldbank.models import *
 from pyparsing import *
 class CustomerFixture(AutoFixture):
 	class Values:
@@ -203,6 +204,12 @@ class SimpleTest(TestCase):
 		return response
 
 
+	def test_transaction(self):
+		user = Customer.objects.all()[0]
+		t = Transaction.objects.get(dst  = user , time_stamp=datetime.now(), ttype="MOD")
+		t.offercodes.add(OfferCode.objects.all()[0])
+		print t
+ 
 	def test_offer_cycle(self):
 		"""
 			submit some offers and check receiving of offers

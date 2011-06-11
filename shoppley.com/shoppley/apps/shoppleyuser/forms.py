@@ -199,3 +199,49 @@ class CustomerSignupForm(forms.Form):
 				
 		return username, password # required for authenticate()
 
+##############
+# FOR BETA
+#############
+class CustomerBetaSubscribeForm( forms.Form ):
+	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
+	address_1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
+	zip_code		= forms.CharField(max_length=10)
+	phone			= forms.CharField(max_length=20)
+
+	def clean_zip_code(self):
+		try:
+			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+			return self.cleaned_data["zip_code"]
+		except ZipCode.DoesNotExist:
+			raise forms.ValidationError(_("Not a valid zip code."))
+
+	def clean_email(self):
+		email = self.cleaned_data["email"]
+		try:
+			BetaCustomer = BetaCustomer.objects.get(email__iexact=email)
+		except User.DoesNotExist:
+			return self.cleaned_data["email"]
+		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
+		
+
+	def clean_phone(self):
+		if not phone_red.search(self.cleaned_data["phone"]):
+			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
+		try: 
+			BetaCustomer = BetaCustomer.objects.get(phone__icontains=self.cleaned_data["phone"])
+		except Customer.DoesNotExist:
+			return self.cleaned_data["phone"]
+		raise forms.ValidationError(_("This phone number is being used by another customer"))
+
+
+	#create a new beta customer and return the customer object
+	def save(self):
+		zipcode = self.clean_zip_code()
+		email = self.clean_email()
+		phone = self.clean_phone()
+		newbCustomer=BetaCustomer.objects.create(email = email, 
+							phone= phone,
+							address_1 = self.cleaned_data["address_1"], 
+							zipcode=ZipCode.objects.get(code=zipcode))
+		return newbCustomer
+

@@ -27,7 +27,7 @@ from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm
 
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
@@ -130,3 +130,33 @@ def login_modal(request):
 		data["result"] = "-1"
 
 	return JSONHttpResponse(data) 
+
+
+#########################################
+## FOR BETA USAGE
+#########################################
+def customer_beta_subscribe(request, form_class=CustomerBetaSubscribeForm,
+	template_name="shoppleyuser/customer_signup.html"):
+	if request.method == "POST":
+		redirect_url = "shoppleyuser/customer_beta_subscribe_success.html"
+		form = form_class(request.POST)
+		if form.is_valid():
+			customer=form.save()
+			data = request.POST["data"]
+			try:	
+				for category in data:
+					customer.categories.add(Category.objects.get(tag=category))
+			except:
+				## signup first before choose preferences		
+				pass	
+			return HttpResponseRedirect(redirect_url)
+
+	else:
+		form = form_class()
+
+	print ">>>>>>>>create form"
+	return render_to_response(template_name, {
+		"form": form,
+		"categories": all_categories,
+	}, context_instance=RequestContext(request))
+
