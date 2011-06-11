@@ -217,6 +217,7 @@ INSTALLED_APPS = [
 	'autofixture',
 	'buxfer',
 	'mobile',
+	'worldbank',
 ]
 
 FIXTURE_DIRS = [
