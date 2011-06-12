@@ -13,15 +13,21 @@ phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
 
 class MerchantSignupForm(forms.Form):
 	email = forms.EmailField(label = _("Email"), required = True, widget=forms.TextInput())
+
+	username = forms.CharField(label=_("Username"), required=True, widget=forms.TextInput())
+	business_name   = forms.CharField(max_length=64)
+	address_1               = forms.CharField(label=_("Business address"), max_length=64, required=False)
+
+	zip_code                = forms.CharField(max_length=10)
+	phone                   = forms.CharField(max_length=20)
+
 	password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(render_value=False))
 	password2 = forms.CharField(label=_("Password (again)"), widget=forms.PasswordInput(render_value=False))
 
 	confirmation_key = forms.CharField(max_length=40, required=False, widget=forms.HiddenInput())
-	business_name	= forms.CharField(max_length=64)
-	address_1		= forms.CharField(label=_("Street address"), max_length=64, required=False)
+
 	# address_2		= forms.CharField(label=_("line 2"), max_length=64, required=False)
-	zip_code		= forms.CharField(max_length=10)
-	phone			= forms.CharField(max_length=20)
+	
 
 	def clean_zip_code(self):
 		try:
@@ -55,7 +61,7 @@ class MerchantSignupForm(forms.Form):
 		return self.cleaned_data
 
 	def save(self):
-		username = self.cleaned_data["email"].lower()
+		username = self.cleaned_data["username"].lower()
 		email = self.cleaned_data["email"].lower()
 		password = self.cleaned_data["password1"]
 		
@@ -106,15 +112,22 @@ class MerchantSignupForm(forms.Form):
 		return username, password # required for authenticate()
 
 class CustomerSignupForm(forms.Form):
-
 	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
+	
+	username = forms.CharField(label=_("Username"), required=True, widget=forms.TextInput())
+	address_1               = forms.CharField(label=_("Street Address"), max_length=64, required=False)
+
+	zip_code                = forms.CharField(max_length=10)
+	phone                   = forms.CharField(max_length=20)
+	
+#	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
 	password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(render_value=False))
 	password2 = forms.CharField(label=_("Password (again)"), widget=forms.PasswordInput(render_value=False))
 	confirmation_key = forms.CharField(max_length=40, required=False, widget=forms.HiddenInput())
-	address_1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
+	#address_1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
 	# address_2		= forms.CharField(max_length=64, required=False)
-	zip_code		= forms.CharField(max_length=10)
-	phone			= forms.CharField(max_length=20)
+	#zip_code		= forms.CharField(max_length=10)
+	#phone			= forms.CharField(max_length=20)
 
 	def clean_zip_code(self):
 		try:
@@ -149,7 +162,7 @@ class CustomerSignupForm(forms.Form):
 
 	def save(self):
 		# assign email as user name
-		username = self.cleaned_data["email"].lower()
+		username = self.cleaned_data["username"].lower()
 		email = self.cleaned_data["email"].lower()
 		password = self.cleaned_data["password1"]
 		
