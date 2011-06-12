@@ -1,0 +1,145 @@
+/*.header {
+	background: transparent url(../images/bg.png);
+
+}*/
+body {
+	background: transparent url(../images/bg.png);
+	background-repeat: repeat-x;
+}
+
+.header {
+	padding-top: 10px;
+}
+.footer {
+	background-color: #FAFAFA;
+	padding: 15px;
+	border-top: 1px solid #D4DA30;
+}
+
+a, a:active, a:visited {
+	color: #35ACE4;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ED5F87;
+}
+.last-call {
+	font-weight: bold;
+	color: #A80010;
+}
+.main-box {
+}
+.msg-box {
+	background-color: #F2EEEC;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 15px;
+	
+}
+.main-box, .msg-box {
+	margin-right: 15px;
+}
+
+
+.main-box, .side-bar {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow:0px 1px 2px #9E9E9E;
+	-webkit-box-shadow:0px 1px 2px #9E9E9E;
+	-moz-box-shadow:0px 1px 2px #9E9E9E;	
+}
+
+.main-box .main-content, .main-box .main-header, .side-bar .sub-header, .side-bar .sub-content {
+	padding: 5px 15px;
+}
+
+.side-bar .sub-header {
+	background-color: #DDD4D0;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+.main-box .main-header, .side-bar .sub-header {
+	font-weight: bold;
+	color: #474341;
+}
+
+.main-box .main-header {
+	background-color: #F2EEEC;
+}
+
+.side-bar .sub-content {
+	background-color: #797979;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+
+}
+
+.side-bar .sub-content {
+	color: #F2EEEC;
+	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
+}
+
+
+.clear {
+	width: 100%;
+	clear: both;
+	float: none;
+	height: 1px;
+	border: none;
+	margin: 8px;
+}
+.signup-header.customer, .signup-header.merchant {
+	padding: 15px 30px 15px 140px;
+	color: #666666;
+	font-size: 1.2em;
+	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
+}
+
+.signup-header span {
+	color: #D4DA30;
+	background-color: #FFFFFF;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.signup-header.customer {
+	background: transparent url({{ STATIC_URL }}/images/boram/signup-customer.png) no-repeat;
+}
+
+.signup-header.merchant {
+	background: transparent url({{ STATIC_URL }}/images/boram/signup-merchant.png) no-repeat;
+}
+
+.signup-form {
+	padding: 15px 15px 15px 20px;
+}
+
+.signup-form, .signup-form table {
+	background-color: #FAFAFA;
+}
+
+.signup-form table td.labels {
+	text-align: right;
+	width: 100px;
+}
+.signup-form table tbody tr td {
+	background-color: #FAFAFA;
+}
+
+.signup-form input {
+	width: 180px;
+}
+
+
+
