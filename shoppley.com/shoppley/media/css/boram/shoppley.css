@@ -1,15 +1,15 @@
-/*.header {
-	background: transparent url(../images/bg.png);
-
-}*/
+.login {
+	float:right;
+}
 body {
-	background: transparent url(../images/bg.png);
+	background: transparent url(/site_media/static/images/boram/bg.png);
 	background-repeat: repeat-x;
 }
 
 .header {
 	padding-top: 10px;
 }
+
 .footer {
 	background-color: #FAFAFA;
 	padding: 15px;
@@ -29,6 +29,8 @@ a:hover {
 	color: #A80010;
 }
 .main-box {
+		border: 1px solid #F3F3F3;
+
 }
 .msg-box {
 	background-color: #F2EEEC;
@@ -47,9 +49,9 @@ a:hover {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	box-shadow:0px 1px 2px #9E9E9E;
-	-webkit-box-shadow:0px 1px 2px #9E9E9E;
-	-moz-box-shadow:0px 1px 2px #9E9E9E;	
+	box-shadow: 0px 1px 2px #9E9E9E;
+	-webkit-box-shadow: 0px 1px 3px #9E9E9E;
+	-moz-box-shadow: 0px 1px 3px #9E9E9E;	
 }
 
 .main-box .main-content, .main-box .main-header, .side-bar .sub-header, .side-bar .sub-content {
@@ -99,7 +101,7 @@ a:hover {
 	border: none;
 	margin: 8px;
 }
-.signup-header.customer, .signup-header.merchant {
+.signup-header{
 	padding: 15px 30px 15px 140px;
 	color: #666666;
 	font-size: 1.2em;
@@ -114,21 +116,30 @@ a:hover {
 }
 
 .signup-header.customer {
-	background: transparent url({{ STATIC_URL }}/images/boram/signup-customer.png) no-repeat;
+	background: transparent url(/site_media/static/images/boram/signup-customer.png) no-repeat;
 }
 
 .signup-header.merchant {
-	background: transparent url({{ STATIC_URL }}/images/boram/signup-merchant.png) no-repeat;
+	background: transparent url(/site_media/static/images/boram/signup-merchant.png) no-repeat;
 }
 
 .signup-form {
-	padding: 15px 15px 15px 20px;
+	padding: 15px 50px;
 }
 
+.ctrlHolder {
+	text-align: right;
+	padding-bottom: 8px;
+}
+.ctrlHolder label {
+	padding-right: 15px;
+}
 .signup-form, .signup-form table {
 	background-color: #FAFAFA;
 }
-
+.form_block {
+	float: right;
+}
 .signup-form table td.labels {
 	text-align: right;
 	width: 100px;
@@ -140,6 +151,33 @@ a:hover {
 .signup-form input {
 	width: 180px;
 }
+.green-text {
+	color: #D4DA30;
+	font-size: 1.5em;
+	font-weight: bold;
+	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
+}
 
+.instruction {
+	padding: 10px 10px 10px 215px;
+	height: 180px;
+	font-size: 1.3em;
+	color: #666666;
+}
+
+#get-offers {
+	background: transparent url(/site_media/static/images/boram/landing-customer-getoffers.png) no-repeat;	
+}
+
+#redeem-offers {
+	background: transparent url(/site_media/static/images/boram/landing-customer-redeemoffers.png) no-repeat;	
+}
+
+#share-offers {
+	background: transparent url(/site_media/static/images/boram/landing-customer-shareoffers.png) no-repeat;	
+}
+#get-offers, #redeem-offers, #share-offers {
+	background-position: top left;
+}
 
 
