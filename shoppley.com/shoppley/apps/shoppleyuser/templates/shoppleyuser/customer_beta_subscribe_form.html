@@ -1,0 +1,53 @@
+{% load i18n %}
+{% load uni_form_tags %}
+
+    <div>
+	<div class= "subscribe" >
+		<form class="signup uniForm" id="signup_form" method="post" action="{% url customer_beta_subscribe %}">
+				{% csrf_token %}
+		    <fieldset class="inlineLabels">
+		        {{ form|as_uni_form }}
+		    </fieldset>
+		</form>
+	</div>
+
+	{% if categories %}
+	<div class="preferences" >
+	<h2>{% trans "Choose your interests! Help us serve you better." %}</h2>
+	{% for category in categories %}
+		<div class="category" >
+			<label for="{{ category.tag }}"> <input type="checkbox" id="{{ category.tag }}" class="select-box"> {{ category.name }} <label>
+		</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+
+	<input type="submit" class="beta-subscribe" value="{% trans "Subscribe &raquo;" %}" />
+    </div>
+
+
+{% block extra_body %}
+
+    <script type="text/javascript">
+        $(function(){
+	
+	function get_selected(){
+		var data =new Object();
+		$("input.select-box").each(function(i) {
+			var i = 0;
+			if (this.checked){
+				data[i++]= this.id;
+			}
+		});
+		return data;
+	}
+
+	$("input.beta-subscribe").click(function() {
+		var data = get_selected();
+		$.post("{% url customer_beta_subscribe %}", {
+			"data": data
+			}
+	});
+	});
+    </script>
+{% endblock %}
