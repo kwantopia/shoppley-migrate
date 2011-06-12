@@ -3,10 +3,10 @@
 Prerequisites: Python 2.7
 
 #Install latest virtualenv
-$ pip install virtualenv
-$ pip install virtualenvwrapper
+$ sudo pip install virtualenv
+$ sudo pip install virtualenvwrapper
 
-# create a virtual environment environment
+# For Linux create a virtual environment environment
 # home directory for you virtual environments, I just named it virtual 
 $ mkdir /home/virtual
 # For MAC (if you develop in workspace directory use below, if you develop
@@ -16,7 +16,7 @@ $ mkdir ~/Documents/virtual
 
 # For MAC with macports: 
 $ /opt/local/bin/virtualenv-2.7 shoppley-env 
-# For DEV or DEPLOYMENT
+# For Linux DEV or DEPLOYMENT
 $ /usr/local/bin/virtualenv shoppley-env
 
 # For MAC
