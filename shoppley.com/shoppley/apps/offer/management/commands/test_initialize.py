@@ -1,5 +1,6 @@
 from django.core.management.base import NoArgsCommand
 from shoppleyuser.models import *
+from shoppleyuser.utils import parse_phone_number
 
 class Command(NoArgsCommand):
 	def handle_noargs(self, **options):
@@ -11,11 +12,15 @@ class Command(NoArgsCommand):
 		u, created = User.objects.get_or_create(username="kool2@mit.edu", first_name="Kwan2", last_name="Lee2", email="kool2@mit.edu")
 		u.set_password("hello")
 		u.save()
-		shop_merchant, created = Merchant.objects.get_or_create(user=u, address_1="15 Pearl St.", zipcode = zipcode, phone="617-871-0710", business_name="Kwan's Pizza", admin="Jake Foster" )
+
+    num1 = "617-871-0710"
+		shop_merchant, created = Merchant.objects.get_or_create(user=u, address_1="15 Pearl St.", zipcode = zipcode, phone=parse_phone_number(num1), business_name="Kwan's Pizza", admin="Jake Foster" )
 		
 		u, created = User.objects.get_or_create(username="kool@mit.edu", first_name="Kwan", last_name="Lee", email="kool@mit.edu")
 		u.set_password("hello")
 		u.save()
-		shop_user, created = Customer.objects.get_or_create(user=u, address_1="20 Pearl St. apt 1", zipcode = zipcode, phone="617-909-2101" )
+
+    num2 = "+1 617-909-2101"
+		shop_user, created = Customer.objects.get_or_create(user=u, address_1="20 Pearl St. apt 1", zipcode = zipcode, phone=parse_phone_number(num2) )
 		shop_user.merchant_likes.add(shop_merchant)
 

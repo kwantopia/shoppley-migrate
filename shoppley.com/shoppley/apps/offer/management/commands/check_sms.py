@@ -434,7 +434,7 @@ class Command(NoArgsCommand):
 					parsed = customer_pattern.parseString(text)
 					
 					#------------------------------- MERCHANT SIGNUP: "merchant_signup<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
-					if  parsed[0].lower() ==MERCHANT_SIGNUP:
+					if  parsed[0].lower() == MERCHANT_SIGNUP:
 						if (len(parsed)<4):
 							receipt_msg=_("Fail to sign up! Please follow this command: 'merchant_signup email zipcode business_name'")
 							self.notify(phone,receipt_msg)      
@@ -488,7 +488,7 @@ class Command(NoArgsCommand):
 
 					else:
 					# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
-						receipt_msg=_("Welcome to Shoppley! You are currently not one of our users. Please sign up @ www.shoppley.com or send us a text message to 123456 with this command: \"signup<SPACE>email_address<SPACE>zipcode\" to sign up as a customer or \"merchant_signup<SPACE>email_address<SPACE>zipcode<SPACE>business_name\" to sign up as a business")
+						receipt_msg=_("Welcome to Shoppley! You are currently not one of our users. Please sign up @ www.shoppley.com or send us a text message to %(shoppley_num)s with this command: \"signup<SPACE>email_address<SPACE>zipcode\" to sign up as a customer or \"merchant_signup<SPACE>email_address<SPACE>zipcode<SPACE>business_name\" to sign up as a business") % { "shoppley_num": "508-690-0888" }
 						print phone
 						self.notify(phone,receipt_msg)
 
