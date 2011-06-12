@@ -1,0 +1,134 @@
+{% extends "beta_site_base.html" %}
+
+{% load i18n %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block not_used %}
+		<!-- START NAVIGATION -->
+   	  	<div class="span-16 header last">
+   	  		<div id="navigation">
+				<ul id="nav">
+					<li id="home"><a href="{% url home %}" title="Home page"class="currentPage">Home</a></li>
+					<li id="portfolio"><a href="" title="Portfolio">Dash Board</a></li>
+					<li id="contact"><a href="" title="Contact">Contact</a></li>
+					<li id="about"><a href="{% url about %}" title="About">About</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- END NAVIGATION -->
+{% endblock %}
+
+{% block subnav_base %}
+{% endblock %}
+
+{% block body %}
+    <h1>{% trans "Shoppley brings you real-time offers" %}</h1>
+    
+    <p>
+        {% blocktrans %}
+        <table id="features">
+          <tbody>
+            <tr>
+              <td>
+                <div class="feature">
+					<h2>Register <span class="orange">address</span></h2>
+					
+					<div class="feature-content">
+							Register your primary address and create an account.
+					</div>
+					<div class="center feature-image">
+					  <img src="{{ STATIC_URL }}images/icons/address.png"/>
+					</div>
+                </div>
+              </td>
+              <td class="left-indent">
+                <div class="feature">
+					<h2>Ready <span class="orange">your phone</span></h2>
+					
+					<div class="feature-content">
+						Register your phone number where you can receive txt messages.
+						<span class="greyRight">[Mobile App coming soon.]</span>
+					</div>
+
+					<div class="center feature-image">
+					  <img src="{{ STATIC_URL }}images/icons/phone.png"/>
+					</div>
+
+                </div>
+              </td>
+              <td class="left-indent">
+                <div class="feature">
+					<h2>Start <span class="orange">receiving offers</span></h2>
+					<div class="feature-content">
+						Decide how many offers you want on a day. 
+					</div>
+					<div class="center feature-image">
+					  <img src="{{ STATIC_URL }}images/icons/offers.png"/>
+					</div>
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        {% endblocktrans %}
+    </p>
+    
+
+	<div class="span-24 bottom last">
+	<!-- START BOTTOM SECTION -->
+	
+		<!-- START TWITTER SECTION -->
+		<div class="span-8">
+		
+	   	</div>
+	   	<!-- END REGISTER SECTION -->
+
+   		<!-- START TESTIMONIAL SECTION -->
+   		<div class="span-8">
+   		
+	   		
+   		</div>
+		<!-- END TESTIMONIAL SECTION -->		
+   	
+		<!-- START CONTACT SECTION -->
+	   	<div class="span-8 last">
+	   	</div>
+	   	<!-- END CONTACT SECTION -->
+	   	
+	   	<div class="clear"></div>
+   	<!-- END BOTTOM SECTION -->
+   
+	</div>
+
+	<div id="user-sign-up-form" class="span-24 last">
+
+	    <p>
+		{% blocktrans %}
+			<div id="short-description">
+			We are coming soon! <br\>
+			Be the first to discover the best real-time local deals
+			</div>
+		{% endblocktrans %}
+	    </p>
+	{% if categories %}
+	Hello
+	{% endif %}
+	  {% include "shoppleyuser/customer_beta_subscribe_form.html" %}
+
+	</div>
+
+	<!--div id="video-intro" class="span-24 last">
+		<h4>Quick Intro Video</h4>
+	</div-->
+    
+{% endblock %}
+{% block extra_body %}
+<script>
+    $("input:submit").button();
+</script>
+{% endblock %}

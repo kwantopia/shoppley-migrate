@@ -1,0 +1,87 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+<html lang="en">
+
+  {% block body %}
+
+
+    <div class="container">
+   
+	<div class="span-17 last">
+    		<h2 class="alt msg-box">thank you for signing up our beta sms service! <br/>
+    			our fancy web site is coming soon, enjoy txt offers in the meantime.</h2>
+    	</div>
+     	      <div class="clear">&nbsp;</div>
+    	<div class="span-24">
+    		<div class="main-box">
+    			<div class="instruction" id="merc-get-offers">
+    				<span class="green-text">Sending Offers</span>
+    				<div>
+    					<ol>
+    						<li>Save 508-690-0888 in your cellphone as shoppley.</li>
+    						<li>Txt &lsquo;offer&rsquo; and the detail of the offer in 160 characters to start the 90 min timer.</li>
+    						<li>You will receive a tracking number txt and email.</li>
+    					</ol>
+    						Good Offer Examples:<br/>
+    						 20% off freshly baked bread this afternoon.<br/>
+    						 FREE orange juice with a sandwich purchase. <br/>					    						
+    				</div>
+    				<div class="clear">&nbsp;</div>
+    			</div>
+       		</div>
+       		<div class="clear">&nbsp;</div>
+       		<div class="main-box">
+    			<div class="instruction" id="merc-redeem-offers">
+    				<span class="green-text">Redeeming Offers</span>
+    				<div>
+    					<ol>
+    						<li>Txt &lsquo;redeem&rsquo; with each customer's offer code and their cellphone number.</li>
+    						<li>If the offer was valid, you will receive a reply.</li>
+    					</ol>
+    				</div>
+    				<div class="clear">&nbsp;</div>
+    			</div>
+       		</div>
+       		<div class="clear">&nbsp;</div>
+       		<div class="main-box">
+    			<div class="instruction" id="merc-track-offers">
+    				<span class="green-text">Track Customers</span>
+    				<div>
+    					<ol>
+    						<li>Txt &lsquo;status&rsquo; and your offer code to shoppley to find out number of customers that were reached.</li>
+    						<li>Based on the numbers, you can try providing different offers at different times.</li>
+    						<li>Soon you will be master in sending offers to maximize your profit.</li>
+    					</ol>
+    				</div>
+    				<div class="clear">&nbsp;</div>
+    			</div>
+       		</div>
+    	</div>
+    	    	<div class="clear" style="height: 40px;">&nbsp;</div>
+         	<div class="clear">&nbsp;</div>
+      	<div class="footer">
+      		<div class="span-4">
+      			<a href="#">About Us</a>	
+      		</div>
+      		<div class="span-4">
+      			<a href="#">Terms of Service</a>	
+      		</div>
+      		<div class="span-4">
+      			<a href="#">Privacy Policy</a>	
+      		</div>
+      		<div class="span-4">
+      			<a href="#">Feedback</a>	
+      		</div>
+      		<div class="span-4 last">
+      			<a href="#">Blog</a>	
+      		</div>
+      		<div class="clear">&nbsp;</div>
+      	</div>
+      </div>
+  {% endblock %}
+</html>
