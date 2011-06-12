@@ -1,26 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+{% extends "site_base.html" %}
 
+{% load i18n %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>FrontPage-Test</title>
+  
+  {% block body %}
 
-    <!-- Framework CSS -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/boram/screen.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/boram/print.css" type="text/css" media="print" />
-
-    <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}css/boram/ie.css" type="text/css" media="screen, projection"><![endif]-->
-
-    <!-- Import fancy-type plugin for the sample page. -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/boram/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/boram/shoppley.css" type="text/css" media="screen, projection">
-  </head>
-  <body>
   	
     <div class="container">
-    	<h1 class="header"><img src="{{ STATIC_URL }}images/boram/logo.png"/></h1>
-    	<div class="clear">&nbsp;</div>
+  	
+    	<!--div class="clear">&nbsp;</div-->
     	<div class="span-17 last">
     		<h2 class="alt msg-box">shoppley connects businesses and customers with awesome <i>real time offers</i>. sign up today!</h2>
     	</div>
@@ -33,7 +25,9 @@
     				Receive discount offer txts from your local stores on your cellphone.
     			</div>
     			<div class="signup-form customer">
-    				<table>
+	  {% include "shoppleyuser/customer_signup_form.html" %}
+
+    				<!--table>
     					<tbody>
     					<tr>
     						<td class="labels"><label>Email*</label></td>
@@ -61,7 +55,7 @@
     						<td><input type="text" /></td>
     					</tr>
     					</tbody>
-    				</table>
+    				</table-->
     			<div class="clear">&nbsp;</div>
     			</div>
     		
@@ -75,7 +69,9 @@
     				by txting offers to shoppley, entirely on your terms.
     			</div>
     			<div class="signup-form merchant">
-    				<table>
+          {% include "shoppleyuser/merchant_signup_form.html" %}
+
+    				<!--table>
     					<tbody>
     					<tr>
     						<td class="labels"><label>Email*</label></td>
@@ -107,7 +103,7 @@
     						<td><input type="text" /></td>
     					</tr>
     					</tbody>
-    				</table>
+    				</table-->
     			<div class="clear">&nbsp;</div>
     			</div>
     		
@@ -135,5 +131,7 @@
       		<div class="clear">&nbsp;</div>
       	</div>
       </div>
-  </body>
+  {% endblock %}
+
 </html>
+
