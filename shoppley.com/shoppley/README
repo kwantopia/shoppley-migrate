@@ -70,7 +70,7 @@ If models have changed we need to delete dev.db and syncdb
 == test data ==
 
 # Updated by Meng
-python manage.py test_initialize
+python manage.py test_init
 
 #################################
 # Deprecated
