@@ -29,6 +29,7 @@ customer_pattern = Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`
 merchant_pattern = customer_pattern
 
 # Customer commands:
+BALANCE= "balance"
 INFO = "info"
 STOP = "stop"
 START = "start"
@@ -55,6 +56,7 @@ class Command(NoArgsCommand):
 
 
 	def info(self, offercode):
+
 			return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
 								"code" : (offercode.code) ,
 								"merchant" : offercode.offer.merchant,
@@ -64,12 +66,14 @@ class Command(NoArgsCommand):
 							}
 	def update_expired(self):
 		
-		expired_offers = [x for x in Offer.objects.all() if not x.is_active()]
+		expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
 		for offer in expired_offers:
+			offer.is_merchant_txted=True
+			offer.save()
 			sentto = offer.num_init_sentto
 			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
 			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
-			merchant_msg = _("Your offer %(offer)s was expired. It was sent to %(sentto)s and forwarded to %(forwarded)s other, a total of %(total)s reached. It was redeemed %(redeem)s") %{ "offer": offer,"sentto":pluralize(sentto,"customer"),"forwarded":forwarded,"total":pluralize(int(sentto)+int(forwarded),"customer"),"redeem":pluralize(redeem,"time"),}
+			merchant_msg = _("Your offer %(offer)s was expired. It was sent to %(sentto)s and forwarded to %(forwarded)s other, a total of %(total)s reached. It was redeemed by %(redeem)s") %{ "offer": offer,"sentto":pluralize(sentto,"customer"),"forwarded":forwarded,"total":pluralize(int(sentto)+int(forwarded),"customer"),"redeem":pluralize(redeem,"customer"),}
 			self.notify(offer.merchant.phone,merchant_msg)
 		return len(expired_offers)
 
@@ -115,6 +119,7 @@ class Command(NoArgsCommand):
 	
 	def check_offercode(self,code,phone):
 		try:
+			code = code.lower()
 			offercode = OfferCode.objects.get(code__iexact = code)
 			return offercode
 		except OfferCode.DoesNotExist:
@@ -125,6 +130,7 @@ class Command(NoArgsCommand):
 
 	def test_handle(self,msg): # take msg: dict("from":phonenumber, "text":text)
 		print "new message %s" % msg
+		msg["from"] = parse_phone_number(msg["from"])
 		if msg["from"] != "Me":
 			su = map_phone_to_user(msg["from"])
 
@@ -136,8 +142,12 @@ class Command(NoArgsCommand):
 				# offer code being redeemed by the customer
 				# merchant sends offer code and the customer's phone number
 
+				# --------------------------- REDEEM: "balance"---------------
+				if parsed[0].lower()==BALANCE:
+					receipt_msg = _("You have %d points.") % su.balance
+					self.notify(su.phone, receipt_msg)
 				# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
-				if parsed[0].lower()==REDEEM:
+				elif parsed[0].lower()==REDEEM:
 					offer_code = self.check_offercode(parsed[1],su.phone)
 					phone = parse_phone_number(parsed[2])
 					if offer_code.offer.merchant != su.merchant:
@@ -164,8 +174,9 @@ class Command(NoArgsCommand):
 									}
 									mtransaction = Transaction.objects.create(time_stamp = current_time,
 														dst = su.merchant,
+														offercode = offercode_obj,
+														offer = offercode_obj.offer,
 														ttype = "MOR")
-									mtransaction.offercodes.add(offercode_obj)
 									mtransaction.execute()
 									self.notify(su.phone, receipt_msg)
 									customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
@@ -173,15 +184,19 @@ class Command(NoArgsCommand):
 									}
 									ctransaction = Transaction.objects.create(time_stamp = current_time,
 														dst=offercode_obj.customer,
+														offercode = offercode_obj,
+														offer = offercode_obj.offer,
 														ttype = "COR")
-									ctransaction.offercodes.add(offercode_ob)
+
 									ctransaction.execute()
 									self.notify(phone, customer_msg)
 									if offercode_obj.forwarder:
 										ftransaction=Transaction.objects.create(time_stamp=current_time,
 															dst=offercode_obj.forwarder,
+															offercode = offercode_obj,
+															offer = offercode_obj.offer,
 															ttype="CFR")	
-										ftransaction.offercodes.add(offercode_obj)
+
 										ftransaction.execute()
 								else:
 									receipt_msg = _("Code reuse! %(offer_code)s was redeemed by %(customer)s at %(time)s.") % {
@@ -233,23 +248,21 @@ class Command(NoArgsCommand):
 							description=description, time_stamp=datetime.now(),
 							starting_time=datetime.now())
 					offer.save()
-					offer.distribute()
+					num_reached = offer.distribute()
 					
-					receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"status %(code)s\"") % {
-						"time": pretty_datetime(offer.time_stamp),
-						"offer": offer,
-						"number": offer.num_received(),
-						"code": offer.gen_tracking_code(),
-					}
+					if num_reached ==0 :
+						receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % su.balance
+						#offer.delete()
+					else:
+						receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"status %(code)s\"") % {
+							"time": pretty_datetime(offer.time_stamp),
+							"offer": offer,
+							"number": offer.num_received(),
+							"code": offer.gen_tracking_code(),
+						}
 						
 					self.notify(su.phone, receipt_msg)
-					transaction = Transaction.objects.create(time_stamp=datetime.now(),
-										dst = su.merchant,
-										ttype = "MOD")
-					ocs = offer.offercode_set.all()
-					for oc in ocs:
-						transaction.offercodes.add(oc)
-					transaction.execute()
+					
 				# --------------------- STATUS : "status<SPACE>trackingcode" ---------------
 				elif parsed[0].lower() == STATUS:
 					if (len(parsed)==1):
@@ -258,14 +271,15 @@ class Command(NoArgsCommand):
 						if offers.count()>0:
 							offer=offers[0]
 							trackingcode = TrackingCode.objects.get(offer=offer)
-							sentto  = offer.num_init_sento
+							sentto  = offer.num_init_sentto
 							forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
 							total = sentto + forwarded
-							receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. To track the offer type \"status<SPACE>%(code)s\"") % {
-							"code":code,
+							receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers. To track the offer type \"status<SPACE>%(code)s\"") % {
+							"code":trackingcode.code,
 							"sentto":sentto,
                                                 	"forwarded":forwarded,
 	                                             	"total":total,
+							"redeemer": offer.redeemers().count()
                                                 	}
 							self.notify(su.phone,receipt_msg)
 						else:
@@ -273,7 +287,7 @@ class Command(NoArgsCommand):
 							self.notify(su.phone,receipt_msg)
 							#raise CommandError("Incorrectly formed status command: %s" % msg["text"])
 					else:
-						code = parsed[1].strip()
+						code = parsed[1].strip().lower()
 					
 						try:
 							trackingcode = TrackingCode.objects.get(code__iexact=code)
@@ -284,10 +298,11 @@ class Command(NoArgsCommand):
 						offer = trackingcode.offer
 						people_sentto = offer.num_init_sentto
 						people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
-						receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached") % {
+						receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers.") % {
 												"code":code,"sentto":people_sentto,
 												"forwarded":people_forwarded,
 												"total":int(people_sentto)+int(people_forwarded),
+												"redeemer": offer.redeemers().count()
 						}
 						self.notify(su.phone,receipt_msg)
 				# --------------------- RESIGNUP -------------------------
@@ -312,9 +327,12 @@ class Command(NoArgsCommand):
 				text = msg["text"].strip()
 				parsed = customer_pattern.parseString(text)
 				phone = su.phone
-
+				# --------------------------- REDEEM: "balance"---------------
+				if parsed[0].lower()==BALANCE:
+					receipt_msg = _("You have %d points.") % su.balance
+					self.notify(su.phone, receipt_msg)		
 				# ----------------- INFO : "info<SPACE>offercode+"----------------
-				if parsed[0].lower() == INFO:
+				elif parsed[0].lower() == INFO:
 					if (len(parsed)==1):
 						offercodes = OfferCode.objects.filter(customer=su.customer).order_by("-time_stamp")
 						if offercodes.count()>0:
@@ -496,10 +514,10 @@ class Command(NoArgsCommand):
 		voice = Voice()
 		voice.login()
 		smses = voice.sms()
-		#self.update_expired()
+		self.update_expired()
 
 		for msg in extractsms(voice.sms.html):
-			sms_notify(msg["from"], "hello")
+			#sms_notify(msg["from"], "hello")
 			try:
 				self.test_handle(msg)
 			except CommandError:
