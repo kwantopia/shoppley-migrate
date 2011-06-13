@@ -38,14 +38,14 @@ urlpatterns = patterns('',
 #    url(r'^$', direct_to_template, {
 #        "template": "homepage.html", "extra_context": {"form": CustomerSignupForm},
 #    }, name="home"),
-    url(r'^$', direct_to_template, {
-        "template": "front-page.html", "extra_context": {"form": CustomerSignupForm, "mform":MerchantSignupForm},
-    }, name="home"),
+#    url(r'^$', direct_to_template, {
+#        "template": "front-page.html", "extra_context": {"form": CustomerSignupForm, "mform":MerchantSignupForm},
+#    }, name="home"),
+    url(r'^$', 'shoppleyuser.views.home', name="home"),
 
-
-    url(r'^comingsoon/$', direct_to_template, {
-        "template": "comingsoon.html", "extra_context": {"form": CustomerBetaSubscribeForm, "categories":Category.objects.all()},
-    }, name="home"),
+    #url(r'^comingsoon/$', direct_to_template, {
+    #    "template": "comingsoon.html", "extra_context": {"form": CustomerBetaSubscribeForm, "categories":Category.objects.all()},
+    #}, name="home"),
     
     url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
     url(r'^account/signup/$', signup_view, name="acct_signup"),
