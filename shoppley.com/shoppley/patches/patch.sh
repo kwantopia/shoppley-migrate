@@ -2,8 +2,8 @@
 
 X="$PWD"
 # TODO: need to modify PINAX_HOME to the home of your pinax environment
-PINAX_HOME=/home/virtual/shoppley-env
-#PINAX_HOME=/Users/kwan/workspace/pinax/shoppley-env
+#PINAX_HOME=/home/virtual/shoppley-env
+PINAX_HOME=/Users/eunicegiarta/Documents/virtual/shoppley-env
 cp profiles.patch $PINAX_HOME/lib/python2.7/site-packages/pinax/apps/profiles
 cd $PINAX_HOME/lib/python2.7/site-packages/pinax/apps/profiles
 patch urls.py < profiles.patch
