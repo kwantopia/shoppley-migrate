@@ -1,4 +1,6 @@
 from django.core.management.base import NoArgsCommand
+from django.contrib.sites.models import Site
+
 from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
 import os, csv
 from googlevoice import Voice
@@ -23,4 +25,5 @@ class Command(NoArgsCommand):
 			zip_obj, created = ZipCode.objects.get_or_create(code=zip_code,
 						city=city_obj, latitude=latitude, longitude=longitude)
 
+		shoppley, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com")
 		print "done"
