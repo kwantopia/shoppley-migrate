@@ -1,15 +1,12 @@
-.login {
-	float:right;
-}
+
 body {
-	background: transparent url(/site_media/static/images/boram/bg.png);
+	background: transparent url(../../images/boram/bg.png);
 	background-repeat: repeat-x;
 }
 
 .header {
 	padding-top: 10px;
 }
-
 .footer {
 	background-color: #FAFAFA;
 	padding: 15px;
@@ -116,11 +113,11 @@ a:hover {
 }
 
 .signup-header.customer {
-	background: transparent url(/site_media/static/images/boram/signup-customer.png) no-repeat;
+	background: transparent url(../../images/boram/signup-customer.png) no-repeat;
 }
 
 .signup-header.merchant {
-	background: transparent url(/site_media/static/images/boram/signup-merchant.png) no-repeat;
+	background: transparent url(../../images/boram/signup-merchant.png) no-repeat;
 }
 
 .signup-form {
@@ -160,24 +157,34 @@ a:hover {
 
 .instruction {
 	padding: 10px 10px 10px 215px;
-	height: 180px;
+	min-height: 180px;
 	font-size: 1.3em;
 	color: #666666;
 }
 
 #get-offers {
-	background: transparent url(/site_media/static/images/boram/landing-customer-getoffers.png) no-repeat;	
+	background: transparent url(../../images/boram/landing-customer-getoffers.png) no-repeat;	
 }
 
 #redeem-offers {
-	background: transparent url(/site_media/static/images/boram/landing-customer-redeemoffers.png) no-repeat;	
+	background: transparent url(../../images/boram/landing-customer-redeemoffers.png) no-repeat;	
 }
 
 #share-offers {
-	background: transparent url(/site_media/static/images/boram/landing-customer-shareoffers.png) no-repeat;	
+	background: transparent url(../../images/boram/landing-customer-shareoffers.png) no-repeat;	
 }
-#get-offers, #redeem-offers, #share-offers {
+
+#merc-get-offers {
+	background: transparent url(../../images/boram/landing-merchant-getoffers.png) no-repeat;	
+}
+
+#merc-redeem-offers {
+	background: transparent url(../../images/boram/landing-merchant-redeemoffers.png) no-repeat;	
+}
+
+#merc-track-offers {
+	background: transparent url(../../../images/boram/boram/landing-merchant-trackoffers.png) no-repeat;	
+}
+#get-offers, #redeem-offers, #share-offers, #merc-get-offers, #merc-redeem-offers, #merc-track-offers {
 	background-position: top left;
 }
-
-
