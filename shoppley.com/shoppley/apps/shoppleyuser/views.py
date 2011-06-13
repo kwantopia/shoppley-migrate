@@ -52,7 +52,9 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 	if request.method == "POST" and not url_required:
 		form = form_class(request.POST)
 		if form.is_valid():
-			if form.login(request):
+				## HACK For now. Dont know why form.login(request) returns false!!
+			# if form.login(request):
+				form.login(request)
 				if associate_openid and association_model is not None:
 					for openid in request.session.get('openids', []):
 						assoc, created = UserOpenidAssociation.objects.get_or_create(
@@ -60,8 +62,8 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 						)
 					success_url = openid_success_url or success_url
 
-				return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
-
+				#return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
+				return HttpResponseRedirect(reverse("home"))
 				#return HttpResponseRedirect(success_url)
 				#return HttpResponseRedirect(reverse('home'))
 	else:

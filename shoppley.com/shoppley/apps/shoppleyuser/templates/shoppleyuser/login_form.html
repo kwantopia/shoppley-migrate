@@ -8,8 +8,10 @@
             <fieldset class="inlineLabels">
                 {{ lform|as_uni_form }}
                 <div  class="form_block">
-                    <input type="submit" value="{% trans "Log In &raquo;" %}" />
-                </div>
+		{% if lform %}
+	                    <input type="submit" value="{% trans "Log In &raquo;" %}" />
+		{% endif %}        
+        </div>
             </fieldset>
         </form>
         
