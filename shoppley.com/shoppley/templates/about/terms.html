@@ -1,0 +1,25 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Terms of Service" %}{% endblock %}
+
+{% block body %}
+
+<hr class="space">
+
+<div class="span-24 last">
+
+<h2>Shoppley {% trans "Terms of Service" %}</h2>
+    
+  <div class="content-wrapper span-24 last">
+
+    Shoppley is currently in Beta and the service is made free to use by anybody. We would like to receive your feedback.  You may unsubscribe at any time.  We will be using your phone number and your friends get automatically signed up if they get offers forwarded.  However, if you do not login and verify your account after receiving offer from friend, you will not be receiving regular offers from Shoppley.
+
+  </div><!-- inner span-24 containing all body -->
+
+</div><!-- main top span-24 -->
+
+
+{% endblock %}

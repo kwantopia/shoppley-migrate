@@ -1,0 +1,68 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "FAQ" %}{% endblock %}
+
+{% block body %}
+
+<hr class="space">
+
+<div class="span-24 last">
+
+<h2>Shoppley {% trans "FAQ" %}</h2>
+    
+  <div class="content-wrapper span-24 last">
+    <div class="faq-section span-20 last">
+      <div class="faq-question span-20 last">
+        I am a store owner, how does Shoppley help me?
+      </div>
+      <div class="faq-answer span-20 last">
+        Shoppley helps you by pulling customers on-demand in the next 90 minutes.  You decide on the offer to send out.  Just text message Shoppley and Shoppley will send it to potential customers that may come visit you in the next 90 minutes.  You will get immediate feedback if anybody is reached or if nobody is available.
+      </div>
+    </div>
+
+    <div class="faq-section span-20 last">
+      <div class="faq-question span-20 last">
+        I am a regular user (consumer), how does Shoppley help me?
+      </div>
+      <div class="faq-answer span-20 last">
+        You will receive an opportunistic offer from a local merchant that will provide you with a timely deal.  The more you redeem it, the better the offers will become.
+      </div>
+    </div>
+
+    <div class="faq-section span-20 last">
+      <div class="faq-question span-20 last">
+        Does it cost to use Shoppley?
+      </div>
+      <div class="faq-answer span-20 last">
+        No, it is currently in Beta and there is no cost to using Shoppley except for the regular text message charges by your mobile operator.  If you have unlimited text you will not be charged.
+      </div>
+    </div>
+
+    <div class="faq-section span-20 last">
+      <div class="faq-question span-20 last">
+        As a consumer, how many messages will I be receiving a day?
+      </div>
+      <div class="faq-answer span-20 last">
+        For Beta, you will receive one message a day.  If you want to receive more, you can adjust your profile settings.  As new features become functional, you will be able to decide on how many offers you want to receive on a day.
+      </div>
+    </div>
+
+    <div class="faq-section span-20 last">
+      <div class="faq-question span-20 last">
+        My friend forwarded me an offer and a Shoppley account was automatically created.  Am I automatically signed up? 
+      </div>
+      <div class="faq-answer span-20 last">
+        You are signed up but you will not be receiving any further offers until you login to the account and verify your account.  If your Shoppley friends forward you future offers, you will still receive those offers.
+      </div>
+    </div>
+
+
+  </div><!-- inner span-24 containing all body -->
+
+</div><!-- main top span-24 -->
+
+
+{% endblock %}

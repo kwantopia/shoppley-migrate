@@ -104,3 +104,21 @@ table#features tr td {
   font-weight: bold;
 }
 
+/* for About Us page */
+.about-header {
+  background-color: #bbb;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.about-person-box {
+  background-color: #ddd; 
+}
+
+.about-person-header {
+  background-color: #aaa;  
+  font-size: 1.2em;
+}
+
+.about-person-body {
+}

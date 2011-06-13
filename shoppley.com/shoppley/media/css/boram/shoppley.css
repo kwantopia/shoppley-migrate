@@ -188,3 +188,43 @@ a:hover {
 #get-offers, #redeem-offers, #share-offers, #merc-get-offers, #merc-redeem-offers, #merc-track-offers {
 	background-position: top left;
 }
+
+/* for About Us page */
+.about-header {
+  margin-top: 10px;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.about-person-box {
+  background-color: #ddd; 
+}
+
+.about-person-header {
+  background-color: #aaa;  
+  font-size: 1.2em;
+}
+
+.about-person-body {
+  padding-left: 20px;
+  padding-bottom: 20px;
+}
+
+/* for FAQ page */
+.faq-section {
+  margin-top: 15px;
+}
+
+.faq-question {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.faq-answer {
+  padding-top: 5px;
+}
+
+.content-wrapper {
+  margin-bottom: 20px;
+}
+
