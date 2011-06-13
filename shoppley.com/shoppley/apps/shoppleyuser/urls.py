@@ -11,6 +11,9 @@ urlpatterns = patterns('',
 	(r'^validate/$', 'ajax_validation.views.validate', 
 		{'form_class': MerchantSignupForm}, 'merchant_signup_form_validate'),
 	url(r'^login/$', login_modal, name="login_modal"),
+	url(r'^customer/signup-success/$',direct_to_template,{"template": "shoppleyuser/customer_landing_page.html"},name="customer_landing_page"),
+	url(r'^merchant/signup-success/$',direct_to_template,{"template": "shoppleyuser/merchant_landing_page.html"},name="merchant_landing_page"),
+
 )
 
 

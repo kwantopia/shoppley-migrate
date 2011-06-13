@@ -28,6 +28,19 @@ from common.helpers import JSONHttpResponse
 from account.utils import get_default_redirect
 from account.forms import LoginForm
 from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm
+from shoppleyuser.models import Customer
+def home(request, template_name="front-page.html"):
+	if request.user.is_authenticated():
+		if Customer.objects.filter(user__id=request.user.id).count()>0:
+			return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
+		else:
+			return render_to_response("shoppleyuser/merchant_landing_page.html", context_instance=RequestContext(request))
+	else:
+		return	render_to_response(template_name,{
+					"form":CustomerSignupForm,
+					"mform":MerchantSignupForm,
+					"lform":LoginForm,
+				},context_instance=RequestContext(request))
 
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
@@ -46,7 +59,11 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 							user=form.user, openid=openid.openid
 						)
 					success_url = openid_success_url or success_url
-				return HttpResponseRedirect(success_url)
+
+				return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
+
+				#return HttpResponseRedirect(success_url)
+				#return HttpResponseRedirect(reverse('home'))
 	else:
 		form = form_class()
 	ctx = {
@@ -60,6 +77,7 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 
 def merchant_signup(request, form_class=MerchantSignupForm,
 	template_name="shoppleyuser/signup.html", success_url=None):
+	success_url = "/shoppleyuser/merchant/signup-success"
 	if success_url is None:
 		success_url = get_default_redirect(request)
 	if request.method == "POST":
@@ -86,6 +104,7 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 
 def customer_signup(request, form_class=CustomerSignupForm,
 	template_name="shoppleyuser/customer_signup.html", success_url=None):
+	success_url = "/shoppleyuser/customer/signup-success"
 	if success_url is None:
 		success_url = get_default_redirect(request)
 	if request.method == "POST":
