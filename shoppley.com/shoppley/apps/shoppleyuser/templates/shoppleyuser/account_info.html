@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+
+{% block head_title %}{% trans "Account Info" %}{% endblock %}
+
+{% block body %}
+ <a href="{% url acct_email %}">{% trans "Add/Verify Emails" %}</a> 
+     <a href="{% url acct_passwd %}">{% trans "Change Password" %}</a> 
+{% endblock %}
+
