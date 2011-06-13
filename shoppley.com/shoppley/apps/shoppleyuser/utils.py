@@ -12,7 +12,7 @@ from googlevoice import Voice
 SMS_DEBUG = settings.DEBUG
 
 # uncomment following when testing using django test
-#SMS_DEBUG = True 
+SMS_DEBUG = True 
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
 

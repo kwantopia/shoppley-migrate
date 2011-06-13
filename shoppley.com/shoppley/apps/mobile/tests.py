@@ -196,6 +196,40 @@ class SimpleTest(TestCase):
 
 		return o
 
+	def expire_offer(self, email):
+		u = User.objects.get(email=email)
+		m = u.shoppleyuser.merchant
+
+		expired_offers = Offer.objects.filter(merchant=m, expired=True)
+		if expired_offers.exists():
+			return random.sample( expired_offers, 1 )[0]
+		valid_offers =  Offer.objects.filter(merchant=m)
+		if valid_offers.exists():
+			o = random.sample(valid_offers, 1)[0]
+			o.expired = True
+			o.save()
+			# expire all offer codes
+			for c in o.offercode_set.all():
+				c.expiration_time = datetime.now()
+				c.save()
+
+			return o
+		else:
+			return None
+
+	def get_offer_code(self, email):
+		u = User.objects.get(email=email)
+		m = u.shoppleyuser.merchant
+
+		offers = Offer.objects.filter(merchant=m, expired=False)
+		codes = []	
+		for o in offers:
+			for c in o.offercode_set.all():
+				codes.append(c)
+
+		return random.sample(codes, 1)[0]
+
+
 	def test_mobile_api(self):
 		"""
 			Generate mobile API doc as it tests
@@ -231,16 +265,16 @@ class SimpleTest(TestCase):
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
-		review_offer_id = response["offers"][0]["offer_id"]
+		review_offer_id = response["offers"][0]["offer_code_id"]
 
 		comment = "Forward offer to a list of phone numbers (text messages are sent to them and new accounts created if they are not current users with text message showing random passwords)"
 		response = self.post_json( reverse("m_offer_forward"), {'offer_code': offer_code_to_forward,'phones':['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'], 'note': 'This offer might interest you.'}, comment)
 
 		comment = "Provide feedback on an offer"
-		response = self.post_json( reverse("m_offer_feedback"), {'offer_id': review_offer_id, 'feedback':'The fish dish was amazing'}, comment)
+		response = self.post_json( reverse("m_offer_feedback"), {'offer_code_id': review_offer_id, 'feedback':'The fish dish was amazing'}, comment)
 
 		comment = "Rate an offer 1-5, 0 if unrated"
-		response = self.post_json( reverse("m_offer_rate"), {'offer_id': review_offer_id, 'rating':5}, comment)
+		response = self.post_json( reverse("m_offer_rate"), {'offer_code_id': review_offer_id, 'rating':5}, comment)
 
 		# test points
 		comment = "Shows a summary of accumulated points for customer"
@@ -287,8 +321,10 @@ class SimpleTest(TestCase):
 
 		comment = "Show active offers for the merchant, returns offer details"
 		response = self.get_json( reverse("m_offers_active"), {}, comment)
+		# redemption is random so following condition is not satisfied all the time
+		#self.assertEqual(response["offers"][0]["redeemed"], 1)
 		
-		comment = "Start a % off offer (units=0), duration if not specified will be next 60 minutes"
+		comment = "Start a % off offer (units=0), duration if not specified will be next 90 minutes"
 		response = self.post_json( reverse("m_offer_start"), {
 								'title':'10% off on entree',
 								'description': 'Come taste some great greek food next 30 minutes',
@@ -299,7 +335,7 @@ class SimpleTest(TestCase):
 								'units': 0,
 								'amount': 10 }, comment)
 				
-		comment = "Start a $ off offer (units=1), duration if not specified will be next 60 minutes"
+		comment = "Start a $ off offer (units=1), duration if not specified will be next 90 minutes"
 		response = self.post_json( reverse("m_offer_start"), {
 								'title':'$10 off on entree',
 								'description': 'Come taste some great greek food next 30 minutes',
@@ -310,7 +346,7 @@ class SimpleTest(TestCase):
 								'units': 1,
 								'amount': 10 }, comment)
 
-		comment = "Start a $ off offer NOW (units=1), duration if not specified will be next 60 minutes"
+		comment = "Start a $ off offer NOW (units=1), duration if not specified will be next 90 minutes"
 		response = self.post_json( reverse("m_offer_start"), {
 								'title':'$10 off on entree',
 								'description': 'Come taste some great greek food next 30 minutes',
@@ -319,26 +355,29 @@ class SimpleTest(TestCase):
 								'units': 1,
 								'amount': 10 }, comment)
 
-		comment = "Send more of the same offer"
-		response = self.get_json( reverse("m_offer_send_more", args=[response['offer_id']]), {}, comment) 
+		comment = "Send more of the same offer (URL param: offer_id)"
+		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
 
-		comment = "Restart a previous offer (it allows change of parameters)"
-		response = self.post_json( reverse("m_offer_restart"), {
-								'offer_id': response['offer_id'],
-								'title':'$10 off on entree',
-								'description': 'Come taste some great greek food next 30 minutes',
-								'now': True,
-								'duartion': 50,
-								'units': 1,
-								'amount': 10 }, comment)
+		# TODO: Need to expire some offers and send new offers
+		exp_offer = self.expire_offer(email=email)
+		self.assertNotEqual(exp_offer, None)
+		exp_offer_id = exp_offer.id
+			
+		comment = "Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call %s to start the offer (URL param: offer_id)"%reverse("m_offer_start")
+		response = self.get_json( reverse("m_offer_restart", args=[exp_offer_id]), {}, comment)
+
+		c = self.get_offer_code(email=email)
 
 		comment = "Redeem an offer and show total dollar spent"
 		response = self.post_json( reverse("m_offer_redeem"), {
-								'code': 'YZ8HY',
+								'code': c.code,
 								'amount': 38.05 }, comment)
 
-		comment = "Show list of past offers and details"
-		response = self.get_json( reverse("m_offers_past"), {}, comment)
+		comment = "Show list of past offers and details (URL param: 0)"
+		response = self.get_json( reverse("m_offers_past", args=[0]), {}, comment)
+
+		comment = "Show list of offers from past week (7 days) and details, used from the Summary view (URL param: 7)"
+		response = self.get_json( reverse("m_offers_past", args=[7]), {}, comment)
 
 		comment = "Show a summary for the merchants"
 		response = self.get_json( reverse("m_merchant_summary"), {}, comment)
@@ -356,7 +395,6 @@ class SimpleTest(TestCase):
 								'units': 2,
 								'days': 7,
 								'amount': 1000 }, comment)
-
 
 		offer_id = response["offer_id"]
 
@@ -394,7 +432,7 @@ class SimpleTest(TestCase):
 		"""
 		Tests that 1 + 1 always equals 2.
 		"""
-		self.failUnlessEqual(1 + 1, 2)
+		self.assertEqual(1 + 1, 2)
 
 __test__ = {"doctest": """
 Another way to test that 1 + 1 is equal to 2.

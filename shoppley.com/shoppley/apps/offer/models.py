@@ -32,31 +32,70 @@ class Offer(models.Model):
 	merchant		= models.ForeignKey(Merchant, related_name="offers_published")
 	title 			= models.CharField(max_length=128, blank=True, help_text="Sexy offer headline. Keep it under 100 characters.")
 	description		= models.TextField(blank=True)
-	percentage		= models.IntegerField(verbose_name="Percent off (%)", blank=True, null=True)
-	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", blank=True, null=True)
+	percentage		= models.IntegerField(verbose_name="Percent off (%)", default=0)
+	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", default=0)
 	
 	time_stamp		= models.DateTimeField()
 	starting_time	= models.DateTimeField(blank=True, null=True)
 	duration		= models.IntegerField(default=90)
 	max_offers		= models.IntegerField(verbose_name="Max # of customers", default=50, help_text="Maximum number of customers you want to send to")
 	num_init_sentto		= models.IntegerField(default=0) # number of customers the offer was sent to
+	num_resent_to		= models.IntegerField(default=0) # number of customers the offer was resent to
 	is_merchant_txted	= models.BooleanField(default=False) # True if the merchant was informed the status of the offer after it's expired
 	img				= ImageField(upload_to='offers/')
+	expired = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return self.title
 	
 	def is_active(self):
 		print "description: ",self.description
-		return self.starting_time+timedelta(minutes=self.duration) > datetime.now()
+		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
+		if not active:
+			self.expired = False
+			self.save()
+		return active
 
-	
+	def num_forwarded(self):
+		return self.offercode_set.count()-self.num_init_sentto-self.num_resent_to
+
+	def num_direct_received(self):
+		return self.num_init_sentto+self.num_resent_to
 
 	def num_redeemed(self):
-		return self.offercode_set.filter(redeem_time__isnull=False)
+		return self.offercode_set.filter(redeem_time__isnull=False).count()
 
 	def num_received(self):
 		return self.offercode_set.count()
+
+	def offer_detail(self):
+		"""
+			Used to report to merchant mobile phone
+		"""
+		data = {}
+
+		data["offer_id"] = self.id
+		data["title"] = self.title
+		data["description"] = self.description
+		data["percentage"] = self.percentage	# shows percentage off, 0 if no % off
+		data["dollar_off"] = self.dollar_off	# shows dollar discount, 0 if no discount
+		expire_time = self.starting_time + timedelta(minutes=self.duration)
+		data["expires"] = pretty_date(expire_time-datetime.now())
+
+		# currently received does not account for forwarded code
+		#data["total_received"] = self.num_received()
+		recvd = self.num_direct_received()
+		data["received"] = recvd 
+		redeemed = self.num_redeemed()
+		data["redeemed"] = self.num_redeemed() 
+		if recvd == 0:
+			data["redeem_rate"] = 0
+		else:
+			data["redeem_rate"] = redeemed/float(recvd)*100
+
+		data["img"] = self.get_image()
+
+		return data
 
 	def get_image(self):
 		if self.img:
@@ -157,7 +196,8 @@ class Offer(models.Model):
 			- report back the number of customers being reached
 			
 		"""
-		num_reached = 0
+		enough_points = True 
+
 		print "Sending out offers"
 
 		# 70 percent of old customers, 30 percent of new
@@ -183,10 +223,13 @@ class Offer(models.Model):
 		from worldbank.models import Transaction
 
 		allowed_number =abs(int( self.merchant.balance/Transaction.points_table["MOD"]))
+		if allowed_number == 0:
+			# check if there's enough balance
+			enough_points = False
+
 		if len(target_list) > allowed_number:
 			target_list = random.sample(target_list, allowed_number)
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
-		
 		
 		for o in self.offercode_set.all():
 			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
@@ -200,7 +243,24 @@ class Offer(models.Model):
 
 		self.num_init_sentto =len(target_list)
 		self.save()
-		return len(target_list) 
+		if enough_points: 
+			# number of people sent to, it can be 0 
+			return self.num_init_sentto
+		else:
+			# not enough points to send to
+			return -2
+			
+	def redistribute(self):
+		"""
+			Offer can be redistributed multiple number of times and all the parameters would be the
+			same except extending the duration.
+
+			Need to find targets that have not been reached at all and also have not gone over quota
+		"""
+		self.num_resent_to += 5
+		self.save() 
+
+		return -2
 
 	def redeemers(self):
 		"""
@@ -236,6 +296,7 @@ class OfferCode(models.Model):
 	# TODO: why is customer null=True
 	customer		= models.ForeignKey(Customer)
 	code			= models.CharField(max_length=32)
+	txn_amount = models.FloatField(default=0)
 	time_stamp		= models.DateTimeField()
 	redeem_time		= models.DateTimeField(null=True, blank=True)
 	expiration_time 	= models.DateTimeField()
@@ -257,11 +318,15 @@ class OfferCode(models.Model):
 		return self.code + "\n -customer:" + str(self.customer)+"\n -description"+str(self.offer.description)
 	
 	def offer_detail(self):
-		offer_detail = {"offer_id": self.id,
+		"""
+			Used to report to customer mobile phone
+		"""
+		offer_detail = {"offer_code_id": self.id,
+							"offer_id": self.offer.id,
 							"code": self.code,
 							"name": self.offer.title,
 							"description": self.offer.description,
-							"expiration": pretty_date(self.expiration_time-datetime.now()),
+							"expires": pretty_date(self.expiration_time-datetime.now()),
 							"phone": self.offer.merchant.phone,
 							"address1": self.offer.merchant.address_1,
 							"citystatezip": self.offer.merchant.zipcode.citystate(),

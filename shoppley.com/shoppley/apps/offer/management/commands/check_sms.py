@@ -251,6 +251,8 @@ class Command(NoArgsCommand):
 					num_reached = offer.distribute()
 					
 					if num_reached ==0 :
+						receipt_msg = _("There were no customers that could be reached at this moment.") 
+					elif num_reached == -2:
 						receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % su.balance
 						#offer.delete()
 					else:

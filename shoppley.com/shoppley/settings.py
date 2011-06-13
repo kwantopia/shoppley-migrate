@@ -126,7 +126,7 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.doc.XViewMiddleware",
 	"pagination.middleware.PaginationMiddleware",
 	"django_sorting.middleware.SortingMiddleware",
-	"pinax.middleware.security.HideSensistiveFieldsMiddleware",
+	#"pinax.middleware.security.HideSensistiveFieldsMiddleware",
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 ROOT_URLCONF = "shoppley.urls"

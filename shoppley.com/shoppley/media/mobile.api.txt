@@ -7,7 +7,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Login successful."
 }
 ****************************************************************************************************
 Show current offers, it also returns offer details
@@ -20,56 +21,60 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "xbnkgx", 
+      "code": "ngdtr2", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-682-9784", 
-      "expiration": "an hour", 
+      "offer_code_id": 1, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "8kckmc", 
+      "code": "xg9loy", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 3, 
+      "offer_id": 2, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 3, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "pr1gtg", 
+      "code": "sj11lz", 
       "description": "Free drink when you order $10 or more", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 5, 
+      "offer_id": 3, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 5, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "qy4zkf", 
+      "code": "xqfz1w", 
       "description": "Half priced cookies", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 7, 
+      "offer_id": 4, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 7, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
@@ -77,7 +82,8 @@ RESPONSE:
     }
   ], 
   "num_offers": 4, 
-  "result": 1
+  "result": 1, 
+  "result_msg": "Returning offer details."
 }
 ****************************************************************************************************
 Show narrow geographical offers, it also returns offer details
@@ -90,56 +96,60 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "xbnkgx", 
+      "code": "ngdtr2", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-682-9784", 
-      "expiration": "an hour", 
+      "offer_code_id": 1, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "8kckmc", 
+      "code": "xg9loy", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 3, 
+      "offer_id": 2, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 3, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "pr1gtg", 
+      "code": "sj11lz", 
       "description": "Free drink when you order $10 or more", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 5, 
+      "offer_id": 3, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 5, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "qy4zkf", 
+      "code": "xqfz1w", 
       "description": "Half priced cookies", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 7, 
+      "offer_id": 4, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 7, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
@@ -147,7 +157,8 @@ RESPONSE:
     }
   ], 
   "num_offers": 4, 
-  "result": 1
+  "result": 1, 
+  "result_msg": "Returning offer details."
 }
 ****************************************************************************************************
 Show redeemed offers, it also returns offer details
@@ -160,21 +171,24 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "8kckmc", 
-      "description": "$1 off Chicken Sandwiches", 
+      "code": "sj11lz", 
+      "description": "Free drink when you order $10 or more", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 3, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "expiration": "an hour", 
+      "offer_code_id": 5, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "banner": "/static/images/merchant/restaurant_banner.png", 
-      "name": "$1 off Chicken Sandwiches"
+      "name": "Free drink when you order $10 or more"
     }
   ], 
-  "num_offers": 1
+  "num_offers": 1, 
+  "result": 1, 
+  "result_msg": "Returning redeemed offers."
 }
 ****************************************************************************************************
 Forward offer to a list of phone numbers (text messages are sent to them and new accounts created if they are not current users with text message showing random passwords)
@@ -182,35 +196,38 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'8kckmc',
+  'offer_code': u'xg9loy',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665']}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "confirm_msg": "Offer by \"8kckmc\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
-  "result": 1
+  "result": 1, 
+  "confirm_msg": "Offer by \"xg9loy\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
 Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
 PARAMS:
-{ 'feedback': 'The fish dish was amazing', 'offer_id': 3}
+{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 5}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Successfully added feedback."
 }
 ****************************************************************************************************
 Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
 PARAMS:
-{ 'offer_id': 3, 'rating': 5}
+{ 'offer_code_id': 5, 'rating': 5}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Successfully rated."
 }
 ****************************************************************************************************
 Shows a summary of accumulated points for customer
@@ -239,7 +256,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Logout successful."
 }
 ****************************************************************************************************
 Customer login
@@ -250,7 +268,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Login successful."
 }
 ****************************************************************************************************
 Show current offers, it also returns offer details (This one contains offer forwarded by another customer)
@@ -263,23 +282,25 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "abvys0", 
+      "code": "nm29xp", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 12, 
+      "offer_id": 2, 
+      "expires": "an hour", 
       "lon": -24.2322, 
       "phone": "617-909-2101", 
-      "forwarder": "user1@customer.com", 
-      "expiration": "an hour", 
+      "offer_code_id": 12, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
+      "forwarder": "user1@customer.com", 
       "banner": "/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
     }
   ], 
   "num_offers": 1, 
-  "result": 1
+  "result": 1, 
+  "result_msg": "Returning offer details."
 }
 ****************************************************************************************************
 Customer logout
@@ -290,7 +311,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Logout successful."
 }
 ****************************************************************************************************
 Customer registration
@@ -301,7 +323,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "User registered and authenticated successfully."
 }
 ****************************************************************************************************
 Merchant login
@@ -312,7 +335,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Login successful."
 }
 ****************************************************************************************************
 Splash view for the merchant
@@ -322,7 +346,13 @@ PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "past_month": 0, 
+  "this_week": 0, 
+  "result": 1, 
+  "last_week": 0, 
+  "result_msg": "Number of redemptions for this week, last week and past month returned."
+}
 ****************************************************************************************************
 Show active offers for the merchant, returns offer details
 ----------------------------------------------------------------------------------------------------
@@ -331,9 +361,26 @@ PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offers": [
+    {
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "title": "$5 off shoes brands, Nike, Reebok", 
+      "dollar_off": 0.0, 
+      "expires": "an hour", 
+      "redeemed": 0, 
+      "percentage": 0, 
+      "offer_id": 1
+    }
+  ], 
+  "result": 1, 
+  "result_msg": "Returned details of merchants currently active offers."
+}
 ****************************************************************************************************
-Start a % off offer (units=0), duration if not specified will be next 60 minutes
+Start a % off offer (units=0), duration if not specified will be next 90 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
 PARAMS:
@@ -348,10 +395,23 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer": {
+    "received": 5, 
+    "redeem_rate": 0.0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "title": "10% off on entree", 
+    "dollar_off": 0, 
+    "expires": "59 minutes", 
+    "redeemed": 0, 
+    "percentage": 10, 
+    "offer_id": 5
+  }, 
+  "result": 5, 
+  "result_msg": "Offers were sent but not clear how many people reached."
 }
 ****************************************************************************************************
-Start a $ off offer (units=1), duration if not specified will be next 60 minutes
+Start a $ off offer (units=1), duration if not specified will be next 90 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
 PARAMS:
@@ -366,10 +426,23 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer": {
+    "received": 3, 
+    "redeem_rate": 0.0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "title": "$10 off on entree", 
+    "dollar_off": 0, 
+    "expires": "29 minutes", 
+    "redeemed": 0, 
+    "percentage": 10, 
+    "offer_id": 6
+  }, 
+  "result": 3, 
+  "result_msg": "Offers were sent but not clear how many people reached."
 }
 ****************************************************************************************************
-Start a $ off offer NOW (units=1), duration if not specified will be next 60 minutes
+Start a $ off offer NOW (units=1), duration if not specified will be next 90 minutes
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/start/
 PARAMS:
@@ -382,52 +455,149 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer": {
+    "received": 0, 
+    "redeem_rate": 0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "title": "$10 off on entree", 
+    "dollar_off": 0, 
+    "expires": "an hour", 
+    "redeemed": 0, 
+    "percentage": 10, 
+    "offer_id": 7
+  }, 
+  "result": -2, 
+  "result_msg": "Your balance is 0. You do not have enough to reach customers."
 }
 ****************************************************************************************************
-Send more of the same offer
+Send more of the same offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/send/more/1/
+GET URL: /m/merchant/offer/send/more/7/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 2
+  "offer": {
+    "received": 5, 
+    "redeem_rate": 0.0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "title": "$10 off on entree", 
+    "dollar_off": 0.0, 
+    "expires": "an hour", 
+    "redeemed": 0, 
+    "percentage": 10, 
+    "offer_id": 7
+  }, 
+  "result": -2, 
+  "result_msg": "Your balance is 0. You do not have enough to reach customers."
 }
 ****************************************************************************************************
-Restart a previous offer (it allows change of parameters)
+Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-POST URL: /m/merchant/offer/restart/
+GET URL: /m/merchant/offer/restart/5/
 PARAMS:
-{ 'amount': 10,
-  'description': 'Come taste some great greek food next 30 minutes',
-  'duartion': 50,
-  'now': True,
-  'offer_id': 2,
-  'title': '$10 off on entree',
-  'units': 1}
+{ }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offer": {
+    "received": 5, 
+    "redeem_rate": 0.0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "title": "10% off on entree", 
+    "dollar_off": 0.0, 
+    "expires": "59 minutes", 
+    "redeemed": 0, 
+    "percentage": 10, 
+    "offer_id": 5
+  }, 
+  "result": 1, 
+  "result_msg": "Found the previous offer that will be prefilled the new offer."
+}
 ****************************************************************************************************
 Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': 'YZ8HY'}
+{ 'amount': 38.05, 'code': u'onf4pr'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offer_code": {
+    "code": "onf4pr", 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/static/images/offers/offer-default.jpg", 
+    "address1": "", 
+    "offer_id": 6, 
+    "expires": "29 minutes", 
+    "lon": -24.2322, 
+    "phone": "617-682-9784", 
+    "offer_code_id": 18, 
+    "citystatezip": "Cambridge, MA 02139", 
+    "lat": -42.2342, 
+    "percentage": 10, 
+    "banner": "/static/images/merchant/restaurant_banner.png", 
+    "name": "$10 off on entree"
+  }, 
+  "result": 1, 
+  "result_msg": "Offer redemption (code: onf4pr) successful."
+}
 ****************************************************************************************************
-Show list of past offers and details
+Show list of past offers and details (URL param: 0)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offers/past/
+GET URL: /m/merchant/offers/past/0/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offers": [
+    {
+      "received": 5, 
+      "redeem_rate": 0.0, 
+      "description": "Come taste some great greek food next 30 minutes", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "title": "10% off on entree", 
+      "dollar_off": 0.0, 
+      "expires": "59 minutes", 
+      "redeemed": 0, 
+      "percentage": 10, 
+      "offer_id": 5
+    }
+  ], 
+  "result": 1, 
+  "result_msg": "Returned details of past offers."
+}
+****************************************************************************************************
+Show list of offers from past week (7 days) and details, used from the Summary view (URL param: 7)
+----------------------------------------------------------------------------------------------------
+GET URL: /m/merchant/offers/past/7/
+PARAMS:
+{ }
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offers": [
+    {
+      "received": 5, 
+      "redeem_rate": 0.0, 
+      "description": "Come taste some great greek food next 30 minutes", 
+      "img": "/static/images/offers/offer-default.jpg", 
+      "title": "10% off on entree", 
+      "dollar_off": 0.0, 
+      "expires": "59 minutes", 
+      "redeemed": 0, 
+      "percentage": 10, 
+      "offer_id": 5
+    }
+  ], 
+  "result": 1, 
+  "result_msg": "Returned details of past offers."
+}
 ****************************************************************************************************
 Show a summary for the merchants
 ----------------------------------------------------------------------------------------------------
@@ -436,7 +606,15 @@ PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "total_redeemed": 1, 
+  "redeem_rate": 6.666666666666667, 
+  "result_msg": "Summary data about the merchant's offers.", 
+  "total_received": 10, 
+  "direct_received": 15, 
+  "result": 1, 
+  "num_offers": 4
+}
 ****************************************************************************************************
 Show a summary visualization for the merchants
 ----------------------------------------------------------------------------------------------------
@@ -445,7 +623,9 @@ PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offer_id": 2
+}
 ****************************************************************************************************
 Start a new point based offer (units=2), point based offer durations are by days
 ----------------------------------------------------------------------------------------------------
@@ -462,7 +642,7 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer_id": 2
 }
 ****************************************************************************************************
 Show active point offers
@@ -473,7 +653,7 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer_id": 2
 }
 ****************************************************************************************************
 Show past point offers
@@ -484,7 +664,7 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer_id": 2
 }
 ****************************************************************************************************
 Start a point offer
@@ -495,7 +675,7 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer_id": 2
 }
 ****************************************************************************************************
 Restart an existing point offer
@@ -506,17 +686,19 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offer_id": 1
+  "offer_id": 2
 }
 ****************************************************************************************************
 Expire a point offer earlier than expiration
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/point/offer/expire/1/
+GET URL: /m/merchant/point/offer/expire/2/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
-{}
+{
+  "offer_id": 2
+}
 ****************************************************************************************************
 Merchant logout
 ----------------------------------------------------------------------------------------------------
@@ -526,7 +708,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": 1
+  "result": 1, 
+  "result_msg": "Logout successful."
 }
 ****************************************************************************************************
 Merchant registration
@@ -541,5 +724,6 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "result": -1
+  "result": -1, 
+  "result_msg": "User already exists so you should login with their password."
 }
