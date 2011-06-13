@@ -32,18 +32,19 @@
     {% if user.is_authenticated %}
         <b>{{ user }}</b> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
-        <a href="{% url shoppleyuser_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url merchant_signup %}">{% trans "Business" %} {% trans "Sign up" %}</a>{% endifsetting %}
+	{% include "shoppleyuser/login_form.html" %}
+        <!--a href="{% url shoppleyuser_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url merchant_signup %}">{% trans "Business" %} {% trans "Sign up" %}</a>{% endifsetting %}-->
     {% endif %}
 {% endblock %}
 
 {% block locale_switcher %}
-    <form action="{% if request.user.is_authenticated %}{% url acct_language_change %}{% else %}/i18n/setlang/{% endif %}" method="post" id="locale_switcher">
+    <!--form action="{% if request.user.is_authenticated %}{% url acct_language_change %}{% else %}/i18n/setlang/{% endif %}" method="post" id="locale_switcher">
         <select name="language" onchange="$('#locale_switcher').submit()">
             {% for lang in LANGUAGES %}
                 <option value="{{ lang.0 }}"{% ifequal lang.0 LANGUAGE_CODE %} selected="selected"{% endifequal %}>{{ lang.1 }}</option>
             {% endfor %}
         </select>
-    </form>
+    </form-->
 {% endblock %}
 
 {% block logo_link_image %}
@@ -52,11 +53,11 @@
 
 {% block right_tabs %}
     {% if user.is_authenticated %}
-        <ul class="tabs">{% spaceless %}
+        <!--ul class="tabs">{% spaceless %}
             <li id="tab_profile"><a href="{% url profile_detail user.username %}">{% trans "Profile" %}</a></li>
             <li id="tab_offer"><a href="{% url offer_home %}">{% trans "Offers" %}</a></li>
             <li id="tab_inbox"><a href="{% url messages_inbox %}">{% trans "Inbox" %} ({{ combined_inbox_count }})</a></li>
-        {% endspaceless %}</ul>
+        {% endspaceless %}</ul-->
     {% endif %}
 {% endblock %}
 
@@ -78,6 +79,9 @@
 			- <a href="{% url faq %}">{% trans "FAQ" %}</a>
 			- <a href="{% url terms %}">{% trans "Terms of Service" %}</a>
 			- <a href="{% url feedback %}">{% trans "Feedback" %}</a>
+	                - <a href="http://blog.shoppley.com">Blog</a>
+
+
 		</div>
 	  </p>
 	</div>

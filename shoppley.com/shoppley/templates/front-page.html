@@ -4,12 +4,18 @@
 
 {% load ifsetting_tag %}
 
+
+
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
-<html lang="en">
   
   {% block body %}
 
-  	
+{% if user.is_authenticated %}
+
+        {% include "shoppleyuser/customer_instructions.html" %}
+{% else %}
+
+
     <div class="container">
   	
     	<!--div class="clear">&nbsp;</div-->
@@ -110,28 +116,13 @@
     		
     		</div>
     	</div>
+
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
-      	<div class="footer">
-      		<div class="span-4">
-      			<a href="{% url about %}">About Us</a>	
-      		</div>
-      		<div class="span-4">
-      			<a href="{% url faq %}">FAQ</a>	
-      		</div>
-      		<div class="span-4">
-      			<a href="{% url terms %}">Terms of Service</a>	
-      		</div>
-      		<div class="span-4">
-      			<a href="{% url feedback %}">Feedback</a>	
-      		</div>
-      		<div class="span-4 last">
-      			<a href="http://blog.shoppley.com">Blog</a>	
-      		</div>
-      		<div class="clear">&nbsp;</div>
-      	</div>
+{% endif %}
+      	
       </div>
   {% endblock %}
 
-</html>
+
 
