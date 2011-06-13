@@ -1,6 +1,7 @@
 # copy this file to local_settings.py on deployment server
 
 import os.path
+import posixpath
 import pinax
 
 # tells Pinax to use the default theme
@@ -45,6 +46,7 @@ DATABASES = {
 
 MEDIA_URL = "http://media.shoppley.com/site_media/media/"
 STATIC_URL = "http://media.shoppley.com/site_media/static/"
+ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
 
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
