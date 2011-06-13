@@ -17,7 +17,7 @@ GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -261,10 +261,14 @@ DEFAULT_FROM_EMAIL = "support@shoppley.com"
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/tmp/shoppley-messages'
 
+# For Shoppleyuser
+MAX_FORWARDS = 2
+
 OFFER_CODE_LENGTH = 6
 RANDOM_PASSWORD_LENGTH = 6
 
-MAX_FORWARDS = 2
+INIT_CUSTOMER_BALANCE = 100
+INIT_MERCHANT_BALANCE = 200
 
 ugettext = lambda s: s
 LANGUAGES = [
