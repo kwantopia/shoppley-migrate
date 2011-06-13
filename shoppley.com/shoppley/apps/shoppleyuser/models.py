@@ -90,6 +90,14 @@ class Merchant(ShoppleyUser):
 	banner			= ImageField(upload_to="banners/")
 	url				= models.URLField(null=True, blank=True)
 
+	
+	def save(self, *args, **kwargs):
+		if not self.pk:
+			
+			self.balance = settings.INIT_MERCHANT_BALANCE
+			
+        	super(Merchant, self).save(*args, **kwargs)
+
 	def __unicode__(self):
 		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
 
@@ -115,6 +123,13 @@ class Customer(ShoppleyUser):
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
 	merchant_dislikes = models.ManyToManyField(Merchant, related_name="antifans")
 
+
+	def save(self, *args, **kwargs):
+		if not self.pk:
+			
+			self.balance = settings.INIT_CUSTOMER_BALANCE
+			
+        	super(Customer, self).save(*args, **kwargs)
 
 class MerchantOfTheDay(models.Model):
 	merchant		= models.ForeignKey(Merchant)

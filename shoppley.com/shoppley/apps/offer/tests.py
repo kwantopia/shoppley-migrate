@@ -206,10 +206,17 @@ class SimpleTest(TestCase):
 
 	def test_transaction(self):
 		user = Customer.objects.all()[0]
-		t = Transaction.objects.get(dst  = user , time_stamp=datetime.now(), ttype="MOD")
-		t.offercodes.add(OfferCode.objects.all()[0])
+		t = Transaction.objects.create(dst  = user , time_stamp=datetime.now(), ttype="MOD", 
+						offercode = OfferCode.objects.all()[0],
+						offer = Offer.objects.all()[0])
+		
+		self.failUnlessEqual(t.amount , -20)
+		#print oc.offer
 		print t
- 
+		print user
+ 		self.failUnlessEqual(Merchant.objects.all()[0].balance,200)
+		self.failUnlessEqual(Customer.objects.all()[0].balance, 100)
+
 	def test_offer_cycle(self):
 		"""
 			submit some offers and check receiving of offers
@@ -358,16 +365,31 @@ class SimpleTest(TestCase):
 		#	count = count+1
 
 		print "************* TEST 1 ***************"
+		
 		msg2={"from":"6170000001", "text":"offer Pizza free all day"}
 		self.failUnlessEqual(Offer.objects.filter(description="Pizza free all day").count(),0)
+		merchant = Merchant.objects.get(phone="6170000001")
+		initial_balance = merchant.balance
+		print "Initial balance = ", initial_balance		
 		cmd.test_handle(msg2)
 		offer =Offer.objects.filter(description="Pizza free all day")
 		self.failUnlessEqual(offer.count(),1)
 		offer = offer[0]
-		merchant = Merchant.objects.get(phone="6170000001")
+
+		############## TODO: WHY?????????????????????
+		print "Current balance = ", merchant.balance
+		print "merchant id = ", merchant.id
+		print "current balance =", offer.merchant.balance
+		print "merchant id = ", offer.merchant.id
+		self.failUnlessEqual(offer.merchant.balance, initial_balance - offer.offercode_set.all().count()*20)
+		
 		self.failUnlessEqual(offer.merchant, merchant)
 		track = TrackingCode.objects.get(offer = offer).code
 		print track
+		
+		msg2a = {"from":"6170000001", "text":"balance"}
+		cmd.test_handle(msg2a)
+
 		print "************* TEST 2: INFO ***************"
 		msg3={"from":"0000000001", "text":"info 00001 00002 00003"}
 		cmd.test_handle(msg3)
@@ -474,14 +496,42 @@ class SimpleTest(TestCase):
 		print "************* TEST 6: REDEEM ***************"
 		msg8={"from":"6170000001", "text": "redeem 00001 0000000001"}
 		customer = Customer.objects.filter(phone__iexact="0000000001")
+		merchant = Merchant.objects.get(phone__iexact="6170000001")
 		self.failUnlessEqual(customer.count(),1)
 		customer = customer[0]
+		c_init = customer.balance
+		m_init = merchant.balance
+		print "merchant's initial balance=",m_init
+		print "customer's initial balance=",c_init
 		oc = OfferCode.objects.filter(code__iexact="00001")
 		self.failUnlessEqual(oc.count(),1)
 		oc = oc[0]
 
-		cmd.test_handle(msg8)
+		cmd.test_handle(msg8)		
+		customer = Customer.objects.get(phone__iexact="0000000001")
+		merchant = Merchant.objects.get(phone__iexact="6170000001")
+		self.failUnlessEqual(merchant.balance, m_init+ 10)
+		self.failUnlessEqual(customer.balance, c_init+ 10)
 		self.failIfEqual(oc.redeem_time,"")
+
+		receiver = Customer.objects.get(phone__iexact="0000000002")
+		offercode = OfferCode.objects.get(customer=receiver,offer = OfferCode.objects.get(code="00002").offer)
+		msg8a={"from":"6170000002", "text": "redeem %s 	0000000002" % offercode.code}
+		f_init = offercode.forwarder.balance
+		c_init = receiver.balance
+		m_init = offercode.offer.merchant.balance
+		print "merchant's initial balance=",m_init
+		print "customer's initial balance=",c_init
+		print "forwarder's initial balance=",f_init
+		cmd.test_handle(msg8a)		
+
+		print "merchant's  balance=",Merchant.objects.get(phone__iexact="6170000002").balance
+		print "customer's  balance=",Customer.objects.get(phone__iexact="0000000002").balance
+		print "forwarder's  balance=",Customer.objects.get(phone__iexact="0000000001").balance
+		
+		self.failUnlessEqual(Merchant.objects.get(phone__iexact="6170000002").balance, m_init+ 10)
+		self.failUnlessEqual(Customer.objects.get(phone__iexact="0000000002").balance, c_init+ 10)
+		self.failUnlessEqual(Customer.objects.get(phone__iexact="0000000001").balance, f_init+ 10)
 		print "************* TEST 6a: REDEEM MERCHANT IS NOT THE OWNER OF THE OFFER***************"
 		# merchant is not the owner of the offer
 		msg8a={"from":"6170000001", "text": "redeem 00002 0000000001"}

@@ -29,31 +29,23 @@ class Transaction(models.Model):
 		("MOR", _("Merchant Offer Redeemed")),
 		("MOD", _("Merchant Offer Distribute")),
 	)
+	points_table = {"COR":10, "CFR":10,
+		"MOR":10, "MOD":-20}
+
 	time_stamp	=models.DateTimeField()
 	dst		=models.ForeignKey(ShoppleyUser,related_name="dst_transaction")
-	amount		=models.IntegerField(default=0)
 	offer		=models.ForeignKey(Offer, blank = True, null = True)
-	offercodes	=models.ManyToManyField(OfferCode, blank=True,null= True)
+	offercode	=models.ForeignKey(OfferCode, blank=True,null= True)
 	ttype		=models.CharField(max_length=3,choices=transaction_TYPES)
-	
+	amount		=models.IntegerField(default=0)
 
+	def save(self, *args, **kwargs):
+		if not self.pk:
+			self.amount = self.points_table[self.ttype]
+        	super(Transaction, self).save(*args, **kwargs)
 
-	def get_amount(self):
-		#self.time_stamp = datetime.now()
-		if self.ttype=="COR":
-			self.amount = REDEEM_POINTS
-		elif self.ttype=="CFR":
-			self.amount = FORWARD_POINTS
-		elif self.ttype=="MOR":
-			self.amount =  MERCHANT_REDEEM
-		elif self.ttype=="MOD":
-			self.amount =  self.offercodes.all().count()*OFFER_POINTS
-		self.save()
-
-	
 
 	def __unicode__(self):
-		self.get_amount()
 		if self.dst:
 			if self.ttype=="COR":
 				return _("%(time)s: %(dst)s earns %(amount)d points for redeeming an offer: %(offer)s") % {
@@ -68,7 +60,7 @@ class Transaction(models.Model):
 					"time": self.time_string_l(),
 					"dst": self.dst,
 					"amount": self.amount,
-					"friend": self.offercodes.all()[0].customer,
+					"friend": self.offercode.customer,
 					"offer":self.offer,
 					}
 			elif self.ttype=="MOR":
@@ -76,23 +68,24 @@ class Transaction(models.Model):
 					"time" : self.time_string_l(),
 					"dst" : self.dst,
 					"amount": self.amount,
-					"customer": self.offercodes.all()[0].customer,
+					"customer": self.offercode.customer,
 					"offer":self.offer,
 					}
 			elif self.ttype=="MOD":
-				return _("%(time)s: Merchant %(dst)s pays %(amount) points to send  %(offer)s to %(count)d customers.") % {
+				return _("%(time)s: Merchant %(dst)s pays %(amount)d points to send  %(offer)s to customer %(customer)s.") % {
 					"time" : self.time_string_l(),
 					"dst" : self.dst,
-					"amount": self.amount,
+					"amount": -1*self.amount,
 					"offer":self.offer,
-					"count":self.offercodes.all().count(),
+					"customer":self.offercode.customer,
 					}
 		
 	def time_string_l(self):
 		return self.time_stamp.strftime("%m-%d %I:%M%p")
 	def execute(self):
-		self.get_amount()
+		#print "In worldbank, init=", self.dst.balance, " amount to be dedcuted=", self.amount
 		self.dst.balance= self.dst.balance +self.amount
+		#print "In worldbank, afterwards=", self.dst.balance
 		self.dst.save()
 	
 			

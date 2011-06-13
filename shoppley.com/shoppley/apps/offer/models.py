@@ -40,7 +40,7 @@ class Offer(models.Model):
 	duration		= models.IntegerField(default=90)
 	max_offers		= models.IntegerField(verbose_name="Max # of customers", default=50, help_text="Maximum number of customers you want to send to")
 	num_init_sentto		= models.IntegerField(default=0) # number of customers the offer was sent to
-
+	is_merchant_txted	= models.BooleanField(default=False) # True if the merchant was informed the status of the offer after it's expired
 	img				= ImageField(upload_to='offers/')
 
 	def __unicode__(self):
@@ -75,7 +75,7 @@ class Offer(models.Model):
 		return track_code
 
 	def gen_offer_code(self, customer):
-		gen_code = gen_offer_code()
+		gen_code = gen_offer_code().lower()
 		while self.offercode_set.filter(code__iexact=gen_code):
 			gen_code = gen_offer_code()
 		self.offercode_set.create (
@@ -99,7 +99,7 @@ class Offer(models.Model):
 		forwarder = OfferCode.objects.filter(code__iexact=original_code)
 		
 		gen_code = gen_offer_code()
-		offers = Offer.objects.all()
+
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
 		
@@ -180,11 +180,23 @@ class Offer(models.Model):
 		else:
 			target_list = list(target)
 
+		from worldbank.models import Transaction
+
+		allowed_number =abs(int( self.merchant.balance/Transaction.points_table["MOD"]))
+		if len(target_list) > allowed_number:
+			target_list = random.sample(target_list, allowed_number)
 		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
+		
 		
 		for o in self.offercode_set.all():
 			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
 			sms_notify(o.customer.phone, offer_msg)
+			transaction = Transaction.objects.create(time_stamp=datetime.now(),
+							offer = self,
+							offercode = o,
+							dst = self.merchant,
+							ttype = "MOD")
+			transaction.execute()
 
 		self.num_init_sentto =len(target_list)
 		self.save()
