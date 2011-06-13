@@ -183,7 +183,7 @@ a:hover {
 }
 
 #merc-track-offers {
-	background: transparent url(../../../images/boram/boram/landing-merchant-trackoffers.png) no-repeat;	
+	background: transparent url(../../images/boram/landing-merchant-trackoffers.png) no-repeat;	
 }
 #get-offers, #redeem-offers, #share-offers, #merc-get-offers, #merc-redeem-offers, #merc-track-offers {
 	background-position: top left;
