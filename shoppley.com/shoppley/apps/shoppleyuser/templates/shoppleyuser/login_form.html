@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load uni_form_tags %}
+   
+        <!--p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p-->
+        
+        <form class="header-login uniForm" id="login_form" method="post" action="{% url shoppleyuser_login %}" style="border_style:none;">
+			{% csrf_token %}
+            <fieldset class="inlineLabels">
+                {{ lform|as_uni_form }}
+                <div  class="form_block">
+                    <input type="submit" value="{% trans "Log In &raquo;" %}" />
+                </div>
+            </fieldset>
+        </form>
+        
+
+   
