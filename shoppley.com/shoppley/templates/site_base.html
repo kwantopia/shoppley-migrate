@@ -30,7 +30,7 @@
 
 {% block login %}
     {% if user.is_authenticated %}
-        <b>{{ user }}</b> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
+        <b>{{ user }}</b> | <a href="{% url home %}">{% trans "Home" %}</a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
 	{% include "shoppleyuser/login_form.html" %}
         <!--a href="{% url shoppleyuser_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url merchant_signup %}">{% trans "Business" %} {% trans "Sign up" %}</a>{% endifsetting %}-->
