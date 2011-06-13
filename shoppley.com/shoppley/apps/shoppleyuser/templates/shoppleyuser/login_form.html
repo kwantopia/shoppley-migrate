@@ -7,13 +7,15 @@
 			{% csrf_token %}
             <fieldset class="inlineLabels">
                 {{ lform|as_uni_form }}
+
+
                 <div  class="form_block">
 		{% if lform %}
-	                    <input type="submit" value="{% trans "Log In &raquo;" %}" />
-		{% endif %}        
-        </div>
-            </fieldset>
-        </form>
-        
 
-   
+			 <a href="{% url acct_passwd_reset %}">{% trans "Forgot your password?" %}</a>
+	                    <input type="submit" value="{% trans "Log In &raquo;" %}" /> 
+
+		{% endif %}
+	</div>	
+	</fieldset>
+	</form>
