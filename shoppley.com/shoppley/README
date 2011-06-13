@@ -99,3 +99,9 @@ cd /home/www/shoppley.com/shoppley
 python manage.py collectstatic 
 cp local_settings.py.sample local_settings.py
 
+
+##### Update: 6/13/2011 -- Kwan
+# New django-mailer 0.2.0 need to be installed manually using git
+$ cd packages
+$ ./download.sh
+# softlink to mailer is added under apps directory to make it accessible
