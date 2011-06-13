@@ -42,7 +42,7 @@ STATUS = "status"
 
 # others
 SIGNUP = "signup"
-MERCHANT_SIGNUP = "merchant_signup"
+MERCHANT_SIGNUP = "merchant"
 HELP = "help"
 
 class Command(NoArgsCommand):
@@ -451,7 +451,7 @@ class Command(NoArgsCommand):
 					phone= msg["from"]
 					parsed = customer_pattern.parseString(text)
 					
-					#------------------------------- MERCHANT SIGNUP: "merchant_signup<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
+					#------------------------------- MERCHANT SIGNUP: "merchant<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
 					if  parsed[0].lower() == MERCHANT_SIGNUP:
 						if (len(parsed)<4):
 							receipt_msg=_("Fail to sign up! Please follow this command: 'merchant_signup email zipcode business_name'")
