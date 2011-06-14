@@ -115,11 +115,12 @@ class Command(NoArgsCommand):
 	def check_phone(self,phone):
 		try:
 			phone = parse_phone_number(phone)
+			print phone			
 			customer = ShoppleyUser.objects.get(phone__icontains=phone)
 			receipt_msg=_('"%s" is already registered with us. You can now use our services.') % phone
 			self.notify(phone,receipt_msg)
 			raise CommandError("Phone number was already used")
-		except Customer.DoesNotExist:
+		except ShoppleyUser.DoesNotExist:
 			return phone
 	
 	def check_offercode(self,code,phone):

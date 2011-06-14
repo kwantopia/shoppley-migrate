@@ -42,6 +42,7 @@ def home(request, template_name="front-page.html"):
 					"lform":LoginForm,
 				},context_instance=RequestContext(request))
 
+
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
 			url_required=False, extra_context=None):
@@ -51,23 +52,32 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 		success_url = get_default_redirect(request)
 	if request.method == "POST" and not url_required:
 		form = form_class(request.POST)
+		print ">>>>>>>>>>>> GET HERE FIRST??"
 		if form.is_valid():
+
+
+				## HACK For now. Dont know why form.login(request) returns false!!
+
 				## TODO HACK For now. Dont know why form.login(request) returns false!!
+
 			# if form.login(request):
 				form.login(request)
+
 				if associate_openid and association_model is not None:
 					for openid in request.session.get('openids', []):
 						assoc, created = UserOpenidAssociation.objects.get_or_create(
 							user=form.user, openid=openid.openid
 						)
 					success_url = openid_success_url or success_url
-
+#				print ">>>>>>>>>>>>>>>>>landing here??"
 				#return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
 				return HttpResponseRedirect(reverse("home"))
 				#return HttpResponseRedirect(success_url)
 				#return HttpResponseRedirect(reverse('home'))
 	else:
 		form = form_class()
+#	print "request" , request.method, url_required, form.is_valid(), form.login(request), request
+#	print ">>>>>>> landing there?"
 	ctx = {
 		"form": form,
 		"url_required": url_required,
@@ -79,7 +89,10 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 
 def merchant_signup(request, form_class=MerchantSignupForm,
 	template_name="shoppleyuser/signup.html", success_url=None):
+
+	
 	success_url = "/shoppleyuser/merchant/signup-success"
+
 	if success_url is None:
 		success_url = get_default_redirect(request)
 	if request.method == "POST":
@@ -106,7 +119,10 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 
 def customer_signup(request, form_class=CustomerSignupForm,
 	template_name="shoppleyuser/customer_signup.html", success_url=None):
+	#success_url = "shoopleyuser/customer_landing_page.html"
+
 	success_url = "/shoppleyuser/customer/signup-success"
+
 	if success_url is None:
 		success_url = get_default_redirect(request)
 	if request.method == "POST":

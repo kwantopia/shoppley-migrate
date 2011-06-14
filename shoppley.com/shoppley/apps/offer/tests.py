@@ -351,7 +351,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(eles[2],"02139")
 
 
-		msg2={"from":"8043329436", "text":"merchant_signup m1@mit.edu 02139 m1"}
+		msg2={"from":"8043329436", "text":"merchant m1@mit.edu 02139 m1"}
 		cmd.test_handle(msg2)
 		cambridge=ZipCode.objects.get(code="02139")
 		
@@ -614,8 +614,8 @@ class SimpleTest(TestCase):
 		cmd.test_handle(msg9c)
 		self.failUnlessEqual(Customer.objects.filter(phone__iexact=msg9c["from"]).count(),1)
 
-		print "************* TEST 8: MERCHANT_SIGNUP ***************"
-		msg10={"from":"0000000020", "text": "merchant_signup m20@mit.edu 02139 test Merchant name"} # what if merchant business name contains many words
+		print "************* TEST 8: merchant ***************"
+		msg10={"from":"0000000020", "text": "merchant m20@mit.edu 02139 test Merchant name"} # what if merchant business name contains many words
 		cmd.test_handle(msg10)
 		tokens = pattern.parseString(msg10["text"])
 		newu=User.objects.filter(email=tokens[1], username=tokens[1])
@@ -625,7 +625,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(newm[0].business_name,"test Merchant name")
 
 		print "************* TEST 8a: RESIGNUP ***************"
-		msg10a={"from":"0000000020", "text": "merchant_signup m20@mit.edu 02139 test Merchant name"}
+		msg10a={"from":"0000000020", "text": "merchant m20@mit.edu 02139 test Merchant name"}
 		error = False
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10a["from"]).count(),1)
 		cmd.test_handle(msg10a)
@@ -633,7 +633,7 @@ class SimpleTest(TestCase):
 
 
 		print "************* TEST 8b: SIGNUP: reuse EMAIL ***************"
-		msg10b={"from":"0000000021", "text": "merchant_signup m20@mit.edu 02139 test Merchant name"}
+		msg10b={"from":"0000000021", "text": "merchant m20@mit.edu 02139 test Merchant name"}
 		error = False
 		try:
 			cmd.test_handle(msg10b)
@@ -642,7 +642,7 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 8c: SIGNUP: reuse PHONE ***************"
-		msg10c={"from":"0000000020", "text": "merchant_signup m21@mit.edu 02139 test Merchant name"}
+		msg10c={"from":"0000000020", "text": "merchant m21@mit.edu 02139 test Merchant name"}
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10c["from"]).count(),1)
 		cmd.test_handle(msg10c)
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10c["from"]).count(),1)
