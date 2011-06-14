@@ -52,7 +52,7 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 	if request.method == "POST" and not url_required:
 		form = form_class(request.POST)
 		if form.is_valid():
-				## HACK For now. Dont know why form.login(request) returns false!!
+				## TODO HACK For now. Dont know why form.login(request) returns false!!
 			# if form.login(request):
 				form.login(request)
 				if associate_openid and association_model is not None:

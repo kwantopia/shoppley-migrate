@@ -57,13 +57,18 @@ class Command(NoArgsCommand):
 
 	def info(self, offercode):
 
-			return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
-								"code" : (offercode.code) ,
-								"merchant" : offercode.offer.merchant,
-								"expiration":pretty_datetime(offercode.expiration_time)	,
-								"description":offercode.offer.description ,
-								"address":offercode.offer.merchant.print_address(),
-							}
+			return _("%(merchant)s offers %(description)s [expires: %(expiration)s]") %{
+								"merchant": offercode.offer.merchant,
+								"description": offercode.offer.description,
+								"expiration": pretty_datetime(offercode.expiration_time) ,
+						}
+			#return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
+		#						"code" : (offercode.code) ,
+		#						"merchant" : offercode.offer.merchant,
+			#					"expiration":pretty_datetime(offercode.expiration_time)	,
+			#					"description":offercode.offer.description ,
+			#					"address":offercode.offer.merchant.print_address(),
+			#				}
 	def update_expired(self):
 		
 		expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
@@ -73,7 +78,7 @@ class Command(NoArgsCommand):
 			sentto = offer.num_init_sentto
 			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
 			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
-			merchant_msg = _("Your offer %(offer)s was expired. It was sent to %(sentto)s and forwarded to %(forwarded)s other, a total of %(total)s reached. It was redeemed by %(redeem)s") %{ "offer": offer,"sentto":pluralize(sentto,"customer"),"forwarded":forwarded,"total":pluralize(int(sentto)+int(forwarded),"customer"),"redeem":pluralize(redeem,"customer"),}
+			merchant_msg = _("%(offer)s expired [sent to %(sentto)d] [forwarded %(forwarded)d] [redeemed %(redeem)d]") %{ "offer": offer,"sentto":sentto,"forwarded":forwarded,"redeem":redeem,}
 			self.notify(offer.merchant.phone,merchant_msg)
 		return len(expired_offers)
 
@@ -110,9 +115,9 @@ class Command(NoArgsCommand):
 	def check_phone(self,phone):
 		try:
 			phone = parse_phone_number(phone)
-			customer = Customer.objects.get(phone__icontains=phone)
+			customer = ShoppleyUser.objects.get(phone__icontains=phone)
 			receipt_msg=_('"%s" is already registered with us. You can now use our services.') % phone
-			self.notify(to,receipt_msg)
+			self.notify(phone,receipt_msg)
 			raise CommandError("Phone number was already used")
 		except Customer.DoesNotExist:
 			return phone
@@ -283,6 +288,7 @@ class Command(NoArgsCommand):
 	                                             	"total":total,
 							"redeemer": offer.redeemers().count()
                                                 	}
+							
 							self.notify(su.phone,receipt_msg)
 						else:
 							receipt_msg=_("Fail to get status! You have not started an offer yet. To start an offer, reply with \"offer<SPACE>description\"")
@@ -411,15 +417,20 @@ class Command(NoArgsCommand):
 							#f_state.update()
 							friend_num = r
 							friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)	
-							customer_msg = _("%(code)s: %(customer)s has forwarded you this offer:\n - merchant: %(merchant)s\n - expiration: %(expiration)s\n - description: %(description)s\n - deal: %(dollar_off)s off\n - address: %(address)s\nPlease use this code %(code)s to redeem the offer.\n")%{
-									"customer":su,
-									"merchant":ori_offer.merchant,
-									"expiration":pretty_datetime(ori_code.expiration_time),
-									"description":ori_offer.description,
-									"dollar_off":ori_offer.dollar_off,
-									"address":ori_offer.merchant.print_address(),
-									"code":friend_code.code,
-									}
+							customer_msg = _("%(customer)s forwarded you an offer: %(info)s. Use %(code)s to redeem")%{
+								"customer":su.customer,
+								"info": self.info(ori_code),
+								"code": friend_code.code,
+							}
+							#customer_msg = _("%(code)s: %(customer)s has forwarded you this offer:\n - merchant: %(merchant)s\n - expiration: %(expiration)s\n - description: %(description)s\n - deal: %(dollar_off)s off\n - address: %(address)s\nPlease use this code %(code)s to redeem the offer.\n")%{
+							#		"customer":su,
+							#		"merchant":ori_offer.merchant,
+							#		"expiration":pretty_datetime(ori_code.expiration_time),
+							#		"description":ori_offer.description,
+							#		"dollar_off":ori_offer.dollar_off,
+							#		"address":ori_offer.merchant.print_address(),
+							#		"code":friend_code.code,
+							#		}
 							self.notify(friend_num,customer_msg)
 							# the phone number is not one of our customers
 							if random_pw:
@@ -462,11 +473,11 @@ class Command(NoArgsCommand):
 
 						parsed_email = parsed[1].lower()
 						parsed_zip = parsed[2]
-
+						
 						business = ''.join(i+" " for i in parsed[3:]).strip()
 						email = self.check_email(parsed_email,phone)
 						zipcode= self.check_zipcode(parsed[2],phone)
-				
+						phone=self.check_phone(phone)
 						randompassword = gen_random_pw()
 						new_user = User.objects.create_user(email,email,randompassword)
 						EmailAddress.objects.add_email(new_user,email)
@@ -494,6 +505,7 @@ class Command(NoArgsCommand):
 						parsed_zip = parsed[2]	
 						email = self.check_email(parsed_email,phone)
 						zipcode= self.check_zipcode(parsed[2],phone)
+						phone =self.check_phone(phone)
 						randompassword = gen_random_pw()
 						receipt_msg = _("Sign up successfully! Please use these info to log in.\n username: %(email)s \n password: %(password)s") % {
 							"email": email,
