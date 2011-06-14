@@ -17,7 +17,7 @@ GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
-DEBUG = False
+DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.

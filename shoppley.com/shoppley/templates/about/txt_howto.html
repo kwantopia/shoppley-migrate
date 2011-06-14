@@ -1,0 +1,33 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "TXT Commands" %}{% endblock %}
+
+{% block body %}
+
+<hr class="space">
+
+<div class="span-24 last">
+
+<h2>Shoppley {% trans "TXT Commands" %}</h2>
+    
+  <div class="content-wrapper span-24 last">
+
+		<div class="span-24 last">
+			Download the TXT commands cheat sheet: <a href="{{ STATIC_URL }}images/cheatsheet/TXTCommands.pdf">here</a>
+		</div>
+		<div class="span-24 last">
+			<img width="750" src="{{ STATIC_URL }}images/cheatsheet/customercheat.png"/>
+		</div>
+		<div class="span-24 last">
+			<img width="750" src="{{ STATIC_URL }}images/cheatsheet/merchantcheat.png"/>
+		</div>
+
+  </div><!-- inner span-24 containing all body -->
+
+</div><!-- main top span-24 -->
+
+
+{% endblock %}
