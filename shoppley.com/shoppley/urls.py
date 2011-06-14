@@ -35,6 +35,7 @@ else:
 
 
 urlpatterns = patterns('',
+
 #    url(r'^$', direct_to_template, {
 #        "template": "homepage.html", "extra_context": {"form": CustomerSignupForm},
 #    }, name="home"),
@@ -46,11 +47,11 @@ urlpatterns = patterns('',
     #url(r'^comingsoon/$', direct_to_template, {
     #    "template": "comingsoon.html", "extra_context": {"form": CustomerBetaSubscribeForm, "categories":Category.objects.all()},
     #}, name="home"),
-    
+
     url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
     url(r'^account/signup/$', signup_view, name="acct_signup"),
     url(r'^account/login/$', 'shoppleyuser.views.login', name="shoppleyuser_login"),
-    
+    url(r'^account/info/$', direct_to_template, {"template": "shoppleyuser/account_info.html"},name="account_info"),
     (r'^about/', include('about.urls')),
     (r'^account/', include('account.urls')),
     (r'^openid/(.*)', PinaxConsumer()),
