@@ -16,7 +16,7 @@ class MerchantSignupForm(forms.Form):
 
 	username = forms.CharField(label=_("Username"), required=True, widget=forms.TextInput())
 	business_name   = forms.CharField(max_length=64)
-	address_1               = forms.CharField(label=_("Business address"), max_length=64, required=False)
+	address_1               = forms.CharField(label=_("Business address"), max_length=64, required=True)
 
 	zip_code                = forms.CharField(max_length=10)
 	phone                   = forms.CharField(max_length=20)
@@ -36,12 +36,24 @@ class MerchantSignupForm(forms.Form):
 		except ZipCode.DoesNotExist:
 			raise forms.ValidationError(_("Not a valid zip code."))
 
+	def clean_username(self):
+		username = self.cleaned_data["username"]
+		try:
+			user = User.objects.get(username__iexact=username)
+		except User.DoesNotExist:
+			return self.cleaned_data["username"]
+		raise forms.ValidationError(_("This username is already registered. Please choose another."))
+
 	def clean_email(self):
 		email = self.cleaned_data["email"]
 		try:
-			user = User.objects.get(username__iexact=email)
-		except User.DoesNotExist:
+			email = EmailAddress.objects.get(email__iexact=email)
+		except EmailAddress.DoesNotExist:
 			return self.cleaned_data["email"]
+		except EmailAddress.MultipleObjectsReturned:
+		## TODO: This should NOT have happened
+			raise forms.ValidationError(_("This email address is already registered. Please choose another."))
+
 		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 	
 	def clean_phone(self):
@@ -111,6 +123,24 @@ class MerchantSignupForm(forms.Form):
 					).save()
 		return username, password # required for authenticate()
 
+class PasswordChangeForm(forms.Form):
+	old_password		= forms.CharField(label=_("Old Password"), widget=forms.PasswordInput(render_value=False))
+	new_password1		= forms.CharField(label=_("New Password"), widget=forms.PasswordInput(render_value=False))
+	new_password2		= forms.CharField(label=_("New Password (again)"), widget=forms.PasswordInput(render_value=False))
+	def clean(self):
+		if not "old_password" in self.cleaned_data:
+			raise forms.ValidationError(_("You must input your old password."))
+		if "new_password1" in self.cleaned_data and "new_password2" in self.cleaned_data:
+			if self.cleaned_data["new_password1"] != self.cleaned_data["new_password2"]:
+				raise forms.ValidationError(_("You must type the same password each time."))
+		return self.cleaned_data
+
+	def save(self, request):
+		data=self.clean()
+		old_password = data["old_password"]
+		new_password = data["new_password1"]
+		
+
 class CustomerSignupForm(forms.Form):
 	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
 	
@@ -136,12 +166,28 @@ class CustomerSignupForm(forms.Form):
 		except ZipCode.DoesNotExist:
 			raise forms.ValidationError(_("Not a valid zip code."))
 
+	def clean_username(self):
+		username = self.cleaned_data["username"]
+		try:
+			user = User.objects.get(username__iexact=username)
+		
+		except User.DoesNotExist:
+			
+			return self.cleaned_data["username"]
+		
+		raise forms.ValidationError(_("This username is already registered. Please choose another."))
+
 	def clean_email(self):
 		email = self.cleaned_data["email"]
 		try:
-			user = User.objects.get(username__iexact=email)
-		except User.DoesNotExist:
+			email = EmailAddress.objects.get(email__iexact=email)
+		except EmailAddress.DoesNotExist:
 			return self.cleaned_data["email"]
+		except EmailAddress.MultipleObjectsReturned:
+                ## TODO: This should NOT have happened
+			raise forms.ValidationError(_("This email address is already registered. Please choose another."))
+
+
 		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 		
 
