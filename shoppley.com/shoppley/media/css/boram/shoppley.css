@@ -3,11 +3,20 @@ body {
 	background: transparent url(../../images/boram/bg.png);
 	background-repeat: repeat-x;
 }
+.logo {
+	float: left;
+}
+.logo a img {
+	padding-top: 10px;
+}
+.login {
+	float: right;
+}
 
 .header {
 	padding-top: 10px;
 }
-.footer {
+.legal {
 	background-color: #FAFAFA;
 	padding: 15px;
 	border-top: 1px solid #D4DA30;
@@ -189,6 +198,26 @@ a:hover {
 	background-position: top left;
 }
 
+/*header login section fix */
+div.login div#div_id_username.ctrHolder, div.login div#div_id_password.ctrHolder {
+	padding-bottom: 0px;
+}
+p#hint_id_remember {
+	display: none;
+}
+div.login fieldset.inlineLabels {
+	width: 500px;
+}
+div.login div#div_id_username, div.login div#div_id_password {
+	float: left;
+}
+div#div_id_username label, div#div_id_password label {
+	padding-right: 7px;
+}
+div#div_id_password label {
+	padding-left: 15px;
+}
+
 /* for About Us page */
 .about-header {
   margin-top: 10px;
@@ -196,18 +225,23 @@ a:hover {
   font-weight: bold;
 }
 
-.about-person-box {
-  background-color: #ddd; 
+.about-person-box { 
+	color: #666666;
+	padding: 10px;
 }
 
 .about-person-header {
-  background-color: #aaa;  
+  border-bottom:1px solid #D4DA30;  
   font-size: 1.2em;
+	color: #333333;
+	margin-top: 10px;
 }
 
 .about-person-body {
+	background-color: #FDFDFD;
   padding-left: 20px;
   padding-bottom: 20px;
+	padding-top: 10px;
 }
 
 /* for FAQ page */
