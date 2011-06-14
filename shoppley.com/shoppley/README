@@ -2,11 +2,9 @@
 
 Prerequisites: Python 2.7
 
-# Install latest virtualenv
+#Install latest virtualenv
 $ sudo pip install virtualenv
 $ sudo pip install virtualenvwrapper
-
-# On Mac you need to softlink virtualenv under Python.framework/Versions/2.7/bin/ to /opt/local/bin/virtualenv
 
 # For Linux create a virtual environment environment
 # home directory for you virtual environments, I just named it virtual 
@@ -34,10 +32,9 @@ $ cd /home/www/webuy.mit.edu/shoppley
 # install requirements
 $ pip install Django (will install 1.3 the latest)
 $ pip install Pinax (will install the latest 0.9)
-$ cd <shoppley project dir>
 $ pip install -r requirements.txt
 
-== DEV server only ==
+== Dev server ==
 # If you are on dev server create a softlink to easily access the project
 # from your home directory after logging in
 
@@ -49,7 +46,7 @@ ln -s /home/www/webuy.mit.edu/shoppley shoppley
 # patches profiles and microblogging apps in pinax to take e-mail as part of url
 
 $ cd patches
-# modify patch.sh to point to your PINAX_HOME, where the virtual environment ofor shoppley-env is installed 
+# modify patch.sh to point to your PINAX_HOME, and necessary directories
 $ vi patch.sh
 $ ./patch.sh
 
@@ -57,7 +54,6 @@ $ ./patch.sh
 
 You need to download blueprint css
 
-$ sudo port install git-core
 $ cd packages
 $ ./download.sh
 
@@ -70,7 +66,7 @@ If models have changed we need to delete dev.db and syncdb
 == test data ==
 
 # Updated by Meng
-python manage.py test_init
+python manage.py test_initialize
 
 #################################
 # Deprecated
@@ -87,11 +83,7 @@ Add more test data generation in apps/shoppleyuser/tests.py "setUp" method
 # Deprecated
 ##################################
 
-== DEV server Only ==
-cp dev_settings.py.sample local_settings.py
-
-
-== DEPLOYMENT server Only ==
+== DEPLOYMENT ==
 
 source /home/virtual/shoppley-env/bin/activate
 cd /home/www/shoppley.com/shoppley
