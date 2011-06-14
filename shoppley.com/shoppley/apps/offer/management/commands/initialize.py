@@ -26,4 +26,5 @@ class Command(NoArgsCommand):
 						city=city_obj, latitude=latitude, longitude=longitude)
 
 		shoppley, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com")
+		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
 		print "done"

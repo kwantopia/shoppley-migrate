@@ -3,6 +3,8 @@ import os.path
 import posixpath
 import pinax
 
+SITE_ID = 3
+
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
