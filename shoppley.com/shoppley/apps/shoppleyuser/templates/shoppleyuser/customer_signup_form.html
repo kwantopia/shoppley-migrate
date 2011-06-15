@@ -6,7 +6,7 @@
     {% else %}
         <!--p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p-->
         
-        <form class="signup uniForm" id="signup_form" method="post" action="{% url customer_signup %}" style="border_style:none;">
+        <form class="customer-signup-front-form uniForm" id="signup_form" method="post" action="{% url customer_signup %}" style="border_style:none;">
 			{% csrf_token %}
             <fieldset class="inlineLabels">
                 {{ form|as_uni_form }}

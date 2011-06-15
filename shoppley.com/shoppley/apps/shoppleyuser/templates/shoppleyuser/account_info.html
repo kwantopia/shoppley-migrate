@@ -3,10 +3,27 @@
 {% load i18n %}
 {% load uni_form_tags %}
 
-{% block head_title %}{% trans "Account Info" %}{% endblock %}
+{% block head_title %}{{ user.username }}{% trans "'s Account" %}{% endblock %}
 
 {% block body %}
- <a href="{% url acct_email %}">{% trans "Add/Verify Emails" %}</a> 
-     <a href="{% url acct_passwd %}">{% trans "Change Password" %}</a> 
+{% if user.is_authenticated %}
+        <ul>
+	
+	   {% if shoppleyuser.is_customer %}
+	   <li><a href="{% url shoppleyuser.views.offer_frequency_set %}">{% trans "Offer Frequency" %}</a></li> 
+           {% endif %}
+	   <li><a href="{% url acct_email %}">{% trans "E-Mail Addresses" %}</a></li>
+            
+            {% if user.password %}
+            <li><a href="{% url acct_passwd %}">{% trans "Change Password" %}</a></li>
+            {% else %}
+            <li><a href="{% url acct_passwd_set %}">{% trans "Set Password" %}</a></li>
+            {% endif %}
+             
+            
+        </ul>
+    {% endif %}
+ 
+  
 {% endblock %}
 
