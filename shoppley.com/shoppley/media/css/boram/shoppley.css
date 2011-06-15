@@ -9,7 +9,7 @@ body {
 .logo a img {
 	padding-top: 10px;
 }
-.login {
+#tabhead .login {
 	float: right;
 }
 
@@ -18,7 +18,7 @@ body {
 }
 .legal {
 	background-color: #FAFAFA;
-	padding: 15px;
+padding: 40px 40px 100px 40px;
 	border-top: 1px solid #D4DA30;
 }
 
@@ -129,21 +129,21 @@ a:hover {
 	background: transparent url(../../images/boram/signup-merchant.png) no-repeat;
 }
 
-.signup-form {
+.signup-form.customer, .signup-form.merchant {
 	padding: 15px 50px;
 }
 
-.ctrlHolder {
+.signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
 	text-align: right;
 	padding-bottom: 8px;
 }
-.ctrlHolder label {
+.signup-form.customer .ctrlHolder label, .signup-form.merchant .ctrlHolder label {
 	padding-right: 15px;
 }
 .signup-form, .signup-form table {
 	background-color: #FAFAFA;
 }
-.form_block {
+.signup-form.customer .form_block, .signup-form.merchant .form_block {
 	float: right;
 }
 .signup-form table td.labels {
@@ -216,6 +216,12 @@ div#div_id_username label, div#div_id_password label {
 }
 div#div_id_password label {
 	padding-left: 15px;
+}
+div#div_id_remember.checkbox {
+	padding-top: 5px;
+}
+div.login .form_block {
+	float: right;
 }
 
 /* for About Us page */
