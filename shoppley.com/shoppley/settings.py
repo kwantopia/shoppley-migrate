@@ -9,6 +9,7 @@ PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # TODO: the following line needs to be updated when running from your local machine
 PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
+#PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.6/site-packages")
 
 
 GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q0bgOQMK8ZOKjSUhquxiiodbA"
@@ -117,9 +118,8 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
-	"django.middleware.csrf.CsrfResponseMiddleware",
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
-	"django_openid.consumer.SessionConsumer",
+	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
 	"groups.middleware.GroupAwareMiddleware",
 	"pinax.apps.account.middleware.LocaleMiddleware",
@@ -137,11 +137,11 @@ TEMPLATE_DIRS = [
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = [
-	"django.core.context_processors.static",
-	"django.core.context_processors.auth",
+	"django.contrib.auth.context_processors.auth",
 	"django.core.context_processors.debug",
 	"django.core.context_processors.i18n",
 	"django.core.context_processors.media",
+	"django.core.context_processors.static",
 	"django.core.context_processors.request",
 	"django.contrib.messages.context_processors.messages",
 	"pinax.apps.account.context_processors.account",

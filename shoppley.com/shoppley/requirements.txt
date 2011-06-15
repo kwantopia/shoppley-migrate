@@ -27,7 +27,7 @@ django-announcements
 django-atomformat
 django-avatar
 django-bookmarks
-django-sentry
+distribute
 django-debug-toolbar
 django-email-confirmation
 django-extensions
@@ -35,7 +35,8 @@ django-flag
 django-friends
 django-gravatar
 django-locations
-django-mailer
+#django-mailer
+django-sentry
 django-messages
 django-microblogging
 django-notification
@@ -59,5 +60,6 @@ django-markup
 template_utils
 django-autofixture
 django-groups
+pil
 sorl-thumbnail
 django-wakawaka
