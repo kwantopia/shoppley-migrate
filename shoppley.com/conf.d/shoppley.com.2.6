@@ -16,7 +16,7 @@ WSGIRestrictStdout Off
     #    Allow from all
     #</Directory>
 
-	WSGIDaemonProcess shoppley.com processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/shoppley-env/lib/python2.7/site-packages
+	WSGIDaemonProcess shoppley.com processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/shoppley-env/lib/python2.6/site-packages
 	WSGIProcessGroup shoppley.com
 
     #WSGIScriptAlias / /home/www/shoppley.com/shoppley/apache/shoppley.wsgi
