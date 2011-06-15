@@ -344,6 +344,37 @@ class OfferCode(models.Model):
 
 		return offer_detail
 
+	def offer_redeemed(self):
+		"""
+			Used to report to customer mobile phone
+		"""
+		offer_detail = {"offer_code_id": self.id,
+							"offer_id": self.offer.id,
+							"name": self.offer.title,
+							"description": self.offer.description,
+							"redeemed": self.redeem_time.strftime("%m-%d-%y %H:%M"),
+							"txn_amount": "%.2f"%self.txn_amount,
+							"feedback": self.feedback,
+							"rating": self.rating,
+							"phone": self.offer.merchant.phone,
+							"address1": self.offer.merchant.address_1,
+							"citystatezip": self.offer.merchant.zipcode.citystate(),
+							"lat": -42.2342,
+							"lon": -24.2322,
+							"img": self.offer.get_image(),
+							"banner": self.offer.merchant.get_banner()
+						}
+		if self.offer.percentage:
+			offer_detail["percentage"] = self.offer.percentage
+		elif self.offer.dollar_off:
+			offer_detail["dollar_off"] = self.offer.dollar_off
+		if self.forwarder:
+			offer_detail["forwarder"] = str(self.forwarder)
+
+		return offer_detail
+
+
+
 class OfferCodeAbnormal(models.Model):
 	ABNORMAL_TYPE = (
 		("IV", "Invalid Code"),

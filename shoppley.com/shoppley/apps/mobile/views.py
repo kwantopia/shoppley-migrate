@@ -213,12 +213,11 @@ def offers_redeemed(request):
 	if u.shoppleyuser.is_customer():
 
 		customer = u.shoppleyuser.customer
-		# need to narrow this query to just return those very close to lat, lon
 		user_offers = OfferCode.objects.filter(customer=customer).exclude(redeem_time__isnull=True)
 		data["num_offers"] = user_offers.count()
 		data["offers"] = []
 		for o in user_offers:
-			data["offers"].append( o.offer_detail() )	
+			data["offers"].append( o.offer_redeemed() )	
 
 		data["result"] = 1
 		data["result_msg"] = "Returning redeemed offers."
@@ -227,6 +226,36 @@ def offers_redeemed(request):
 		data["result_msg"] = "User is not a customer."
 
 	return JSONHttpResponse(data)	
+
+@csrf_exempt
+@login_required
+def offers_expired(request):
+	"""
+		Offers that expired and haven't been redeemed
+
+		Future use: to indicate that they would like offers like this
+	"""
+	data = {}
+
+	u = request.user
+	if u.shoppleyuser.is_customer():
+
+		customer = u.shoppleyuser.customer
+		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__lt=datetime.now(), redeem_time__isnull=True)
+
+		data["num_offers"] = user_offers.count()
+		data["offers"] = []
+		for o in user_offers:
+			data["offers"].append( o.offer_detail() )	
+
+		data["result"] = 1
+		data["result_msg"] = "Returning expired offers that have not been redeemed."
+	else:
+		data["result"] = -1
+		data["result_msg"] = "User is not a customer."
+
+	return JSONHttpResponse(data)	
+
 
 @csrf_exempt
 @login_required

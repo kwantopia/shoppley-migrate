@@ -42,9 +42,11 @@ def pretty_date(time=False, future=True):
 	day_diff = diff.days
 
 	if day_diff < 0:
-		return ''
+		return "Expired" 
 
 	if day_diff == 0:
+		if second_diff < 0:
+			return "Expired"
 		if second_diff < 10:
 			return "just now"
 		if second_diff < 60:
