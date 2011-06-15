@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'shoppleyClientTests' target in the 'shoppleyClientTests' project
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+#endif
