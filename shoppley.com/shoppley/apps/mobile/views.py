@@ -45,7 +45,7 @@ def mobile_login(request):
 		return JSONHttpResponse(data)	 
 	else:	
 		data["result"] = -1
-		data["result_msg"] = "Login unsuccessful."
+		data["result_msg"] = "Wrong email/password."
 		return JSONHttpResponse(data)
 
 @csrf_exempt
@@ -70,7 +70,7 @@ def register_customer(request):
 
 	if not ZipCode.objects.filter(code=zipcode).exists():
 		# ERROR: zip code is invalid
-		data["result"] = "-2"
+		data["result"] = -2
 		data["result_msg"] = "Zip Code is invalid or not in the system."
 		return JSONHttpResponse(data)	
 	else:
@@ -94,7 +94,7 @@ def register_customer(request):
 		sms_notify(phone, txt_msg)
 	else:
 		# ERROR: User exists, ask user to login with their password 
-		data["result"] = "-1"
+		data["result"] = -1
 		data["result_msg"] = "User already exists so you should login with their password."
 		return JSONHttpResponse(data)	
 
@@ -108,7 +108,7 @@ def register_customer(request):
 		return JSONHttpResponse(data)	 
 	else:
 		# ERROR: problem authenticating user
-		data["result"] = "-3"
+		data["result"] = -3
 		data["result_msg"] = "Authentication error, possibly the user is not activated."
 		return JSONHttpResponse(data)
 			
