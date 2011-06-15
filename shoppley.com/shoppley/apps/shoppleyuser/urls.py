@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 	url(r'^login/$', login_modal, name="login_modal"),
 	url(r'^customer/signup-success/$',direct_to_template,{"template": "shoppleyuser/customer_landing_page.html"},name="customer_landing_page"),
 	url(r'^merchant/signup-success/$',direct_to_template,{"template": "shoppleyuser/merchant_landing_page.html"},name="merchant_landing_page"),
-
+	url(r'customer/offer-frequency-set/$',offer_frequency_set, name ="offer_frequency_set"),
 )
 
 

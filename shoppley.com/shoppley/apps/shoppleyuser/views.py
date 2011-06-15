@@ -28,7 +28,10 @@ from common.helpers import JSONHttpResponse
 from account.utils import get_default_redirect
 from account.forms import LoginForm
 from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm
-from shoppleyuser.models import Customer
+from shoppleyuser.models import Customer, ShoppleyUser
+
+
+
 def home(request, template_name="front-page.html"):
 	if request.user.is_authenticated():
 		if Customer.objects.filter(user__id=request.user.id).count()>0:
@@ -42,6 +45,34 @@ def home(request, template_name="front-page.html"):
 					"lform":LoginForm,
 				},context_instance=RequestContext(request))
 
+
+def account_test (request, template_name = "account/account.html"):
+	try:
+		shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)	
+		return render_to_response(template_name,{
+					"shoppleyuser":shoppleyuser,
+			}, context_instance=RequestContext(request))
+	except ShoppleyUser.DoesNotExist:
+		pass
+
+def account_info(request, template_name="shoppleyuser/account_info.html"):
+	try:
+		shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)
+		return render_to_response(template_name,{
+					"shoppleyuser":shoppleyuser,
+				}, context_instance=RequestContext(request))
+	except ShoppleyUser.DoesNotExist:
+		pass
+		
+
+def offer_frequency_set(request, template_name="shoppleyuser/offer_frequency_set.html"):
+	try:
+		customer = Customer.objects.get(user__id = request.user.id)
+		return render_to_response(template_name,{
+					"frequency":customer.frequency,
+				}, context_instance=RequestContext(request))
+	except Customer.DoesNotExist:
+		pass
 
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
@@ -99,6 +130,9 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 		form = form_class(request.POST)
 		if form.is_valid():
 			username, password = form.save()
+			from shoppleyuser.utils import parse_phone_number,sms_notify
+			signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+			sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 			if settings.ACCOUNT_EMAIL_VERIFICATION:
 				return render_to_response("account/verification_sent.html", {
 					"email": form.cleaned_data["email"],
@@ -129,6 +163,10 @@ def customer_signup(request, form_class=CustomerSignupForm,
 		form = form_class(request.POST)
 		if form.is_valid():
 			username, password = form.save()
+			from shoppleyuser.utils import parse_phone_number,sms_notify
+			signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+			sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+
 			if settings.ACCOUNT_EMAIL_VERIFICATION:
 				return render_to_response("account/verification_sent.html", {
 					"email": form.cleaned_data["email"],
