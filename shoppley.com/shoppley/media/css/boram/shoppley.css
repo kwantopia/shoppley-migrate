@@ -122,11 +122,11 @@ a:hover {
 }
 
 .signup-header.customer {
-	background: transparent url(../../images/boram/signup-customer.png) no-repeat;
+	background: transparent url(../../images/boram/temp_customer_100.png) no-repeat;
 }
 
 .signup-header.merchant {
-	background: transparent url(../../images/boram/signup-merchant.png) no-repeat;
+	background: transparent url(../../images/boram/temp_merchant_100.png) no-repeat;
 }
 
 .signup-form.customer, .signup-form.merchant {
@@ -164,6 +164,13 @@ a:hover {
 	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
 }
 
+.italic-text {
+	font-style: italic;
+}
+
+.bold-text {
+	font-weight:bold;
+}
 .instruction {
 	padding: 10px 10px 10px 215px;
 	min-height: 180px;
