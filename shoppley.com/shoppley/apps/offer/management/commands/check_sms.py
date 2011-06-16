@@ -416,7 +416,8 @@ class Command(NoArgsCommand):
 						valid_receivers=set([ i for i in parsed_numbers if ori_offer.offercode_set.filter(customer__phone=i).count()==0 or Customer.objects.filter(phone=i).count()==0]) # those who havenot received the offer: new customers or customers who have not got the offer before
 						invalid_receivers= set(parsed_numbers) - valid_receivers # those who have
 						#allowed_forwards = f_state.allowed_forwards(len(valid_receivers))
-
+						for r in invalid_receivers:
+							su.customer.customer_friends.add(Customer.objects.get(phone=r))
 						if len(valid_receivers)==0:
 							forwarder_msg = _("[%s] All phone numbers you wanted to forward the code already received the offer.") % ori_code.code		
 							self.notify(su.phone,forwarder_msg)
