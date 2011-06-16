@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "SLDataController.h"
 
-@interface CurrentOffersViewController : TTTableViewController {
+@interface CurrentOffersViewController : TTTableViewController <SLDataDownloaderDelegate> {
     
 }
 

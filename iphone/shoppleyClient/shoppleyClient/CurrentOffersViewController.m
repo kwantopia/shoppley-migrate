@@ -8,7 +8,6 @@
 
 #import "CurrentOffersViewController.h"
 
-
 @implementation CurrentOffersViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -27,12 +26,23 @@
 }
 
 - (void)createModel {
+    NSArray* offers = [[SLDataController sharedInstance] obtainCurrentOffersWithDelegate:self forcedDownload:NO];
+    TTDPRINT(@"%@", offers);
+    
     self.dataSource = [TTSectionedDataSource dataSourceWithObjects:
                        @"",
                        [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
                        [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
                        nil
                        ];
+}
+
+- (void)didFinishDownload {
+    [self reload];
+}
+
+- (void)didFailDownload {
+    TTDPRINT(@"failed");
 }
 
 @end

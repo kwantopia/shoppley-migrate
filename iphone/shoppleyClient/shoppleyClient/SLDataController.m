@@ -12,8 +12,83 @@
 
 static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 
+#pragma mark -
+#pragma mark SLDataDownloader
+
+@implementation SLDataDownloader
+
+- (id)initWithDataType:(NSString*)dataType delegate:(id <SLDataDownloaderDelegate>)delegate {
+    if ((self = [self init])) {
+        _dataType = [dataType copy];
+        _delegate = delegate;
+        _isDownloading = NO;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    TT_RELEASE_SAFELY(_dataType);
+    [super dealloc];
+}
+
+- (void)download {
+    @synchronized(self) {
+        if (_isDownloading) return;
+        _isDownloading = YES;
+    }
+    
+    NSDictionary* endPoints = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"customer/offers/current/", @"current_offers",
+                             @"customer/offers/redeemed/", @"redeemed_offers",
+                             nil];
+    
+    NSString* url = [kSLURLPrefix stringByAppendingString:[endPoints objectForKey:_dataType]];
+    TTURLRequest* request = [TTURLRequest requestWithURL:url delegate:self];
+    request.response = [[[TTURLJSONResponse alloc] init] autorelease];
+    
+    //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //[request.parameters setValue:appDelegate.latitude forKey:@"lat"];
+    //[request.parameters setValue:appDelegate.longitude forKey:@"lon"];
+    [request.parameters setValue:[NSNumber numberWithFloat:47.78799] forKey:@"lat"];
+    [request.parameters setValue:[NSNumber numberWithFloat:98.9989] forKey:@"lon"];
+    
+    request.httpMethod = @"POST";
+    request.cachePolicy = TTURLRequestCachePolicyNone;
+    
+    TTDPRINT(@"%@",request.parameters);
+    [request send];
+}
+
+- (void)requestDidFinishLoad:(TTURLRequest*)request {
+    TTURLJSONResponse* jsonResponse = request.response;
+    
+    if (![jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
+        TTDPRINT(@"Server Error");
+        return;
+    }
+    
+    NSDictionary* response = jsonResponse.rootObject;
+    TTDPRINT(@"%@",response);
+    
+    [[SLDataController sharedInstance] setCurrentOffers:[[NSArray alloc] init]];
+    
+    [_delegate didFinishDownload];
+    _isDownloading = NO;
+}
+
+- (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
+    TTDPRINT(@"DataDownloader Error: %@ - %@", error.localizedDescription, error.localizedFailureReason);
+    [_delegate didFailDownload];
+    _isDownloading = NO;
+}
+
+@end
+
+#pragma mark -
+#pragma mark SLDataController
+
 @implementation SLDataController
-@synthesize errorString;
+@synthesize errorString, currentOffers = _currentOffers;
 
 - (id) init {
 	if (self = [super init]) {
@@ -57,6 +132,20 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     }
     errorString = @"Connection Error. Please try again later.";
     return NO;
+}
+
+#pragma mark -
+#pragma mark Offers
+- (NSArray*)obtainCurrentOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
+    if (forcedDownload || (_currentOffers == nil)) {
+        if (!_currentOffersDownloader) {
+            _currentOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"current_offers" delegate:delegate];
+        }
+        [_currentOffersDownloader download];
+        return nil;
+    } else {
+        return _currentOffers;
+    }
 }
 
 @end
