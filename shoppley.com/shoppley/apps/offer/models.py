@@ -148,18 +148,19 @@ class Offer(models.Model):
 		phone =parse_phone_number(phone)
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
-		
+		forwarder=original_code.customer
 		try: 
 			friend = Customer.objects.get(phone=(phone))
 			print phone
+			
 			o=self.offercode_set.create(
 				customer=friend,
 				code = gen_code,
-				forwarder=original_code.customer,
+				forwarder=forwarder,
 				time_stamp=datetime.now(),
 				expiration_time=self.starting_time+timedelta(minutes=self.duration))
 			o.save()
-
+			forwarder.customer_friends.add(friend)
 			return o, None # for existing customer
 
 		except Customer.DoesNotExist:
@@ -181,11 +182,11 @@ class Offer(models.Model):
 			o=self.offercode_set.create(
 				customer = friend,
 				code = gen_code,
-				forwarder=original_code.customer,
+				forwarder=forwarder,
 				time_stamp=datetime.now(),
 				expiration_time=self.starting_time+timedelta(minutes=self.duration))
 			o.save()
-
+			forwarder.customer_friends.add(friend)
 			return o, rand_passwd  # for new customer
 
 	def distribute(self):

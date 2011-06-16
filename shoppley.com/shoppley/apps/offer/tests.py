@@ -49,6 +49,7 @@ class SimpleTest(TestCase):
 			u.is_active=True
 			u.save()
 			cambridge = ZipCode.objects.get(code="02139")
+			
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 
 
@@ -139,7 +140,7 @@ class SimpleTest(TestCase):
 		#	u.user.is_active=True
 		#	u.user.save()
 
-
+		
 		self.create_merchants()
 
 		self.create_customers()
@@ -437,15 +438,18 @@ class SimpleTest(TestCase):
 
 		print "************* TEST 5: FORWARD ***************"
 		msg7={"from":"0000000001", "text": "#forward 00002 000-000-0002 000-000-0001"}
+		forwarder = Customer.objects.filter(phone__iexact="0000000001")
+		self.failUnlessEqual(forwarder[0].customer_friends.count(),0)
 		cmd.test_handle(msg7)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
 		forwarder = forwarder[0]
-		
+		self.failUnlessEqual(forwarder.customer_friends.count(),2)
 		receiver = Customer.objects.filter(phone__iexact="0000000002")
 		self.failUnlessEqual(receiver.count(),1)
 		receiver = receiver[0]
-
+		self.failUnlessEqual(receiver.customer_friends.count(),1)
+		self.failUnlessEqual(forwarder in receiver.customer_friends.all(),True)
 		oc_ori = OfferCode.objects.filter(code = "00002")
 		self.failUnlessEqual(oc_ori.count(),1)
 		
@@ -462,7 +466,7 @@ class SimpleTest(TestCase):
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
 		forwarder = forwarder[0]
-		
+		self.failUnlessEqual(forwarder.customer_friends.count(),3)
 		rec_user = User.objects.filter(username__iexact="000000010")
 		self.failUnlessEqual(rec_user.count(),1)
 		print rec_user[0].email
@@ -470,7 +474,8 @@ class SimpleTest(TestCase):
 		receiver = Customer.objects.filter(phone__iexact="000000010")
 		self.failUnlessEqual(receiver.count(),1)
 		receiver = receiver[0]
-
+		self.failUnlessEqual(receiver.customer_friends.count(),1)
+		self.failUnlessEqual(forwarder in receiver.customer_friends.all(),True)
 		oc2 = OfferCode.objects.filter(offer__id=oc_ori[0].offer.id,customer__phone="000000010")
 		self.failUnlessEqual(oc2.count(),1)
 		oc2 = oc2[0]
@@ -490,13 +495,15 @@ class SimpleTest(TestCase):
 		offercode = OfferCode.objects.get(code = "00002")
 		customer = Customer.objects.get(phone__iexact="0000000002")
 		self.failIfEqual(offercode.customer, customer)
-		f_state = ForwardState.objects.filter(customer=customer,offer=offercode.offer)
+
+		#f_state = ForwardState.objects.filter(customer=customer,offer=offercode.offer)
 		error = False		
 		try:
 			cmd.test_handle(msg7c)
 		except CommandError:
 			error = True
 		self.assertTrue(error)
+		self.failUnlessEqual(customer.customer_friends.count(),1)
 		# forward code that does not exist
 		print "************* TEST 5d: FORWARD A CODE THAT DOES NOT EXIST***************"
 		msg7d={"from":"0000000002", "text": "#forward 0000X 000000010"}
@@ -506,6 +513,7 @@ class SimpleTest(TestCase):
 		except CommandError:
 			error = True
 		self.assertTrue(error)
+		self.failUnlessEqual(customer.customer_friends.count(),1)
 		# forward to someone who already has the offer
 		print "************* TEST 5e: FORWARD TO SOMEONE WHO ALREADY HAS THE OFFER***************"
 		msg7e={"from":"0000000002", "text": "#forward 00001 000000010"}
@@ -515,7 +523,7 @@ class SimpleTest(TestCase):
 		except CommandError:
 			error= True
 		self.assertTrue(error)
-		
+		self.failUnlessEqual(customer.customer_friends.count(),1)
 		print "************* TEST 6: REDEEM ***************"
 		msg8={"from":"6170000001", "text": "#redeem 00001 0000000001"}
 		customer = Customer.objects.filter(phone__iexact="0000000001")
@@ -805,7 +813,24 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(old_balance+Transaction.points_table["MOD"]*offer.offercode_set.count(),new_balance)
 		msg19={"from":"6170000002", "text":"#balance"}
 		cmd.test_handle(msg19)
+	
+		print "**************** TEST 16: CHANGE ZIPCODE ************************"
+		print ZipCode.objects.all()
+		boston = ZipCode.objects.get(code="02142")
+		msg20={"from":"0000000001", "text": "#zipcode 02142"}
+		cmd.test_handle(msg20)
+		msg20={"from":"6170000001", "text": "#zipcode 02142"}
+		cmd.test_handle(msg20)
+		msg21={"from":"6170000001", "text":"#offer All you can eat in boston"}
+		cmd.test_handle(msg21)
 
+		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print "new=" , new_verified
+		msg21={"from":"6170000003", "text":"#offer All you can eat in cambridge"}
+		cmd.test_handle(msg21)
+
+		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print "new=" , new_verified
 	def test_basic_addition(self):
 		"""
 		Tests that 1 + 1 always equals 2.

@@ -53,12 +53,12 @@ class Category(models.Model):
 			return self.name
 
 
-
 class ShoppleyUser(models.Model):
 	user			= models.OneToOneField(User)
 	address_1		= models.CharField(max_length=64, blank=True)
 	address_2		= models.CharField(max_length=64, blank=True)
-	zipcode			= models.ForeignKey(ZipCode)
+	zipcode			= models.ForeignKey(ZipCode) # current zipcode
+
 	phone			= models.CharField(max_length=20, blank=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
@@ -94,10 +94,10 @@ class Merchant(ShoppleyUser):
 	
 	def save(self, *args, **kwargs):
 		if not self.pk:
-			
 			self.balance = settings.INIT_MERCHANT_BALANCE
-			
+
         	super(Merchant, self).save(*args, **kwargs)
+		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 	def __unicode__(self):
 #		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
@@ -134,12 +134,17 @@ class Customer(ShoppleyUser):
 		self.offer_count=self.offer_count + 1
 		self.save()
 	
+	def daily_reset(self):
+		self.daily_limit=5
+		self.save()
+
 	def save(self, *args, **kwargs):
 		if not self.pk:
-			
+
 			self.balance = settings.INIT_CUSTOMER_BALANCE
 			
         	super(Customer, self).save(*args, **kwargs)
+		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 class MerchantOfTheDay(models.Model):
 	merchant		= models.ForeignKey(Merchant)
@@ -147,6 +152,14 @@ class MerchantOfTheDay(models.Model):
 
 	def __unicode__(self):
 		return "%s - %s" % (self.date, self.merchant.business_name)
+
+class ZipCodeChange(models.Model):
+	zipcode			= models.ForeignKey(ZipCode) # current zipcode, the one a user just changed to
+	user			= models.ForeignKey(ShoppleyUser)
+	time_stamp		= models.DateTimeField()
+
+	def __unicode__(self):
+		return "%s, user %s switched his zipcode from %s to %s" % (self.time_stamp, self.user, self.user.zipcode, self.zipcode)
 
 #capture relationship between users
 #class Relationship(models.Model):
