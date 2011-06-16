@@ -191,7 +191,13 @@ static NSString* kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
       [body appendData:[[NSString
         stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key]
           dataUsingEncoding:_charsetForMultipart]];
-      [body appendData:[value dataUsingEncoding:_charsetForMultipart]];
+      if ([value isKindOfClass:[NSNumber class]]) {
+        NSNumber* val = [_parameters valueForKey:key];
+        [body appendData:[[val stringValue] dataUsingEncoding:_charsetForMultipart]];
+
+      } else {
+        [body appendData:[value dataUsingEncoding:_charsetForMultipart]];
+      }
     }
   }
 
