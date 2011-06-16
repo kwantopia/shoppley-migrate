@@ -2,12 +2,13 @@ from django.core.management.base import NoArgsCommand
 from django.contrib.sites.models import Site
 from shoppleyuser.models import *
 from shoppleyuser.utils import parse_phone_number
+from mobile.tests import SimpleTest
 
 class Command(NoArgsCommand):
 	def handle_noargs(self, **options):
 		c, created = Country.objects.get_or_create( name="United States", code="US")
 		r, created = Region.objects.get_or_create(name="Massachusetts", code="MA", country=c)
-		city, created = City.objects.get_or_create(name="Boston", region=r)
+		city, created = City.objects.get_or_create(name="Cambridge", region=r)
 		zipcode, created = ZipCode.objects.get_or_create(code="02142", city=city)
 		zipcode, created = ZipCode.objects.get_or_create(code="02139", city=city)
 		u, created = User.objects.get_or_create(username="kool2@mit.edu", first_name="Kwan2", last_name="Lee2", email="kool2@mit.edu")
@@ -27,3 +28,7 @@ class Command(NoArgsCommand):
 		
 		shoppley, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com") 
 		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
+
+#		s = SimpleTest()
+#		s.setUp()
+#		s.create_test_offers()
