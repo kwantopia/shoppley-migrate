@@ -9,6 +9,7 @@
 #import "SLDataController.h"
 
 #import "extThree20JSON/extThree20JSON.h"
+#import "SLCurrentOffer.h"
 
 static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 
@@ -70,7 +71,7 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     NSDictionary* response = jsonResponse.rootObject;
     TTDPRINT(@"%@",response);
     
-    [[SLDataController sharedInstance] setCurrentOffers:[[NSArray alloc] init]];
+    [[SLDataController sharedInstance] setCurrentOffers:[SLCurrentOffer offersArrayfromDictionary:response]];
     
     [_delegate didFinishDownload];
     _isDownloading = NO;
@@ -88,10 +89,10 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 #pragma mark SLDataController
 
 @implementation SLDataController
-@synthesize errorString, currentOffers = _currentOffers;
+@synthesize errorString = _errorString, currentOffers = _currentOffers;
 
 - (id) init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
     
     }
 	return self;
@@ -127,10 +128,10 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
         if ([[response valueForKey:@"result"] intValue]== 1) {
             return YES;            
         }
-        errorString = [response valueForKey:@"result_msg"];
+        _errorString = [response valueForKey:@"result_msg"];
         return NO;
     }
-    errorString = @"Connection Error. Please try again later.";
+    _errorString = @"Connection Error. Please try again later.";
     return NO;
 }
 

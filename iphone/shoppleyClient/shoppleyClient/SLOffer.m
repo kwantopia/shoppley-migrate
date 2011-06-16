@@ -10,5 +10,16 @@
 
 
 @implementation SLOffer
+@synthesize name, description, code, img, phone, lat, lon;
+
+- (void)populateFromDictionary:(NSDictionary*)data {
+    self.name = [data objectForKey:@"name"];
+    self.description = [data objectForKey:@"description"];
+    self.code = [data objectForKey:@"code"];
+    self.img = [data objectForKey:@"img"];
+    self.phone = [data objectForKey:@"phone"];
+    self.lat = [data objectForKey:@"lat"];
+    self.lon = [data objectForKey:@"lon"];
+}
 
 @end

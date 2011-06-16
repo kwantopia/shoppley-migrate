@@ -30,6 +30,7 @@
 #pragma mark -
 #pragma mark SLDataController
 @interface SLDataController : NSObject {
+    NSString* _errorString;
     NSArray* _currentOffers;
     SLDataDownloader* _currentOffersDownloader;
 }

@@ -13,4 +13,10 @@
     
 }
 
+@property (nonatomic, retain) NSString* expires;
+
++ (NSArray*)offersArrayfromDictionary:(NSDictionary*)data;
+
+- (void)populateFromDictionary:(NSDictionary*)data;
+
 @end

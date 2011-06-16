@@ -8,6 +8,8 @@
 
 #import "CurrentOffersViewController.h"
 
+#import "SLCurrentOffer.h"
+
 @implementation CurrentOffersViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -27,18 +29,24 @@
 
 - (void)createModel {
     NSArray* offers = [[SLDataController sharedInstance] obtainCurrentOffersWithDelegate:self forcedDownload:NO];
-    TTDPRINT(@"%@", offers);
     
-    self.dataSource = [TTSectionedDataSource dataSourceWithObjects:
-                       @"",
-                       [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
-                       [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
-                       nil
-                       ];
+    if (offers) {
+        TTDPRINT(@"%@", offers);
+        NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
+        for (int i = 0; i < [offers count]; i++) {
+            SLCurrentOffer* offer = [offers objectAtIndex:i];
+            [items addObject:[TTTableTextItem itemWithText:offer.name]];
+        }
+        self.dataSource = [TTListDataSource dataSourceWithItems:items];
+    } else {
+        self.dataSource = [TTListDataSource dataSourceWithObjects:
+                           [TTTableActivityItem itemWithText:@"Processing..."],
+                           nil];
+    }
 }
 
 - (void)didFinishDownload {
-    [self reload];
+    [self createModel];
 }
 
 - (void)didFailDownload {
