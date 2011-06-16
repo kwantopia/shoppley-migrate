@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
 
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user
-from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser
+from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime
 from worldbank.models import Transaction
@@ -44,7 +44,7 @@ STATUS = "status"
 SIGNUP = "signup"
 MERCHANT_SIGNUP = "merchant"
 HELP = "help"
-
+ZIPCODE = ["zip", "zipcode"]
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
 	DEBUG = False
@@ -153,6 +153,7 @@ class Command(NoArgsCommand):
 					if parsed[0].lower()==BALANCE:
 						receipt_msg = _("You have %d points.") % su.balance
 						self.notify(su.phone, receipt_msg)
+
 					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
 					elif parsed[0].lower()==REDEEM:
 						offer_code = self.check_offercode(parsed[1],su.phone)
@@ -242,7 +243,19 @@ class Command(NoArgsCommand):
 							OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offer_code.code).save()
 						except MultipleObjectsReturned, e:																	# Multiple offer codes found, which indicates a programming error
 							print e
-
+					# --------------------------- ZIPCODE: "zipcode "---------------
+					elif parsed[0].lower() in ZIPCODE:
+						if len(parsed)<2:
+							receipt_msg=_("Command Error! To change your zipcode, please use this command: #zipcode new_zipcode")
+							self.notify(su.phone,receipt_msg)
+							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
+						code = self.check_zipcode(parsed[1],su.phone)
+						zipcode = ZipCode.objects.get(code=code)
+						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
+						su.merchant.zipcode=zipcode
+						su.merchant.save()
+						receipt_msg=_("%s is your new zipcode. Your later offers will be distributed to customers in this new area.") % zipcode.code
+						self.notify(su.phone,receipt_msg)
 					# ------------------------OFFER : "offer<SPACE>description" ---------------
 					elif parsed[0].lower() == OFFER:
 						if len(parsed)<2:
@@ -393,7 +406,19 @@ class Command(NoArgsCommand):
 						else:
 							customer_msg = _("You are active and receiving offer messages.")
 							self.notify(phone, customer_msg)
-
+					# --------------------------- ZIPCODE: "zipcode "---------------
+					elif parsed[0].lower() in ZIPCODE:
+						if len(parsed)<2:
+							receipt_msg=_("Command Error! To change your zipcode, please use this command: #zipcode new_zipcode")
+							self.notify(su.phone,receipt_msg)
+							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
+						code = self.check_zipcode(parsed[1], su.phone)
+						zipcode = ZipCode.objects.get(code=code)
+						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
+						su.customer.zipcode=zipcode
+						su.customer.save()
+						receipt_msg=_("%s is your new zipcode. You will receive offers from this new area.") % zipcode.code
+						self.notify(su.phone,receipt_msg)
 					#-------------------- FORWARD: "forward<SPACE>offercode<SPACE>number+"---------------------
 					elif parsed[0].lower() ==FORWARD:
 						# TODO add sender to dst's friend list
