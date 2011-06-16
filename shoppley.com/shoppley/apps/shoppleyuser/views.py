@@ -83,7 +83,7 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 		success_url = get_default_redirect(request)
 	if request.method == "POST" and not url_required:
 		form = form_class(request.POST)
-		print ">>>>>>>>>>>> GET HERE FIRST??"
+		#print ">>>>>>>>>>>> GET HERE FIRST??"
 		if form.is_valid():
 
 
@@ -93,6 +93,13 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 
 			# if form.login(request):
 				form.login(request)
+				try:
+					s = ShoppleyUser.objects.get(user__id=request.user.id)
+					s.verified=True
+					s.save()
+				except ShoppleyUser.DoesNotExist:	
+					# user wasnt registered yet.
+					pass
 
 				if associate_openid and association_model is not None:
 					for openid in request.session.get('openids', []):

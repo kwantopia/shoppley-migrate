@@ -63,6 +63,7 @@ class ShoppleyUser(models.Model):
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
 	active 			= models.BooleanField(default=True)
+	verified		= models.BooleanField(default=False) # verified by logging in.
 
 	def is_customer(self):
 		return hasattr(self, "customer")
@@ -118,12 +119,21 @@ class Customer(ShoppleyUser):
 			)
 
 	frequency = models.IntegerField(choices=FREQUENCY_CHOICES, default=4)
+	daily_limit = models.IntegerField(default=5) # daily limit on num of offers
+	offer_count = models.IntegerField(default=0) # track offer received each day
 	weekdays_only = models.BooleanField(default=False)
 	weekends_only = models.BooleanField(default=False)
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
 	merchant_dislikes = models.ManyToManyField(Merchant, related_name="antifans")
+	customer_friends = models.ManyToManyField("self", related_name="friends")
 
+	def is_taking_offers(self):
+		return self.offer_count < self.daily_limit
 
+	def update_offer_count(self):
+		self.offer_count=self.offer_count + 1
+		self.save()
+	
 	def save(self, *args, **kwargs):
 		if not self.pk:
 			
@@ -137,6 +147,20 @@ class MerchantOfTheDay(models.Model):
 
 	def __unicode__(self):
 		return "%s - %s" % (self.date, self.merchant.business_name)
+
+#capture relationship between users
+#class Relationship(models.Model):
+#	types=(
+#		(0,"Friend forwarding offer"),
+#		)
+#	rtype = models.IntegerField(choices=types,default=0)
+#	user1 = models.ForeignField(ShoppleyUser,related_name="relationship_user1")
+#	user2 = models.ForeignField(ShoppleyUser,related_name="relationship_user2")
+#	offer = models.ManyToManyField(Offer)
+
+#	def __unicode__(self):
+#		if self.rtype=0:
+#			return "%s forwarded offers to %s" % self.user1, self.user2
 
 
 ###############

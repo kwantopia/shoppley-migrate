@@ -12,7 +12,12 @@ def pretty_datetime(time):
 	"""
 	return time.strftime("%Y-%m-%d,%I:%M%p")
 
-def gen_offer_code(chars=string.lowercase+string.digits):
+
+def gen_tracking_code(chars=string.digits):
+	return ''.join([random.choice(chars) for i in xrange(settings.TRACKING_CODE_LENGTH)])
+
+### offer code only is only alphabetic
+def gen_offer_code(chars=string.lowercase):
 	#start = random.randint(0,28)
 	#new_code = str(uuid.uuid4())[start:start+settings.OFFER_CODE_LENGTH]
 

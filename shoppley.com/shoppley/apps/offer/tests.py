@@ -17,7 +17,7 @@ from django.contrib.auth.models import *
 from datetime import datetime, timedelta
 from django.conf import settings
 from offer.management.commands.check_sms import Command 
-
+from django.contrib.sites.models import Site
 from shoppleyuser.models import *
 from offer.models import OfferCode, Offer, ForwardState, Feature, OfferCodeAbnormal, TrackingCode
 from shoppleyuser.utils import parse_phone_number
@@ -49,7 +49,7 @@ class SimpleTest(TestCase):
 			u.is_active=True
 			u.save()
 			cambridge = ZipCode.objects.get(code="02139")
-			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2])
+			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 
 
 
@@ -152,6 +152,7 @@ class SimpleTest(TestCase):
 #			fixture = AutoFixture(OfferCode)
 #			codes = fixture.create(10)
 		self.create_offers()
+		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
 
 	def post_json(self, command, params={}, comment="No comment"):
 		print "*************************************************"
@@ -342,21 +343,22 @@ class SimpleTest(TestCase):
 		cmd.DEBUG = True
 		settings.DEBUG=True
 		self.failIfEqual(cmd.DEBUG,False)
-		msg1= {"from":"8043329436", "text":"signup smengl@mit.edu 02139"}
-		pattern = Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
+		msg1= {"from":"8043329436", "text":"#signup smengl@mit.edu 02139"}
+		pattern = "#"+Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
 		eles=pattern.parseString(msg1["text"])
+		del eles[0]
 		self.failUnlessEqual(len(eles),3)
 		self.failUnlessEqual(eles[0],"signup")
 		self.failUnlessEqual(eles[1],"smengl@mit.edu")
 		self.failUnlessEqual(eles[2],"02139")
 
 
-		msg2={"from":"8043329436", "text":"merchant m1@mit.edu 02139 m1"}
+		msg2={"from":"8043329436", "text":"#merchant m1@mit.edu 02139 m1"}
 		cmd.test_handle(msg2)
 		cambridge=ZipCode.objects.get(code="02139")
 		
 		m= Merchant.objects.filter(zipcode=cambridge,business_name="m1")
-
+		
 		self.failUnlessEqual(m.count(),1)
 		print m[0].user.password, m[0].user.username
 		#count=0
@@ -364,9 +366,30 @@ class SimpleTest(TestCase):
 		#	print str(count), i
 		#	count = count+1
 
+		print "************* TEST 0: PATTERN UNMATCHED ***************"
+		msg0={"from":"6170000001", "text":"offer Pizza free all day"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"info"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"forward 11223 11223334"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"stop"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"start"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"signup test@a.com 02139"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"merchant test@a.com 02139 test-merc"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"status"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"redeem 11223 11223334"}
+		cmd.test_handle(msg0)
+		msg0={"from":"6170000001", "text":"help"}
+		cmd.test_handle(msg0)
 		print "************* TEST 1 ***************"
 		
-		msg2={"from":"6170000001", "text":"offer Pizza free all day"}
+		msg2={"from":"6170000001", "text":"#offer Pizza free all day"}
 		self.failUnlessEqual(Offer.objects.filter(description="Pizza free all day").count(),0)
 		merchant = Merchant.objects.get(phone="6170000001")
 		initial_balance = merchant.balance
@@ -387,13 +410,13 @@ class SimpleTest(TestCase):
 		track = TrackingCode.objects.get(offer = offer).code
 		print track
 		
-		msg2a = {"from":"6170000001", "text":"balance"}
+		msg2a = {"from":"6170000001", "text":"#balance"}
 		cmd.test_handle(msg2a)
 
 		print "************* TEST 2: INFO ***************"
-		msg3={"from":"0000000001", "text":"info 00001 00002 00003"}
+		msg3={"from":"0000000001", "text":"#info 00001 00002 00003"}
 		cmd.test_handle(msg3)
-		msg4={"from":"0000000001", "text":"info 00004"}
+		msg4={"from":"0000000001", "text":"#info 00004"}
 		error = False
 		try:
 			cmd.test_handle(msg4)
@@ -402,18 +425,18 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 3: STOP ***************"
-		msg5={"from":"0000000001", "text": "stop"}
+		msg5={"from":"0000000001", "text": "#stop"}
 		cmd.test_handle(msg5)
 		c=Customer.objects.filter(phone__iexact=msg5["from"])
 		self.failUnlessEqual(c.count(), 1)
 		self.failUnlessEqual(c[0].active, False)
 		print "************* TEST 4: START ***************"
-		msg6={"from":"0000000001", "text": "start"}
+		msg6={"from":"0000000001", "text": "#start"}
 		cmd.test_handle(msg6)
 		self.failUnlessEqual(c[0].active, True)
 
 		print "************* TEST 5: FORWARD ***************"
-		msg7={"from":"0000000001", "text": "forward 00002 000-000-002 000-000-0001"}
+		msg7={"from":"0000000001", "text": "#forward 00002 000-000-0002 000-000-0001"}
 		cmd.test_handle(msg7)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
@@ -434,7 +457,7 @@ class SimpleTest(TestCase):
 		self.failIfEqual(oc.code,oc_ori[0].code)
 		print "************* TEST 5a: FORWARD TO NON-CUSTOMER***************"
 
-		msg7a={"from":"0000000001", "text": "forward 00002 0000-000-10"}
+		msg7a={"from":"0000000001", "text": "#forward 00002 0000-000-10"}
 		cmd.test_handle(msg7a)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
@@ -458,12 +481,12 @@ class SimpleTest(TestCase):
 		self.failIfEqual(oc2.code,oc.code)
 		print "************* TEST 5b: FORWARD REACH LIMIT***************"
 
-		msg7b={"from":"0000000001", "text": "forward 00002 000000010"}
+		msg7b={"from":"0000000001", "text": "#forward 00002 000000010"}
 		cmd.test_handle(msg7b)
 
 		print "************* TEST 5c: FORWARD A CODE THE CUSTOMER DOES NOT OWN***************"
 		# forward code not the customer's
-		msg7c={"from":"0000000002", "text": "forward 00002 000000010"}
+		msg7c={"from":"0000000002", "text": "#forward 00002 000000010"}
 		offercode = OfferCode.objects.get(code = "00002")
 		customer = Customer.objects.get(phone__iexact="0000000002")
 		self.failIfEqual(offercode.customer, customer)
@@ -476,7 +499,7 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 		# forward code that does not exist
 		print "************* TEST 5d: FORWARD A CODE THAT DOES NOT EXIST***************"
-		msg7d={"from":"0000000002", "text": "forward 0000X 000000010"}
+		msg7d={"from":"0000000002", "text": "#forward 0000X 000000010"}
 		error = False
 		try:
 			cmd.test_handle(msg7d)
@@ -485,7 +508,7 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 		# forward to someone who already has the offer
 		print "************* TEST 5e: FORWARD TO SOMEONE WHO ALREADY HAS THE OFFER***************"
-		msg7e={"from":"0000000002", "text": "forward 00001 000000010"}
+		msg7e={"from":"0000000002", "text": "#forward 00001 000000010"}
 		error = False
 		try:
 			cmd.test_handle(msg7e)
@@ -494,7 +517,7 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 		
 		print "************* TEST 6: REDEEM ***************"
-		msg8={"from":"6170000001", "text": "redeem 00001 0000000001"}
+		msg8={"from":"6170000001", "text": "#redeem 00001 0000000001"}
 		customer = Customer.objects.filter(phone__iexact="0000000001")
 		merchant = Merchant.objects.get(phone__iexact="6170000001")
 		self.failUnlessEqual(customer.count(),1)
@@ -516,7 +539,7 @@ class SimpleTest(TestCase):
 
 		receiver = Customer.objects.get(phone__iexact="0000000002")
 		offercode = OfferCode.objects.get(customer=receiver,offer = OfferCode.objects.get(code="00002").offer)
-		msg8a={"from":"6170000002", "text": "redeem %s 	0000000002" % offercode.code}
+		msg8a={"from":"6170000002", "text": "#redeem %s 0000000002" % offercode.code}
 		f_init = offercode.forwarder.balance
 		c_init = receiver.balance
 		m_init = offercode.offer.merchant.balance
@@ -534,7 +557,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(Customer.objects.get(phone__iexact="0000000001").balance, f_init+ 10)
 		print "************* TEST 6a: REDEEM MERCHANT IS NOT THE OWNER OF THE OFFER***************"
 		# merchant is not the owner of the offer
-		msg8a={"from":"6170000001", "text": "redeem 00002 0000000001"}
+		msg8a={"from":"6170000001", "text": "#redeem 00002 0000000001"}
 		customer = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(customer.count(),1)
 		customer = customer[0]
@@ -551,7 +574,7 @@ class SimpleTest(TestCase):
 
 		print "************* TEST 6b: REDEEM NON-EXISTENT CODE***************"
 		# redeem code that does not exist
-		msg8b={"from":"6170000001", "text": "redeem 0000X 0000000001"}
+		msg8b={"from":"6170000001", "text": "#redeem 0000X 0000000001"}
 		error=False
 		try:
 			cmd.test_handle(msg8b)
@@ -561,7 +584,7 @@ class SimpleTest(TestCase):
 
 
 		print "************* TEST 6d: REDEEM CODE REUSE**************"
-		msg8d={"from":"6170000001", "text": "redeem 00001 0000000001"}
+		msg8d={"from":"6170000001", "text": "#redeem 00001 0000000001"}
 		error = False		
 		try:
 			cmd.test_handle(msg8)
@@ -574,7 +597,7 @@ class SimpleTest(TestCase):
 		customer2 = Customer.objects.get(phone="0000000002")
 		OfferCode(offer=offer,code="000X2",customer=customer2,time_stamp=datetime.now(),expiration_time=datetime.now() + timedelta(minutes=offer.duration)).save()
 		# redeemer and code's owner are different
-		msg8c={"from":"6170000002", "text": "redeem 000X2 0000000001"}
+		msg8c={"from":"6170000002", "text": "#redeem 000X2 0000000001"}
 		error = False
 		try:
 			cmd.test_handle(msg8c)
@@ -583,7 +606,7 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 7: SIGNUP ***************"
-		msg9={"from":"0000000010", "text": "signup s10@mit.edu 02139"}
+		msg9={"from":"0000000010", "text": "#signup s10@mit.edu 02139"}
 		self.failUnlessEqual(Customer.objects.filter(phone__iexact=msg9["from"]).count(),0)
 		cmd.test_handle(msg9)
 		newc=Customer.objects.filter(phone__iexact=msg9["from"])
@@ -592,7 +615,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(newc[0].phone , "0000000010")
 
 		print "************* TEST 7a: RESIGNUP ***************"
-		msg9a={"from":"0000000010", "text": "signup s10@mit.edu 02139"}
+		msg9a={"from":"0000000010", "text": "#signup s10@mit.edu 02139"}
 		error = False
 		self.failUnlessEqual(Customer.objects.filter(phone__iexact=msg9a["from"]).count(),1)
 		cmd.test_handle(msg9a)
@@ -600,7 +623,7 @@ class SimpleTest(TestCase):
 
 
 		print "************* TEST 7b: SIGNUP: reuse EMAIL ***************"
-		msg9b={"from":"0000000011", "text": "signup s10@mit.edu 02139"}
+		msg9b={"from":"0000000011", "text": "#signup s10@mit.edu 02139"}
 		error = False
 		try:
 			cmd.test_handle(msg9b)
@@ -609,23 +632,23 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 7c: SIGNUP: reuse PHONE ***************"
-		msg9c={"from":"0000000010", "text": "signup s11@mit.edu 02139"}
+		msg9c={"from":"0000000010", "text": "#signup s11@mit.edu 02139"}
 		self.failUnlessEqual(Customer.objects.filter(phone__iexact=msg9c["from"]).count(),1)
 		cmd.test_handle(msg9c)
 		self.failUnlessEqual(Customer.objects.filter(phone__iexact=msg9c["from"]).count(),1)
 
 		print "************* TEST 8: merchant ***************"
-		msg10={"from":"0000000020", "text": "merchant m20@mit.edu 02139 test Merchant name"} # what if merchant business name contains many words
+		msg10={"from":"0000000020", "text": "#merchant m20@mit.edu 02139 test Merchant name"} # what if merchant business name contains many words
 		cmd.test_handle(msg10)
 		tokens = pattern.parseString(msg10["text"])
-		newu=User.objects.filter(email=tokens[1], username=tokens[1])
+		newu=User.objects.filter(email=tokens[2], username=tokens[2])
 		self.failUnlessEqual(newu.count(),1)
 		newm=Merchant.objects.filter(phone__iexact=msg10["from"])
 		self.failUnlessEqual(newm.count(),1)
 		self.failUnlessEqual(newm[0].business_name,"test Merchant name")
 
 		print "************* TEST 8a: RESIGNUP ***************"
-		msg10a={"from":"0000000020", "text": "merchant m20@mit.edu 02139 test Merchant name"}
+		msg10a={"from":"0000000020", "text": "#merchant m20@mit.edu 02139 test Merchant name"}
 		error = False
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10a["from"]).count(),1)
 		cmd.test_handle(msg10a)
@@ -633,7 +656,7 @@ class SimpleTest(TestCase):
 
 
 		print "************* TEST 8b: SIGNUP: reuse EMAIL ***************"
-		msg10b={"from":"0000000021", "text": "merchant m20@mit.edu 02139 test Merchant name"}
+		msg10b={"from":"0000000021", "text": "#merchant m20@mit.edu 02139 test Merchant name"}
 		error = False
 		try:
 			cmd.test_handle(msg10b)
@@ -642,22 +665,22 @@ class SimpleTest(TestCase):
 		self.assertTrue(error)
 
 		print "************* TEST 8c: SIGNUP: reuse PHONE ***************"
-		msg10c={"from":"0000000020", "text": "merchant m21@mit.edu 02139 test Merchant name"}
+		msg10c={"from":"0000000020", "text": "#merchant m21@mit.edu 02139 test Merchant name"}
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10c["from"]).count(),1)
 		cmd.test_handle(msg10c)
 		self.failUnlessEqual(Merchant.objects.filter(phone__iexact=msg10c["from"]).count(),1)
 
 		print "************* TEST 9: STATUS ***************"
 		# test phone number isnt in record, and text for info
-		msg11={"from":"6170000001", "text":"status %s" % track}
+		msg11={"from":"6170000001", "text":"#status %s" % track}
 		cmd.test_handle(msg11)
 		offercode= OfferCode.objects.get(customer=Customer.objects.get(phone="0000000001"),offer=TrackingCode.objects.get(code=track).offer)
 
-		msg11a = {"from":"0000000001", "text":"forward %s 0000000010" % offercode.code}
+		msg11a = {"from":"0000000001", "text":"#forward %s 0000000010" % offercode.code}
 		cmd.test_handle(msg11a)
 
 
-		msg11b={"from":"6170000001", "text":"status %s" % track}
+		msg11b={"from":"6170000001", "text":"#status %s" % track}
 		cmd.test_handle(msg11b)
 
 
@@ -667,24 +690,25 @@ class SimpleTest(TestCase):
 # test distribute to nonactive
 		customer1= Customer.objects.get(phone="0000000001")
 		customer1= Customer.objects.get(phone="0000000002")
-		msg12={"from":"0000000001", "text": "stop"}
+		msg12={"from":"0000000001", "text": "#stop"}
 		cmd.test_handle(msg12)
-		msg13={"from":"0000000002", "text": "stop"}
+		msg13={"from":"0000000002", "text": "#stop"}
 		cmd.test_handle(msg13)
-		msg14={"from":"6170000002", "text":"offer All you can eat for $10"}
+		msg14={"from":"6170000002", "text":"#offer All you can eat for $10"}
 		cmd.test_handle(msg14)
 		
 		offer = Offer.objects.get(description="All you can eat for $10")
-		self.failUnlessEqual(Customer.objects.all().count()-2, offer.num_init_sentto)
+		self.failUnlessEqual(Customer.objects.filter(verified=True).count()-2, offer.num_init_sentto)
 		code = offer.offercode_set.filter(customer = customer1)
 		self.failUnlessEqual(code.count(),0)
 		code = offer.offercode_set.filter(customer = customer2)
 		self.failUnlessEqual(code.count(),0)
 
-
 		print "**************** TEST 11: Help ************************"
-		print cmd.customer_help()
-		print cmd.merchant_help()
+		msg15={"from":"0000000001", "text": "#help"}
+		cmd.test_handle(msg15)
+		msg16={"from":"6170000002", "text":"#help"}
+		cmd.test_handle(msg16)
 
 		print "**************** TEST 12: Update_expired ************************"
 		m = Merchant.objects.get(phone="6170000002")
@@ -694,6 +718,93 @@ class SimpleTest(TestCase):
 		o.distribute()
 		
 		self.failUnlessEqual(cmd.update_expired(),1)
+
+		print "**************** TEST 13: NON_VERIFIED SENT FORWARD ************************"
+
+		c = Customer.objects.filter(verified=False)
+		self.failUnlessEqual( c.count(), 1)
+		print c
+		c = c[0]
+		offer = Offer.objects.get(description="All you can eat for $10")
+		init_count = offer.offercode_set.count()
+		offercode = offer.offercode_set.all()[0]
+		msg17 = {"from": "%s" % offercode.customer.phone, "text":"#forward %s %s" % (offercode.code, c.phone)}
+		print c.phone, "customer count=", Customer.objects.filter(phone__contains=c.phone).count()
+		offer_count = c.offer_count
+		cmd.test_handle(msg17)
+		
+		self.failUnlessEqual(offer.offercode_set.count(), init_count +1)
+	
+		self.failUnlessEqual(OfferCode.objects.filter(offer=offer,customer=c, forwarder=offercode.customer).count(),1)
+		self.failUnlessEqual(offer_count, c.offer_count)
+
+		c.verified=True
+		c.save()
+		
+		count_list = []
+		verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print Customer.objects.all().values_list('phone',flat=True)
+		print "verified=" ,verified
+		self.failUnlessEqual(c in Customer.objects.filter(verified=True), True)
+		
+		msg18={"from":"6170000002", "text":"#offer All you can eat for $20"}
+		old_balance = ShoppleyUser.objects.get(phone="6170000002").balance
+		cmd.test_handle(msg18)
+		i=0
+		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print "new=" , new_verified
+		self.failUnlessEqual(verified.count(),new_verified.count())
+		msg19={"from":"6170000002", "text":"#balance"}
+		cmd.test_handle(msg19)
+		new_balance=  ShoppleyUser.objects.get(phone="6170000002").balance
+		offer = Offer.objects.get(description="All you can eat for $20")
+		self.failUnlessEqual(old_balance+Transaction.points_table["MOD"]*offer.offercode_set.count(),new_balance)
+		print "**************** TEST 14: OFFER SENT TO CUSTOMER REACH LIMIT ************************"
+		msg12={"from":"0000000001", "text": "#start"}
+		cmd.test_handle(msg12)
+		msg13={"from":"0000000002", "text": "#start"}
+		cmd.test_handle(msg13)
+		for c in Customer.objects.all():
+			c.daily_limit=4
+			c.save()
+
+		msg18={"from":"6170000001", "text":"#offer All you can eat for $30"}
+		old_balance = ShoppleyUser.objects.get(phone=msg18["from"]).balance
+		cmd.test_handle(msg18)
+		i=0
+		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print "new=" , new_verified
+		self.failUnlessEqual(verified.count(),new_verified.count())
+		msg19={"from":"6170000001", "text":"#balance"}
+		cmd.test_handle(msg19)
+		new_balance=  ShoppleyUser.objects.get(phone="6170000001").balance
+		offer = Offer.objects.get(description="All you can eat for $30")
+		self.failUnlessEqual(old_balance+Transaction.points_table["MOD"]*offer.offercode_set.count(),new_balance)
+		msg19={"from":"6170000001", "text":"#balance"}
+		cmd.test_handle(msg19)
+		print "**************** TEST 15: MERCHANT NOT ENOUGH POINT ************************"
+		msg12={"from":"0000000001", "text": "#start"}
+		cmd.test_handle(msg12)
+		msg13={"from":"0000000002", "text": "#start"}
+		cmd.test_handle(msg13)
+		for c in Customer.objects.all():
+			c.daily_limit=4
+			c.save()
+
+		msg18={"from":"6170000002", "text":"#offer All you can eat for $3"}
+		old_balance = ShoppleyUser.objects.get(phone=msg18["from"]).balance
+		cmd.test_handle(msg18)
+		i=0
+		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
+		print "new=" , new_verified
+		self.failUnlessEqual(verified.count(),new_verified.count())
+		msg19={"from":"6170000002", "text":"#balance"}
+		cmd.test_handle(msg19)
+		new_balance=  ShoppleyUser.objects.get(phone="6170000002").balance
+		offer = Offer.objects.get(description="All you can eat for $3")
+		self.failUnlessEqual(old_balance+Transaction.points_table["MOD"]*offer.offercode_set.count(),new_balance)
+		msg19={"from":"6170000002", "text":"#balance"}
+		cmd.test_handle(msg19)
 
 	def test_basic_addition(self):
 		"""

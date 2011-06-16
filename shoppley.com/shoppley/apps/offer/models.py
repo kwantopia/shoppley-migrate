@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
-from shoppleyuser.utils import sms_notify, pretty_date
+from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
-from offer.utils import gen_offer_code, gen_random_pw
+from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code
 from sorl.thumbnail import ImageField
 
 from datetime import datetime, timedelta
@@ -104,9 +104,9 @@ class Offer(models.Model):
 			return settings.DEFAULT_OFFER_IMG_URL	
 
 	def gen_tracking_code(self):
-		track_code = gen_offer_code()
+		track_code = gen_tracking_code()
 		while TrackingCode.objects.filter(code__iexact=track_code):
-			track_code = gen_offer_code()
+			track_code = gen_tracking_code()
 		TrackingCode.objects.create(
 			offer=self,
 			code = track_code
@@ -129,8 +129,15 @@ class Offer(models.Model):
 			TODO: this part needs to be optimized so that the offer code generation
 				does not have a bottle neck
 		"""
+		count=0
 		for customer in customers:
-			self.gen_offer_code(customer)
+			if customer.is_taking_offers():
+				self.gen_offer_code(customer)
+				count = count +1
+				print count, customer
+				customer.update_offer_count()
+				
+		return count
 
 
 	def gen_forward_offercode(self,original_code,phone):
@@ -138,12 +145,13 @@ class Offer(models.Model):
 		forwarder = OfferCode.objects.filter(code__iexact=original_code)
 		
 		gen_code = gen_offer_code()
-
+		phone =parse_phone_number(phone)
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
 		
 		try: 
-			friend = Customer.objects.get(phone__contains=phone)
+			friend = Customer.objects.get(phone=(phone))
+			print phone
 			o=self.offercode_set.create(
 				customer=friend,
 				code = gen_code,
@@ -151,6 +159,7 @@ class Offer(models.Model):
 				time_stamp=datetime.now(),
 				expiration_time=self.starting_time+timedelta(minutes=self.duration))
 			o.save()
+
 			return o, None # for existing customer
 
 		except Customer.DoesNotExist:
@@ -205,10 +214,10 @@ class Offer(models.Model):
 		existing_num = int(round(0.7*max_offers))
 
 		merchant = self.merchant
-		fans = merchant.fans.exclude(active=False).order_by('?').values_list('pk', flat=True)
+		fans = merchant.fans.exclude(active=False).exclude(verified=False).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
 		# TODO: geographically filter
-		nonfans = Customer.objects.exclude(active=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
+		nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
 		print "Num fans:",fans.count()
 		print "Num nonfans:",nonfans.count()
@@ -222,14 +231,16 @@ class Offer(models.Model):
 
 		from worldbank.models import Transaction
 
-		allowed_number =abs(int( self.merchant.balance/Transaction.points_table["MOD"]))
+		allowed_number =int( self.merchant.balance/abs(Transaction.points_table["MOD"]))
+		print "balance=" ,self.merchant.balance
+		print "allowed_number", allowed_number
 		if allowed_number == 0:
 			# check if there's enough balance
 			enough_points = False
 
 		if len(target_list) > allowed_number:
 			target_list = random.sample(target_list, allowed_number)
-		self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
+		sentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
 		for o in self.offercode_set.all():
 			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
@@ -241,8 +252,9 @@ class Offer(models.Model):
 							ttype = "MOD")
 			transaction.execute()
 
-		self.num_init_sentto =len(target_list)
+		self.num_init_sentto =sentto
 		self.save()
+		
 		if enough_points: 
 			# number of people sent to, it can be 0 
 			return self.num_init_sentto
