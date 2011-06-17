@@ -12,6 +12,8 @@ from sorl.thumbnail import ImageField
 from datetime import datetime, timedelta
 import random, string
 
+SMS_DEBUG = False 
+
 # Create your models here.
 
 class Feature(models.Model):
@@ -245,7 +247,7 @@ class Offer(models.Model):
 		
 		for o in self.offercode_set.all():
 			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"#info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
-			sms_notify(o.customer.phone, offer_msg)
+			sms_notify(o.customer.phone, offer_msg, SMS_DEBUG)
 			transaction = Transaction.objects.create(time_stamp=datetime.now(),
 							offer = self,
 							offercode = o,

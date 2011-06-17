@@ -284,7 +284,7 @@ def offer_forward(request):
 				new_code, random_pw = offer.gen_forward_offercode(original_code, phone)
 				# text the user the user name and password
 
-				customer_msg = _("[%(code)s] %(customer)s forwarded you this offer:\n *merchant: %(merchant)s\n *expires: %(expiration)s\n *description: %(description)s\n *deal: %(dollar_off)s off\nVisit and redeem with this code: [%(code)s].\n")%{
+				customer_msg = _("%(customer)s forwarded you offer!\n*from: %(merchant)s\n*title: %(description)s\n*expires: %(expiration)s\nCome redeem w/ [%(code)s]\n")%{
 						"customer": customer.phone,
 						"merchant": offer.merchant,
 						"expiration": pretty_date(original_code.expiration_time),
