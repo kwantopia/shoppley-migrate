@@ -104,6 +104,7 @@ class Command(NoArgsCommand):
 		try:
 			if not validateEmail(email):
 				receipt_msg= _('"%s" is not a valid email address. Please provide a new and valid email')%email
+				self.notify(phone,receipt_msg)
 				raise CommandError("Invalid email address")			
 			user = User.objects.get(username__iexact =email)
 			receipt_msg = _('"%s" is already registered with us. Please provide another email.') % email
@@ -527,9 +528,10 @@ class Command(NoArgsCommand):
 							EmailAddress.objects.add_email(new_user,email)
 							zipcode_obj = ZipCode.objects.get(code=parsed_zip)
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
+							print "creating new merchant..."
 							new_merchant = Merchant(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
 										business_name = business, verified=True).save()
-					
+							print "merchant created!"
 
 							receipt_msg = _("Sign up successfully! Please use these info to log in.\n username: %(email)s \n password: %(password)s") % {
 								"email": email,
@@ -585,16 +587,15 @@ class Command(NoArgsCommand):
 				self.test_handle(msg)
 			except CommandError:
 				continue
-			except ObjectDoesNotExist, e:
-				print str(e)
-				continue
-			except MultipleObjectsReturned, e:
-				print str(e)
-				continue
+			#except ObjectDoesNotExist, e:
+			#	print str(e)
+			#	continue
+			#except MultipleObjectsReturned, e:
+			#	print str(e)
+			#	continue
 			#except Exception:
 			#	skipped_sms.append(index)
 			#	continue
 		
 		for message in voice.sms().messages:
-		
 			message.delete()

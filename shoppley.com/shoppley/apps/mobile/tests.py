@@ -28,8 +28,8 @@ class SimpleTest(TestCase):
 		self.pp = pprint.PrettyPrinter(indent=2)
 		self.f = open("/tmp/shoppley.test.out.txt", "w")
 
-		us, created = Country.objects.get_or_create(name="United States", code="us")
-		region, created = Region.objects.get_or_create(name="Massachusetts", code="ma", country=us)
+		us, created = Country.objects.get_or_create(name="United States", code="US")
+		region, created = Region.objects.get_or_create(name="Massachusetts", code="MA", country=us)
 		city, created = City.objects.get_or_create(name="Cambridge", region=region)
 		zipcode1, created = ZipCode.objects.get_or_create(code="02139", city=city)
 		city, created = City.objects.get_or_create(name="Boston", region=region)
