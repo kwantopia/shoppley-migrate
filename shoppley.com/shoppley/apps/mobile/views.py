@@ -405,7 +405,7 @@ def register_merchant(request):
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
 		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
-		#sms_notify(phone, txt_msg)
+		sms_notify(phone, txt_msg)
 	else:
 		# ERROR: User exists, ask user to login with their password 
 		data["result"] = -1
