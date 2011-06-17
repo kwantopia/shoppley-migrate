@@ -8,9 +8,13 @@ MAX_CHARS = 160
 
 def pretty_datetime(time):
 	"""
-	print %Y-%m-%d,%I:%M%p
+	print %Y/%m/%d,%I:%M%p
+
+	changed date separator to "/" since "-" makes
+	it look like a number in smart phone txt message
+	app, making it clickable [kwan]
 	"""
-	return time.strftime("%Y-%m-%d,%I:%M%p")
+	return time.strftime("%Y/%m/%d %I:%M%p")
 
 
 def gen_tracking_code(chars=string.digits):

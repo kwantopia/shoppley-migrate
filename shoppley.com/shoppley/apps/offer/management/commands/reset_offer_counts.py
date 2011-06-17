@@ -9,5 +9,5 @@ class Command(NoArgsCommand):
 		for u in ShoppleyUser.objects.all():
 			if u.is_customer():
 				u.customer.offer_count=0
-				u.save()
+				u.customer.save()
 		print "Offer count for all users reset to 0"

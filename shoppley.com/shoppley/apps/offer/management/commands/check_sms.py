@@ -73,7 +73,7 @@ class Command(NoArgsCommand):
 
 	def forward_info(self, offercode):
 
-			return _("%(merchant)s \"%(description)s\" [expires: %(expiration)s]") %{
+			return _("%(merchant)s \"%(description)s\" [expires: %(expires)s]") %{
 								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
 								"expires": pretty_datetime(offercode.expiration_time) ,
@@ -288,7 +288,7 @@ class Command(NoArgsCommand):
 							receipt_msg = _("Your balance is %d. You do not have enough to reach customers. Please try again when you have enough balance.") % su.balance
 							offer.delete()
 						else:
-							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. Track the status of the offer: \"%(offer)s\" by txting \"#status %(code)s\"") % {
+							receipt_msg = _("We have received your offer at %(time)s, %(number)d users have been reached. Track the status of the offer: \"%(offer)s\" by txting \"#status %(code)s\"") % {
 								"time": pretty_datetime(offer.time_stamp),
 								"offer": offer,
 								"number": offer.num_received(),
@@ -480,7 +480,7 @@ class Command(NoArgsCommand):
 									self.notify(friend_num,account_msg)
 
 							forwarder_msg= _('Offer [%s] was forwarded to ') % ori_code.code
-							forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in valid_receivers]) + "\nYou will receive points when they redeem." 
+							forwarder_msg= forwarder_msg+ ', '.join([str(i) for i in valid_receivers]) + "\nYou will receive points when they redeem." 
 							#% f_state.remaining
 							self.notify(su.phone,forwarder_msg)
 					# --------------------- HELP: "help" -------------------------
@@ -580,7 +580,7 @@ class Command(NoArgsCommand):
 		#index = -1
 		for msg in extractsms(voice.sms.html):
 			#sms_notify(msg["from"], "hello")
-			print datetime.now(), "- processing: ", msg
+			#print datetime.now(), "- processing: ", msg
 			try:
 				self.test_handle(msg)
 			except CommandError:
