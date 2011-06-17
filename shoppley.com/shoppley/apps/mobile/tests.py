@@ -51,7 +51,7 @@ class SimpleTest(TestCase):
 		u.set_password("hello")
 		u.save()
 		
-		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone="617-871-0710", balance=1000)
+		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone="617-909-2101", balance=1000)
 		c.active = True
 		c.verified = True
 		c.save()
@@ -61,8 +61,8 @@ class SimpleTest(TestCase):
 		u.set_password("hello")
 		u.save()
 		
-		#617-453-8665 Meng's googlevoice number
-		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone="617-453-8665", balance=1000)
+		#617-682-9784 Meng's other googlevoice
+		c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone="617-682-9784", balance=1000)
 		c.active = True
 		c.verified = True
 		c.save()
@@ -71,9 +71,9 @@ class SimpleTest(TestCase):
 		u.email="user1@merchant.com"
 		u.set_password("hello")
 		u.save()
-
 		
-		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone="617-682-9784", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
+		#617-453-8665 Meng's googlevoice number
+		m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone="617-453-8665", balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
 		m.active = True
 		m.verified = True
 		m.save()
@@ -83,7 +83,7 @@ class SimpleTest(TestCase):
 		u.set_password("hello")
 		u.save()
 
-		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone="617-909-2101", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
+		m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone="617-871-0710", balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
 		m.active = True
 		m.verified = True
 		m.save()

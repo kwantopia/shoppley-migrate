@@ -435,5 +435,5 @@ class TrackingCode(models.Model):
 	code			= models.CharField(max_length=32)
 
 	def __unicode__(self):
-		return "code: %s for offer: %s" (self.code, self.offer)
+		return "code: %s for offer: %s" % (self.code, self.offer)
 

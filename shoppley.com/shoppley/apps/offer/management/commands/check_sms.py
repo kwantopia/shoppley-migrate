@@ -272,10 +272,11 @@ class Command(NoArgsCommand):
 						num_reached = offer.distribute()
 					
 						if num_reached ==0 :
-							receipt_msg = _("There were no customers that could be reached at this moment.") 
+							receipt_msg = _("There were no customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.gen_tracking_code()
+ 
 						elif num_reached == -2:
-							receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % su.balance
-							#offer.delete()
+							receipt_msg = _("Your balance is %d. You do not have enough to reach customers. Please try again when you have enough balance.") % su.balance
+							offer.delete()
 						else:
 							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"status %(code)s\"") % {
 								"time": pretty_datetime(offer.time_stamp),
@@ -293,7 +294,8 @@ class Command(NoArgsCommand):
 							offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
 							if offers.count()>0:
 								offer=offers[0]
-								trackingcode = TrackingCode.objects.get(offer=offer)
+								print offer
+								trackingcode =offer.trackingcode
 								sentto  = offer.num_init_sentto
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
 								total = sentto + forwarded
@@ -564,12 +566,22 @@ class Command(NoArgsCommand):
 		voice.login()
 		smses = voice.sms()
 		self.update_expired()
-
+		skipped_sms=[]
+		index = -1
 		for msg in extractsms(voice.sms.html):
 			#sms_notify(msg["from"], "hello")
+			index = index + 1
 			try:
 				self.test_handle(msg)
+			
 			except CommandError:
 				continue
+			except Exception:
+				skipped_sms.append(index)
+				continue
+		index =0
 		for message in voice.sms().messages:
+			if index in skipped_sms:
+				continue
+			index = index  + 1
 			message.delete()

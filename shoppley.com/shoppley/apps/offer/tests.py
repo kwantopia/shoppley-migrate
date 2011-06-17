@@ -23,6 +23,8 @@ from offer.models import OfferCode, Offer, ForwardState, Feature, OfferCodeAbnor
 from shoppleyuser.utils import parse_phone_number
 from worldbank.models import *
 from pyparsing import *
+#from django.contrib.sites.models import Site
+
 class CustomerFixture(AutoFixture):
 	class Values:
 		cambridge = ZipCode.objects.get(code="02139")
@@ -153,8 +155,11 @@ class SimpleTest(TestCase):
 #			fixture = AutoFixture(OfferCode)
 #			codes = fixture.create(10)
 		self.create_offers()
-		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
+                webuy, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com")
 
+		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
+		print "site created",Site.objects.count()
+		print Site.objects.all()
 	def post_json(self, command, params={}, comment="No comment"):
 		print "*************************************************"
 		print comment
