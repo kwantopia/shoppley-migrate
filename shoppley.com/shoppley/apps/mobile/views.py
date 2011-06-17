@@ -22,7 +22,7 @@ else:
 		from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from shoppleyuser.utils import sms_notify, parse_phone_number
+from shoppleyuser.utils import sms_notify, parse_phone_number, pretty_date
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
 
@@ -284,10 +284,10 @@ def offer_forward(request):
 				new_code, random_pw = offer.gen_forward_offercode(original_code, phone)
 				# text the user the user name and password
 
-				customer_msg = _("%(code)s: %(customer)s has forwarded you this offer:\n - merchant: %(merchant)s\n - expiration: %(expiration)s\n - description: %(description)s\n - deal: %(dollar_off)s off\nPlease use this code %(code)s to redeem the offer.\n")%{
-						"customer": customer,
+				customer_msg = _("[%(code)s] %(customer)s forwarded you this offer:\n *merchant: %(merchant)s\n *expires: %(expiration)s\n *description: %(description)s\n *deal: %(dollar_off)s off\nVisit and redeem with this code: [%(code)s].\n")%{
+						"customer": customer.phone,
 						"merchant": offer.merchant,
-						"expiration": original_code.expiration_time,
+						"expiration": pretty_date(original_code.expiration_time),
 						"description": offer.description,
 						"dollar_off": offer.dollar_off,
 						"code": new_code.code,

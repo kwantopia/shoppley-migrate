@@ -104,7 +104,7 @@ class Merchant(ShoppleyUser):
 
 	def __unicode__(self):
 #		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
-		return "%s, %s [%s]" % (self.business_name, self.print_address(), self.phone)
+		return "%s, %s [ph: %s]" % (self.business_name, self.print_address(), self.phone)
 	def get_banner(self):
 		if self.banner:
 			return self.banner.url

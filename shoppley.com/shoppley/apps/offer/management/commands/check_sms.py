@@ -570,6 +570,7 @@ class Command(NoArgsCommand):
 		#index = -1
 		for msg in extractsms(voice.sms.html):
 			#sms_notify(msg["from"], "hello")
+			print datetime.now(), "- processing: ", msg
 			try:
 				self.test_handle(msg)
 			except CommandError:
