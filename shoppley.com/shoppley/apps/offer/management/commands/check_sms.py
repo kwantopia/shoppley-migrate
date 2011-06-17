@@ -309,7 +309,7 @@ class Command(NoArgsCommand):
 								sentto  = offer.num_init_sentto
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
 								total = sentto + forwarded
-								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s, forwarded to %(forwarded)s, total: %(total)d customers reached. Redeemed by %(redeemer)d customers. To track the offer type \"#status %(code)s\"") % {
+								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s, forwarded to %(forwarded)s, total: %(total)d customers reached. Redeemed by %(redeemer)d customers. To track the offer, txt \"#status %(code)s\"") % {
 								"code":trackingcode.code,
 								"sentto":sentto,
 		                                        	"forwarded":forwarded,

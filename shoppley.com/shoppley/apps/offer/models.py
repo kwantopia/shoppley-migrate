@@ -330,7 +330,7 @@ class OfferCode(models.Model):
 		self.save()
 
 	def __unicode__(self):
-		return self.code + "\n -customer:" + str(self.customer)+"\n -description"+str(self.offer.description)
+		return self.code + "\n -customer:" + str(self.customer)+"\n -description:"+str(self.offer.description)
 	
 	def offer_detail(self):
 		"""
