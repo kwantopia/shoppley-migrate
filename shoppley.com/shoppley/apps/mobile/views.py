@@ -22,7 +22,7 @@ else:
 		from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from shoppleyuser.utils import sms_notify
+from shoppleyuser.utils import sms_notify, parse_phone_number
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
 
@@ -63,7 +63,7 @@ def register_customer(request):
 	
 	# input parameters
 	email = request.POST['email'].lower()
-	phone = request.POST['phone']	
+	phone = parse_phone_number(request.POST['phone'])
 	zipcode = request.POST['zipcode']
 	
 	# need to clean up phone
@@ -376,7 +376,7 @@ def register_merchant(request):
 	# input parameters
 	business_name = request.POST['business']
 	email = request.POST['email'].lower()
-	phone = request.POST['phone']	
+	phone = parse_phone_number(request.POST['phone'])
 	zipcode = request.POST['zipcode']
 	
 	# need to clean up phone

@@ -566,22 +566,24 @@ class Command(NoArgsCommand):
 		voice.login()
 		smses = voice.sms()
 		self.update_expired()
-		skipped_sms=[]
-		index = -1
+		#skipped_sms=[]
+		#index = -1
 		for msg in extractsms(voice.sms.html):
 			#sms_notify(msg["from"], "hello")
-			index = index + 1
 			try:
 				self.test_handle(msg)
-			
 			except CommandError:
 				continue
-			except Exception:
-				skipped_sms.append(index)
+			except ObjectDoesNotExist, e:
+				print str(e)
 				continue
-		index =0
+			except MultipleObjectsReturned, e:
+				print str(e)
+				continue
+			#except Exception:
+			#	skipped_sms.append(index)
+			#	continue
+		
 		for message in voice.sms().messages:
-			if index in skipped_sms:
-				continue
-			index = index  + 1
+		
 			message.delete()
