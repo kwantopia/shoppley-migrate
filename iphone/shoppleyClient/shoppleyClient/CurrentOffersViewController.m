@@ -9,6 +9,7 @@
 #import "CurrentOffersViewController.h"
 
 #import "SLCurrentOffer.h"
+#import "SLTableViewDataSource.h"
 
 @implementation CurrentOffersViewController
 
@@ -35,9 +36,9 @@
         NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
         for (int i = 0; i < [offers count]; i++) {
             SLCurrentOffer* offer = [offers objectAtIndex:i];
-            [items addObject:[TTTableTextItem itemWithText:offer.name]];
+            [items addObject:[SLCurrentOfferTableItem itemWithOffer:offer URL:[NSString stringWithFormat:@"shoppley://offers/current/%d", i]]];
         }
-        self.dataSource = [TTListDataSource dataSourceWithItems:items];
+        self.dataSource = [SLListDataSource dataSourceWithItems:items];
     } else {
         self.dataSource = [TTListDataSource dataSourceWithObjects:
                            [TTTableActivityItem itemWithText:@"Processing..."],

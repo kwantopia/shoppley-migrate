@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 
 
-@interface SLOffer : NSObject {
+@interface SLOffer : NSObject <NSCoding> {
 
 }
 
 @property (nonatomic, retain) NSString* name;
+@property (nonatomic, retain) NSString* merchantName;
 @property (nonatomic, retain) NSString* description;
 @property (nonatomic, retain) NSString* code;
 @property (nonatomic, retain) NSString* img;
@@ -22,5 +23,11 @@
 @property (nonatomic, retain) NSNumber* lon;
 
 - (void)populateFromDictionary:(NSDictionary*)data;
+
+@end
+
+@interface SLOfferTableItem : TTTableLinkedItem {
+    
+}
 
 @end

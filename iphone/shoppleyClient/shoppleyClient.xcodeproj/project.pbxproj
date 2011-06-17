@@ -38,6 +38,8 @@
 		D5D11D6213A6E5F800F302D1 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11D6113A6E5F800F302D1 /* TabBarController.m */; };
 		D5D11DB713A7143100F302D1 /* CurrentOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11DB613A7143100F302D1 /* CurrentOffersViewController.m */; };
 		D5D11DBA13A7153700F302D1 /* RedeemedOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11DB913A7153700F302D1 /* RedeemedOffersViewController.m */; };
+		D5E72F2813AB0FCA00415F18 /* SLTableItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */; };
+		D5E72F4913AB15B400415F18 /* SLTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D5E72F4813AB15B400415F18 /* SLTableViewDataSource.m */; };
 		D5FFF4A213A71BE20059702E /* SummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5FFF4A113A71BE20059702E /* SummaryViewController.m */; };
 		D5FFF55113A7331F0059702E /* tab_current_offers.png in Resources */ = {isa = PBXBuildFile; fileRef = D5FFF54E13A7331F0059702E /* tab_current_offers.png */; };
 		D5FFF55213A7331F0059702E /* tab_redeemed_offers.png in Resources */ = {isa = PBXBuildFile; fileRef = D5FFF54F13A7331F0059702E /* tab_redeemed_offers.png */; };
@@ -272,6 +274,10 @@
 		D5D11DB613A7143100F302D1 /* CurrentOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentOffersViewController.m; sourceTree = "<group>"; };
 		D5D11DB813A7153700F302D1 /* RedeemedOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedeemedOffersViewController.h; sourceTree = "<group>"; };
 		D5D11DB913A7153700F302D1 /* RedeemedOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedeemedOffersViewController.m; sourceTree = "<group>"; };
+		D5E72F2613AB0FCA00415F18 /* SLTableItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableItemCell.h; sourceTree = "<group>"; };
+		D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableItemCell.m; sourceTree = "<group>"; };
+		D5E72F4713AB15B400415F18 /* SLTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableViewDataSource.h; sourceTree = "<group>"; };
+		D5E72F4813AB15B400415F18 /* SLTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableViewDataSource.m; sourceTree = "<group>"; };
 		D5FFF4A013A71BE20059702E /* SummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryViewController.h; sourceTree = "<group>"; };
 		D5FFF4A113A71BE20059702E /* SummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryViewController.m; sourceTree = "<group>"; };
 		D5FFF54E13A7331F0059702E /* tab_current_offers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_current_offers.png; path = images/tab_current_offers.png; sourceTree = "<group>"; };
@@ -454,6 +460,10 @@
 				D562E30C13A8532700E6EDE5 /* LoginViewController.m */,
 				D5FFF5CB13A82E1B0059702E /* SLDataController.h */,
 				D5FFF5CC13A82E1B0059702E /* SLDataController.m */,
+				D5E72F2613AB0FCA00415F18 /* SLTableItemCell.h */,
+				D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */,
+				D5E72F4713AB15B400415F18 /* SLTableViewDataSource.h */,
+				D5E72F4813AB15B400415F18 /* SLTableViewDataSource.m */,
 				D579365813A6E2720047B69F /* shoppleyClient.xcdatamodeld */,
 				D579364A13A6E2720047B69F /* Supporting Files */,
 				D5FFF54D13A733010059702E /* Resources */,
@@ -808,6 +818,8 @@
 				D562E2C813A82E8900E6EDE5 /* SLOffer.m in Sources */,
 				D562E2CB13A8309600E6EDE5 /* SLCurrentOffer.m in Sources */,
 				D562E30D13A8532800E6EDE5 /* LoginViewController.m in Sources */,
+				D5E72F2813AB0FCA00415F18 /* SLTableItemCell.m in Sources */,
+				D5E72F4913AB15B400415F18 /* SLTableViewDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,3 +20,13 @@
 - (void)populateFromDictionary:(NSDictionary*)data;
 
 @end
+
+@interface SLCurrentOfferTableItem : TTTableLinkedItem {
+    SLCurrentOffer* _offer;
+}
+
+@property(nonatomic,retain) SLCurrentOffer* offer;
+
++ (id)itemWithOffer:(SLCurrentOffer*)offer URL:(NSString*)URL;
+
+@end

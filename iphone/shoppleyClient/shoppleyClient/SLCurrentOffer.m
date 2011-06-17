@@ -29,4 +29,55 @@
     self.expires = [data objectForKey:@"expires"];
 }
 
+#pragma mark -
+#pragma mark NSCoding
+
+- (id)initWithCoder:(NSCoder*)decoder {
+    if ((self = [super initWithCoder:decoder])) {
+        self.expires = [decoder decodeObjectForKey:@"expires"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    [super encodeWithCoder:encoder];
+    if (self.expires) {
+        [encoder encodeObject:self.expires forKey:@"expires"];
+    }
+}
+
+@end
+
+@implementation SLCurrentOfferTableItem
+@synthesize offer = _offer;
+
+- (void)dealloc {
+    TT_RELEASE_SAFELY(_offer);
+    [super dealloc];
+}
+
++ (id)itemWithOffer:(SLCurrentOffer*)offer URL:(NSString *)URL {
+    SLCurrentOfferTableItem* item = [[[self alloc] init] autorelease];
+    item.URL = URL;
+    item.offer = [offer retain];
+    return item;
+}
+
+#pragma mark -
+#pragma mark NSCoding
+
+- (id)initWithCoder:(NSCoder*)decoder {
+    if ((self = [super initWithCoder:decoder])) {
+        self.offer = [decoder decodeObjectForKey:@"offer"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    [super encodeWithCoder:encoder];
+    if (self.offer) {
+        [encoder encodeObject:self.offer forKey:@"offer"];
+    }
+}
+
 @end
