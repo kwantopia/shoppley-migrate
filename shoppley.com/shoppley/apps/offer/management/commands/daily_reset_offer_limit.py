@@ -10,4 +10,5 @@ from shoppleyuser.models import Customer
 class Command(NoArgsCommand):
 	def handle_noargs(self, **options):
 		for c in Customer.objects.all():
+			print "reset", c, " 's offer count to", c.offer_count
 			c.daily_reset()

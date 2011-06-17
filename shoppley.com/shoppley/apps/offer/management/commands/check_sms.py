@@ -83,11 +83,11 @@ class Command(NoArgsCommand):
 		return len(expired_offers)
 
 	def customer_help(self):
-		avail_commands = "- #info offercode(s): list information about an offercode or offercodes separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n- #stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance"
+		avail_commands = "- #info offercode(s): list information about an offercode or offercodes separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance"
 		return avail_commands
 
 	def merchant_help(self):
-		avail_commands = "- #redeem offercode number: redeem a customer's offercode\n- #offer description: start an offer with its description.\n- #status trackingcode: check the status of an offer you started\n- #balance: check point balance"
+		avail_commands = "- #redeem offercode number: redeem a customer's offercode\n- #offer description: start an offer with its description.\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)- #status trackingcode: check the status of an offer you started\n- #balance: check point balance"
 		return avail_commands
 		
 	def check_email(self,email,phone):
@@ -278,7 +278,7 @@ class Command(NoArgsCommand):
 							receipt_msg = _("Your balance is %d. You do not have enough to reach customers. Please try again when you have enough balance.") % su.balance
 							offer.delete()
 						else:
-							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"status %(code)s\"") % {
+							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"#status %(code)s\"") % {
 								"time": pretty_datetime(offer.time_stamp),
 								"offer": offer,
 								"number": offer.num_received(),
@@ -287,7 +287,7 @@ class Command(NoArgsCommand):
 						
 						self.notify(su.phone, receipt_msg)
 					
-					# --------------------- STATUS : "status<SPACE>trackingcode" ---------------
+					# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
 					elif parsed[0].lower() == STATUS:
 						if (len(parsed)==1):
 							 
@@ -299,7 +299,7 @@ class Command(NoArgsCommand):
 								sentto  = offer.num_init_sentto
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
 								total = sentto + forwarded
-								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers. To track the offer type \"status<SPACE>%(code)s\"") % {
+								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers. To track the offer type \"#status<SPACE>%(code)s\"") % {
 								"code":trackingcode.code,
 								"sentto":sentto,
 		                                        	"forwarded":forwarded,
@@ -359,11 +359,11 @@ class Command(NoArgsCommand):
 					parsed = customer_pattern.parseString(text)
 					del parsed[0]
 					phone = su.phone
-					# --------------------------- REDEEM: "balance"---------------
+					# --------------------------- REDEEM: "#balance"---------------
 					if parsed[0].lower()==BALANCE:
 						receipt_msg = _("You have %d points.") % su.balance
 						self.notify(su.phone, receipt_msg)		
-					# ----------------- INFO : "info<SPACE>offercode+"----------------
+					# ----------------- INFO : "#info<SPACE>offercode+"----------------
 					elif parsed[0].lower() == INFO:
 						if (len(parsed)==1):
 							offercodes = OfferCode.objects.filter(customer=su.customer).order_by("-time_stamp")
@@ -421,7 +421,7 @@ class Command(NoArgsCommand):
 						su.customer.save()
 						receipt_msg=_("%s is your new zipcode. You will receive offers from this new area.") % zipcode.code
 						self.notify(su.phone,receipt_msg)
-					#-------------------- FORWARD: "forward<SPACE>offercode<SPACE>number+"---------------------
+					#-------------------- FORWARD: "#forward<SPACE>offercode<SPACE>number+"---------------------
 					elif parsed[0].lower() ==FORWARD:
 						# TODO add sender to dst's friend list
 						if (len(parsed) < 3):
