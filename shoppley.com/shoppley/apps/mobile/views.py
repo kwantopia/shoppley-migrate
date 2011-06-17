@@ -30,6 +30,8 @@ from offer.models import Offer, OfferCode
 import random, string, time
 from datetime import datetime, timedelta
 
+SMS_DEBUG = True
+
 @csrf_exempt
 def mobile_login(request):
 	data = {}
@@ -91,7 +93,7 @@ def register_customer(request):
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
 		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
-		sms_notify(phone, txt_msg)
+		sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 
 		data["result"] = -1
@@ -291,13 +293,13 @@ def offer_forward(request):
 						"code": new_code.code,
 						}
 				#TODO: if the personal do not mind receiving txt
-				sms_notify(phone,customer_msg)
+				sms_notify(phone,customer_msg, SMS_DEBUG)
 
 				if random_pw:
 					new_customer = new_code.customer
 					#print "created a customer for %s" % friend_num
 					account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
-					sms_notify(phone,account_msg)
+					sms_notify(phone,account_msg, SMS_DEBUG)
 
 			forwarder_msg= _('Offer by "%s" was forwarded to ') % offer_code
 			forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in phones]) + "\nYou will receive points when they redeem their offers."
@@ -405,7 +407,7 @@ def register_merchant(request):
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
 		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
-		sms_notify(phone, txt_msg)
+		sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 
 		data["result"] = -1
