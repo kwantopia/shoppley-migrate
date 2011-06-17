@@ -57,8 +57,9 @@ class Command(NoArgsCommand):
 
 	def info(self, offercode):
 
-			return _("Redeem [%(offercode)s] at %(merchant)s [expires: %(expiration)s]") %{
+			return _("Redeem [%(offercode)s] at %(merchant)s \"%(description)s\" [expires: %(expiration)s]") %{
 								"offercode": offercode.code,
+								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
 								"expiration": pretty_datetime(offercode.expiration_time) ,
 						}
@@ -69,6 +70,15 @@ class Command(NoArgsCommand):
 			#					"description":offercode.offer.description ,
 			#					"address":offercode.offer.merchant.print_address(),
 			#				}
+
+	def forward_info(self, offercode):
+
+			return _("%(merchant)s \"%(description)s\" [expires: %(expiration)s]") %{
+								"description": offercode.offer.description,
+								"merchant": offercode.offer.merchant,
+								"expires": pretty_datetime(offercode.expiration_time) ,
+						}
+
 	def update_expired(self):
 		
 		expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
@@ -265,7 +275,7 @@ class Command(NoArgsCommand):
 						# This is an offer made by the merchant, not a redemption code
 
 						description = ''.join([i+' ' for i in parsed[1:]]).strip()
-						offer = Offer(merchant=su.merchant, title=description[:40],
+						offer = Offer(merchant=su.merchant, title=description[:80],
 								description=description, time_stamp=datetime.now(),
 								starting_time=datetime.now())
 						offer.save()
@@ -278,7 +288,7 @@ class Command(NoArgsCommand):
 							receipt_msg = _("Your balance is %d. You do not have enough to reach customers. Please try again when you have enough balance.") % su.balance
 							offer.delete()
 						else:
-							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. You can track the status of this offer: \"%(offer)s\" by typing \"#status %(code)s\"") % {
+							receipt_msg = _("We have received your offer message at %(time)s, %(number)d users have been reached. Track the status of the offer: \"%(offer)s\" by txting \"#status %(code)s\"") % {
 								"time": pretty_datetime(offer.time_stamp),
 								"offer": offer,
 								"number": offer.num_received(),
@@ -309,7 +319,7 @@ class Command(NoArgsCommand):
 							
 								self.notify(su.phone,receipt_msg)
 							else:
-								receipt_msg=_("Fail to get status! You have not started an offer yet. To start an offer, reply with \"#offer description\"")
+								receipt_msg=_("Fail to get status! You have not started an offer yet. To start an offer, txt \"#offer description\"")
 								self.notify(su.phone,receipt_msg)
 								#raise CommandError("Incorrectly formed status command: %s" % msg["text"])
 						else:
@@ -389,13 +399,13 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() == STOP:
 					
 						if su.active:
-							customer_msg = _("You chose to temporarily stop receiving offer messages. Please reply #start to %s to restart our service.") % DEFAULT_SHOPPLEY_NUM
+							customer_msg = _("You chose to temporarily stop receiving offer messages. Please txt #start to %s to restart your service.") % DEFAULT_SHOPPLEY_NUM
 							self.notify(phone,customer_msg)
 							su.active = False
 							su.save()
 
 						else:
-					 		customer_msg = _("You already elected to stop receiving offer messages. Please reply #start to %s to restart our service.") % DEFAULT_SHOPPLEY_NUM
+					 		customer_msg = _("You already elected to stop receiving offer messages. Please txt #start to %s to restart your service.") % DEFAULT_SHOPPLEY_NUM
 							self.notify(phone,customer_msg)
 					# ------------------- START: "start"-----------------------
 					elif parsed[0].lower() == START :
@@ -455,9 +465,9 @@ class Command(NoArgsCommand):
 								#f_state.update()
 								friend_num = r
 								friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)	
-								customer_msg = _("%(customer)s forwarded you an offer: %(info)s. Use %(code)s to redeem")%{
+								customer_msg = _("%(customer)s forwarded you an offer: %(info)s. Use [%(code)s] to redeem")%{
 									"customer":su.customer,
-									"info": self.info(ori_code),
+									"info": self.forward_info(ori_code),
 									"code": friend_code.code,
 								}
 							

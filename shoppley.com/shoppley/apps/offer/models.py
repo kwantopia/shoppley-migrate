@@ -246,7 +246,7 @@ class Offer(models.Model):
 		sentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		
 		for o in self.offercode_set.all():
-			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"#info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
+			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (txt \"#info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
 			sms_notify(o.customer.phone, offer_msg, SMS_DEBUG)
 			transaction = Transaction.objects.create(time_stamp=datetime.now(),
 							offer = self,
