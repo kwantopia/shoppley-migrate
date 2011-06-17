@@ -137,9 +137,9 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 		form = form_class(request.POST)
 		if form.is_valid():
 			username, password = form.save()
-			from shoppleyuser.utils import parse_phone_number,sms_notify
-			signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
-			sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+			#from shoppleyuser.utils import parse_phone_number,sms_notify
+			#signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+			#sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 			if settings.ACCOUNT_EMAIL_VERIFICATION:
 				return render_to_response("account/verification_sent.html", {
 					"email": form.cleaned_data["email"],
@@ -151,6 +151,10 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 					message=_("Successfully logged in as %(username)s.") % {
 						'username': user.username
 					})
+				from shoppleyuser.utils import parse_phone_number,sms_notify
+				signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+
 				return HttpResponseRedirect(success_url)
 	else:
 		form = form_class()
@@ -170,9 +174,9 @@ def customer_signup(request, form_class=CustomerSignupForm,
 		form = form_class(request.POST)
 		if form.is_valid():
 			username, password = form.save()
-			from shoppleyuser.utils import parse_phone_number,sms_notify
-			signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
-			sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+			#from shoppleyuser.utils import parse_phone_number,sms_notify
+			#signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+			#sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 			if settings.ACCOUNT_EMAIL_VERIFICATION:
 				return render_to_response("account/verification_sent.html", {
@@ -185,6 +189,11 @@ def customer_signup(request, form_class=CustomerSignupForm,
 					message=_("Successfully logged in as %(username)s.") % {
 						'username': user.username
 					})
+				from shoppleyuser.utils import parse_phone_number,sms_notify
+				signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+
+
 				return HttpResponseRedirect(success_url)
 	else:
 		form = form_class()

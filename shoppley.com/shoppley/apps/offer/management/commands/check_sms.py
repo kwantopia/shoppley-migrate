@@ -57,9 +57,9 @@ class Command(NoArgsCommand):
 
 	def info(self, offercode):
 
-			return _("%(merchant)s offers %(description)s [expires: %(expiration)s]") %{
+			return _("Redeem [%(offercode)s] at %(merchant)s [expires: %(expiration)s]") %{
+								"offercode": offercode.code,
 								"merchant": offercode.offer.merchant,
-								"description": offercode.offer.description,
 								"expiration": pretty_datetime(offercode.expiration_time) ,
 						}
 			#return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
@@ -299,7 +299,7 @@ class Command(NoArgsCommand):
 								sentto  = offer.num_init_sentto
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
 								total = sentto + forwarded
-								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers. To track the offer type \"#status<SPACE>%(code)s\"") % {
+								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s, forwarded to %(forwarded)s, total: %(total)d customers reached. Redeemed by %(redeemer)d customers. To track the offer type \"#status %(code)s\"") % {
 								"code":trackingcode.code,
 								"sentto":sentto,
 		                                        	"forwarded":forwarded,
@@ -324,7 +324,7 @@ class Command(NoArgsCommand):
 							offer = trackingcode.offer
 							people_sentto = offer.num_init_sentto
 							people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
-							receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers.") % {
+							receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s, forwarded to %(forwarded)s, total: %(total)d customers reached. Redeemed by %(redeemer)d customers.") % {
 													"code":code,"sentto":people_sentto,
 													"forwarded":people_forwarded,
 													"total":int(people_sentto)+int(people_forwarded),
@@ -469,7 +469,7 @@ class Command(NoArgsCommand):
 									account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
 									self.notify(friend_num,account_msg)
 
-							forwarder_msg= _('Offer by "%s" was forwarded to ') % ori_code.code
+							forwarder_msg= _('Offer [%s] was forwarded to ') % ori_code.code
 							forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in valid_receivers]) + "\nYou will receive points when they redeem." 
 							#% f_state.remaining
 							self.notify(su.phone,forwarder_msg)

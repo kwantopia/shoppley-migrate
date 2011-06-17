@@ -62,8 +62,11 @@ class ShoppleyUser(models.Model):
 	phone			= models.CharField(max_length=20, blank=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
+
+	#: set to False when customer issues #stop command
 	active 			= models.BooleanField(default=True)
-	verified		= models.BooleanField(default=False) # verified by logging in.
+	#: verified by logging in when invited by friends
+	verified		= models.BooleanField(default=False) 
 
 	def is_customer(self):
 		return hasattr(self, "customer")
@@ -135,7 +138,7 @@ class Customer(ShoppleyUser):
 		self.save()
 	
 	def daily_reset(self):
-		self.daily_limit=5
+		self.offer_count=0
 		self.save()
 
 	def save(self, *args, **kwargs):
