@@ -111,7 +111,7 @@ def parse_phone_number(raw_number, country_code="US"):
 def map_phone_to_user(raw_number):
 	cleaned_phone = parse_phone_number(raw_number)
 	try:
-		su = ShoppleyUser.objects.get(phone=cleaned_phone)
+		su = ShoppleyUser.objects.filter(phone=cleaned_phone)[0]
 		# What's returned is a ShoppleyUser, not a User
 		return su
 	except Exception, e:
