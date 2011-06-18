@@ -43,6 +43,7 @@ urlpatterns = patterns('',
 #        "template": "front-page.html", "extra_context": {"form": CustomerSignupForm, "mform":MerchantSignupForm},
 #    }, name="home"),
     url(r'^$', 'shoppleyuser.views.home', name="home"),
+    url(r'^premium/', include('premium.urls')),
 
     #url(r'^comingsoon/$', direct_to_template, {
     #    "template": "comingsoon.html", "extra_context": {"form": CustomerBetaSubscribeForm, "categories":Category.objects.all()},
