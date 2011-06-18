@@ -18,7 +18,11 @@ GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
-DEBUG = True 
+# set SMS_DEBUG=True when running django tests so that
+# it doesn't send out unnecessary txt messages
+SMS_DEBUG = False 
+
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -118,6 +122,7 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
+	'django.middleware.csrf.CsrfResponseMiddleware',
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
@@ -272,8 +277,8 @@ OFFER_CODE_LENGTH = 6
 TRACKING_CODE_LENGTH= 6
 RANDOM_PASSWORD_LENGTH = 6
 
-INIT_CUSTOMER_BALANCE = 100
-INIT_MERCHANT_BALANCE = 200
+INIT_CUSTOMER_BALANCE = 0
+INIT_MERCHANT_BALANCE = 10000
 
 ugettext = lambda s: s
 LANGUAGES = [

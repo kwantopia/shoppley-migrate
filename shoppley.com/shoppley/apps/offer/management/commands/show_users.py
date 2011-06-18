@@ -9,6 +9,6 @@ class Command(NoArgsCommand):
 		print "ID", "email", "phone", "merchant", "verified", "offer_count", "daily_limit"
 		for u in ShoppleyUser.objects.all():
 			if u.is_customer():
-				print "customer", u.id, u.user.email, u.phone, u.is_merchant(), u.verified, u.customer.offer_count, u.customer.daily_limit
+				print "customer", u.id, u.zipcode.code,u.user.email, u.phone, u.is_merchant(), u.verified, u.customer.offer_count, u.customer.daily_limit
 			else:
-				print "merchant",u.id, u.user.email, u.phone, u.is_merchant(), u.verified 
+				print "merchant",u.id,u.zipcode.code, u.user.email, u.phone, u.is_merchant(), u.verified 

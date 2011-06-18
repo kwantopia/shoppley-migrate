@@ -12,7 +12,7 @@ from sorl.thumbnail import ImageField
 from datetime import datetime, timedelta
 import random, string
 
-SMS_DEBUG = False 
+SMS_DEBUG = settings.SMS_DEBUG 
 
 # Create your models here.
 

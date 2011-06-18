@@ -152,7 +152,7 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 						'username': user.username
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
-				signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+				signup_msg = _("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!")
 				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 				return HttpResponseRedirect(success_url)
@@ -175,7 +175,7 @@ def customer_signup(request, form_class=CustomerSignupForm,
 		if form.is_valid():
 			username, password = form.save()
 			#from shoppleyuser.utils import parse_phone_number,sms_notify
-			#signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+			#signup_msg = _("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!")
 			#sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 			if settings.ACCOUNT_EMAIL_VERIFICATION:
@@ -190,7 +190,7 @@ def customer_signup(request, form_class=CustomerSignupForm,
 						'username': user.username
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
-				signup_msg = _("Wecome to Shoppley! Txt \"help\" for all commands. Enjoy!")
+				signup_msg = _("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!")
 				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 
