@@ -35,7 +35,7 @@ django-flag
 django-friends
 django-gravatar
 django-locations
-#django-mailer
+-e git+https://github.com/jtauber/django-mailer.git#egg=django-mailer
 django-sentry
 django-messages
 django-microblogging
