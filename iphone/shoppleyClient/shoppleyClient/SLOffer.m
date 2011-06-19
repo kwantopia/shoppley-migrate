@@ -12,6 +12,18 @@
 @implementation SLOffer
 @synthesize name, merchantName, description, code, img, phone, lat, lon;
 
+- (void)dealloc {
+    TT_RELEASE_SAFELY(name);
+    TT_RELEASE_SAFELY(merchantName);
+    TT_RELEASE_SAFELY(description);
+    TT_RELEASE_SAFELY(code);
+    TT_RELEASE_SAFELY(img);
+    TT_RELEASE_SAFELY(phone);
+    TT_RELEASE_SAFELY(lat);
+    TT_RELEASE_SAFELY(lon);
+    [super dealloc];
+}
+
 - (void)populateFromDictionary:(NSDictionary*)data {
     self.name = [data objectForKey:@"name"];
     self.merchantName = @"Merchant";

@@ -64,13 +64,13 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *saved_email = [defaults stringForKey:@"email"];
     NSString *saved_password = [defaults stringForKey:@"password"];
-    if (saved_email != nil) {
+    if (TTIsStringWithAnyText(saved_email)) {
         _emailField.text = saved_email;
     }
-    if (saved_password != nil) {
+    if (TTIsStringWithAnyText(saved_password)) {
         _passwordField.text = saved_password;
     }
-    if (saved_email != nil && saved_password != nil) {
+    if (TTIsStringWithAnyText(saved_email) && TTIsStringWithAnyText(saved_password)) {
         [self authenticate];
     }
 }
@@ -102,12 +102,6 @@
     _passwordField.enabled = NO;
     
     if ([[SLDataController sharedInstance] authenticateEmail:_emailField.text password:_passwordField.text]) {
-        // Persist username/password
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:_emailField.text forKey:@"email"];
-        [defaults setObject:_passwordField.text forKey:@"password"];
-        [defaults synchronize];
-        
         [[TTNavigator navigator] removeAllViewControllers];
         [[TTNavigator navigator] openURLAction:[[TTURLAction actionWithURLPath:@"shoppley://tabbar"] applyAnimated:NO]];
     } else {

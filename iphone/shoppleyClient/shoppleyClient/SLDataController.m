@@ -105,7 +105,7 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 @implementation SLDataController
 @synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers;
 
-- (id) init {
+- (id)init {
 	if ((self = [super init])) {
     
     }
@@ -113,12 +113,16 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 }
 
 - (void)dealloc {
+    [self clean];
+	[super dealloc];
+}
+
+- (void)clean {
     TT_RELEASE_SAFELY(_errorString);
     TT_RELEASE_SAFELY(_currentOffers);
     TT_RELEASE_SAFELY(_redeemedOffers);
     TT_RELEASE_SAFELY(_currentOffersDownloader);
     TT_RELEASE_SAFELY(_redeemedOffersDownloader);
-	[super dealloc];
 }
 
 + (SLDataController*)sharedInstance {
@@ -145,6 +149,39 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary* response = jsonResponse.rootObject;
         if ([[response valueForKey:@"result"] intValue]== 1) {
+            // Persist username/password
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:email forKey:@"email"];
+            [defaults setObject:password forKey:@"password"];
+            [defaults synchronize];
+            
+            return YES;            
+        }
+        _errorString = [response valueForKey:@"result_msg"];
+        return NO;
+    }
+    _errorString = @"Connection Error. Please try again later.";
+    return NO;
+}
+
+- (BOOL)logout {
+    TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:@"logout/"] delegate:self];
+    request.response = [[[TTURLJSONResponse alloc] init] autorelease];
+    request.httpMethod = @"POST";
+    request.cachePolicy = TTURLRequestCachePolicyNone;
+    [request sendSynchronously];
+    
+    TTURLJSONResponse* jsonResponse = request.response;
+    
+    if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* response = jsonResponse.rootObject;
+        if ([[response valueForKey:@"result"] intValue]== 1) {
+            // Remove password
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults removeObjectForKey:@"password"];
+            [defaults synchronize];
+            
+            [self clean];
             return YES;            
         }
         _errorString = [response valueForKey:@"result_msg"];

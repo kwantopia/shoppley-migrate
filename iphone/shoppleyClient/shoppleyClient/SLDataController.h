@@ -43,9 +43,12 @@
 
 + (SLDataController*)sharedInstance;
 
+- (void)clean;
+
 #pragma mark -
 #pragma mark User
 - (BOOL)authenticateEmail:(NSString*)email password:(NSString*)password;
+- (BOOL)logout;
 
 #pragma mark -
 #pragma mark Offers

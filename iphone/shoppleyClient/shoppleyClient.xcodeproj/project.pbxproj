@@ -20,6 +20,8 @@
 		D562E2CB13A8309600E6EDE5 /* SLCurrentOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D562E2CA13A8309600E6EDE5 /* SLCurrentOffer.m */; };
 		D562E30813A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */; };
 		D562E30D13A8532800E6EDE5 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D562E30C13A8532700E6EDE5 /* LoginViewController.m */; };
+		D577058B13ADBFF400DBCD3A /* tab_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D577058A13ADBFF400DBCD3A /* tab_settings.png */; };
+		D577058F13ADC18500DBCD3A /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D577058E13ADC18500DBCD3A /* SettingsViewController.m */; };
 		D579364213A6E2720047B69F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D579364113A6E2720047B69F /* UIKit.framework */; };
 		D579364413A6E2720047B69F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D579364313A6E2720047B69F /* Foundation.framework */; };
 		D579364613A6E2720047B69F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D579364513A6E2720047B69F /* CoreGraphics.framework */; };
@@ -255,6 +257,9 @@
 		D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libextThree20JSON+SBJSON.a"; sourceTree = SOURCE_ROOT; };
 		D562E30B13A8532600E6EDE5 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D562E30C13A8532700E6EDE5 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		D577058A13ADBFF400DBCD3A /* tab_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_settings.png; path = images/tab_settings.png; sourceTree = "<group>"; };
+		D577058D13ADC18500DBCD3A /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		D577058E13ADC18500DBCD3A /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		D579363D13A6E2720047B69F /* Shoppley.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shoppley.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D579364113A6E2720047B69F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D579364313A6E2720047B69F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -423,6 +428,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D577058C13ADC15B00DBCD3A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D577058D13ADC18500DBCD3A /* SettingsViewController.h */,
+				D577058E13ADC18500DBCD3A /* SettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		D579363213A6E2720047B69F = {
 			isa = PBXGroup;
 			children = (
@@ -470,6 +484,7 @@
 				D5FFF5C613A82D100059702E /* Offers */,
 				D5AECCDA13AD200D008B7D52 /* Displays */,
 				D5FFF5C713A82D350059702E /* Summary */,
+				D577058C13ADC15B00DBCD3A /* Settings */,
 				D579365213A6E2720047B69F /* AppDelegate.h */,
 				D579365313A6E2720047B69F /* AppDelegate.m */,
 				D5FFF5CB13A82E1B0059702E /* SLDataController.h */,
@@ -538,6 +553,7 @@
 				D5FFF54E13A7331F0059702E /* tab_current_offers.png */,
 				D5FFF54F13A7331F0059702E /* tab_redeemed_offers.png */,
 				D5FFF55013A7331F0059702E /* tab_summary.png */,
+				D577058A13ADBFF400DBCD3A /* tab_settings.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -805,6 +821,7 @@
 				D5FFF55113A7331F0059702E /* tab_current_offers.png in Resources */,
 				D5FFF55213A7331F0059702E /* tab_redeemed_offers.png in Resources */,
 				D5FFF55313A7331F0059702E /* tab_summary.png in Resources */,
+				D577058B13ADBFF400DBCD3A /* tab_settings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -858,6 +875,7 @@
 				D5AECD2D13AD9F8A008B7D52 /* SLRedeemedOffer.m in Sources */,
 				D5AECD3013ADA0EE008B7D52 /* OffersViewController.m in Sources */,
 				D5D7822113ADABB100493478 /* SLStyleSheet.m in Sources */,
+				D577058F13ADC18500DBCD3A /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,11 +10,15 @@
 
 @implementation TabBarController
 
+- (void)dealloc {
+    [super dealloc];
+}
+
 - (void)viewDidLoad {
 	[self setTabURLs:[NSArray arrayWithObjects:
 					  @"shoppley://current_offers",
 					  @"shoppley://redeemed_offers",
-					  @"shoppley://summary",
+					  @"shoppley://settings",
                       nil]];
 }
 

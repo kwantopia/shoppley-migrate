@@ -11,6 +11,11 @@
 @implementation SLCurrentOffer
 @synthesize expires;
 
+- (void)dealloc {
+    TT_RELEASE_SAFELY(expires);
+    [super dealloc];
+}
+
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data {
     NSMutableArray* outputArray = [[[NSMutableArray alloc] init] autorelease];
     

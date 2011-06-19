@@ -12,6 +12,12 @@
 @implementation SLRedeemedOffer
 @synthesize redeemedOn, txnAmount;
 
+- (void)dealloc {
+    TT_RELEASE_SAFELY(redeemedOn);
+    TT_RELEASE_SAFELY(txnAmount);
+    [super dealloc];
+}
+
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data {
     NSMutableArray* outputArray = [[[NSMutableArray alloc] init] autorelease];
     

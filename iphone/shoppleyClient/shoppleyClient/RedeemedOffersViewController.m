@@ -25,7 +25,7 @@
 }
 
 - (void)createModel {
-    _offers = [[SLDataController sharedInstance] obtainRedeemedOffersWithDelegate:self forcedDownload:NO];
+    _offers = [[[SLDataController sharedInstance] obtainRedeemedOffersWithDelegate:self forcedDownload:NO] retain];
     
     if (_offers) {
         TTDPRINT(@"%@", _offers);

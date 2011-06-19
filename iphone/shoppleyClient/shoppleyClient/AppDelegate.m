@@ -12,6 +12,7 @@
 #import "LoginViewController.h"
 #import "OfferDetailViewController.h"
 #import "RedeemedOffersViewController.h"
+#import "SettingsViewController.h"
 #import "SLDataController.h"
 #import "SLStyleSheet.h"
 #import "SummaryViewController.h"
@@ -48,6 +49,7 @@
     [map from:@"shoppley://tabbar" toSharedViewController:[TabBarController class]];
     [map from:@"shoppley://current_offers" toSharedViewController:[CurrentOffersViewController class]];
     [map from:@"shoppley://redeemed_offers" toSharedViewController:[RedeemedOffersViewController class]];
+    [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
