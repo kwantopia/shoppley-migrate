@@ -75,6 +75,11 @@
                  navigationMode == TTNavigationModeShare) {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+      } else if (navigationMode == TTNavigationModeExternal &&
+                 [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:item.URL]]) {
+        // (yod) we migth not want to do this
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
       } else {
         self.accessoryType = UITableViewCellAccessoryNone;
       }
