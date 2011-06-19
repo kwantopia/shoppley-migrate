@@ -323,7 +323,7 @@ class OfferCode(models.Model):
 		return datetime.now() < time_stamp + timedelta(minutes=self.offer.duration)
 
 	def is_redeemed(self):
-		return not self.redeem_time
+		return False if self.redeem_time is None else True
 
 	def redeem(self):
 		self.redeem_time = datetime.now()
