@@ -18,7 +18,7 @@
 @end
 
 @interface OfferDetailHeaderView: UIView {
-    SLOffer* _offer;
+
 }
 
 - (id)initWithFrame:(CGRect)frame offer:(SLOffer*)offer;

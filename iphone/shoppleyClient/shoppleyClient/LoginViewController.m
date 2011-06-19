@@ -24,6 +24,8 @@
 - (void)dealloc {
     TT_RELEASE_SAFELY(_loginDataSource);
     TT_RELEASE_SAFELY(_isLoadingDataSource);
+    TT_RELEASE_SAFELY(_emailField);
+    TT_RELEASE_SAFELY(_passwordField);
     [super dealloc];
 }
 
@@ -34,7 +36,7 @@
     self.tableView.scrollEnabled = NO;
     self.tableView.backgroundColor = RGBCOLOR(230,230,230);
     
-    _emailField = [[[UITextField alloc] init] autorelease];
+    _emailField = [[UITextField alloc] init];
     _emailField.delegate = self;
     _emailField.placeholder = @"Email";
     _emailField.font = TTSTYLEVAR(font);
@@ -44,7 +46,7 @@
     _emailField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _emailField.returnKeyType = UIReturnKeyNext;
     
-    _passwordField = [[[UITextField alloc] init] autorelease];
+    _passwordField = [[UITextField alloc] init];
     _passwordField.delegate = self;
     _passwordField.placeholder = @"Password";
     _passwordField.font = TTSTYLEVAR(font);

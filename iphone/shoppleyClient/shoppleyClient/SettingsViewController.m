@@ -42,7 +42,6 @@
 
 - (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath {
     [super didSelectObject:object atIndexPath:indexPath];
-    NSLog(@"%@", indexPath);
     if (indexPath.section == 0 && indexPath.row == 1) {
         [self logout];
     }

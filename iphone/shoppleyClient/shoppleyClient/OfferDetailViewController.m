@@ -17,7 +17,7 @@
 
 - (id)initWithNavigatorURL:(NSURL*)URL query:(NSDictionary*)query {
     if ((self = [super init])) {
-        _offer = [query objectForKey:@"offer"];
+        _offer = [[query objectForKey:@"offer"] retain];
         self.title = _offer.name;
            
         self.tableViewStyle = UITableViewStyleGrouped;
@@ -88,7 +88,7 @@
         
         self.backgroundColor = [UIColor clearColor];
         
-        BOOL isCurrentOffer = [_offer isKindOfClass:[SLCurrentOffer class]];
+        BOOL isCurrentOffer = [offer isKindOfClass:[SLCurrentOffer class]];
         
         TTImageView* imageView = [[[TTImageView alloc] init] autorelease];
         imageView.urlPath = offer.img;        
@@ -155,11 +155,6 @@
         self.frame = frame;
     }
     return self;
-}
-
-- (void)dealloc {
-    TT_RELEASE_SAFELY(_offer);
-    [super dealloc];
 }
 
 @end
