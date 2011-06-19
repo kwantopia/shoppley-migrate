@@ -293,7 +293,7 @@ div.login .form_block {
 
 #feedback-tab {
   background-color: #0087CC;
-  background-image: url("/static/images/feedback_tab_white.png");
+  background-image: url("/site_media/static/images/feedback_tab_white.png");
   background-repeat: no-repeat;
   background-position: 2px 50%;
   border: outset 1px #0087CC;
