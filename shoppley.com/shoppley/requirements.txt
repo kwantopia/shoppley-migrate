@@ -63,3 +63,5 @@ django-groups
 pil
 sorl-thumbnail
 django-wakawaka
+Celery
+django-celery
