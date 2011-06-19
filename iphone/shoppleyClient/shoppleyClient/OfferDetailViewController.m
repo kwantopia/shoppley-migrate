@@ -9,6 +9,7 @@
 #import "OfferDetailViewController.h"
 
 #import "SLCurrentOffer.h"
+#import "SLRedeemedOffer.h"
 #import "SLTableViewDataSource.h"
 #import "SLTableItem.h"
 
@@ -21,6 +22,8 @@
            
         self.tableViewStyle = UITableViewStyleGrouped;
         self.variableHeightRows = YES;
+        
+        _isCurrentOffer = [_offer isKindOfClass:[SLCurrentOffer class]];
     }
     return self;
 }
@@ -31,17 +34,39 @@
 }
 
 - (void)createModel {
-    // [[UIApplication sharedApplication] canOpenURL:(NSString*)someURL]
-    self.dataSource = [SLSectionedDataSource dataSourceWithObjects:
-                       @"",
-                       [TTTableTextItem itemWithText:@"Call" URL:@"tel:8574458979"],//[NSString stringWithFormat:@"tel:%@", _offer.phone]],
-                       [TTTableTextItem itemWithText:@"Locate" URL:nil],
-                       @"",
-                       [SLRightValueTableItem itemWithText:@"Your personal redeem code" value:_offer.code],
-                       @"",
-                       [TTTableTextItem itemWithText:@"Forward to Friends (10 points)" URL:nil],
-                       nil
-                       ];
+    NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* sections = [[[NSMutableArray alloc] init] autorelease];
+    
+    if (!_isCurrentOffer) {
+        NSMutableArray* feedbacks = [[[NSMutableArray alloc] init] autorelease];
+        [feedbacks addObject:[TTTableTextItem itemWithText:@"Rate" URL:nil]];
+        [feedbacks addObject:[TTTableTextItem itemWithText:@"Feedback to merchant" URL:nil]];
+        [items addObject:feedbacks];
+        [sections addObject:@""];
+    }
+    
+    NSMutableArray* contacts = [[[NSMutableArray alloc] init] autorelease];
+    NSString* callURL = [NSString stringWithFormat:@"tel:%@", _offer.phone];
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:callURL]]) {
+        [contacts addObject:[TTTableTextItem itemWithText:@"Call" URL:callURL]];
+    }
+    [contacts addObject:[TTTableTextItem itemWithText:@"Locate" URL:nil]];
+    [items addObject:contacts];
+    [sections addObject:@""];
+    
+    if (_isCurrentOffer) {
+        NSMutableArray* redeemCode = [[[NSMutableArray alloc] init] autorelease];
+        [redeemCode addObject:[SLRightValueTableItem itemWithText:@"Your personal redeem code" value:_offer.code]];
+        [items addObject:redeemCode];
+        [sections addObject:@""];
+        
+        NSMutableArray* forward = [[[NSMutableArray alloc] init] autorelease];
+        [forward addObject:[TTTableTextItem itemWithText:@"Forward to Friends (10 points)" URL:nil]];
+        [items addObject:forward];
+        [sections addObject:@""];
+    }
+    
+    self.dataSource = [SLSectionedDataSource dataSourceWithItems:items sections:sections];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,6 +87,8 @@
         static const CGFloat kLargeMargin = 10;
         
         self.backgroundColor = [UIColor clearColor];
+        
+        BOOL isCurrentOffer = [_offer isKindOfClass:[SLCurrentOffer class]];
         
         TTImageView* imageView = [[[TTImageView alloc] init] autorelease];
         imageView.urlPath = offer.img;        
@@ -94,8 +121,10 @@
         TTStyledTextLabel* redLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(kSmallMargin, top, frame.size.width - (2*kSmallMargin), 100)] autorelease];
         redLabel.font = [UIFont systemFontOfSize:14];
         NSString* redLabelText = @"";
-        if ([offer isKindOfClass:[SLCurrentOffer class]]) {
-            redLabelText = [NSString stringWithFormat:@"<b>expires: %@</b>", ((SLCurrentOffer*)offer).expires];
+        if (isCurrentOffer) {
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>expires: %@</b></span>", ((SLCurrentOffer*)offer).expires];
+        } else {
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Redeemed on: %@</b></span>", ((SLRedeemedOffer*)offer).redeemedOn];
         }
         redLabel.text = [TTStyledText textFromXHTML:redLabelText lineBreaks:YES URLs:YES];
         redLabel.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
@@ -103,8 +132,26 @@
         redLabel.backgroundColor = self.backgroundColor;
         [self addSubview:redLabel];
         
+        top += redLabel.frame.size.height;
+        
+        if (!isCurrentOffer) {
+            // Transaction Detail
+            // (yod) TTStyledTextLabel doesn't support text align
+            
+            top += kSmallMargin;
+            TTStyledTextLabel* transactionDetailLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(kSmallMargin, top, frame.size.width - (2*kSmallMargin), 100)] autorelease];
+            transactionDetailLabel.font = [UIFont systemFontOfSize:14];
+            NSString* transactionDetail = [NSString stringWithFormat:@"<center>Transaction Detail<br/>$%@</center>", ((SLRedeemedOffer*)offer).txnAmount];
+            transactionDetailLabel.text = [TTStyledText textFromXHTML:transactionDetail lineBreaks:YES URLs:YES];
+            transactionDetailLabel.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            [transactionDetailLabel sizeToFit];
+            transactionDetailLabel.backgroundColor = self.backgroundColor;
+            [self addSubview:transactionDetailLabel];
+            top += transactionDetailLabel.frame.size.height;
+        }
+        
         // Resize
-        frame.size.height = top + redLabel.frame.size.height + kLargeMargin;
+        frame.size.height = top + kLargeMargin;
         self.frame = frame;
     }
     return self;

@@ -13,6 +13,7 @@
 #import <Three20UI/UIViewAdditions.h>
 
 #import "SLCurrentOffer.h"
+#import "SLRedeemedOffer.h"
 
 @implementation SLCurrentOfferTableItemCell
 
@@ -36,14 +37,66 @@
         if (offer.name.length) {
             self.titleLabel.text = offer.name;
         }
-        if (offer.name.length) {
+        if (offer.merchantName.length) {
             self.captionLabel.text = [NSString stringWithFormat:@"by %@", offer.merchantName];
         }
-        if (offer.name.length) {
+        if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
         }
-        if (offer.name.length) {
+        if (offer.expires.length) {
             self.timestampLabel.text = offer.expires;
+            //self.timestampLabel.text = [item.timestamp formatShortTime];
+        }
+        if (offer.img) {
+            self.imageView2.urlPath = offer.img;
+        }
+    }
+}
+
+- (UILabel*)timestampLabel {
+    if (!_timestampLabel) {
+        _timestampLabel = [[UILabel alloc] init];
+        _timestampLabel.font = TTSTYLEVAR(tableTimestampFont);
+        _timestampLabel.textColor = [UIColor redColor];
+        _timestampLabel.highlightedTextColor = [UIColor whiteColor];
+        _timestampLabel.contentMode = UIViewContentModeLeft;
+        [self.contentView addSubview:_timestampLabel];
+    }
+    return _timestampLabel;
+}
+
+@end
+
+@implementation SLRedeemedOfferTableItemCell
+
++ (CGFloat)tableView:(UITableView*)tableView rowHeightForObject:(id)object {
+    // TODO(yod): fix this
+    /*
+     SLCurrentOfferTableItem* item = object;
+     SLCurrentOffer* offer = item.offer;
+     */
+    return 90;
+}
+
+- (void)setObject:(id)object {
+    if (_item != object) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        self.selectionStyle = TTSTYLEVAR(tableSelectionStyle);
+        
+        SLRedeemedOfferTableItem* item = object;
+        SLRedeemedOffer* offer = item.offer;
+        
+        if (offer.name.length) {
+            self.titleLabel.text = offer.name;
+        }
+        if (offer.merchantName.length) {
+            self.captionLabel.text = [NSString stringWithFormat:@"by %@", offer.merchantName];
+        }
+        if (offer.description.length) {
+            self.detailTextLabel.text = offer.description;
+        }
+        if (offer.redeemedOn.length) {
+            self.timestampLabel.text = offer.redeemedOn;
             //self.timestampLabel.text = [item.timestamp formatShortTime];
         }
         if (offer.img) {

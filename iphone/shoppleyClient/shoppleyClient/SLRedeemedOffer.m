@@ -10,7 +10,7 @@
 
 
 @implementation SLRedeemedOffer
-@synthesize redeemedOn;
+@synthesize redeemedOn, txnAmount;
 
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data {
     NSMutableArray* outputArray = [[[NSMutableArray alloc] init] autorelease];
@@ -28,6 +28,7 @@
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
     self.redeemedOn = [data objectForKey:@"redeemed"];
+    self.txnAmount = [data objectForKey:@"txn_amount"];
 }
 
 #pragma mark -
@@ -36,6 +37,7 @@
 - (id)initWithCoder:(NSCoder*)decoder {
     if ((self = [super initWithCoder:decoder])) {
         self.redeemedOn = [decoder decodeObjectForKey:@"redeemed"];
+        self.txnAmount = [decoder decodeObjectForKey:@"txn_amount"];
     }
     return self;
 }
@@ -44,6 +46,7 @@
     [super encodeWithCoder:encoder];
     if (self.redeemedOn) {
         [encoder encodeObject:self.redeemedOn forKey:@"redeemed"];
+        [encoder encodeObject:self.txnAmount forKey:@"txn_amount"];
     }
 }
 

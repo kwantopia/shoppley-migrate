@@ -15,6 +15,12 @@
 
 @end
 
+@interface SLRedeemedOfferTableItemCell : TTTableMessageItemCell {
+    
+}
+
+@end
+
 @interface SLRightValueTableItemCell : TTTableCaptionItemCell {
     
 }

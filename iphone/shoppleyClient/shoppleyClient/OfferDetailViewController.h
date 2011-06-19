@@ -12,6 +12,7 @@
 
 @interface OfferDetailViewController : TTTableViewController {
     SLOffer* _offer;
+    BOOL _isCurrentOffer;
 }
 
 @end

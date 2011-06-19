@@ -14,6 +14,7 @@
 }
 
 @property (nonatomic, retain) NSString* redeemedOn;
+@property (nonatomic, retain) NSNumber* txnAmount;
 
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data;
 

@@ -13,6 +13,7 @@
 #import "OfferDetailViewController.h"
 #import "RedeemedOffersViewController.h"
 #import "SLDataController.h"
+#import "SLStyleSheet.h"
 #import "SummaryViewController.h"
 #import "TabBarController.h"
 
@@ -31,6 +32,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [TTStyleSheet setGlobalStyleSheet:[[[SLStyleSheet alloc] init] autorelease]];
+    
     TTNavigator *navigator = [TTNavigator navigator];
     [navigator setPersistenceMode:TTNavigatorPersistenceModeAll];
     [navigator setOpensExternalURLs:YES];
