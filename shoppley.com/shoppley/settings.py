@@ -20,7 +20,7 @@ PINAX_THEME = "default"
 
 # set SMS_DEBUG=True when running django tests so that
 # it doesn't send out unnecessary txt messages
-SMS_DEBUG = False 
+SMS_DEBUG = True 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -119,16 +119,17 @@ TEMPLATE_LOADERS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+	"django.middleware.cache.UpdateCacheMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
-	'django.middleware.csrf.CsrfResponseMiddleware',
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
 	"groups.middleware.GroupAwareMiddleware",
 	"pinax.apps.account.middleware.LocaleMiddleware",
 	"django.middleware.doc.XViewMiddleware",
+	"django.middleware.cache.FetchFromCacheMiddleware",
 	"pagination.middleware.PaginationMiddleware",
 	"django_sorting.middleware.SortingMiddleware",
 	#"pinax.middleware.security.HideSensistiveFieldsMiddleware",

@@ -1,3 +1,16 @@
+# For installing postgresql-9.0 on ubuntu
+# http://diegobenna.blogspot.com/2011/02/install-postgresql-90-on-ubuntu-1010.html
+# http://linfiniti.com/2011/05/running-posgresql-8-4-and-9-0-side-by-side-on-ubuntu/
+
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:pitti/postgresql
+
+# with postgis
+# http://www.tokumine.com/2010/10/12/postgres-9-postgis-1-5-2-geos-3-2-2-and-gdal-1-7-on-ubuntu-10-04-lucid/
+
+
+
+
 http://www.cyberciti.biz/faq/howto-add-postgresql-user-account/
 
 
