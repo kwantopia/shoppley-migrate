@@ -2,7 +2,16 @@
 body {
 	background: transparent url(../../images/boram/bg.png);
 	background-repeat: repeat-x;
+	/*background: #FAFAFA;
+	background-image:	-webkit-gradient(linear, 0% 0%, 0% 30%, from(#F2F2F2), to(#FFFFFF), color-stop(.6,#FFFFFF));
+
+	border-top: 2px solid #DADA30;
+*/}
+
+/*.container {
+	border: 1px solid red;
 }
+*/
 .logo {
 	float: left;
 }
