@@ -18,7 +18,8 @@ class MerchantSignupForm(forms.Form):
 	business_name   = forms.CharField(max_length=64)
 	address_1               = forms.CharField(label=_("Business address"), max_length=64, required=True)
 
-	zip_code                = forms.CharField(max_length=10)
+
+	zip_code                = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
 	phone                   = forms.CharField(max_length=20)
 
 	password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(render_value=False))
@@ -149,7 +150,7 @@ class CustomerSignupForm(forms.Form):
 	username = forms.CharField(label=_("Username"), required=True, widget=forms.TextInput())
 	address_1               = forms.CharField(label=_("Street Address"), max_length=64, required=False)
 
-	zip_code                = forms.CharField(max_length=10)
+	zip_code                = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
 	phone                   = forms.CharField(max_length=20)
 	
 #	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())

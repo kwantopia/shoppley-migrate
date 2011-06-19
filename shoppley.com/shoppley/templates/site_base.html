@@ -90,7 +90,7 @@
 	<!-- END FOOTER -->
 {% endblock %}
 
-{% block extra_scripts %}
+{% block extra_scripts_base %}
 	<script type="text/javascript" src="https://www.google.com/jsapi?key={{GOOGLE_API_KEY}}"></script>
 	<script type="text/javascript">
 		google.load("jquery", "1.5.1");
@@ -102,6 +102,8 @@
     <script  type="text/javascript" src="{{ STATIC_URL }}js/coda-slider.1.1.1.js"></script>
     <script  type="text/javascript" src="{{ STATIC_URL }}js/jquery-easing-compatibility.1.2.pack.js"></script>
     <script  type="text/javascript" src="{{ STATIC_URL }}js/jquery-easing.1.2.pack.js"></script>
+	{% block extra_scripts %}
+	{% endblock %}
 {% endblock %}
 
 

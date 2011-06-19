@@ -8,12 +8,12 @@
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
   
-  {% block body %}
+{% block body %}
 
-{% if user.is_authenticated %}
+	{% if user.is_authenticated %}
 
         {% include "shoppleyuser/customer_instructions.html" %}
-{% else %}
+	{% else %}
 
 
     <div class="container">
@@ -31,7 +31,7 @@
     				Receive discount offer txts from your local stores on your cellphone.
     			</div>
     			<div class="signup-form customer">
-	  {% include "shoppleyuser/customer_signup_form.html" %}
+						{% include "shoppleyuser/customer_signup_form.html" %}
 
     				<!--table>
     					<tbody>
@@ -75,7 +75,7 @@
     				by txting offers to shoppley, entirely on your terms.
     			</div>
     			<div class="signup-form merchant">
-          {% include "shoppleyuser/merchant_signup_form.html" %}
+						{% include "shoppleyuser/merchant_signup_form.html" %}
 
     				<!--table>
     					<tbody>
@@ -119,10 +119,20 @@
 
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
-{% endif %}
+	{% endif %}<!-- else if user.is_authenticated -->
       	
       </div>
-  {% endblock %}
+{% endblock %}
 
 
+{% block extra_scripts %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tipsy.js"></script>
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/tipsy.css" type="text/css" />
+	
+	<script type="text/javascript">
+		$(function() {
+			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
+		});
+	</script>
+{% endblock %}
 
