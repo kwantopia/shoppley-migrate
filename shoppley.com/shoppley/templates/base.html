@@ -18,7 +18,14 @@
 		{% endblock %}
 	</head>
 	
-    <body class="{% block body_class %}{% endblock %}">
+	<body class="{% block body_class %}{% endblock %}">
+
+	<div id="feedback">
+		<a id="feedback-tab" href="{% url feedback %}">Feedback</a>
+	</div>
+
+
+
 	  <div class="container">	
         {% if site_wide_announcements %}
             <div id="site_wide_announcements">

@@ -284,3 +284,35 @@ div.login .form_block {
   margin-bottom: 20px;
 }
 
+/* for Feedback tab */
+#feedback {
+  position: fixed;
+  top: 45%;
+  left: 0px;
+}
+
+#feedback-tab {
+  background-color: #0087CC;
+  background-image: url("/static/images/feedback_tab_white.png");
+  background-repeat: no-repeat;
+  background-position: 2px 50%;
+  border: outset 1px #0087CC;
+  border-left: none;
+  z-index: 100001;
+  text-indent: -9000px;
+  height: 100px;
+  width: 26px;
+  min-height: 100px;
+  min-width: 26px;
+  position: fixed;
+  vertical-align: baseline;
+}
+
+#feedback-tab:hover {
+  background-color: #06C;
+  border: outset 1px #06C;
+  border-left: none;      
+  cursor: pointer;
+}
+
+
