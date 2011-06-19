@@ -11,23 +11,18 @@ WSGIRestrictStdout Off
     #	Allow from all
     #</Directory>
 
-    #<Directory /usr/share/phppgadmin/>
-    #    Order allow,deny
-    #    Allow from all
-    #</Directory>
-
 	WSGIDaemonProcess shoppley.com processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/shoppley-env/lib/python2.7/site-packages
 	WSGIProcessGroup shoppley.com
 
-    #WSGIScriptAlias / /home/www/shoppley.com/shoppley/apache/shoppley.wsgi
-    WSGIScriptAlias / /home/www/shoppley.com/shoppley/deploy/pinax.wsgi
+	#WSGIScriptAlias / /home/www/shoppley.com/shoppley/apache/shoppley.wsgi
+	WSGIScriptAlias / /home/www/shoppley.com/shoppley/deploy/pinax.wsgi
 
 	<Directory /home/www/shoppley.com/shoppley/deploy>
 		Order allow,deny
 		Allow from all
 	</Directory>
 
-    ErrorLog /home/www/shoppley.com/logs/error.log	
+	ErrorLog /home/www/shoppley.com/logs/error.log	
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
 	LogLevel warn
