@@ -38,6 +38,11 @@
     NSMutableArray* sections = [[[NSMutableArray alloc] init] autorelease];
     
     if (!_isCurrentOffer) {
+        NSMutableArray* transactions = [[[NSMutableArray alloc] init] autorelease];
+        [transactions addObject:[SLRightValueTableItem itemWithText:@"Transaction Cost" value:[NSString stringWithFormat:@"$%@", ((SLRedeemedOffer*)_offer).txnAmount]]];
+        [items addObject:transactions];
+        [sections addObject:@""];
+        
         NSMutableArray* feedbacks = [[[NSMutableArray alloc] init] autorelease];
         [feedbacks addObject:[TTTableTextItem itemWithText:@"Rate" URL:nil]];
         [feedbacks addObject:[TTTableTextItem itemWithText:@"Feedback to merchant" URL:nil]];
@@ -46,11 +51,11 @@
     }
     
     NSMutableArray* contacts = [[[NSMutableArray alloc] init] autorelease];
-    NSString* callURL = [NSString stringWithFormat:@"tel:%@", _offer.phone];
+    NSString* callURL = [NSString stringWithFormat:@"tel://%@", _offer.phone];
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:callURL]]) {
         [contacts addObject:[TTTableTextItem itemWithText:@"Call" URL:callURL]];
     }
-    [contacts addObject:[TTTableTextItem itemWithText:@"Locate" URL:nil]];
+    [contacts addObject:[TTTableTextItem itemWithText:@"Locate" URL:[NSString stringWithFormat:@"shoppley://map/%@/%@/%@", _offer.lat, _offer.lon, _offer.merchantName]]];
     [items addObject:contacts];
     [sections addObject:@""];
     
@@ -134,6 +139,7 @@
         
         top += redLabel.frame.size.height;
         
+        /*
         if (!isCurrentOffer) {
             // Transaction Detail
             // (yod) TTStyledTextLabel doesn't support text align
@@ -149,6 +155,7 @@
             [self addSubview:transactionDetailLabel];
             top += transactionDetailLabel.frame.size.height;
         }
+        */
         
         // Resize
         frame.size.height = top + kLargeMargin;

@@ -14,6 +14,7 @@
 #import "RedeemedOffersViewController.h"
 #import "SettingsViewController.h"
 #import "SLDataController.h"
+#import "SLMapViewController.h"
 #import "SLStyleSheet.h"
 #import "SummaryViewController.h"
 #import "TabBarController.h"
@@ -53,6 +54,9 @@
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
+    
+    [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)" toViewController:[SLMapViewController class]];
+    [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)/(subtitle:)" toViewController:[SLMapViewController class]];
     
     [navigator openURLAction:[TTURLAction actionWithURLPath:@"shoppley://login"]];
     
