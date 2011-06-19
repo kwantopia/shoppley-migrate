@@ -14,3 +14,9 @@
 }
 
 @end
+
+@interface SLSectionedDataSource : TTSectionedDataSource {
+    
+}
+
+@end

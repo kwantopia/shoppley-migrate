@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import "OffersViewController.h"
 
-@interface RedeemedOffersViewController : TTTableViewController {
-    
+@interface RedeemedOffersViewController : OffersViewController {
+
 }
 
 @end

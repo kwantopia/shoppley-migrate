@@ -32,11 +32,14 @@
 @interface SLDataController : NSObject {
     NSString* _errorString;
     NSArray* _currentOffers;
+    NSArray* _redeemedOffers;
     SLDataDownloader* _currentOffersDownloader;
+    SLDataDownloader* _redeemedOffersDownloader;
 }
 
 @property (nonatomic, retain) NSString* errorString;
 @property (nonatomic, retain) NSArray* currentOffers;
+@property (nonatomic, retain) NSArray* redeemedOffers;
 
 + (SLDataController*)sharedInstance;
 
@@ -49,4 +52,5 @@
 
 // Return nil, if the data is not downloaded. Caller should try again later.
 - (NSArray*)obtainCurrentOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
+- (NSArray*)obtainRedeemedOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
 @end

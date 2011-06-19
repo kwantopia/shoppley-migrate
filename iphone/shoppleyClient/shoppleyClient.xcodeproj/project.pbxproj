@@ -35,6 +35,10 @@
 		D579366C13A6E2730047B69F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D579366A13A6E2730047B69F /* InfoPlist.strings */; };
 		D579366F13A6E2730047B69F /* shoppleyClientTests.h in Resources */ = {isa = PBXBuildFile; fileRef = D579366E13A6E2730047B69F /* shoppleyClientTests.h */; };
 		D579367113A6E2730047B69F /* shoppleyClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D579367013A6E2730047B69F /* shoppleyClientTests.m */; };
+		D5AECCDD13AD2403008B7D52 /* OfferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */; };
+		D5AECD1E13AD9862008B7D52 /* SLTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECD1D13AD9862008B7D52 /* SLTableItem.m */; };
+		D5AECD2D13AD9F8A008B7D52 /* SLRedeemedOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECD2C13AD9F8A008B7D52 /* SLRedeemedOffer.m */; };
+		D5AECD3013ADA0EE008B7D52 /* OffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECD2F13ADA0ED008B7D52 /* OffersViewController.m */; };
 		D5D11D6213A6E5F800F302D1 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11D6113A6E5F800F302D1 /* TabBarController.m */; };
 		D5D11DB713A7143100F302D1 /* CurrentOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11DB613A7143100F302D1 /* CurrentOffersViewController.m */; };
 		D5D11DBA13A7153700F302D1 /* RedeemedOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D11DB913A7153700F302D1 /* RedeemedOffersViewController.m */; };
@@ -268,6 +272,14 @@
 		D579366D13A6E2730047B69F /* shoppleyClientTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shoppleyClientTests-Prefix.pch"; sourceTree = "<group>"; };
 		D579366E13A6E2730047B69F /* shoppleyClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shoppleyClientTests.h; sourceTree = "<group>"; };
 		D579367013A6E2730047B69F /* shoppleyClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = shoppleyClientTests.m; sourceTree = "<group>"; };
+		D5AECCDB13AD2403008B7D52 /* OfferDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferDetailViewController.h; sourceTree = "<group>"; };
+		D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferDetailViewController.m; sourceTree = "<group>"; };
+		D5AECD1C13AD9862008B7D52 /* SLTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableItem.h; sourceTree = "<group>"; };
+		D5AECD1D13AD9862008B7D52 /* SLTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableItem.m; sourceTree = "<group>"; };
+		D5AECD2B13AD9F8A008B7D52 /* SLRedeemedOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRedeemedOffer.h; sourceTree = "<group>"; };
+		D5AECD2C13AD9F8A008B7D52 /* SLRedeemedOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRedeemedOffer.m; sourceTree = "<group>"; };
+		D5AECD2E13ADA0EC008B7D52 /* OffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OffersViewController.h; sourceTree = "<group>"; };
+		D5AECD2F13ADA0ED008B7D52 /* OffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OffersViewController.m; sourceTree = "<group>"; };
 		D5D11D6013A6E5F800F302D1 /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		D5D11D6113A6E5F800F302D1 /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		D5D11DB513A7143100F302D1 /* CurrentOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentOffersViewController.h; sourceTree = "<group>"; };
@@ -392,6 +404,8 @@
 				D562E2C713A82E8900E6EDE5 /* SLOffer.m */,
 				D562E2C913A8309600E6EDE5 /* SLCurrentOffer.h */,
 				D562E2CA13A8309600E6EDE5 /* SLCurrentOffer.m */,
+				D5AECD2B13AD9F8A008B7D52 /* SLRedeemedOffer.h */,
+				D5AECD2C13AD9F8A008B7D52 /* SLRedeemedOffer.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -451,19 +465,16 @@
 			children = (
 				D562E2C513A82E6C00E6EDE5 /* Models */,
 				D5FFF5C613A82D100059702E /* Offers */,
+				D5AECCDA13AD200D008B7D52 /* Displays */,
 				D5FFF5C713A82D350059702E /* Summary */,
 				D579365213A6E2720047B69F /* AppDelegate.h */,
 				D579365313A6E2720047B69F /* AppDelegate.m */,
+				D5FFF5CB13A82E1B0059702E /* SLDataController.h */,
+				D5FFF5CC13A82E1B0059702E /* SLDataController.m */,
 				D5D11D6013A6E5F800F302D1 /* TabBarController.h */,
 				D5D11D6113A6E5F800F302D1 /* TabBarController.m */,
 				D562E30B13A8532600E6EDE5 /* LoginViewController.h */,
 				D562E30C13A8532700E6EDE5 /* LoginViewController.m */,
-				D5FFF5CB13A82E1B0059702E /* SLDataController.h */,
-				D5FFF5CC13A82E1B0059702E /* SLDataController.m */,
-				D5E72F2613AB0FCA00415F18 /* SLTableItemCell.h */,
-				D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */,
-				D5E72F4713AB15B400415F18 /* SLTableViewDataSource.h */,
-				D5E72F4813AB15B400415F18 /* SLTableViewDataSource.m */,
 				D579365813A6E2720047B69F /* shoppleyClient.xcdatamodeld */,
 				D579364A13A6E2720047B69F /* Supporting Files */,
 				D5FFF54D13A733010059702E /* Resources */,
@@ -503,6 +514,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D5AECCDA13AD200D008B7D52 /* Displays */ = {
+			isa = PBXGroup;
+			children = (
+				D5E72F4713AB15B400415F18 /* SLTableViewDataSource.h */,
+				D5E72F4813AB15B400415F18 /* SLTableViewDataSource.m */,
+				D5AECD1C13AD9862008B7D52 /* SLTableItem.h */,
+				D5AECD1D13AD9862008B7D52 /* SLTableItem.m */,
+				D5E72F2613AB0FCA00415F18 /* SLTableItemCell.h */,
+				D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */,
+			);
+			name = Displays;
+			sourceTree = "<group>";
+		};
 		D5FFF54D13A733010059702E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,10 +540,14 @@
 		D5FFF5C613A82D100059702E /* Offers */ = {
 			isa = PBXGroup;
 			children = (
+				D5AECD2E13ADA0EC008B7D52 /* OffersViewController.h */,
+				D5AECD2F13ADA0ED008B7D52 /* OffersViewController.m */,
 				D5D11DB513A7143100F302D1 /* CurrentOffersViewController.h */,
 				D5D11DB613A7143100F302D1 /* CurrentOffersViewController.m */,
 				D5D11DB813A7153700F302D1 /* RedeemedOffersViewController.h */,
 				D5D11DB913A7153700F302D1 /* RedeemedOffersViewController.m */,
+				D5AECCDB13AD2403008B7D52 /* OfferDetailViewController.h */,
+				D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */,
 			);
 			name = Offers;
 			sourceTree = "<group>";
@@ -820,6 +848,10 @@
 				D562E30D13A8532800E6EDE5 /* LoginViewController.m in Sources */,
 				D5E72F2813AB0FCA00415F18 /* SLTableItemCell.m in Sources */,
 				D5E72F4913AB15B400415F18 /* SLTableViewDataSource.m in Sources */,
+				D5AECCDD13AD2403008B7D52 /* OfferDetailViewController.m in Sources */,
+				D5AECD1E13AD9862008B7D52 /* SLTableItem.m in Sources */,
+				D5AECD2D13AD9F8A008B7D52 /* SLRedeemedOffer.m in Sources */,
+				D5AECD3013ADA0EE008B7D52 /* OffersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

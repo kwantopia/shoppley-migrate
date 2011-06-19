@@ -9,6 +9,7 @@
 #import "SLTableViewDataSource.h"
 
 #import "SLCurrentOffer.h"
+#import "SLTableItem.h"
 #import "SLTableItemCell.h"
 
 @implementation SLListDataSource
@@ -16,7 +17,25 @@
 - (Class)tableView:(UITableView*)tableView cellClassForObject:(id) object { 
     if ([object isKindOfClass:[SLCurrentOfferTableItem class]]) {
         return [SLCurrentOfferTableItemCell class];
-	} else {
+	} else if ([object isKindOfClass:[SLRightValueTableItem class]]) {
+        return [SLRightValueTableItemCell class];
+	}
+    else {
+		return [super tableView:tableView cellClassForObject:object];
+	}
+}
+
+@end
+
+@implementation SLSectionedDataSource
+
+- (Class)tableView:(UITableView*)tableView cellClassForObject:(id) object { 
+    if ([object isKindOfClass:[SLCurrentOfferTableItem class]]) {
+        return [SLCurrentOfferTableItemCell class];
+	} else if ([object isKindOfClass:[SLRightValueTableItem class]]) {
+        return [SLRightValueTableItemCell class];
+	}
+    else {
 		return [super tableView:tableView cellClassForObject:object];
 	}
 }

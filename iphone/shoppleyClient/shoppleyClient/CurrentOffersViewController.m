@@ -24,19 +24,15 @@
     return self;
 }
 
-- (void)dealloc {
-    [super dealloc];
-}
-
 - (void)createModel {
-    NSArray* offers = [[SLDataController sharedInstance] obtainCurrentOffersWithDelegate:self forcedDownload:NO];
+    _offers = [[SLDataController sharedInstance] obtainCurrentOffersWithDelegate:self forcedDownload:NO];
     
-    if (offers) {
-        TTDPRINT(@"%@", offers);
+    if (_offers) {
+        TTDPRINT(@"%@", _offers);
         NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
-        for (int i = 0; i < [offers count]; i++) {
-            SLCurrentOffer* offer = [offers objectAtIndex:i];
-            [items addObject:[SLCurrentOfferTableItem itemWithOffer:offer URL:[NSString stringWithFormat:@"shoppley://offers/current/%d", i]]];
+        for (int i = 0; i < [_offers count]; i++) {
+            SLCurrentOffer* offer = [_offers objectAtIndex:i];
+            [items addObject:[SLCurrentOfferTableItem itemWithOffer:offer URL:nil]];
         }
         self.dataSource = [SLListDataSource dataSourceWithItems:items];
     } else {
@@ -44,14 +40,6 @@
                            [TTTableActivityItem itemWithText:@"Processing..."],
                            nil];
     }
-}
-
-- (void)didFinishDownload {
-    [self createModel];
-}
-
-- (void)didFailDownload {
-    TTDPRINT(@"failed");
 }
 
 @end

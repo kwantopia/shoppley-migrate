@@ -8,6 +8,8 @@
 
 #import "RedeemedOffersViewController.h"
 
+#import "SLRedeemedOffer.h"
+#import "SLTableViewDataSource.h"
 
 @implementation RedeemedOffersViewController
 
@@ -22,17 +24,22 @@
     return self;
 }
 
-- (void)dealloc {
-    [super dealloc];
-}
-
 - (void)createModel {
-    self.dataSource = [TTSectionedDataSource dataSourceWithObjects:
-                       @"",
-                       [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
-                       [TTTableTextItem itemWithText:@"Offer" URL:@"http://www.mit.edu"],
-                       nil
-                       ];
+    _offers = [[SLDataController sharedInstance] obtainRedeemedOffersWithDelegate:self forcedDownload:NO];
+    
+    if (_offers) {
+        TTDPRINT(@"%@", _offers);
+        NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
+        for (int i = 0; i < [_offers count]; i++) {
+            SLRedeemedOffer* offer = [_offers objectAtIndex:i];
+            [items addObject:[SLRedeemedOfferTableItem itemWithOffer:offer URL:nil]];
+        }
+        self.dataSource = [SLListDataSource dataSourceWithItems:items];
+    } else {
+        self.dataSource = [TTListDataSource dataSourceWithObjects:
+                           [TTTableActivityItem itemWithText:@"Processing..."],
+                           nil];
+    }
 }
 
 @end

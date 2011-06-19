@@ -14,3 +14,9 @@
 }
 
 @end
+
+@interface SLRightValueTableItemCell : TTTableCaptionItemCell {
+    
+}
+
+@end

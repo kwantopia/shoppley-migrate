@@ -12,6 +12,7 @@
 #import "SLCurrentOffer.h"
 
 static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+//static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
 #pragma mark SLDataDownloader
@@ -50,10 +51,17 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //[request.parameters setValue:appDelegate.latitude forKey:@"lat"];
     //[request.parameters setValue:appDelegate.longitude forKey:@"lon"];
-    [request.parameters setValue:[NSNumber numberWithFloat:47.78799] forKey:@"lat"];
-    [request.parameters setValue:[NSNumber numberWithFloat:98.9989] forKey:@"lon"];
     
-    request.httpMethod = @"POST";
+    if ([_dataType isEqualToString:@"current_offers"]) {
+        [request.parameters setValue:[NSNumber numberWithFloat:47.78799] forKey:@"lat"];
+        [request.parameters setValue:[NSNumber numberWithFloat:98.9989] forKey:@"lon"];
+        request.httpMethod = @"POST";
+    } else if ([_dataType isEqualToString:@"redeemed_offers"]) {
+        request.httpMethod = @"GET";
+    } else {
+        TTDERROR(@"Unknown datatype");
+    }
+    
     request.cachePolicy = TTURLRequestCachePolicyNone;
     
     TTDPRINT(@"%@",request.parameters);
@@ -71,7 +79,12 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     NSDictionary* response = jsonResponse.rootObject;
     TTDPRINT(@"%@",response);
     
-    [[SLDataController sharedInstance] setCurrentOffers:[SLCurrentOffer offersArrayfromDictionary:response]];
+    if ([request.httpMethod isEqualToString:@"POST"]) {
+        // current offers
+        [[SLDataController sharedInstance] setCurrentOffers:[SLCurrentOffer offersArrayfromDictionary:response]];
+    } else {
+        [[SLDataController sharedInstance] setRedeemedOffers:[SLCurrentOffer offersArrayfromDictionary:response]];
+    }
     
     [_delegate didFinishDownload];
     _isDownloading = NO;
@@ -89,7 +102,7 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 #pragma mark SLDataController
 
 @implementation SLDataController
-@synthesize errorString = _errorString, currentOffers = _currentOffers;
+@synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers;
 
 - (id) init {
 	if ((self = [super init])) {
@@ -99,6 +112,11 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 }
 
 - (void)dealloc {
+    TT_RELEASE_SAFELY(_errorString);
+    TT_RELEASE_SAFELY(_currentOffers);
+    TT_RELEASE_SAFELY(_redeemedOffers);
+    TT_RELEASE_SAFELY(_currentOffersDownloader);
+    TT_RELEASE_SAFELY(_redeemedOffersDownloader);
 	[super dealloc];
 }
 
@@ -146,6 +164,18 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
         return nil;
     } else {
         return _currentOffers;
+    }
+}
+
+- (NSArray*)obtainRedeemedOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
+    if (forcedDownload || (_redeemedOffers == nil)) {
+        if (!_redeemedOffersDownloader) {
+            _redeemedOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"redeemed_offers" delegate:delegate];
+        }
+        [_redeemedOffersDownloader download];
+        return nil;
+    } else {
+        return _redeemedOffers;
     }
 }
 

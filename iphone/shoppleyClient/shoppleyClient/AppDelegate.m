@@ -10,6 +10,7 @@
 
 #import "CurrentOffersViewController.h"
 #import "LoginViewController.h"
+#import "OfferDetailViewController.h"
 #import "RedeemedOffersViewController.h"
 #import "SLDataController.h"
 #import "SummaryViewController.h"
@@ -32,11 +33,12 @@
 {
     TTNavigator *navigator = [TTNavigator navigator];
     [navigator setPersistenceMode:TTNavigatorPersistenceModeAll];
+    [navigator setOpensExternalURLs:YES];
     
     TTURLMap *map = navigator.URLMap;
     
     // A navigator will default to TTWebController class when no URL match will be met
-    [map from:@"*" toViewController:[TTWebController class]];
+    [map from:@"http*" toViewController:[TTWebController class]];
     
     [map from:@"shoppley://login" toViewController:[LoginViewController class]];
     
@@ -44,6 +46,8 @@
     [map from:@"shoppley://current_offers" toSharedViewController:[CurrentOffersViewController class]];
     [map from:@"shoppley://redeemed_offers" toSharedViewController:[RedeemedOffersViewController class]];
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
+    
+    [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
     
     [navigator openURLAction:[TTURLAction actionWithURLPath:@"shoppley://login"]];
     
