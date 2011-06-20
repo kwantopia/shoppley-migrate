@@ -21,6 +21,7 @@ from django.contrib.sites.models import Site
 from shoppleyuser.models import *
 from offer.models import OfferCode, Offer, ForwardState, Feature, OfferCodeAbnormal, TrackingCode
 from shoppleyuser.utils import parse_phone_number
+from offer.utils import pretty_datetime
 from worldbank.models import *
 from pyparsing import *
 #from django.contrib.sites.models import Site
@@ -54,7 +55,18 @@ class SimpleTest(TestCase):
 			
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 
-
+	def create_more_customers(self): #for resent
+		customers=[["c5@mit.edu","12345", "0000000005"],
+								["c6@mit.edu","12345", "0000000006"],
+								["c7@mit.edu","12345", "0000000007"],
+								["c8@mit.edu","12345", "0000000008"],]
+		for o in customers:
+			u,created= User.objects.get_or_create(username=o[0],email=o[0],password=o[1])
+			u.is_active=True
+			u.save()
+			cambridge = ZipCode.objects.get(code="02139")
+			
+			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 
 	def create_offers(self):
 
@@ -160,6 +172,26 @@ class SimpleTest(TestCase):
 		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
 		print "site created",Site.objects.count()
 		print Site.objects.all()
+	def test_redistribute(self):
+		cmd = Command()
+		cmd.DEBUG = True
+		settings.DEBUG=True
+		msg1={"from":"6170000002", "text":"#offer test redistribute"}
+		cmd.test_handle(msg1)
+		o = Offer.objects.get(description="test redistribute")
+		print o
+		print o.offercode_set.all().values_list('customer',flat=True)
+		for c in o.offercode_set.all().values_list('customer',flat=True):	
+			print Customer.objects.get(pk=c).phone, pretty_datetime(OfferCode.objects.filter(customer__pk=c, offer__id = o.id)[0].expiration_time)
+		self.create_more_customers()
+		print "redistributing..."
+		track = o.trackingcode.code
+		msg2={"from":"6170000002", "text":"#reoffer  %s" % track}
+		cmd.test_handle(msg2)
+		print o.offercode_set.all().values_list('customer',flat=True)
+		for c in o.offercode_set.all().values_list('customer',flat=True):	
+			print Customer.objects.get(pk=c).phone, pretty_datetime(OfferCode.objects.filter(customer__pk=c, offer__id=o.id)[0].expiration_time)
+
 	def post_json(self, command, params={}, comment="No comment"):
 		print "*************************************************"
 		print comment
@@ -836,6 +868,27 @@ class SimpleTest(TestCase):
 
 		new_verified=Customer.objects.filter(verified=True).values_list('offer_count', flat=True)
 		print "new=" , new_verified
+
+		print "**************** TEST 17: IWANT  ************************"
+		msg22={"from":"0000000001", "text": "#iwant italian food"}
+
+		cmd.test_handle(msg22)
+		self.failUnlessEqual(IWantRequest.objects.all().count(),1)
+		self.failUnlessEqual(IWantRequest.objects.get(customer=Customer.objects.get(phone="0000000001")).request, "italian food")
+		
+		print "**************** TEST 18: REDISTRIBUTE  ************************"
+
+		o = Offer.objects.get(description="All you can eat for $3")
+		track  = o.trackingcode.code
+		offers = Offer.objects.all().count()
+		codes = o.offercode_set.all().count()
+		msg23={"from":"0000000001", "text": "#reoffer %s" % track}
+		cmd.test_handle(msg23)
+		self.failUnlessEqual(Offer.objects.all().count(),offers)
+		self.failUnlessEqual(codes<o.offercode_set.all().count(),True)
+
+
+		
 	def test_basic_addition(self):
 		"""
 		Tests that 1 + 1 always equals 2.
