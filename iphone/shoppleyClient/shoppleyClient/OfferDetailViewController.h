@@ -15,6 +15,9 @@
     BOOL _isCurrentOffer;
 }
 
+- (NSString*)rateURL;
+- (NSString*)feedbackURL;
+
 @end
 
 @interface OfferDetailHeaderView: UIView {

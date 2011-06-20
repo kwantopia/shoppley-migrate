@@ -11,6 +11,8 @@
 #import "CurrentOffersViewController.h"
 #import "LoginViewController.h"
 #import "OfferDetailViewController.h"
+#import "OfferFeedbackViewController.h"
+#import "OfferRateViewController.h"
 #import "RedeemedOffersViewController.h"
 #import "SettingsViewController.h"
 #import "SLDataController.h"
@@ -58,6 +60,8 @@
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
+    [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];
+    [map from:@"shoppley://offer/rate" toViewController:[OfferRateViewController class]];
     
     [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)" toViewController:[SLMapViewController class]];
     [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)/(subtitle:)" toViewController:[SLMapViewController class]];

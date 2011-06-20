@@ -24,11 +24,16 @@
         self.variableHeightRows = YES;
         
         _isCurrentOffer = [_offer isKindOfClass:[SLCurrentOffer class]];
+        
+        [[TTNavigator navigator].URLMap from:[self rateURL] toViewController:self selector:@selector(rateOffer)];
+        [[TTNavigator navigator].URLMap from:[self feedbackURL] toViewController:self selector:@selector(feedbackOffer)];
     }
     return self;
 }
 
 - (void)dealloc {
+    [[TTNavigator navigator].URLMap removeURL:[self rateURL]];
+    [[TTNavigator navigator].URLMap removeURL:[self feedbackURL]];
     TT_RELEASE_SAFELY(_offer);
     [super dealloc];
 }
@@ -44,8 +49,8 @@
         [sections addObject:@""];
         
         NSMutableArray* feedbacks = [[[NSMutableArray alloc] init] autorelease];
-        [feedbacks addObject:[TTTableTextItem itemWithText:@"Rate" URL:nil]];
-        [feedbacks addObject:[TTTableTextItem itemWithText:@"Feedback to merchant" URL:nil]];
+        [feedbacks addObject:[TTTableTextItem itemWithText:@"Rate" URL:[self rateURL]]];
+        [feedbacks addObject:[TTTableTextItem itemWithText:@"Feedback to merchant" URL:[self feedbackURL]]];
         [items addObject:feedbacks];
         [sections addObject:@""];
     }
@@ -55,7 +60,7 @@
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:callURL]]) {
         [contacts addObject:[TTTableTextItem itemWithText:@"Call" URL:callURL]];
     }
-    [contacts addObject:[TTTableTextItem itemWithText:@"Locate" URL:[NSString stringWithFormat:@"shoppley://map/%@/%@/%@", _offer.lat, _offer.lon, _offer.merchantName]]];
+    [contacts addObject:[TTTableTextItem itemWithText:@"Locate" URL:[NSString stringWithFormat:@"shoppley://map/%@/%@/%@", _offer.lat, _offer.lon, [_offer.merchantName stringByReplacingOccurrencesOfString:@" " withString:@"_"]]]];
     [items addObject:contacts];
     [sections addObject:@""];
     
@@ -78,6 +83,28 @@
     UIView* headerView = [[[OfferDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 50) offer:_offer] autorelease];
     self.tableView.tableHeaderView = headerView;
     [super viewWillAppear:animated];
+}
+
+- (NSString*)rateURL {
+    return [NSString stringWithFormat:@"shoppley://offer/%@/rate", _offer.offerId];
+}
+
+- (NSString*)feedbackURL {
+    return [NSString stringWithFormat:@"shoppley://offer/%@/feedback", _offer.offerId];
+}
+
+- (void)rateOffer {
+    TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/rate"] autorelease];
+    urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
+    urlAction.animated = YES;
+    [[TTNavigator navigator] openURLAction:urlAction];
+}
+
+- (void)feedbackOffer {
+    TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/feedback"] autorelease];
+    urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
+    urlAction.animated = YES;
+    [[TTNavigator navigator] openURLAction:urlAction];
 }
 
 @end

@@ -16,6 +16,8 @@
 		320CC833B8AF0ACFD35E6225 /* libThree20Style.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320CC833B8AF0ACFD35E6224 /* libThree20Style.a */; };
 		320D7DCCE32703ACAB9A45E5 /* libThree20.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320D7DCCE32703ACAB9A45E4 /* libThree20.a */; };
 		320F2C48872C2E2C4DF86205 /* libThree20UI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320F2C48872C2E2C4DF86204 /* libThree20UI.a */; };
+		D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */; };
+		D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99613AF0F710047F385 /* OfferRateViewController.m */; };
 		D5544A8913AE6106004CABBE /* SLMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5544A8813AE6105004CABBE /* SLMapViewController.m */; };
 		D5544A8B13AE6154004CABBE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5544A8A13AE6154004CABBE /* MapKit.framework */; };
 		D5544A8D13AE6ACE004CABBE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5544A8C13AE6ACE004CABBE /* CoreLocation.framework */; };
@@ -252,6 +254,10 @@
 		320CC833B8AF0ACFD35E6220 /* Three20Style.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20Style.xcodeproj; path = ../three20/src/Three20Style/Three20Style.xcodeproj; sourceTree = SOURCE_ROOT; };
 		320D7DCCE32703ACAB9A45E0 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = ../three20/src/Three20/Three20.xcodeproj; sourceTree = SOURCE_ROOT; };
 		320F2C48872C2E2C4DF86200 /* Three20UI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20UI.xcodeproj; path = ../three20/src/Three20UI/Three20UI.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D522C99213AEF6810047F385 /* OfferFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferFeedbackViewController.h; sourceTree = "<group>"; };
+		D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferFeedbackViewController.m; sourceTree = "<group>"; };
+		D522C99513AF0F710047F385 /* OfferRateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferRateViewController.h; sourceTree = "<group>"; };
+		D522C99613AF0F710047F385 /* OfferRateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferRateViewController.m; sourceTree = "<group>"; };
 		D5544A8713AE6105004CABBE /* SLMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLMapViewController.h; sourceTree = "<group>"; };
 		D5544A8813AE6105004CABBE /* SLMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLMapViewController.m; sourceTree = "<group>"; };
 		D5544A8A13AE6154004CABBE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -590,6 +596,10 @@
 				D5D11DB913A7153700F302D1 /* RedeemedOffersViewController.m */,
 				D5AECCDB13AD2403008B7D52 /* OfferDetailViewController.h */,
 				D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */,
+				D522C99513AF0F710047F385 /* OfferRateViewController.h */,
+				D522C99613AF0F710047F385 /* OfferRateViewController.m */,
+				D522C99213AEF6810047F385 /* OfferFeedbackViewController.h */,
+				D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */,
 			);
 			name = Offers;
 			sourceTree = "<group>";
@@ -898,6 +908,8 @@
 				D5D7822113ADABB100493478 /* SLStyleSheet.m in Sources */,
 				D577058F13ADC18500DBCD3A /* SettingsViewController.m in Sources */,
 				D5544A8913AE6106004CABBE /* SLMapViewController.m in Sources */,
+				D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */,
+				D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

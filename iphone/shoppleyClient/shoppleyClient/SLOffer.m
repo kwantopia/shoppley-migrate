@@ -10,13 +10,15 @@
 
 
 @implementation SLOffer
-@synthesize name, merchantName, description, code, img, phone, lat, lon;
+@synthesize offerId, name, merchantName, description, code, offerCodeId, img, phone, lat, lon;
 
 - (void)dealloc {
+    TT_RELEASE_SAFELY(offerId);
     TT_RELEASE_SAFELY(name);
     TT_RELEASE_SAFELY(merchantName);
     TT_RELEASE_SAFELY(description);
     TT_RELEASE_SAFELY(code);
+    TT_RELEASE_SAFELY(offerCodeId);
     TT_RELEASE_SAFELY(img);
     TT_RELEASE_SAFELY(phone);
     TT_RELEASE_SAFELY(lat);
@@ -25,10 +27,12 @@
 }
 
 - (void)populateFromDictionary:(NSDictionary*)data {
+    self.offerId = [data objectForKey:@"offer_id"];
     self.name = [data objectForKey:@"name"];
-    self.merchantName = @"Merchant";
+    self.merchantName = [data objectForKey:@"merchant_name"];
     self.description = [data objectForKey:@"description"];
     self.code = [data objectForKey:@"code"];
+    self.offerCodeId = [data objectForKey:@"offer_code_id"];
     self.img = [data objectForKey:@"img"];
     self.phone = [data objectForKey:@"phone"];
     self.lat = [data objectForKey:@"lat"];
@@ -40,10 +44,12 @@
 
 - (id)initWithCoder:(NSCoder*)decoder {
     if ((self = [self init])) {
+        self.offerId = [decoder decodeObjectForKey:@"offerId"];
         self.name = [decoder decodeObjectForKey:@"name"];
         self.merchantName = [decoder decodeObjectForKey:@"merchantName"];
         self.description = [decoder decodeObjectForKey:@"description"];
         self.code = [decoder decodeObjectForKey:@"code"];
+        self.offerCodeId = [decoder decodeObjectForKey:@"offerCodeId"];
         self.img = [decoder decodeObjectForKey:@"img"];
         self.phone = [decoder decodeObjectForKey:@"phone"];
         self.lat = [decoder decodeObjectForKey:@"lat"];
@@ -54,6 +60,9 @@
 }
 
 - (void)encodeWithCoder:(NSCoder*)encoder {
+    if (self.offerId) {
+        [encoder encodeObject:self.offerId forKey:@"offerId"];
+    }
     if (self.name) {
         [encoder encodeObject:self.name forKey:@"name"];
     }
@@ -65,6 +74,9 @@
     }
     if (self.code) {
         [encoder encodeObject:self.code forKey:@"code"];
+    }
+    if (self.offerCodeId) {
+        [encoder encodeObject:self.offerCodeId forKey:@"offerCodeId"];
     }
     if (self.img) {
         [encoder encodeObject:self.img forKey:@"img"];

@@ -56,6 +56,8 @@
 - (void)clean;
 - (void)updateLocation;
 
+- (BOOL)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint;
+
 #pragma mark -
 #pragma mark User
 - (BOOL)authenticateEmail:(NSString*)email password:(NSString*)password;
@@ -67,4 +69,11 @@
 // Return nil, if the data is not downloaded. Caller should try again later.
 - (NSArray*)obtainCurrentOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
 - (NSArray*)obtainRedeemedOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
+
+#pragma mark -
+#pragma mark Offer
+
+- (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId;
+- (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId;
+    
 @end

@@ -12,8 +12,8 @@
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
-static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
-//static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
+//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
 #pragma mark SLDataDownloader
@@ -150,6 +150,28 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     [_locationManager startUpdatingLocation];
 }
 
+- (BOOL)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint {
+    TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:endpoint] delegate:self];
+    request.response = [[[TTURLJSONResponse alloc] init] autorelease];
+    [request.parameters setDictionary:parameters];
+    request.httpMethod = @"POST";
+    request.cachePolicy = TTURLRequestCachePolicyNone;
+    [request sendSynchronously];
+    
+    TTURLJSONResponse* jsonResponse = request.response;
+    
+    if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* response = jsonResponse.rootObject;
+        if ([[response valueForKey:@"result"] intValue]== 1) {
+            return YES;            
+        }
+        _errorString = [response valueForKey:@"result_msg"];
+        return NO;
+    }
+    _errorString = @"Connection Error. Please try again later.";
+    return NO;
+}
+
 #pragma mark -
 #pragma mark User
 - (BOOL)authenticateEmail:(NSString*)email password:(NSString*)password {
@@ -234,6 +256,22 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     }
 }
 
+#pragma mark -
+#pragma mark Offer
+
+- (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:feedback forKey:@"feedback"];
+    [parameters setValue:offerCodeId forKey:@"offer_code_id"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/feedback/"];
+}
+
+- (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:rate forKey:@"rating"];
+    [parameters setValue:offerCodeId forKey:@"offer_code_id"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/rate/"];
+}
 
 #pragma mark -
 #pragma mark CLLocationManagerDelegate

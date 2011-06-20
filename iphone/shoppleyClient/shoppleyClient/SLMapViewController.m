@@ -60,11 +60,11 @@ static CLLocationDegrees kLongitudeDelta = 0.02;
 
 - (id)initWithLatitude:(NSString*)latitude longitude:(NSString*)longitude title:(NSString*)title subtitle:(NSString*)subtitle {
     if ((self = [self init])) {
-        self.title = title;
+        self.title = [title stringByReplacingOccurrencesOfString:@"_" withString:@" "];
         
         _latitude = [latitude doubleValue];
         _longitude = [longitude doubleValue];
-        _mTitle = [title retain];
+        _mTitle = [self.title retain];
         _mSubtitle = [subtitle retain];
     }
     return self;
@@ -103,7 +103,7 @@ static CLLocationDegrees kLongitudeDelta = 0.02;
 }
 
 - (void)openInMaps {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?q=%.4f,%.4f+(%@)", _latitude, _longitude, _mTitle]]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?q=%.4f,%.4f+(%@)", _latitude, _longitude, [_mTitle stringByReplacingOccurrencesOfString:@" " withString:@"+"]]]];
 }
 
 @end
