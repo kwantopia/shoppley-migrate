@@ -328,3 +328,4 @@ except ImportError:
 
 DEFAULT_OFFER_IMG_URL = STATIC_URL+"images/offers/offer-default.jpg"
 DEFAULT_MERCHANT_BANNER_URL = STATIC_URL+"images/merchant/restaurant_banner.png"
+CONTACT_EMAIL = "support@shoppley.com"
