@@ -20,8 +20,7 @@
 
     <!--link rel="stylesheet" href="{{ STATIC_URL }}css/boram/print.css" type="text/css" media="print" /-->
 	<!--[if IE]><link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]--> 
-  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/redmond/jquery-ui.css" type="text/css"/>
-  <!-- using google cdn above <link rel="stylesheet" href="{{ STATIC_URL }}css/redmond/jquery-ui-1.8.11.custom.css" type="text/css"/> -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/redmond/jquery-ui.css" type="text/css"/>
 	<!-- [template css] end -->
     <!--link rel="stylesheet" href="{{ STATIC_URL }}css/boram/shoppley.css" /-->
 
@@ -91,9 +90,17 @@
 
 {% block extra_scripts_base %}
 	<script type="text/javascript" src="https://www.google.com/jsapi?key={{GOOGLE_API_KEY}}"></script>
+	<!-- IE gives error that jQuery is not loaded if we use google.load
+		One way to mitigate is by loading from server
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+	-->
 	<script type="text/javascript">
-		google.load("jquery", "1.5.1");
-		google.load("jqueryui", "1.8.11");
+		google.load("jquery", "1.6.1");
+		google.load("jqueryui", "1.8.13");
+		google.setOnLoadCallback(function() {
+			// Place init code here instead of $(document).ready()
+		});
 	</script>
 	<script src="{{ STATIC_URL }}pinax/js/base.js" type="text/javascript"></script>
 	<script src="{{ STATIC_URL }}uni_form/uni-form.jquery.js" type="text/javascript"></script>
