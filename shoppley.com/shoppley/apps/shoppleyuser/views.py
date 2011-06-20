@@ -251,3 +251,4 @@ def customer_beta_subscribe(request, form_class=CustomerBetaSubscribeForm,
 		"categories": all_categories,
 	}, context_instance=RequestContext(request))
 
+

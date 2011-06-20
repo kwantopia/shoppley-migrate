@@ -1,0 +1,21 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Initial Market Survey" %}{% endblock %}
+
+{% block body %}
+
+<hr class="space">
+
+<div class="span-24 last">
+
+<h2>{% trans "Help us understand your needs" %}</h2>
+    
+<iframe src="https://spreadsheets.google.com/spreadsheet/embeddedform?formkey=dENzYUdMSWEwMnVrdmJuRlloZDZfcGc6MA" width="760" height="1305" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+
+</div>
+
+
+{% endblock %}
