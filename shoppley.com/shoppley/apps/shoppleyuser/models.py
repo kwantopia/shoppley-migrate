@@ -149,6 +149,14 @@ class Customer(ShoppleyUser):
         	super(Customer, self).save(*args, **kwargs)
 		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
+class IWantRequest(models.Model):
+	customer		= models.ForeignKey(Customer)
+	time_stamp 		= models.DateTimeField()
+	request			= models.TextField()
+
+	def __unicode__(self):
+		return "%s, customer %s wants: %s" % (self.time_stamp, self.customer, self.request)
+
 class MerchantOfTheDay(models.Model):
 	merchant		= models.ForeignKey(Merchant)
 	date			= models.DateField()
