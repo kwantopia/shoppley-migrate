@@ -34,8 +34,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[SLDataController sharedInstance] updateLocation];
+    
+    // Style Sheet
     [TTStyleSheet setGlobalStyleSheet:[[[SLStyleSheet alloc] init] autorelease]];
     
+    // Navigator
     TTNavigator *navigator = [TTNavigator navigator];
     [navigator setPersistenceMode:TTNavigatorPersistenceModeAll];
     [navigator setOpensExternalURLs:YES];

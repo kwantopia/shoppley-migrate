@@ -54,8 +54,8 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     //[request.parameters setValue:appDelegate.longitude forKey:@"lon"];
     
     if ([_dataType isEqualToString:@"current_offers"]) {
-        [request.parameters setValue:[NSNumber numberWithFloat:47.78799] forKey:@"lat"];
-        [request.parameters setValue:[NSNumber numberWithFloat:98.9989] forKey:@"lon"];
+        [request.parameters setValue:[[SLDataController sharedInstance] latitude] forKey:@"lat"];
+        [request.parameters setValue:[[SLDataController sharedInstance] longitude] forKey:@"lon"];
         request.httpMethod = @"POST";
     } else if ([_dataType isEqualToString:@"redeemed_offers"]) {
         request.httpMethod = @"GET";
@@ -87,13 +87,17 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
         [[SLDataController sharedInstance] setRedeemedOffers:[SLRedeemedOffer offersArrayfromDictionary:response]];
     }
     
-    [_delegate didFinishDownload];
+    if (_delegate) {
+        [_delegate didFinishDownload];
+    }
     _isDownloading = NO;
 }
 
 - (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
     TTDPRINT(@"DataDownloader Error: %@ - %@", error.localizedDescription, error.localizedFailureReason);
-    [_delegate didFailDownload];
+    if (_delegate) {
+        [_delegate didFailDownload];
+    }
     _isDownloading = NO;
 }
 
@@ -103,17 +107,21 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 #pragma mark SLDataController
 
 @implementation SLDataController
-@synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers;
+@synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers, latitude = _latitude, longitude = _longitude;
 
 - (id)init {
 	if ((self = [super init])) {
-    
+        _latitude = @"";
+        _longitude = @"";
     }
 	return self;
 }
 
 - (void)dealloc {
     [self clean];
+    TT_RELEASE_SAFELY(_latitude);
+    TT_RELEASE_SAFELY(_longitude);
+    TT_RELEASE_SAFELY(_locationManager);
 	[super dealloc];
 }
 
@@ -131,6 +139,15 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
         instance = [[SLDataController alloc] init];
     }
 	return instance;
+}
+
+- (void)updateLocation {
+    _isLocationReady = NO;
+    
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [_locationManager startUpdatingLocation];
 }
 
 #pragma mark -
@@ -216,5 +233,27 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
         return _redeemedOffers;
     }
 }
+
+
+#pragma mark -
+#pragma mark CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    [_locationManager stopUpdatingLocation];
+    
+	_latitude = [[NSString stringWithFormat:@"%f", [newLocation coordinate].latitude] retain];
+    _longitude = [[NSString stringWithFormat:@"%f", [newLocation coordinate].longitude] retain];
+    
+    TTDPRINT(@"Location %@ %@", _latitude, _longitude);
+    _isLocationReady = YES;
+    
+    [_currentOffersDownloader download];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+	TTDPRINT(@"Update location failed");
+    _isLocationReady = YES;
+}
+
 
 @end

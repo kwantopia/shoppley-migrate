@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 #pragma mark -
 #pragma mark SLDataDownloader
@@ -29,21 +30,31 @@
 
 #pragma mark -
 #pragma mark SLDataController
-@interface SLDataController : NSObject {
+@interface SLDataController : NSObject <CLLocationManagerDelegate> {
     NSString* _errorString;
     NSArray* _currentOffers;
     NSArray* _redeemedOffers;
     SLDataDownloader* _currentOffersDownloader;
     SLDataDownloader* _redeemedOffersDownloader;
+    
+    // Location
+    BOOL _isLocationReady;
+    NSString* _latitude;
+    NSString* _longitude;
+    CLLocationManager* _locationManager;
 }
 
 @property (nonatomic, retain) NSString* errorString;
 @property (nonatomic, retain) NSArray* currentOffers;
 @property (nonatomic, retain) NSArray* redeemedOffers;
+@property (nonatomic, retain) NSString* latitude;
+@property (nonatomic, retain) NSString* longitude;
+
 
 + (SLDataController*)sharedInstance;
 
 - (void)clean;
+- (void)updateLocation;
 
 #pragma mark -
 #pragma mark User
