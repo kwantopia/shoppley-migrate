@@ -140,6 +140,7 @@ a:hover {
 
 .signup-form.customer, .signup-form.merchant {
 	padding: 15px 50px;
+	min-height: 350px;
 }
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
@@ -221,16 +222,20 @@ div.login div#div_id_username.ctrHolder, div.login div#div_id_password.ctrHolder
 p#hint_id_remember {
 	display: none;
 }
-div.login fieldset.inlineLabels {
+div.login form.login-header-form fieldset.inlineLabels {
 	width: 500px;
 }
+div.login form.login-header-form input#id_username, div.login form.login-header-form input#id_password {
+	width: 119px;
+}
+
 div.login div#div_id_username, div.login div#div_id_password {
 	float: left;
 }
 div#div_id_username label, div#div_id_password label {
 	padding-right: 7px;
 }
-div#div_id_password label {
+form.login-header-form div#div_id_password label {
 	padding-left: 15px;
 }
 div#div_id_remember.checkbox {
@@ -243,12 +248,12 @@ div.login .form_block {
 /* for About Us page */
 .about-header {
   margin-top: 10px;
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: bold;
 }
 
 .about-person-box { 
-	color: #666666;
+	color: #000000;
 	padding: 10px;
 }
 
@@ -257,6 +262,7 @@ div.login .form_block {
   font-size: 1.2em;
 	color: #333333;
 	margin-top: 10px;
+	font-weight: bold;
 }
 
 .about-person-body {
