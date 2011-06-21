@@ -17,6 +17,7 @@
 
 - (NSString*)rateURL;
 - (NSString*)feedbackURL;
+- (NSString*)forwardURL;
 
 @end
 

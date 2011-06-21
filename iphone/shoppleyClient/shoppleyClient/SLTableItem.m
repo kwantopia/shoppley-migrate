@@ -12,10 +12,41 @@
 @implementation SLRightValueTableItem
 
 + (id)itemWithText:(NSString*)text value:(NSString*)value {
-    TTTableCaptionItem* item = [[[self alloc] init] autorelease];
+    SLRightValueTableItem* item = [[[self alloc] init] autorelease];
     item.text = text;
     item.caption = value;
     return item;
+}
+
+@end
+
+@implementation SLStarsTableItem
+
+@synthesize numberOfStars = _numberOfStars;
+
++ (id)itemWithNumberofStars:(NSNumber*)numberOfStars {
+    SLStarsTableItem* item = [[[self alloc] init] autorelease];
+    item.numberOfStars = numberOfStars;
+    return item;
+}
+
+- (void)dealloc {
+    TT_RELEASE_SAFELY(_numberOfStars);
+    [super dealloc];
+}
+
+- (id)initWithCoder:(NSCoder*)decoder {
+    if ((self = [super initWithCoder:decoder])) {
+        self.numberOfStars = [decoder decodeObjectForKey:@"numberOfStars"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    [super encodeWithCoder:encoder];
+    if (self.numberOfStars) {
+        [encoder encodeObject:self.numberOfStars forKey:@"numberOfStars"];
+    }
 }
 
 @end

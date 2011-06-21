@@ -16,3 +16,13 @@
 + (id)itemWithText:(NSString *)text value:(NSString *)value;
 
 @end
+
+@interface SLStarsTableItem : TTTableItem {
+    NSNumber* _numberOfStars;
+}
+
+@property (nonatomic, copy) NSNumber* numberOfStars;
+
++ (id)itemWithNumberofStars:(NSNumber*)numberOfStars;
+
+@end

@@ -14,6 +14,10 @@
     SLRedeemedOffer* _offer;
     UIBarButtonItem* _doneButton;
     UIBarButtonItem* _cancelButton;
+    
+    NSNumber* _new_value;
 }
+
+@property (nonatomic, retain) NSNumber* new_value;
 
 @end

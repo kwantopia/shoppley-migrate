@@ -27,6 +27,7 @@
         
         [[TTNavigator navigator].URLMap from:[self rateURL] toViewController:self selector:@selector(rateOffer)];
         [[TTNavigator navigator].URLMap from:[self feedbackURL] toViewController:self selector:@selector(feedbackOffer)];
+        [[TTNavigator navigator].URLMap from:[self forwardURL] toViewController:self selector:@selector(forwardOffer)];
     }
     return self;
 }
@@ -34,6 +35,7 @@
 - (void)dealloc {
     [[TTNavigator navigator].URLMap removeURL:[self rateURL]];
     [[TTNavigator navigator].URLMap removeURL:[self feedbackURL]];
+    [[TTNavigator navigator].URLMap removeURL:[self forwardURL]];
     TT_RELEASE_SAFELY(_offer);
     [super dealloc];
 }
@@ -71,7 +73,7 @@
         [sections addObject:@""];
         
         NSMutableArray* forward = [[[NSMutableArray alloc] init] autorelease];
-        [forward addObject:[TTTableTextItem itemWithText:@"Forward to Friends (10 points)" URL:nil]];
+        [forward addObject:[TTTableTextItem itemWithText:@"Forward to Friends (10 points)" URL:[self forwardURL]]];
         [items addObject:forward];
         [sections addObject:@""];
     }
@@ -93,6 +95,10 @@
     return [NSString stringWithFormat:@"shoppley://offer/%@/feedback", _offer.offerId];
 }
 
+- (NSString*)forwardURL {
+    return [NSString stringWithFormat:@"shoppley://offer/%@/forward", _offer.offerId];
+}
+
 - (void)rateOffer {
     TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/rate"] autorelease];
     urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
@@ -102,6 +108,13 @@
 
 - (void)feedbackOffer {
     TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/feedback"] autorelease];
+    urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
+    urlAction.animated = YES;
+    [[TTNavigator navigator] openURLAction:urlAction];
+}
+
+- (void)forwardOffer {
+    TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/forward"] autorelease];
     urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
     urlAction.animated = YES;
     [[TTNavigator navigator] openURLAction:urlAction];

@@ -13,6 +13,7 @@
     
 }
 
+@property (nonatomic, retain) NSNumber* rating;
 @property (nonatomic, retain) NSString* redeemedOn;
 @property (nonatomic, retain) NSNumber* txnAmount;
 

@@ -12,6 +12,7 @@
 #import "LoginViewController.h"
 #import "OfferDetailViewController.h"
 #import "OfferFeedbackViewController.h"
+#import "OfferForwardViewController.h"
 #import "OfferRateViewController.h"
 #import "RedeemedOffersViewController.h"
 #import "SettingsViewController.h"
@@ -49,7 +50,7 @@
     TTURLMap *map = navigator.URLMap;
     
     // A navigator will default to TTWebController class when no URL match will be met
-    [map from:@"http*" toViewController:[TTWebController class]];
+    //[map from:@"http*" toViewController:[TTWebController class]];
     
     [map from:@"shoppley://login" toViewController:[LoginViewController class]];
     
@@ -62,6 +63,7 @@
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
     [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];
     [map from:@"shoppley://offer/rate" toViewController:[OfferRateViewController class]];
+    [map from:@"shoppley://offer/forward" toViewController:[OfferForwardViewController class]];
     
     [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)" toViewController:[SLMapViewController class]];
     [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)/(subtitle:)" toViewController:[SLMapViewController class]];
@@ -99,6 +101,8 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [[SLDataController sharedInstance] reloadData];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -42,6 +42,11 @@
 		D579366C13A6E2730047B69F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D579366A13A6E2730047B69F /* InfoPlist.strings */; };
 		D579366F13A6E2730047B69F /* shoppleyClientTests.h in Resources */ = {isa = PBXBuildFile; fileRef = D579366E13A6E2730047B69F /* shoppleyClientTests.h */; };
 		D579367113A6E2730047B69F /* shoppleyClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D579367013A6E2730047B69F /* shoppleyClientTests.m */; };
+		D59431F513B020970010EC23 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = D59431F413B020970010EC23 /* star.png */; };
+		D59431F813B031ED0010EC23 /* OfferForwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D59431F713B031ED0010EC23 /* OfferForwardViewController.m */; };
+		D59431FA13B038AB0010EC23 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431F913B038AB0010EC23 /* AddressBook.framework */; };
+		D59431FC13B050D10010EC23 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431FB13B050D10010EC23 /* AddressBookUI.framework */; };
+		D59F97C913B06BFA002EDB54 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D59F97C813B06BFA002EDB54 /* logo.png */; };
 		D5AECCDD13AD2403008B7D52 /* OfferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */; };
 		D5AECD1E13AD9862008B7D52 /* SLTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECD1D13AD9862008B7D52 /* SLTableItem.m */; };
 		D5AECD2D13AD9F8A008B7D52 /* SLRedeemedOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AECD2C13AD9F8A008B7D52 /* SLRedeemedOffer.m */; };
@@ -291,6 +296,12 @@
 		D579366D13A6E2730047B69F /* shoppleyClientTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shoppleyClientTests-Prefix.pch"; sourceTree = "<group>"; };
 		D579366E13A6E2730047B69F /* shoppleyClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shoppleyClientTests.h; sourceTree = "<group>"; };
 		D579367013A6E2730047B69F /* shoppleyClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = shoppleyClientTests.m; sourceTree = "<group>"; };
+		D59431F413B020970010EC23 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star.png; path = images/star.png; sourceTree = "<group>"; };
+		D59431F613B031EC0010EC23 /* OfferForwardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferForwardViewController.h; sourceTree = "<group>"; };
+		D59431F713B031ED0010EC23 /* OfferForwardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferForwardViewController.m; sourceTree = "<group>"; };
+		D59431F913B038AB0010EC23 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		D59431FB13B050D10010EC23 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		D59F97C813B06BFA002EDB54 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = images/logo.png; sourceTree = "<group>"; };
 		D5AECCDB13AD2403008B7D52 /* OfferDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferDetailViewController.h; sourceTree = "<group>"; };
 		D5AECCDC13AD2403008B7D52 /* OfferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferDetailViewController.m; sourceTree = "<group>"; };
 		D5AECD1C13AD9862008B7D52 /* SLTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableItem.h; sourceTree = "<group>"; };
@@ -325,6 +336,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D59431FA13B038AB0010EC23 /* AddressBook.framework in Frameworks */,
+				D59431FC13B050D10010EC23 /* AddressBookUI.framework in Frameworks */,
 				D5544A8D13AE6ACE004CABBE /* CoreLocation.framework in Frameworks */,
 				3201088596B4756681693705 /* libThree20UICommon.a in Frameworks */,
 				320D7DCCE32703ACAB9A45E5 /* libThree20.a in Frameworks */,
@@ -489,6 +502,8 @@
 		D579364013A6E2720047B69F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D59431FB13B050D10010EC23 /* AddressBookUI.framework */,
+				D59431F913B038AB0010EC23 /* AddressBook.framework */,
 				D5544A8C13AE6ACE004CABBE /* CoreLocation.framework */,
 				D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */,
 				D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */,
@@ -577,6 +592,8 @@
 		D5FFF54D13A733010059702E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D59F97C813B06BFA002EDB54 /* logo.png */,
+				D59431F413B020970010EC23 /* star.png */,
 				D5FFF54E13A7331F0059702E /* tab_current_offers.png */,
 				D5FFF54F13A7331F0059702E /* tab_redeemed_offers.png */,
 				D5FFF55013A7331F0059702E /* tab_summary.png */,
@@ -600,6 +617,8 @@
 				D522C99613AF0F710047F385 /* OfferRateViewController.m */,
 				D522C99213AEF6810047F385 /* OfferFeedbackViewController.h */,
 				D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */,
+				D59431F613B031EC0010EC23 /* OfferForwardViewController.h */,
+				D59431F713B031ED0010EC23 /* OfferForwardViewController.m */,
 			);
 			name = Offers;
 			sourceTree = "<group>";
@@ -853,6 +872,8 @@
 				D5FFF55213A7331F0059702E /* tab_redeemed_offers.png in Resources */,
 				D5FFF55313A7331F0059702E /* tab_summary.png in Resources */,
 				D577058B13ADBFF400DBCD3A /* tab_settings.png in Resources */,
+				D59431F513B020970010EC23 /* star.png in Resources */,
+				D59F97C913B06BFA002EDB54 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -910,6 +931,7 @@
 				D5544A8913AE6106004CABBE /* SLMapViewController.m in Sources */,
 				D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */,
 				D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */,
+				D59431F813B031ED0010EC23 /* OfferForwardViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

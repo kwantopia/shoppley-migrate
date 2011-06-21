@@ -10,7 +10,7 @@
 
 
 @implementation SLRedeemedOffer
-@synthesize redeemedOn, txnAmount;
+@synthesize rating, redeemedOn, txnAmount;
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(redeemedOn);
@@ -33,6 +33,7 @@
 
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
+    self.rating = [data objectForKey:@"rating"];
     self.redeemedOn = [data objectForKey:@"redeemed"];
     self.txnAmount = [data objectForKey:@"txn_amount"];
 }
@@ -42,6 +43,7 @@
 
 - (id)initWithCoder:(NSCoder*)decoder {
     if ((self = [super initWithCoder:decoder])) {
+        self.rating = [decoder decodeObjectForKey:@"rating"];
         self.redeemedOn = [decoder decodeObjectForKey:@"redeemed"];
         self.txnAmount = [decoder decodeObjectForKey:@"txn_amount"];
     }
@@ -50,8 +52,13 @@
 
 - (void)encodeWithCoder:(NSCoder*)encoder {
     [super encodeWithCoder:encoder];
+    if (self.rating) {
+        [encoder encodeObject:self.rating forKey:@"rating"];
+    }
     if (self.redeemedOn) {
         [encoder encodeObject:self.redeemedOn forKey:@"redeemed"];
+    }
+    if (self.txnAmount) {
         [encoder encodeObject:self.txnAmount forKey:@"txn_amount"];
     }
 }

@@ -150,3 +150,50 @@
 }
 
 @end
+
+@implementation SLStarsTableItemCell
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
+    if ((self = [super initWithStyle:style reuseIdentifier:identifier])) {
+        self.accessoryType = UITableViewCellAccessoryNone;
+        self.selectionStyle = TTSTYLEVAR(tableSelectionStyle);
+    }
+    return self;
+}
+
+- (void)dealloc {
+    TT_RELEASE_SAFELY(_item);
+    [super dealloc];
+}
+
+- (id)object {
+    return _item;
+}
+
++ (CGFloat)tableView:(UITableView*)tableView rowHeightForObject:(id)object {
+    return 100;
+}
+
+- (void)setObject:(id)object {
+    if (_item != object) {
+        [_item release];
+        _item = [object retain];
+        
+        [self.contentView removeAllSubviews];
+        
+        CGFloat left = 10;
+        for (int i = 0; i < [_item.numberOfStars intValue]; i++) {
+            UIImageView* t = [[[UIImageView alloc] initWithFrame:CGRectMake(left, 5, 30, 30)] autorelease];
+            t.image = [UIImage imageNamed:@"star.png"];
+            [self.contentView addSubview:t];
+            
+            left += 40;
+        }
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+}
+
+@end

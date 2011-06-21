@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "SLTableItem.h"
 
 @interface SLCurrentOfferTableItemCell : TTTableMessageItemCell {
     
@@ -23,6 +24,13 @@
 
 @interface SLRightValueTableItemCell : TTTableCaptionItemCell {
     
+}
+
+@end
+
+@interface SLStarsTableItemCell : TTTableViewCell {
+    SLStarsTableItem* _item;
+    UIView* _itemView;
 }
 
 @end

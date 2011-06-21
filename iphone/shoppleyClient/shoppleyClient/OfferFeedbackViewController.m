@@ -58,7 +58,7 @@
 
 - (void)dismiss {
     if (_commentTextView.text.length > 0) {
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Cancel" message:@"Do you want to discard your change?" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil] autorelease];
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to discard your change?" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil] autorelease];
         [alert show];
     } else {
         [self.navigationController popViewControllerAnimated:YES];

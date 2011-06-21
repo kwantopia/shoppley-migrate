@@ -55,6 +55,7 @@
 
 - (void)clean;
 - (void)updateLocation;
+- (void)reloadData;
 
 - (BOOL)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint;
 
@@ -75,5 +76,6 @@
 
 - (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId;
 - (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId;
+- (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode;
     
 @end

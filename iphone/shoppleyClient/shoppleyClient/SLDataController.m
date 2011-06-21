@@ -9,6 +9,7 @@
 #import "SLDataController.h"
 
 #import "extThree20JSON/extThree20JSON.h"
+#import "extThree20JSON/JSON.h"
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
@@ -109,6 +110,14 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 @implementation SLDataController
 @synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers, latitude = _latitude, longitude = _longitude;
 
++ (SLDataController*)sharedInstance {
+	static SLDataController *instance = nil;
+	if (instance == nil) {
+        instance = [[SLDataController alloc] init];
+    }
+	return instance;
+}
+
 - (id)init {
 	if ((self = [super init])) {
         _latitude = @"";
@@ -133,12 +142,13 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
     TT_RELEASE_SAFELY(_redeemedOffersDownloader);
 }
 
-+ (SLDataController*)sharedInstance {
-	static SLDataController *instance = nil;
-	if (instance == nil) {
-        instance = [[SLDataController alloc] init];
-    }
-	return instance;
+- (void)reloadData {
+    [self updateLocation];
+    TT_RELEASE_SAFELY(_errorString);
+    TT_RELEASE_SAFELY(_currentOffers);
+    TT_RELEASE_SAFELY(_redeemedOffers);
+    [_currentOffersDownloader download];
+    [_redeemedOffersDownloader download];
 }
 
 - (void)updateLocation {
@@ -156,6 +166,8 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
     [request.parameters setDictionary:parameters];
     request.httpMethod = @"POST";
     request.cachePolicy = TTURLRequestCachePolicyNone;
+    
+    TTDPRINT(@"%@", request.parameters);
     [request sendSynchronously];
     
     TTURLJSONResponse* jsonResponse = request.response;
@@ -271,6 +283,15 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
     [parameters setValue:rate forKey:@"rating"];
     [parameters setValue:offerCodeId forKey:@"offer_code_id"];
     return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/rate/"];
+}
+
+- (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:note forKey:@"note"];
+    [parameters setValue:offerCode forKey:@"offer_code"];
+    [parameters setValue:[phones JSONRepresentation] forKey:@"phones"];
+    [parameters setValue:[emails JSONRepresentation] forKey:@"emails"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/forward/"];
 }
 
 #pragma mark -
