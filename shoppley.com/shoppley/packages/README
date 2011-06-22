@@ -1,0 +1,5 @@
+django-mailer is needed because what gets installed using pip does not have mailer.backends
+
+pygooglevoice is being downloaded just for reference
+
+django-uni-form was downloaded to get the javascript files and css

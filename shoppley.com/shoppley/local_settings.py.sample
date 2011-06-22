@@ -53,3 +53,20 @@ DEFAULT_FROM_EMAIL = "support@shoppley.com"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_SUBJECT_PREFIX = "[ Shoppley ] "
 EMAIL_BACKEND = "mailer.backend.DbBackend"
+
+MIDDLEWARE_CLASSES = [
+	"django.middleware.cache.UpdateCacheMiddleware",
+	"django.middleware.common.CommonMiddleware",
+	"django.contrib.sessions.middleware.SessionMiddleware",
+	"django.middleware.csrf.CsrfViewMiddleware",
+	"django.contrib.auth.middleware.AuthenticationMiddleware",
+	#"django_openid.consumer.SessionConsumer",
+	"django.contrib.messages.middleware.MessageMiddleware",
+	"groups.middleware.GroupAwareMiddleware",
+	"pinax.apps.account.middleware.LocaleMiddleware",
+	"django.middleware.doc.XViewMiddleware",
+	"django.middleware.cache.FetchFromCacheMiddleware",
+	"pagination.middleware.PaginationMiddleware",
+	"django_sorting.middleware.SortingMiddleware",
+]
+

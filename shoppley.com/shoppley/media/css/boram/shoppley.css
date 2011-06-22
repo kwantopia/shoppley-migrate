@@ -140,7 +140,12 @@ a:hover {
 
 .signup-form.customer, .signup-form.merchant {
 	padding: 15px 50px;
-	min-height: 350px;
+	min-height: 360px;
+  height: auto;
+}
+
+* html .signup-form.customer, .signup-form.merchant {
+	height: 360px;
 }
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {

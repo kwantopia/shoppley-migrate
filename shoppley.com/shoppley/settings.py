@@ -119,7 +119,6 @@ TEMPLATE_LOADERS = [
 ]
 
 MIDDLEWARE_CLASSES = [
-	"django.middleware.cache.UpdateCacheMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
@@ -129,7 +128,6 @@ MIDDLEWARE_CLASSES = [
 	"groups.middleware.GroupAwareMiddleware",
 	"pinax.apps.account.middleware.LocaleMiddleware",
 	"django.middleware.doc.XViewMiddleware",
-	"django.middleware.cache.FetchFromCacheMiddleware",
 	"pagination.middleware.PaginationMiddleware",
 	"django_sorting.middleware.SortingMiddleware",
 	#"pinax.middleware.security.HideSensistiveFieldsMiddleware",
@@ -227,6 +225,7 @@ INSTALLED_APPS = [
 	'mobile',
 	'worldbank',
 	'premium',
+  'common',
 ]
 
 FIXTURE_DIRS = [
