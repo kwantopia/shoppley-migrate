@@ -22,7 +22,7 @@
 - (id)init {
     if ((self = [super init])) {
         self.tableViewStyle = UITableViewStyleGrouped;
-        self.autoresizesForKeyboard = YES;
+        self.autoresizesForKeyboard = NO;
         self.variableHeightRows = YES;
         
         self.title = @"Feedback";
