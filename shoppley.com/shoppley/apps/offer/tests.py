@@ -171,7 +171,10 @@ class SimpleTest(TestCase):
 
 		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
 		print "site created",Site.objects.count()
+
 		print Site.objects.all()
+
+	
 	def test_redistribute(self):
 		cmd = Command()
 		cmd.DEBUG = True

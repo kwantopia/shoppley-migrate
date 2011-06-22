@@ -138,6 +138,7 @@ class Offer(models.Model):
 				count = count +1
 				print count, customer
 				customer.update_offer_count()
+		print "reached " , count
 		return count
 
 
@@ -318,11 +319,12 @@ class Offer(models.Model):
 		fan_target = set(list(fans))
 		nonfan_target = set(list(nonfans))	
 		target = fan_target | nonfan_target
+		print "target: ", target
 		if len(target) > max_resent:
 			target_list = random.sample(target, max_resent)
 		else:
 			target_list = list(target)
-
+		print "target_list: ", target_list
 		from worldbank.models import Transaction
 
 		allowed_number =int( self.merchant.balance/abs(Transaction.points_table["MOD"]))
@@ -335,7 +337,7 @@ class Offer(models.Model):
 		if len(target_list) > allowed_number:
 			target_list = random.sample(target_list, allowed_number)
 		resentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
-		
+		print "final target_list: ", target_list
 		for oc in self.offercode_set.filter(customer__pk__in=target_list):
 			oc.expiration_time = datetime.now() + timedelta(minutes=self.duration)
 			oc.save()
@@ -349,12 +351,14 @@ class Offer(models.Model):
 							ttype = "MOD")
 			transaction.execute()
 		
-		self.num_resent_to =resentto
+		self.num_resent_to = resentto
 		self.save()
 		#print "balance after redist=", self.merchant.balance
 		if enough_points: 
 			# number of people sent to, it can be 0 
-			return resentto
+
+			return self.num_resent_to
+
 		else:
 			# not enough points to send to
 			return -2

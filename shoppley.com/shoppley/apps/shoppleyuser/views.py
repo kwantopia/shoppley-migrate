@@ -65,6 +65,10 @@ def account_info(request, template_name="shoppleyuser/account_info.html"):
 		pass
 		
 
+def account_set_offer_limit(request, template_name="shoppleyuser/account_set_offer_limit.html"):
+	if request.method== "POST":
+		pass
+
 def offer_frequency_set(request, template_name="shoppleyuser/offer_frequency_set.html"):
 	try:
 		customer = Customer.objects.get(user__id = request.user.id)

@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 from emailconfirmation.models import EmailAddress
-
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user
 from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
@@ -302,9 +301,12 @@ class Command(NoArgsCommand):
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NO_CUSTOMER"], {"code":offer.gen_tracking_code()})
  
 						elif num_reached == -2:
+
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NOTENOUGH_BALANCE"], {"points":su.balance})
+
 							offer.delete()
 						else:
+
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_SUCCESS"], {
 								"time": pretty_datetime(offer.time_stamp),
 								"offer": offer,
@@ -320,7 +322,15 @@ class Command(NoArgsCommand):
 							if offers:
 								offer = offers.order_by("-time_stamp")[0]
 								resentto = offer.redistribute()
-								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
+
+								print "redistributed -- DONE", resentto
+								if resentto == 0:
+									merchant_msg = _("There were no new customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.trackingcode.code
+								elif resentto==-2:
+									merchant_msg = _("Your balance is %d. You do not have enough to reach new customers. Please try again when you have enough balance.") % su.balance
+								else:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
+
 										"title" : offer.title,
 										"resentto": resentto,
 										})
@@ -345,7 +355,13 @@ class Command(NoArgsCommand):
 							else:
 								
 								resentto = offer.redistribute()
-								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
+
+								if resentto == 0:
+									merchant_msg = _("There were no new customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.trackingcode.code
+								if resentto == -2:
+									merchant_msg = _("Your balance is %d. You do not have enough to reach new customers. Please try again when you have enough balance.") % su.balance
+								else:			
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 											"title" : offer.title,
 											"resentto": resentto,
 											})
@@ -361,12 +377,14 @@ class Command(NoArgsCommand):
 								trackingcode =offer.trackingcode
 								sentto  = offer.num_init_sentto + offer.num_resent_to
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
+
 								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
 								"code":trackingcode.code,
 								"sentto":sentto,
 		                                        	"forwarded":forwarded,
 								"offer": offer,
 								"redeemer": offer.redeemers().count()
+
 		                                        	})
 							
 								self.notify(su.phone,receipt_msg)
@@ -392,19 +410,23 @@ class Command(NoArgsCommand):
 								offer = trackingcode.offer
 								people_sentto = offer.num_init_sentto + offer.num_resent_to
 								people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
+
 								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
+
 														"code":code,"sentto":people_sentto,
 														"forwarded":people_forwarded,
+
 														"redeemer": offer.redeemers().count(),
 														"offer":offer
 								})
+
 								self.notify(su.phone,receipt_msg)
 					# --------------------- RESIGNUP -------------------------
 					elif parsed[0].lower() == MERCHANT_SIGNUP:
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["RESIGNUP"], {})
 						self.notify(su.phone, receipt_msg)
 		
-				# --------------------- HELP: "help" -------------------------
+					# --------------------- HELP: "help" -------------------------
 					elif parsed[0].lower() == HELP:
 						commands = self.merchant_help()
 						self.notify(su.phone, commands)
@@ -601,7 +623,9 @@ class Command(NoArgsCommand):
 										business_name = business, verified=True).save()
 							print "merchant created!"
 
+
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_SUCCESS"], {
+
 								"email": email,
 								"password": randompassword,
 								})
@@ -621,8 +645,10 @@ class Command(NoArgsCommand):
 							zipcode= self.check_zipcode(parsed[2],phone)
 							phone =self.check_phone(phone)
 							randompassword = gen_random_pw()
+
 							receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
 								"email": email,
+
 								"password": randompassword,
 								})
 							self.notify(phone,receipt_msg)
@@ -654,15 +680,16 @@ class Command(NoArgsCommand):
 				self.test_handle(msg)
 			except CommandError:
 				continue
-			#except ObjectDoesNotExist, e:
-			#	print str(e)
-			#	continue
-			#except MultipleObjectsReturned, e:
-			#	print str(e)
-			#	continue
-			#except Exception:
+			except ObjectDoesNotExist, e:
+				print str(e)
+				continue
+			except MultipleObjectsReturned, e:
+				print str(e)
+				continue
+			except Exception, e:
 			#	skipped_sms.append(index)
-			#	continue
+				print str(e)
+				continue
 		
 		for message in voice.sms().messages:
 			message.delete()
