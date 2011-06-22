@@ -48,18 +48,7 @@
 }
 
 - (void)logout {
-    if ([[SLDataController sharedInstance] logout]) {
-        [[TTNavigator navigator] removeAllViewControllers];
-        [[TTNavigator navigator] openURLAction:[[TTURLAction actionWithURLPath:@"shoppley://login"] applyAnimated:NO]];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:@"Log Out Failure"
-                              message:[SLDataController sharedInstance].errorString
-                              delegate:self
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles: nil];
-        [alert show];
-        [alert release];
-    }
+    [[SLDataController sharedInstance] logout];
 }
+
 @end

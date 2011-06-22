@@ -56,8 +56,7 @@
     _passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _passwordField.returnKeyType = UIReturnKeyGo;
     
-    _loginDataSource = [TTListDataSource dataSourceWithObjects:_emailField, _passwordField, nil];
-    [_loginDataSource retain];
+    _loginDataSource = [[TTListDataSource dataSourceWithObjects:_emailField, _passwordField, nil] retain];
     self.dataSource = _loginDataSource;
     
     [_emailField becomeFirstResponder];
@@ -79,7 +78,7 @@
     // Header
     UIView* headerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 92)] autorelease];
     UIImageView* logoView = [[[UIImageView alloc] initWithFrame:CGRectMake(22, 10, 280, 72)] autorelease];
-    logoView.image = [[UIImage imageNamed:@"logo.png"] autorelease];
+    logoView.image = [UIImage imageNamed:@"logo.png"];
     [headerView addSubview:logoView];
     self.tableView.tableHeaderView = headerView;
     

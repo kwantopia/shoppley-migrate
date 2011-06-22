@@ -101,8 +101,23 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    [[SLDataController sharedInstance] reloadData];
     
+    if ([[[TTNavigator navigator] topViewController] isKindOfClass:[LoginViewController class]]) {
+        return;
+    }
+    
+    SLDataController* dataController = [SLDataController sharedInstance];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *saved_email = [defaults stringForKey:@"email"];
+    NSString *saved_password = [defaults stringForKey:@"password"];
+    if (TTIsStringWithAnyText(saved_email) && TTIsStringWithAnyText(saved_password)) {
+        if ([dataController authenticateEmail:saved_email password:saved_password]) {
+            [dataController reloadData];
+            return;
+        }
+    }
+    [dataController logout];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

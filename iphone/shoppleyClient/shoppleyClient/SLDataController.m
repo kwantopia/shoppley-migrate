@@ -13,8 +13,8 @@
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
-//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
-static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
+static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+//static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
 #pragma mark SLDataDownloader
@@ -215,7 +215,7 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
     return NO;
 }
 
-- (BOOL)logout {
+- (BOOL)_logout {
     TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:@"logout/"] delegate:self];
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];
     request.httpMethod = @"POST";
@@ -240,6 +240,12 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
     }
     _errorString = @"Connection Error. Please try again later.";
     return NO;
+}
+
+- (void)logout {
+    [self _logout];
+    [[TTNavigator navigator] removeAllViewControllers];
+    [[TTNavigator navigator] openURLAction:[[TTURLAction actionWithURLPath:@"shoppley://login"] applyAnimated:NO]];
 }
 
 #pragma mark -
