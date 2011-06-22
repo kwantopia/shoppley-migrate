@@ -325,9 +325,9 @@ class Command(NoArgsCommand):
 
 								print "redistributed -- DONE", resentto
 								if resentto == 0:
-									merchant_msg = _("There were no new customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.trackingcode.code
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
 								elif resentto==-2:
-									merchant_msg = _("Your balance is %d. You do not have enough to reach new customers. Please try again when you have enough balance.") % su.balance
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
 								else:
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 
@@ -357,9 +357,9 @@ class Command(NoArgsCommand):
 								resentto = offer.redistribute()
 
 								if resentto == 0:
-									merchant_msg = _("There were no new customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.trackingcode.code
+									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
 								if resentto == -2:
-									merchant_msg = _("Your balance is %d. You do not have enough to reach new customers. Please try again when you have enough balance.") % su.balance
+									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
 								else:			
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 											"title" : offer.title,

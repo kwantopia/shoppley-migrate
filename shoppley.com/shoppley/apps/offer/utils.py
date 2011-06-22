@@ -97,6 +97,7 @@ class TxtTemplates:
 			"OFFER_NO_CUSTOMER" : "There were no customers that could be reached at this moment. Txt #status {{ code }} to track this offer.",
 			"OFFER_NOTENOUGH_BALANCE": "Your balance is {{ points }} points. You do not have enough to reach customers. Please try again when you have enough in your balance.",
 			"OFFER_SUCCESS": "We have received your offer at {{ time }}, {{ number }} users have been reached. Txt #status {{ code }} to track this offer: {{ offer }}",
+			"REOFFER_ZERO_CUSTOMER":"There were no new customers that could be reached at this moment. Txt #status %s to track this offer.",
 			"REOFFER_SUCCESS": "{{ title }} was resent to {{ resentto }} new customers.",
 			"REOFFER_NO_OFFER": "Fail to redistribute your offer! You have not started an offer yet. To start an offer, txt #offer description",
 			"REOFFER_INVALID_TRACKING" : "The tracking code {{ code }} can not be found. Please enter a correct tracking code.",
