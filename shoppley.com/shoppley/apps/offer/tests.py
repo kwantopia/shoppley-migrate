@@ -882,9 +882,11 @@ class SimpleTest(TestCase):
 		track  = o.trackingcode.code
 		offers = Offer.objects.all().count()
 		codes = o.offercode_set.all().count()
-		msg23={"from":"0000000001", "text": "#reoffer %s" % track}
+		print o.offercode_set.all()
+		msg23={"from":"%s" % o.merchant, "text": "#reoffer %s" % track}
 		cmd.test_handle(msg23)
 		self.failUnlessEqual(Offer.objects.all().count(),offers)
+		print "new", o.offercode_set.all()
 		self.failUnlessEqual(codes<o.offercode_set.all().count(),True)
 
 

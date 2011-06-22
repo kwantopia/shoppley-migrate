@@ -6,7 +6,7 @@ from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser
-from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime
+from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
 
 from datetime import datetime, timedelta
@@ -208,6 +208,7 @@ class Offer(models.Model):
 			
 		"""
 		enough_points = True 
+		t = TxtTemplates()
 
 		print "Sending out offers"
 
@@ -245,7 +246,7 @@ class Offer(models.Model):
 		sentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 		print "count=" , self.offercode_set.all().count()
 		for o in self.offercode_set.all():
-			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (txt \"#info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code }			
+			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["OFFER_RECEIVED"],{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code })		
 			sms_notify(o.customer.phone, offer_msg, SMS_DEBUG)
 			transaction = Transaction.objects.create(time_stamp=datetime.now(),
 							offer = self,
@@ -274,6 +275,7 @@ class Offer(models.Model):
 		#self.num_resent_to += 5
 		#self.save() 
 		#print "balance before redist=", self.merchant.balance
+		t= TxtTemplates()
 		enough_points = True 
 		max_resent = 50 - self.num_init_sentto - self.num_resent_to
 
@@ -292,12 +294,12 @@ class Offer(models.Model):
 			#print "time added" , datetime.now() + timedelta(minutes=self.duration)
 			oc.save()
 			#print "set expiration to " , pretty_datetime(oc.expiration_time)
-			offer_msg = _("[%(code)s] %(title)s, by %(merchant)s at %(address)s, is extended until %(expiration)s") % {
+			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_EXTENSION"],{
 						"code": oc.code,
 						"title": self.title,
 						"merchant": self.merchant.business_name,
 						"address": self.merchant.print_address(),
-						"expiration": pretty_datetime(oc.expiration_time),}
+						"expiration": pretty_datetime(oc.expiration_time),})
 			sms_notify(oc.customer.phone, offer_msg)
 
 
@@ -337,7 +339,7 @@ class Offer(models.Model):
 		for oc in self.offercode_set.filter(customer__pk__in=target_list):
 			oc.expiration_time = datetime.now() + timedelta(minutes=self.duration)
 			oc.save()
-			offer_msg = _("[%(code)s] %(title)s by %(merchant)s (reply \"info %(code)s\" for address)")%{ "merchant":self.merchant.business_name, "title":self.title, "code":oc.code }	
+			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_NEWCUSTOMER_RECEIVED"],{ "merchant":self.merchant.business_name, "title":self.title, "code":oc.code })
 			
 			sms_notify(oc.customer.phone, offer_msg)
 			transaction = Transaction.objects.create(time_stamp=datetime.now(),
@@ -352,7 +354,7 @@ class Offer(models.Model):
 		#print "balance after redist=", self.merchant.balance
 		if enough_points: 
 			# number of people sent to, it can be 0 
-			return self.num_init_sentto
+			return resentto
 		else:
 			# not enough points to send to
 			return -2

@@ -10,7 +10,7 @@ from emailconfirmation.models import EmailAddress
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user
 from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
-from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime
+from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
 from worldbank.models import Transaction
 from googlevoice import Voice
 from googlevoice.util import input
@@ -27,7 +27,10 @@ redemption_code_re = re.compile(pattern)
 # Pattern used to parse text 
 customer_pattern = "#" + Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
 merchant_pattern = customer_pattern
+
 DEFAULT_SHOPPLEY_NUM="508-690-0888"
+DEFAULT_SITE = "www.shoppley.com"
+
 # Customer commands:
 BALANCE= "balance"
 INFO = "info"
@@ -59,13 +62,15 @@ class Command(NoArgsCommand):
 
 
 	def info(self, offercode):
-
-			return _("Redeem [%(offercode)s] at %(merchant)s \"%(description)s\" [expires: %(expiration)s]") %{
+			t = TxtTemplates()
+			return t.render(TxtTemplates.templates["CUSTOMER"]["INFO"],
+					{
 								"offercode": offercode.code,
 								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
-								"expiration": pretty_datetime(offercode.expiration_time) ,
-						}
+								"expiration": pretty_datetime(offercode.expiration_time) 
+						})
+
 			#return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
 		#						"code" : (offercode.code) ,
 		#						"merchant" : offercode.offer.merchant,
@@ -75,42 +80,46 @@ class Command(NoArgsCommand):
 			#				}
 
 	def forward_info(self, offercode):
-
-			return _("%(merchant)s \"%(description)s\" [expires: %(expires)s]") %{
+			t = TxtTemplates()
+			return t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_INFO"],{
 								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
-								"expires": pretty_datetime(offercode.expiration_time) ,
-						}
+								"expires": pretty_datetime(offercode.expiration_time) 
+						})
 
 	def update_expired(self):
 		
 		expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
+		t = TxtTemplates()
 		for offer in expired_offers:
 			offer.is_merchant_txted=True
 			offer.save()
 			sentto = offer.num_init_sentto + offer.num_resent_to
 			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
 			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
-			merchant_msg = _("%(offer)s expired [sent to %(sentto)d] [forwarded %(forwarded)d] [redeemed %(redeem)d]") %{ "offer": offer,"sentto":sentto,"forwarded":forwarded,"redeem":redeem,}
+			merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["EXPIRE_INFO"],{ "offer":offer,"sentto":sentto,"forwarded":forwarded,"redeem":redeem})
 			self.notify(offer.merchant.phone,merchant_msg)
 		return len(expired_offers)
 
 	def customer_help(self):
-		avail_commands = "- #info offercode(s): list information about an offercode or offercodes separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance"
+		t = TxtTemplates()
+		avail_commands = t.render(TxtTemplates.templates["CUSTOMER"]["HELP"],{})
 		return avail_commands
 
 	def merchant_help(self):
-		avail_commands = "- #redeem offercode number: redeem a customer's offercode\n- #offer description: start an offer with its description.\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)- #status trackingcode: check the status of an offer you started\n- #balance: check point balance"
+		t = TxtTemplates()
+		avail_commands = t.render(TxtTemplates.templates["MERCHANT"]["HELP"],{})
 		return avail_commands
 		
 	def check_email(self,email,phone):
 		try:
+			t = TxtTemplates()
 			if not validateEmail(email):
-				receipt_msg= _('"%s" is not a valid email address. Please provide a new and valid email')%email
+				receipt_msg=t.render(TxtTemplates.templates["SHARED"]["INVALID_EMAIL"],{"email":email,})
 				self.notify(phone,receipt_msg)
 				raise CommandError("Invalid email address")			
 			user = User.objects.get(username__iexact =email)
-			receipt_msg = _('"%s" is already registered with us. Please provide another email.') % email
+			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["EMAIL_TAKEN"],{"email":email,})
 			self.notify(phone,receipt_msg)
 			raise CommandError("Email was already used")
 		except User.DoesNotExist:
@@ -119,10 +128,12 @@ class Command(NoArgsCommand):
 		### raise user already exist error
 	def check_zipcode(self,code,phone):
 		try:
+			
 			zipcode= ZipCode.objects.get(code=code)
 			return code
 		except ZipCode.DoesNotExist:
-			receipt_msg = _('Zipcode "%s" does not exist. Please provide a correct zipcode.') % code
+			t = TxtTemplates()
+			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["INVALID_ZIPCODE"],{"zipcode": code,})
 			self.notify(phone,receipt_msg)
 			raise CommandError("Zipcode does not exist")
 
@@ -131,7 +142,7 @@ class Command(NoArgsCommand):
 			phone = parse_phone_number(phone)
 			print phone			
 			customer = ShoppleyUser.objects.get(phone__icontains=phone)
-			receipt_msg=_('"%s" is already registered with us. You can now use our services.') % phone
+			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["PHONE_TAKEN"],{"phone":phone,})
 			self.notify(phone,receipt_msg)
 			raise CommandError("Phone number was already used")
 		except ShoppleyUser.DoesNotExist:
@@ -143,12 +154,14 @@ class Command(NoArgsCommand):
 			offercode = OfferCode.objects.get(code__iexact = code)
 			return offercode
 		except OfferCode.DoesNotExist:
-			receipt_msg = _("Offercode %s does not exist.")% code
+			t = TxtTemplates()
+			receipt_msg=t.render(TxtTemplates.templates["SHARED"]["OFFERCODE_NOT_EXIST"], {"code":code})
 			self.notify(phone,receipt_msg)
 			OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV",invalid_code=code).save()
 			raise CommandError("Offercode does not exist")
 
 	def test_handle(self,msg): # take msg: dict("from":phonenumber, "text":text)
+		t= TxtTemplates()
 		print "new message %s" % msg
 		msg["from"] = parse_phone_number(msg["from"])
 		if msg["from"] != "Me":
@@ -165,7 +178,7 @@ class Command(NoArgsCommand):
 					del parsed[0]
 					# --------------------------- BALANCE: "balance"---------------
 					if parsed[0].lower()==BALANCE:
-						receipt_msg = _("You have %d points.") % su.balance
+						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["BALANCE"],{"points": su.balance})
 						self.notify(su.phone, receipt_msg)
 
 					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
@@ -173,7 +186,7 @@ class Command(NoArgsCommand):
 						offer_code = self.check_offercode(parsed[1],su.phone)
 						phone = parse_phone_number(parsed[2])
 						if offer_code.offer.merchant != su.merchant:
-							receipt_msg = _("Redeem Fail! %s was initiated by a different business, and not by you.") % offer_code.code
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_WRONG_MERCHANT"],{"code": offer_code.code})
 							self.notify(su.phone,receipt_msg)
 							raise CommandError ("Merchant attempts to redeem an offer he does not own")
 						phone = parse_phone_number(parsed[2])
@@ -190,10 +203,10 @@ class Command(NoArgsCommand):
 									if not offercode_obj.redeem_time:
 										offercode_obj.redeem_time = current_time
 										offercode_obj.save()
-										receipt_msg = _("%(offer_code)s is a valid offer code! Redeemed by %(customer)s.") % {
+										receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_SUCCESS"], {
 											"offer_code": offer_code.code,
 											"customer": offercode_obj.customer
-										}
+										})
 										mtransaction = Transaction.objects.create(time_stamp = current_time,
 															dst = su.merchant,
 															offercode = offercode_obj,
@@ -201,9 +214,9 @@ class Command(NoArgsCommand):
 															ttype = "MOR")
 										mtransaction.execute()
 										self.notify(su.phone, receipt_msg)
-										customer_msg = _("You have successfully redeemed your code at %(merchant)s.") %{
+										customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REDEEM_SUCCESS"],{
 											"merchant": su.merchant.business_name
-										}
+										})
 										ctransaction = Transaction.objects.create(time_stamp = current_time,
 															dst=offercode_obj.customer,
 															offercode = offercode_obj,
@@ -221,28 +234,28 @@ class Command(NoArgsCommand):
 
 											ftransaction.execute()
 									else:
-										receipt_msg = _("Code reuse! %(offer_code)s was redeemed by %(customer)s at %(time)s.") % {
+										receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_CODE_REUSE"], {
 											"offer_code": offer_code.code,
 											"customer": offercode_obj.customer,
 											"time": pretty_datetime(offercode_obj.redeem_time),
-										}
+										})
 										#print "sent msg"
 										self.notify(su.phone, receipt_msg)
 										OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="DR", offercode=offercode_obj).save()
 										raise CommandError("Customer attempts to reuse a code")
 								else:
-									receipt_msg = _("Redeem failed! %(offer_code)s does not belong to %(customer)s.") % {
+									receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_WRONG_CUSTOMER"],  {
 										"offer_code":offer_code.code,
 										"customer":offercode_obj.customer,
-									}
+									})
 									self.notify(su.phone, receipt_msg)
 									raise CommandError("Customer attempts to redeem a code he doesnt own")
 							except ObjectDoesNotExist:
 								# Such phone number doesn't exist in customers' profiles, save it
-								receipt_msg = _("%(phone)s is not in our record. %(offer_code)s offercode was not processed") % {
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_INVALID_CUSTOMER_NUM"], {
 									"offer_code": offer_code.code,
 									"phone": phone,
-								}
+								})
 								self.notify(su.phone, receipt_msg)
 							except MultipleObjectsReturned, e:
 								# Multiple customers registered with the same phone number, should be prevented
@@ -250,9 +263,9 @@ class Command(NoArgsCommand):
 							
 						except ObjectDoesNotExist:
 							# The offer code is not found, or an invalid one
-							receipt_msg = _("%(offer_code)s is not a valid offer code!") % {
+							receipt_msg =t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_INVALID_CODE"], {
 								"offer_code": offer_code.code,
-							}
+							})
 							self.notify(su.phone, receipt_msg)
 							OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offer_code.code).save()
 						except MultipleObjectsReturned, e:																	# Multiple offer codes found, which indicates a programming error
@@ -260,7 +273,7 @@ class Command(NoArgsCommand):
 					# --------------------------- ZIPCODE: "zipcode "---------------
 					elif parsed[0].lower() in ZIPCODE:
 						if len(parsed)<2:
-							receipt_msg=_("Command Error! To change your zipcode, please use this command: #zipcode new_zipcode")
+							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						code = self.check_zipcode(parsed[1],su.phone)
@@ -268,12 +281,12 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
 						su.merchant.zipcode=zipcode
 						su.merchant.save()
-						receipt_msg=_("%s is your new zipcode. Your later offers will be distributed to customers in this new area.") % zipcode.code
+						receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code})
 						self.notify(su.phone,receipt_msg)
 					# ------------------------OFFER : "offer<SPACE>description" ---------------
 					elif parsed[0].lower() == OFFER:
 						if len(parsed)<2:
-							receipt_msg=_("Command Error! To start an offer, please use this command: #offer offer_description")
+							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["OFFER_COMMAND_ERROR"])
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						# This is an offer made by the merchant, not a redemption code
@@ -286,18 +299,18 @@ class Command(NoArgsCommand):
 						num_reached = offer.distribute()
 					
 						if num_reached ==0 :
-							receipt_msg = _("There were no customers that could be reached at this moment. Txt #status %s to track this offer.") % offer.gen_tracking_code()
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NO_CUSTOMER"], {"code":offer.gen_tracking_code()})
  
 						elif num_reached == -2:
-							receipt_msg = _("Your balance is %d. You do not have enough to reach customers. Please try again when you have enough balance.") % su.balance
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NOTENOUGH_BALANCE"], {"points":su.balance})
 							offer.delete()
 						else:
-							receipt_msg = _("We have received your offer at %(time)s, %(number)d users have been reached. Track the status of the offer: \"%(offer)s\" by txting \"#status %(code)s\"") % {
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_SUCCESS"], {
 								"time": pretty_datetime(offer.time_stamp),
 								"offer": offer,
 								"number": offer.num_received(),
 								"code": offer.gen_tracking_code(),
-							}
+							})
 						
 						self.notify(su.phone, receipt_msg)
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
@@ -307,13 +320,13 @@ class Command(NoArgsCommand):
 							if offers:
 								offer = offers.order_by("-time_stamp")[0]
 								resentto = offer.redistribute()
-								merchant_msg = _("%(title)s was resent to %(resentto)d new customers.") % {
+								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 										"title" : offer.title,
 										"resentto": resentto,
-										}
+										})
 								self.notify(su.phone,merchant_msg)
 							else:
-								merchant_msg = _("Fail to redistribute your offer! You have not started an offer yet. To start an offer, reply with \"#offer description\"")
+								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NO_OFFER"],{})
 								self.notify(su.phone,merchant_msg)
 						else:
 							code = parsed[1].strip().lower()
@@ -322,20 +335,20 @@ class Command(NoArgsCommand):
 							try:
 								trackingcode = TrackingCode.objects.get(code__iexact=code)
 							except TrackingCode.DoesNotExist:
-								receipt_msg = _("The tracking code can not be found. Please enter a correct tracking code.")
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_INVALID_TRACKING"],{"code":trackingcode.code})
 								self.notify(su.phone,receipt_msg)
 								raise CommandError ("Tracking code not found")
 							offer = trackingcode.offer
 							if offer.merchant.id != su.merchant.id:
-								merchant_msg = _("Sorry offer by %s was not started by you. Please input your correct tracking code") % code	
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_WRONG_MERCHANT"],{"code":trackingcode.code})
 								self.notify(su.phone,merchant_msg)
 							else:
 								
 								resentto = offer.redistribute()
-								merchant_msg = _("%(title)s was resent to %(resentto)d new customers.") % {
+								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 											"title" : offer.title,
 											"resentto": resentto,
-											}
+											})
 								self.notify(su.phone,merchant_msg)
 						# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
 					elif parsed[0].lower() == STATUS:
@@ -348,18 +361,17 @@ class Command(NoArgsCommand):
 								trackingcode =offer.trackingcode
 								sentto  = offer.num_init_sentto + offer.num_resent_to
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
-								total = sentto + forwarded
-								receipt_msg = _("[%(code)s] Your latest offer was sent to %(sentto)s, forwarded to %(forwarded)s, total: %(total)d customers reached. Redeemed by %(redeemer)d customers. To track the offer, txt \"#status %(code)s\"") % {
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
 								"code":trackingcode.code,
 								"sentto":sentto,
 		                                        	"forwarded":forwarded,
-			                                     	"total":total,
+								"offer": offer,
 								"redeemer": offer.redeemers().count()
-		                                        	}
+		                                        	})
 							
 								self.notify(su.phone,receipt_msg)
 							else:
-								receipt_msg=_("Fail to get status! You have not started an offer yet. To start an offer, txt \"#offer description\"")
+								receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["STATUS_NO_OFFER"], {})
 								self.notify(su.phone,receipt_msg)
 								#raise CommandError("Incorrectly formed status command: %s" % msg["text"])
 						else:
@@ -369,27 +381,27 @@ class Command(NoArgsCommand):
 								trackingcode = TrackingCode.objects.get(code__iexact=code)
 								
 							except TrackingCode.DoesNotExist:
-								receipt_msg = _("The tracking code can not be found. Please enter a correct tracking code.")
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_INVALID_CODE"],{"code":trackingcode.code})
 								self.notify(su.phone,receipt_msg)
 								raise CommandError ("Tracking code not found")
 							offer = trackingcode.offer
 							if offer.merchant.id != su.merchant.id:
-								merchant_msg = _("Sorry offer by %s was not started by you. Please input your correct tracking code") % code	
+								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_WRONG_MERCHANT"],{"code":trackingcode.code	})
 								self.notify(su.phone,merchant_msg)
 							else:
 								offer = trackingcode.offer
 								people_sentto = offer.num_init_sentto + offer.num_resent_to
 								people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
-								receipt_msg = _("[%(code)s] This offer was sent to %(sentto)s customers and forwarded to %(forwarded)s other customers, totally %(total)d customers reached. It was redeemed by %(redeemer)d customers.") % {
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
 														"code":code,"sentto":people_sentto,
 														"forwarded":people_forwarded,
-														"total":int(people_sentto)+int(people_forwarded),
-														"redeemer": offer.redeemers().count()
-								}
+														"redeemer": offer.redeemers().count(),
+														"offer":offer
+								})
 								self.notify(su.phone,receipt_msg)
 					# --------------------- RESIGNUP -------------------------
 					elif parsed[0].lower() == MERCHANT_SIGNUP:
-						receipt_msg = _("You are already a Shoppley merchant")
+						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["RESIGNUP"], {})
 						self.notify(su.phone, receipt_msg)
 		
 				# --------------------- HELP: "help" -------------------------
@@ -400,7 +412,7 @@ class Command(NoArgsCommand):
 
 					# --------------------- INCORRECT COMMAND: give them helps --------------
 					else:
-						receipt_msg=_("%s is not available. Here are the available commands:\n") % parsed[0]+ self.merchant_help()
+						receipt_msg= t.render(TxtTemplates.templates["MERCHANT"]["INCORRECT_COMMAND"], {"command":parsed[0], "help": self.merchant_help()})
 						self.notify(su.phone,receipt_msg)
 				except ParseException:
 					sender_msg = _("%s is not a valid command. Our commands start with \"#\". Txt #help for all commands") % text
@@ -416,7 +428,7 @@ class Command(NoArgsCommand):
 					phone = su.phone
 					# --------------------------- REDEEM: "#balance"---------------
 					if parsed[0].lower()==BALANCE:
-						receipt_msg = _("You have %d points.") % su.balance
+						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["BALANCE"], {"points":su.balance})
 						self.notify(su.phone, receipt_msg)		
 					# ----------------- INFO : "#info<SPACE>offercode+"----------------
 					elif parsed[0].lower() == INFO:
@@ -427,7 +439,7 @@ class Command(NoArgsCommand):
 								customer_msg = self.info(offercode)
 								self.notify(phone,customer_msg)
 							else:
-								receipt_msg=_("Fail to find your offer! You have not received an offer yet.")
+								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["INFO_NO_OFFER"],{})
 								self.notify(phone,receipt_msg)
 								#raise CommandError('Incorrectly formed info command: "%s"' % msg["text"])
 
@@ -443,27 +455,27 @@ class Command(NoArgsCommand):
 					# ------------------- IWANT: "#iwant ..."----------------------
 					elif parsed[0].lower() == IWANT:
 						if len(parsed)<2:
-							receipt_msg=_("Command Error! To request for a deal, please reply with #iwant your_request")
+							receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["IWANT_COMMAND_ERROR"], {})
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed iwant command: %s" % msg["text"])
 						# This is an offer made by the merchant, not a redemption code
 
 						request = ''.join([i+' ' for i in parsed[1:]]).strip()
 						iwant = IWantRequest.objects.create(customer=su.customer,request=request,time_stamp=datetime.now())
-						customer_msg = _("We have received your request: %s. Our search monkeys are hard at work finding the perfect deal for you.") % request
+						customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["IWANT"],{"request": request})
 						self.notify(su.phone, customer_msg)
 
 					# ------------------- STOP: "stop"----------------------
 					elif parsed[0].lower() == STOP:
 					
 						if su.active:
-							customer_msg = _("You chose to temporarily stop receiving offer messages. Please txt #start to %s to restart your service.") % DEFAULT_SHOPPLEY_NUM
+							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY_NUM": DEFAULT_SHOPPLEY_NUM})
 							self.notify(phone,customer_msg)
 							su.active = False
 							su.save()
 
 						else:
-					 		customer_msg = _("You already elected to stop receiving offer messages. Please txt #start to %s to restart your service.") % DEFAULT_SHOPPLEY_NUM
+					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY_NUM": DEFAULT_SHOPPLEY_NUM})
 							self.notify(phone,customer_msg)
 					# ------------------- START: "start"-----------------------
 					elif parsed[0].lower() == START :
@@ -471,15 +483,15 @@ class Command(NoArgsCommand):
 						if not su.active:
 							su.active = True
 							su.save()
-							customer_msg = _("Welcome back! You will start receiving offer messages again.")
+							customer_msg =t.render(TxtTemplates.templates["CUSTOMER"]["START"], {})
 							self.notify(phone, customer_msg)	
 						else:
-							customer_msg = _("You are active and receiving offer messages.")
+							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTART"], {})
 							self.notify(phone, customer_msg)
 					# --------------------------- ZIPCODE: "zipcode "---------------
 					elif parsed[0].lower() in ZIPCODE:
 						if len(parsed)<2:
-							receipt_msg=_("Command Error! To change your zipcode, please use this command: #zipcode new_zipcode")
+							receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE_COMMAND_ERROR"], {})
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						code = self.check_zipcode(parsed[1], su.phone)
@@ -487,20 +499,20 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
 						su.customer.zipcode=zipcode
 						su.customer.save()
-						receipt_msg=_("%s is your new zipcode. You will receive offers from this new area.") % zipcode.code
+						receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE"],{"zipcode": zipcode.code})
 						self.notify(su.phone,receipt_msg)
 					#-------------------- FORWARD: "#forward<SPACE>offercode<SPACE>number+"---------------------
 					elif parsed[0].lower() ==FORWARD:
 						# TODO add sender to dst's friend list
 						if (len(parsed) < 3):
-							forwarder_msg='Fail to forward the offer! Please follow this command: "#forward offercode(s)" followed by one or more friends\' numbers separated by spaces'
+							forwarder_msg=t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_COMMAND_ERROR"], {})
 							self.notify(su.phone,forwarder_msg)
 							raise CommandError('Incorrectly formed forward command: "%s"' % msg["text"])
 						ori_code = self.check_offercode(parsed[1],phone)
 						ori_offer = ori_code.offer
 
 						if (ori_code.customer!=su.customer):
-							forwarder_msg= _("%s: Fail to forward! You are not the owner of this offercode.") % ori_code.code
+							forwarder_msg= t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_WRONG_FORWARDER"], {"code":ori_code.code})
 							self.notify(phone,forwarder_msg)
 							raise CommandError("Fail to forward! Customer attempts to forward an offercode he doesnt own")
 
@@ -514,31 +526,30 @@ class Command(NoArgsCommand):
 						for r in invalid_receivers:
 							su.customer.customer_friends.add(Customer.objects.get(phone=r))
 						if len(valid_receivers)==0:
-							forwarder_msg = _("[%s] All phone numbers you wanted to forward the code already received the offer.") % ori_code.code		
+							forwarder_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_ALL_RECEIVED"], {"code":ori_code.code	})
 							self.notify(su.phone,forwarder_msg)
 					
 						else:
-							forwarder_msg= _('[%s] was forwarded to ') % ori_code.code
+							#forwarder_msg= _('[%s] was forwarded to ') % ori_code.code
 							for r in valid_receivers:
 								#f_state.update()
 								friend_num = r
 								friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)	
-								customer_msg = _("%(customer)s forwarded you an offer: %(info)s. Use [%(code)s] to redeem")%{
+								customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_CUSTOMER_MSG"],{
 									"customer":su.customer,
 									"info": self.forward_info(ori_code),
 									"code": friend_code.code,
-								}
+								})
 							
 								self.notify(friend_num,customer_msg)
 								# the phone number is not one of our customers
 								if random_pw:
 									new_customer = friend_code.customer
 									#print "created a customer for %s" % friend_num
-									account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
+									account_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_NON_CUSTOMER_LOGIN"],{"name":new_customer.user.username,"password":random_pw,})
 									self.notify(friend_num,account_msg)
 
-							forwarder_msg= _('Offer [%s] was forwarded to ') % ori_code.code
-							forwarder_msg= forwarder_msg+ ', '.join([str(i) for i in valid_receivers]) + "\nYou will receive points when they redeem." 
+							forwarder_msg= t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_SUCCESS"], {"code": ori_code.code, "numbers": ', '.join([str(i) for i in valid_receivers])}) 
 							#% f_state.remaining
 							self.notify(su.phone,forwarder_msg)
 					# --------------------- HELP: "help" -------------------------
@@ -547,15 +558,15 @@ class Command(NoArgsCommand):
 						self.notify(su.phone, commands)
 					# --------------------- RESIGNUP -------------------------
 					elif parsed[0].lower() == SIGNUP:
-						receipt_msg = _("You are already a Shoppley customer")
+						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESIGNUP"],{})
 						self.notify(su.phone, receipt_msg)
 				
 					# ---------------------------- INCORRECT COMMAND : give them help -----------
 					else:
-						customer_msg=_("%s command is not available. Here is a list of accepted commands:\n") % parsed[0]+self.customer_help()
+						customer_msg=t.render(TxtTemplates.templates["CUSTOMER"]["INCORRECT_COMMAND"], {"command": parsed[0], "help": self.customer_help()})
 						self.notify(su.phone,customer_msg)
 				except ParseException:
-					sender_msg = _("%s is not a valid command. Our commands start with \"#\". Txt #help for all commands") % text
+					sender_msg = t.render(TxtTemplates.templates["CUSTOMER"]["COMMAND_NOT_STARTED_W_#"],{"command":text})
 					self.notify(su.phone,sender_msg)
 
 			else:
@@ -569,7 +580,7 @@ class Command(NoArgsCommand):
 						#------------------------------- MERCHANT SIGNUP: "merchant<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
 						if  parsed[0].lower() == MERCHANT_SIGNUP:
 							if (len(parsed)<4):
-								receipt_msg=_("Fail to sign up! Please follow this command: \'#merchant email zipcode business_name\'")
+								receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"],{})
 								self.notify(phone,receipt_msg)      
 								raise CommandError('Incorrectly formed merchant signup command: "%s"' % msg["text"])
 
@@ -590,17 +601,17 @@ class Command(NoArgsCommand):
 										business_name = business, verified=True).save()
 							print "merchant created!"
 
-							receipt_msg = _("Sign up successfully! Please use these info to log in.\n username: %(email)s \n password: %(password)s") % {
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_SUCCESS"], {
 								"email": email,
 								"password": randompassword,
-								}
+								})
 
 							self.notify(phone,receipt_msg)	
 
 						# ----------------------------------- SIGNUP: "signup<SPACE>email<SPACE>zipcode" ----------------
 						elif parsed[0].lower() ==SIGNUP:
 							if (len(parsed) <3):
-								receipt_msg=_("Signup Error! Please follow this command: '#signup email zipcode'")
+								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_COMMAND_ERROR"],{})
 								self.notify(phone,receipt_msg)
 								raise CommandError('Incorrectly formed signup command: "%s"' % msg["text"])
 
@@ -610,10 +621,10 @@ class Command(NoArgsCommand):
 							zipcode= self.check_zipcode(parsed[2],phone)
 							phone =self.check_phone(phone)
 							randompassword = gen_random_pw()
-							receipt_msg = _("Sign up successfully! Please use these info to log in.\n username: %(email)s \n password: %(password)s") % {
+							receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
 								"email": email,
 								"password": randompassword,
-								}
+								})
 							self.notify(phone,receipt_msg)
 							new_user = User.objects.create_user(parsed_email,parsed_email,randompassword)
 							EmailAddress.objects.add_email(new_user,parsed_email)
@@ -623,11 +634,10 @@ class Command(NoArgsCommand):
 
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
-							receipt_msg=_("Welcome to Shoppley! You are currently not one of our users. Please sign up @ www.shoppley.com or send us a text message to %(shoppley_num)s with this command: \"#signup email zipcode\" to sign up as a customer or \"merchant email zipcode business_name\" to sign up as a business") % { "shoppley_num": "508-690-0888" }
-							print phone
+							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": "508-690-0888" })
 							self.notify(phone,receipt_msg)
 					except ParseException:
-						receipt_msg=_("Welcome to Shoppley! You are currently not one of our users. Please sign up @ www.shoppley.com or send us a text message to %(shoppley_num)s with this command: \"#signup email zipcode\" to sign up as a customer or \"merchant email zipcode business_name\" to sign up as a business") % { "shoppley_num": "508-690-0888" }
+						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": "508-690-0888" })
 							
 						self.notify(phone,receipt_msg)
 	def handle_noargs(self, **options):

@@ -102,9 +102,9 @@ class TxtTemplates:
 			"REOFFER_INVALID_TRACKING" : "The tracking code {{ code }} can not be found. Please enter a correct tracking code.",
 			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code {{ code }} was not started by you. Please input your correct tracking code",
 			"STATUS_SUCCESS": "[{{ code }}] Offer: {{ offer }} [sent to {{ sentto }}], [forwarded to {{ forwarded }}], [redeemed by {{ redeemer }} Txt #status {{ code }} to track the offer",
-			"STATUS_NO_OFFER": "Fail to get status for {{ code }}! You have not started an offer yet. To start an offer, txt #offer description",
+			"STATUS_NO_OFFER": "Fail to get status! You have not started an offer yet. To start an offer, txt #offer description",
 			"STATUS_INVALID_CODE": "The tracking code {{ code }} can not be found. Please enter a correct tracking code.",
-			"STATUS_WRONG_MERCHANT" : "Sorry offer by {{ code }} was not started by you. Please txt again with your correct tracking code",
+			"STATUS_WRONG_MERCHANT" : "Sorry, offer by {{ code }} was not started by you. Please txt again with your correct tracking code",
 			
 			"RESIGNUP": "You are already a Shoppley merchant.",
 			"HELP": "{{ help }}",
@@ -139,7 +139,7 @@ class TxtTemplates:
 			"FORWARD_COMMAND_ERROR": "Fail to forward the offer! Please txt \"#forward offercode(s)\" followed by one or more friends\' numbers separated by spaces",
 			"FORWARD_WRONG_FORWARDER":"{{ code }}: Fail to forward! You are not the owner of this offercode." ,
 			"FORWARD_ALL_RECEIVED": "[{{ code }}] All phone numbers you wanted to forward the code to already received the offer.",
-			"FORWARD_SUCCESS": "Offer [{{ code }}] was forwarded to {{ numbers }}.",
+			"FORWARD_SUCCESS": "Offer [{{ code }}] was forwarded to {{ numbers }}. You will receive points when they redeem.",
 			"FORWARD_CUSTOMER_MSG": "{{ customer }} forwarded you an offer: {{ info }}. Use [{{ code }}] to redeem",
 			"FORWARD_INFO":"{{ merchant }} \"{{ description }}\" [expires: {{ expires }}]",
 			"FORWARD_NON_CUSTOMER_LOGIN": "Welcome to Shoppley! Here is your shoppley.com login info:\n - username: {{ name }}\n - password: {{ password }}" ,
@@ -157,11 +157,11 @@ class TxtTemplates:
 			"EMAIL_TAKEN": "\"{{ email }}\" is already registered with shoppley. Please provide another email.",
 			"PHONE_TAKEN": "\"{{ phone }}\" is already registered with us. You can now use our services.",
 			"OFFERCODE_NOT_EXIST": "Offercode {{ code }} does not exist.",
-
+			"INVALID_ZIPCODE": "Zipcode {{ zipcode }} does not exist. Please provide a correct zipcode.",
 			"NON_USER": "Welcome to Shoppley! You are currently not one of our users. Please sign up @ {{ site }} or send us a text message to {{ shoppley_num }} with this command: \"#signup email zipcode\" to sign up as a customer or \"merchant email zipcode business_name\" to sign up as a business"
 		}
 	}
 
-	def render(tstring,c):
+	def render(self,tstring,c):
 		t=Template(tstring)
 		return unescape(t.render(Context(c)))
