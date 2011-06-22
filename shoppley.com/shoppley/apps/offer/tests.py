@@ -886,6 +886,7 @@ class SimpleTest(TestCase):
 		offers = Offer.objects.all().count()
 		codes = o.offercode_set.all().count()
 		print o.offercode_set.all()
+		self.create_more_customers()
 		msg23={"from":"%s" % o.merchant, "text": "#reoffer %s" % track}
 		cmd.test_handle(msg23)
 		self.failUnlessEqual(Offer.objects.all().count(),offers)

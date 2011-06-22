@@ -301,7 +301,7 @@ class Offer(models.Model):
 						"merchant": self.merchant.business_name,
 						"address": self.merchant.print_address(),
 						"expiration": pretty_datetime(oc.expiration_time),})
-			sms_notify(oc.customer.phone, offer_msg)
+			sms_notify(oc.customer.phone, offer_msg, SMS_DEBUG)
 
 
 		# customers who have received the offers
@@ -319,17 +319,17 @@ class Offer(models.Model):
 		fan_target = set(list(fans))
 		nonfan_target = set(list(nonfans))	
 		target = fan_target | nonfan_target
-		print "target: ", target
+		#print "target: ", target
 		if len(target) > max_resent:
 			target_list = random.sample(target, max_resent)
 		else:
 			target_list = list(target)
-		print "target_list: ", target_list
+		#print "target_list: ", target_list
 		from worldbank.models import Transaction
 
 		allowed_number =int( self.merchant.balance/abs(Transaction.points_table["MOD"]))
-		print "balance=" ,self.merchant.balance
-		print "allowed_number", allowed_number
+		#print "balance=" ,self.merchant.balance
+		#print "allowed_number", allowed_number
 		if allowed_number == 0:
 			# check if there's enough balance
 			enough_points = False
@@ -337,13 +337,13 @@ class Offer(models.Model):
 		if len(target_list) > allowed_number:
 			target_list = random.sample(target_list, allowed_number)
 		resentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
-		print "final target_list: ", target_list
+		#print "final target_list: ", target_list
 		for oc in self.offercode_set.filter(customer__pk__in=target_list):
 			oc.expiration_time = datetime.now() + timedelta(minutes=self.duration)
 			oc.save()
 			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_NEWCUSTOMER_RECEIVED"],{ "merchant":self.merchant.business_name, "title":self.title, "code":oc.code })
 			
-			sms_notify(oc.customer.phone, offer_msg)
+			sms_notify(oc.customer.phone, offer_msg, SMS_DEBUG)
 			transaction = Transaction.objects.create(time_stamp=datetime.now(),
 							offer = self,
 							offercode = oc,
