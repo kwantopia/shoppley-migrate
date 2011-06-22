@@ -328,6 +328,9 @@ class Command(NoArgsCommand):
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
 								elif resentto==-2:
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
+								elif resentto==-3:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
+
 								else:
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 
@@ -358,8 +361,11 @@ class Command(NoArgsCommand):
 
 								if resentto == 0:
 									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
-								if resentto == -2:
+								elif resentto == -2:
 									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
+								elif resentto == -3:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
+
 								else:			
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
 											"title" : offer.title,

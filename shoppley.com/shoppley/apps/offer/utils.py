@@ -103,6 +103,7 @@ class TxtTemplates:
 			"REOFFER_NO_OFFER": "Fail to redistribute your offer! You have not started an offer yet. To start an offer, txt #offer description",
 			"REOFFER_INVALID_TRACKING" : "The tracking code {{ code }} can not be found. Please enter a correct tracking code.",
 			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code {{ code }} was not started by you. Please input your correct tracking code",
+			"REOFFER_NOT_ALLOWED": "Sorry, you are allowed to redistribute the offer, {{ offer }}, more than once.", 
 			"STATUS_SUCCESS": "[{{ code }}] Offer: {{ offer }} [sent to {{ sentto }}], [forwarded to {{ forwarded }}], [redeemed by {{ redeemer }} Txt #status {{ code }} to track the offer",
 			"STATUS_NO_OFFER": "Fail to get status! You have not started an offer yet. To start an offer, txt #offer description",
 			"STATUS_INVALID_CODE": "The tracking code {{ code }} can not be found. Please enter a correct tracking code.",

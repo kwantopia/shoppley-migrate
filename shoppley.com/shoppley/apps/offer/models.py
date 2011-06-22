@@ -47,6 +47,9 @@ class Offer(models.Model):
 	img				= ImageField(upload_to='offers/')
 	expired = models.BooleanField(default=False)
 
+	redistributable = models.BooleanField(default=True)
+	is_processing = models.BooleanField(default=False)
+	redistribute_processing = models.BooleanField(default=False)
 	def __unicode__(self):
 		return self.title
 	
@@ -208,6 +211,8 @@ class Offer(models.Model):
 			- report back the number of customers being reached
 			
 		"""
+		self.is_processing = True
+		self.save()
 		enough_points = True 
 		t = TxtTemplates()
 
@@ -257,7 +262,11 @@ class Offer(models.Model):
 			transaction.execute()
 
 		self.num_init_sentto =sentto
+		self.is_processing = False
 		self.save()
+
+	
+
 		
 		if enough_points: 
 			# number of people sent to, it can be 0 
@@ -267,6 +276,11 @@ class Offer(models.Model):
 			return -2
 			
 	def redistribute(self):
+		self.redistribute_processing=True
+		self.save()
+
+		if not self.redistributable:
+			return -3
 		"""
 			Offer can be redistributed multiple number of times and all the parameters would be the
 			same except extending the duration.
@@ -352,11 +366,14 @@ class Offer(models.Model):
 			transaction.execute()
 		
 		self.num_resent_to = resentto
+		self.redistribute_processing = False
 		self.save()
+		
+
 		#print "balance after redist=", self.merchant.balance
 		if enough_points: 
 			# number of people sent to, it can be 0 
-
+			self.redistributable = True
 			return self.num_resent_to
 
 		else:
