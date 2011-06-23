@@ -228,7 +228,7 @@ p#hint_id_remember {
 	display: none;
 }
 div.login form.login-header-form fieldset.inlineLabels {
-	width: 500px;
+	width: 510px;
 }
 div.login form.login-header-form input#id_username, div.login form.login-header-form input#id_password {
 	width: 119px;
@@ -241,7 +241,7 @@ div#div_id_username label, div#div_id_password label {
 	padding-right: 7px;
 }
 form.login-header-form div#div_id_password label {
-	padding-left: 15px;
+	padding-left: 12px;
 }
 div#div_id_remember.checkbox {
 	padding-top: 5px;
