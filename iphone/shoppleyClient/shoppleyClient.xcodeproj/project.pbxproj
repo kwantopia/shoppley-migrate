@@ -18,6 +18,10 @@
 		320F2C48872C2E2C4DF86205 /* libThree20UI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320F2C48872C2E2C4DF86204 /* libThree20UI.a */; };
 		D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */; };
 		D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99613AF0F710047F385 /* OfferRateViewController.m */; };
+		D549299013B2DC790089E34A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D549298E13B2DC790089E34A /* Default.png */; };
+		D549299113B2DC790089E34A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D549298F13B2DC790089E34A /* Icon.png */; };
+		D549299413B2DDE10089E34A /* star15.png in Resources */ = {isa = PBXBuildFile; fileRef = D549299213B2DDE10089E34A /* star15.png */; };
+		D549299513B2DDE10089E34A /* star30.png in Resources */ = {isa = PBXBuildFile; fileRef = D549299313B2DDE10089E34A /* star30.png */; };
 		D5544A8913AE6106004CABBE /* SLMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5544A8813AE6105004CABBE /* SLMapViewController.m */; };
 		D5544A8B13AE6154004CABBE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5544A8A13AE6154004CABBE /* MapKit.framework */; };
 		D5544A8D13AE6ACE004CABBE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5544A8C13AE6ACE004CABBE /* CoreLocation.framework */; };
@@ -42,7 +46,6 @@
 		D579366C13A6E2730047B69F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D579366A13A6E2730047B69F /* InfoPlist.strings */; };
 		D579366F13A6E2730047B69F /* shoppleyClientTests.h in Resources */ = {isa = PBXBuildFile; fileRef = D579366E13A6E2730047B69F /* shoppleyClientTests.h */; };
 		D579367113A6E2730047B69F /* shoppleyClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D579367013A6E2730047B69F /* shoppleyClientTests.m */; };
-		D59431F513B020970010EC23 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = D59431F413B020970010EC23 /* star.png */; };
 		D59431F813B031ED0010EC23 /* OfferForwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D59431F713B031ED0010EC23 /* OfferForwardViewController.m */; };
 		D59431FA13B038AB0010EC23 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431F913B038AB0010EC23 /* AddressBook.framework */; };
 		D59431FC13B050D10010EC23 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431FB13B050D10010EC23 /* AddressBookUI.framework */; };
@@ -263,6 +266,10 @@
 		D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferFeedbackViewController.m; sourceTree = "<group>"; };
 		D522C99513AF0F710047F385 /* OfferRateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferRateViewController.h; sourceTree = "<group>"; };
 		D522C99613AF0F710047F385 /* OfferRateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferRateViewController.m; sourceTree = "<group>"; };
+		D549298E13B2DC790089E34A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
+		D549298F13B2DC790089E34A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = images/Icon.png; sourceTree = "<group>"; };
+		D549299213B2DDE10089E34A /* star15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star15.png; path = images/star15.png; sourceTree = "<group>"; };
+		D549299313B2DDE10089E34A /* star30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star30.png; path = images/star30.png; sourceTree = "<group>"; };
 		D5544A8713AE6105004CABBE /* SLMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLMapViewController.h; sourceTree = "<group>"; };
 		D5544A8813AE6105004CABBE /* SLMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLMapViewController.m; sourceTree = "<group>"; };
 		D5544A8A13AE6154004CABBE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -296,7 +303,6 @@
 		D579366D13A6E2730047B69F /* shoppleyClientTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shoppleyClientTests-Prefix.pch"; sourceTree = "<group>"; };
 		D579366E13A6E2730047B69F /* shoppleyClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shoppleyClientTests.h; sourceTree = "<group>"; };
 		D579367013A6E2730047B69F /* shoppleyClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = shoppleyClientTests.m; sourceTree = "<group>"; };
-		D59431F413B020970010EC23 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star.png; path = images/star.png; sourceTree = "<group>"; };
 		D59431F613B031EC0010EC23 /* OfferForwardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferForwardViewController.h; sourceTree = "<group>"; };
 		D59431F713B031ED0010EC23 /* OfferForwardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferForwardViewController.m; sourceTree = "<group>"; };
 		D59431F913B038AB0010EC23 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -592,8 +598,11 @@
 		D5FFF54D13A733010059702E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D549298E13B2DC790089E34A /* Default.png */,
+				D549298F13B2DC790089E34A /* Icon.png */,
 				D59F97C813B06BFA002EDB54 /* logo.png */,
-				D59431F413B020970010EC23 /* star.png */,
+				D549299213B2DDE10089E34A /* star15.png */,
+				D549299313B2DDE10089E34A /* star30.png */,
 				D5FFF54E13A7331F0059702E /* tab_current_offers.png */,
 				D5FFF54F13A7331F0059702E /* tab_redeemed_offers.png */,
 				D5FFF55013A7331F0059702E /* tab_summary.png */,
@@ -872,8 +881,11 @@
 				D5FFF55213A7331F0059702E /* tab_redeemed_offers.png in Resources */,
 				D5FFF55313A7331F0059702E /* tab_summary.png in Resources */,
 				D577058B13ADBFF400DBCD3A /* tab_settings.png in Resources */,
-				D59431F513B020970010EC23 /* star.png in Resources */,
 				D59F97C913B06BFA002EDB54 /* logo.png in Resources */,
+				D549299013B2DC790089E34A /* Default.png in Resources */,
+				D549299113B2DC790089E34A /* Icon.png in Resources */,
+				D549299413B2DDE10089E34A /* star15.png in Resources */,
+				D549299513B2DDE10089E34A /* star30.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1023,7 +1035,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1031,6 +1043,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)/../../three20\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1041,9 +1054,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1053,6 +1067,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -1067,7 +1083,7 @@
 				GCC_PREFIX_HEADER = "shoppleyClient/shoppleyClient-Prefix.pch";
 				INFOPLIST_FILE = "shoppleyClient/shoppleyClient-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Shoppley;
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
@@ -1078,13 +1094,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "shoppleyClient/shoppleyClient-Prefix.pch";
 				INFOPLIST_FILE = "shoppleyClient/shoppleyClient-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Shoppley;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

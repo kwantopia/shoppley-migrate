@@ -24,6 +24,8 @@
         return [SLRightValueTableItemCell class];
 	} else if ([object isKindOfClass:[SLStarsTableItem class]]) {
         return [SLStarsTableItemCell class];
+	} else if ([object isKindOfClass:[SLRightStarsTableItem class]]) {
+        return [SLRightStarsTableItemCell class];
 	} else {
 		return [super tableView:tableView cellClassForObject:object];
 	}
@@ -42,6 +44,8 @@
         return [SLRightValueTableItemCell class];
 	} else if ([object isKindOfClass:[SLStarsTableItem class]]) {
         return [SLStarsTableItemCell class];
+	} else if ([object isKindOfClass:[SLRightStarsTableItem class]]) {
+        return [SLRightStarsTableItemCell class];
 	} else {
 		return [super tableView:tableView cellClassForObject:object];
 	}

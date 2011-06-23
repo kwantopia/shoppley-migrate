@@ -30,7 +30,13 @@
 
 @interface SLStarsTableItemCell : TTTableViewCell {
     SLStarsTableItem* _item;
-    UIView* _itemView;
+}
+
+@end
+
+@interface SLRightStarsTableItemCell : TTTableTextItemCell {
+    UIView* _starsView;
+    CGFloat _starsViewWidth;
 }
 
 @end

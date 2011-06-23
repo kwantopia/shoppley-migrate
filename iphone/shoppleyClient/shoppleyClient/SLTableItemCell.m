@@ -184,7 +184,7 @@
         CGFloat left = 10;
         for (int i = 0; i < [_item.numberOfStars intValue]; i++) {
             UIImageView* t = [[[UIImageView alloc] initWithFrame:CGRectMake(left, 5, 30, 30)] autorelease];
-            t.image = [UIImage imageNamed:@"star.png"];
+            t.image = [UIImage imageNamed:@"star30.png"];
             [self.contentView addSubview:t];
             
             left += 40;
@@ -194,6 +194,49 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+}
+
+@end
+
+@implementation SLRightStarsTableItemCell
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
+    if ((self = [super initWithStyle:style reuseIdentifier:identifier])) {
+        _starsView = [[UIView alloc] init];
+        [self.contentView addSubview:_starsView];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    TT_RELEASE_SAFELY(_starsView);
+    [super dealloc];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    TTDPRINT(@"%e %e", self.contentView.height, _starsView.size.height);
+    _starsView.frame = CGRectMake(self.contentView.width - _starsViewWidth, (self.contentView.height - 15) / 2, _starsViewWidth, 15);
+}
+
+- (void)setObject:(id)object {
+    if (_item != object) {
+        [super setObject:object];
+        
+        SLRightStarsTableItem* item = object;
+        [_starsView removeAllSubviews];
+        
+        CGFloat left = 10;
+        for (int i = 0; i < [item.numberOfStars intValue]; i++) {
+            UIImageView* t = [[[UIImageView alloc] initWithFrame:CGRectMake(left, 0, 15, 15)] autorelease];
+            t.image = [UIImage imageNamed:@"star15.png"];
+            [_starsView addSubview:t];
+            left += 18;
+        }
+        _starsViewWidth = left;
+    }
 }
 
 @end

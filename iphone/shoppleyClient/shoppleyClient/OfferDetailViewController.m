@@ -51,7 +51,7 @@
         [sections addObject:@""];
         
         NSMutableArray* feedbacks = [[[NSMutableArray alloc] init] autorelease];
-        [feedbacks addObject:[TTTableTextItem itemWithText:@"Rate" URL:[self rateURL]]];
+        [feedbacks addObject:[SLRightStarsTableItem itemWithText:@"Rate" numberOfStars:((SLRedeemedOffer*)_offer).rating URL:[self rateURL]]];
         [feedbacks addObject:[TTTableTextItem itemWithText:@"Feedback to merchant" URL:[self feedbackURL]]];
         [items addObject:feedbacks];
         [sections addObject:@""];
@@ -82,6 +82,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self createModel];
+    
     UIView* headerView = [[[OfferDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 50) offer:_offer] autorelease];
     self.tableView.tableHeaderView = headerView;
     [super viewWillAppear:animated];

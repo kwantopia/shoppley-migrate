@@ -12,9 +12,14 @@
 @implementation SLRightValueTableItem
 
 + (id)itemWithText:(NSString*)text value:(NSString*)value {
+    return [self itemWithText:text value:value URL:nil];
+}
+
++ (id)itemWithText:(NSString*)text value:(NSString*)value URL:(NSString *)URL {
     SLRightValueTableItem* item = [[[self alloc] init] autorelease];
     item.text = text;
     item.caption = value;
+    item.URL = URL;
     return item;
 }
 
@@ -47,6 +52,19 @@
     if (self.numberOfStars) {
         [encoder encodeObject:self.numberOfStars forKey:@"numberOfStars"];
     }
+}
+
+@end
+
+@implementation SLRightStarsTableItem
+@synthesize numberOfStars = _numberOfStars;
+
++ (id)itemWithText:(NSString*)text numberOfStars:(NSNumber*)numberOfStars URL:(NSString *)URL {
+    SLRightStarsTableItem* item = [[[self alloc] init] autorelease];
+    item.text = text;
+    item.numberOfStars = numberOfStars;
+    item.URL = URL;
+    return item;
 }
 
 @end

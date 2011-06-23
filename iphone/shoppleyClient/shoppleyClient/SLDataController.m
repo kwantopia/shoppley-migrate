@@ -13,7 +13,8 @@
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
-static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 //static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
@@ -135,7 +136,6 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 }
 
 - (void)clean {
-    TT_RELEASE_SAFELY(_errorString);
     TT_RELEASE_SAFELY(_currentOffers);
     TT_RELEASE_SAFELY(_redeemedOffers);
     TT_RELEASE_SAFELY(_currentOffersDownloader);
@@ -144,7 +144,6 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 
 - (void)reloadData {
     [self updateLocation];
-    TT_RELEASE_SAFELY(_errorString);
     TT_RELEASE_SAFELY(_currentOffers);
     TT_RELEASE_SAFELY(_redeemedOffers);
     [_currentOffersDownloader download];

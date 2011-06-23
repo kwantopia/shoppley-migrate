@@ -14,6 +14,7 @@
 }
 
 + (id)itemWithText:(NSString *)text value:(NSString *)value;
++ (id)itemWithText:(NSString *)text value:(NSString *)value URL:(NSString *)URL;
 
 @end
 
@@ -24,5 +25,15 @@
 @property (nonatomic, copy) NSNumber* numberOfStars;
 
 + (id)itemWithNumberofStars:(NSNumber*)numberOfStars;
+
+@end
+
+@interface SLRightStarsTableItem : TTTableTextItem {
+    NSNumber* _numberOfStars;
+}
+
++ (id)itemWithText:(NSString *)text numberOfStars:(NSNumber *)numberOfStars URL:(NSString *)URL;
+
+@property (nonatomic, copy) NSNumber* numberOfStars;
 
 @end
