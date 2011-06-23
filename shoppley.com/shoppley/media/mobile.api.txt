@@ -21,63 +21,67 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "cvauun", 
+      "code": "xtolfu", 
       "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6174538665", 
       "offer_code_id": 1, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "hqhtqb", 
+      "code": "llkbri", 
       "description": "$1 off Chicken Sandwiches", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 2, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 3, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "hckhlb", 
+      "code": "ugdche", 
       "description": "Free drink when you order $10 or more", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 3, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 5, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "pcltmx", 
+      "code": "wdaqnu", 
       "description": "Half priced cookies", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 4, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 7, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Half priced cookies"
     }
   ], 
@@ -96,63 +100,67 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "cvauun", 
+      "code": "xtolfu", 
       "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6174538665", 
       "offer_code_id": 1, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "hqhtqb", 
+      "code": "llkbri", 
       "description": "$1 off Chicken Sandwiches", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 2, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 3, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
     }, 
     {
-      "code": "hckhlb", 
+      "code": "ugdche", 
       "description": "Free drink when you order $10 or more", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 3, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 5, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "code": "pcltmx", 
+      "code": "wdaqnu", 
       "description": "Half priced cookies", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 4, 
-      "expires": "an hour", 
+      "expires": "59 minutes", 
       "lon": -24.2322, 
       "phone": "6178710710", 
       "offer_code_id": 7, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Half priced cookies"
     }
   ], 
@@ -172,20 +180,21 @@ RESPONSE:
   "offers": [
     {
       "rating": 0, 
-      "offer_code_id": 5, 
+      "offer_code_id": 1, 
+      "name": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "redeemed": "06-23-11 18:52", 
+      "address1": "", 
+      "offer_id": 1, 
       "feedback": "", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "06-18-11 18:14", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 3, 
-      "description": "Free drink when you order $10 or more", 
       "lon": -24.2322, 
-      "name": "Free drink when you order $10 or more", 
-      "phone": "6178710710", 
+      "phone": "6174538665", 
+      "merchant_name": "Dunkin Donuts", 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
-      "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
-      "txn_amount": "0.00"
+      "txn_amount": "0.00", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "description": "$5 off shoes brands, Nike, Reebok"
     }
   ], 
   "num_offers": 1, 
@@ -198,13 +207,13 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'hqhtqb',
+  'offer_code': u'llkbri',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665']}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1, 
-  "confirm_msg": "Offer by \"hqhtqb\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"llkbri\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
@@ -212,7 +221,7 @@ Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
 PARAMS:
-{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 5}
+{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -224,7 +233,7 @@ Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
 PARAMS:
-{ 'offer_code_id': 5, 'rating': 5}
+{ 'offer_code_id': 1, 'rating': 5}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -332,8 +341,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "past_month": 0, 
-  "this_week": 0, 
+  "past_month": 1, 
+  "this_week": 1, 
   "result": 1, 
   "last_week": 0, 
   "result_msg": "Number of redemptions for this week, last week and past month returned."
@@ -350,15 +359,18 @@ RESPONSE:
   "offers": [
     {
       "received": 2, 
-      "redeem_rate": 0.0, 
+      "redeem_rate": 50.0, 
       "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$5 off shoes brands, Nike, Reebok", 
       "dollar_off": 0.0, 
-      "expires": "an hour", 
-      "redeemed": 0, 
+      "expires": "59 minutes", 
+      "redistributable": true, 
+      "redeemed": 1, 
+      "redistribute_processing": false, 
       "percentage": 0, 
-      "offer_id": 1
+      "offer_id": 1, 
+      "is_processing": false
     }
   ], 
   "result": 1, 
@@ -384,13 +396,16 @@ RESPONSE:
     "received": 2, 
     "redeem_rate": 0.0, 
     "description": "Come taste some great greek food next 30 minutes", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "10% off on entree", 
     "dollar_off": 0, 
     "expires": "59 minutes", 
+    "redistributable": true, 
     "redeemed": 0, 
+    "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 5
+    "offer_id": 5, 
+    "is_processing": false
   }, 
   "result": 2, 
   "result_msg": "Offers were sent but not clear how many people reached."
@@ -415,13 +430,16 @@ RESPONSE:
     "received": 0, 
     "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "dollar_off": 0, 
     "expires": "29 minutes", 
+    "redistributable": true, 
     "redeemed": 0, 
+    "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 6
+    "offer_id": 6, 
+    "is_processing": false
   }, 
   "result": 0, 
   "result_msg": "There were no customers that could be reached at this moment."
@@ -444,13 +462,16 @@ RESPONSE:
     "received": 0, 
     "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "dollar_off": 0, 
     "expires": "an hour", 
+    "redistributable": true, 
     "redeemed": 0, 
+    "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 7
+    "offer_id": 7, 
+    "is_processing": false
   }, 
   "result": 0, 
   "result_msg": "There were no customers that could be reached at this moment."
@@ -465,24 +486,27 @@ PARAMS:
 RESPONSE:
 {
   "offer": {
-    "received": 5, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "dollar_off": 0.0, 
     "expires": "an hour", 
+    "redistributable": false, 
     "redeemed": 0, 
+    "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 7
+    "offer_id": 7, 
+    "is_processing": false
   }, 
-  "result": -2, 
-  "result_msg": "Your balance is 9920. You do not have enough to reach customers."
+  "result": 0, 
+  "result_msg": "There were no customers that could be reached at this moment."
 }
 ****************************************************************************************************
 Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/restart/6/
+GET URL: /m/merchant/offer/restart/7/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
@@ -492,13 +516,16 @@ RESPONSE:
     "received": 0, 
     "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "dollar_off": 0.0, 
-    "expires": "29 minutes", 
+    "expires": "Expired", 
+    "redistributable": true, 
     "redeemed": 0, 
+    "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 6
+    "offer_id": 7, 
+    "is_processing": false
   }, 
   "result": 1, 
   "result_msg": "Found the previous offer that will be prefilled the new offer."
@@ -508,27 +535,29 @@ Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': u'cvauun'}
+{ 'amount': 38.05, 'code': u'qxafaq'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer_code": {
-    "code": "cvauun", 
-    "description": "$5 off shoes brands, Nike, Reebok", 
-    "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+    "code": "qxafaq", 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
     "address1": "", 
-    "offer_id": 1, 
-    "expires": "an hour", 
+    "offer_id": 5, 
+    "expires": "59 minutes", 
     "lon": -24.2322, 
     "phone": "6174538665", 
-    "offer_code_id": 1, 
+    "offer_code_id": 14, 
     "citystatezip": "Cambridge, MA 02139", 
     "lat": -42.2342, 
-    "banner": "http://webuy-dev.mit.edu/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "$5 off shoes brands, Nike, Reebok"
+    "percentage": 10, 
+    "merchant_name": "Dunkin Donuts", 
+    "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+    "name": "10% off on entree"
   }, 
   "result": 1, 
-  "result_msg": "Offer redemption (code: cvauun) successful."
+  "result_msg": "Offer redemption (code: qxafaq) successful."
 }
 ****************************************************************************************************
 Show list of past offers and details (URL param: 0)
@@ -544,13 +573,13 @@ RESPONSE:
       "received": 0, 
       "redeem_rate": 0, 
       "description": "Come taste some great greek food next 30 minutes", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$10 off on entree", 
       "dollar_off": 0.0, 
-      "expires": "29 minutes", 
+      "expires": "Expired", 
       "redeemed": 0, 
       "percentage": 10, 
-      "offer_id": 6
+      "offer_id": 7
     }
   ], 
   "result": 1, 
@@ -570,13 +599,13 @@ RESPONSE:
       "received": 0, 
       "redeem_rate": 0, 
       "description": "Come taste some great greek food next 30 minutes", 
-      "img": "http://webuy-dev.mit.edu/site_media/static/images/offers/offer-default.jpg", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$10 off on entree", 
       "dollar_off": 0.0, 
-      "expires": "29 minutes", 
+      "expires": "Expired", 
       "redeemed": 0, 
       "percentage": 10, 
-      "offer_id": 6
+      "offer_id": 7
     }
   ], 
   "result": 1, 
@@ -591,11 +620,11 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "total_redeemed": 1, 
-  "redeem_rate": 11.11111111111111, 
+  "total_redeemed": 2, 
+  "redeem_rate": 50.0, 
   "result_msg": "Summary data about the merchant's offers.", 
   "total_received": 4, 
-  "direct_received": 9, 
+  "direct_received": 4, 
   "result": 1, 
   "num_offers": 4
 }

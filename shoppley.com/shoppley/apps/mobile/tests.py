@@ -14,7 +14,7 @@ from django.conf import settings
 import csv, json
 import pprint
 import sqlite3, random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from shoppleyuser.utils import parse_phone_number
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category
@@ -197,7 +197,9 @@ class SimpleTest(TestCase):
 
 		m = Merchant.objects.get(user__email="user1@merchant.com")	
 		for o in offers:
-			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=datetime.now(), starting_time=datetime.now()) 
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, starting_time=input_time) 
 			offer.save()
 			offer.distribute()
 
@@ -210,7 +212,9 @@ class SimpleTest(TestCase):
 
 		m = Merchant.objects.get(user__email="user2@merchant.com")	
 		for o in offers:
-			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=datetime.now(), starting_time=datetime.now()) 
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, starting_time=input_time) 
 			offer.save()
 			offer.distribute()
 
@@ -248,6 +252,9 @@ class SimpleTest(TestCase):
 		if valid_offers.exists():
 			o = random.sample(valid_offers, 1)[0]
 			o.expired = True
+
+			# shorten duration manually
+			o.duration = 0 
 			o.save()
 			# expire all offer codes
 			for c in o.offercode_set.all():

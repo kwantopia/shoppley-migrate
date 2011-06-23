@@ -50,6 +50,7 @@ class Offer(models.Model):
 	redistributable = models.BooleanField(default=True)
 	is_processing = models.BooleanField(default=False)
 	redistribute_processing = models.BooleanField(default=False)
+
 	def __unicode__(self):
 		return self.title
 	
@@ -73,7 +74,7 @@ class Offer(models.Model):
 	def num_received(self):
 		return self.offercode_set.count()
 
-	def offer_detail(self):
+	def offer_detail(self, past=False):
 		"""
 			Used to report to merchant mobile phone
 		"""
@@ -99,6 +100,11 @@ class Offer(models.Model):
 			data["redeem_rate"] = redeemed/float(recvd)*100
 
 		data["img"] = self.get_image()
+
+		if not past:
+			data["redistributable"] = self.redistributable
+			data["is_processing"] = self.is_processing
+			data["redistribute_processing"] = self.redistribute_processing
 
 		return data
 
@@ -373,7 +379,7 @@ class Offer(models.Model):
 		#print "balance after redist=", self.merchant.balance
 		if enough_points: 
 			# number of people sent to, it can be 0 
-			self.redistributable = True
+			self.redistributable = False 
 			return self.num_resent_to
 
 		else:

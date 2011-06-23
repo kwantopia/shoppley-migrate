@@ -150,7 +150,6 @@ def offers_current(request):
 			data["result_msg"] = "No latitude and longitude specified."
 			return JSONHttpResponse(data) 
 			
-			
 		customer = u.shoppleyuser.customer
 		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
 		data["num_offers"] = user_offers.count()
@@ -692,12 +691,12 @@ def offers_past(request, days=0):
 		data["offers"] = []
 		if days == 0:
 			for o in Offer.objects.filter(merchant=merchant, expired=True):
-				data["offers"].append( o.offer_detail() )
+				data["offers"].append( o.offer_detail(past=True) )
 		else:
 			start_date = datetime.now()-timedelta(days=days)
 			end_date = datetime.now()
 			for o in Offer.objects.filter(merchant=merchant, expired=True, starting_time__range=(start_date, end_date)):
-				data["offers"].append( o.offer_detail() )
+				data["offers"].append( o.offer_detail(past=True) )
 
 		data["result"] = 1
 		data["result_msg"] = "Returned details of past offers."
