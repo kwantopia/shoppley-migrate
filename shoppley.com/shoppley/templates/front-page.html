@@ -40,8 +40,8 @@
     				Receive discount offer txts from your local stores on your cellphone.
     			</div>
     			<div class="signup-form customer">
-						{% include "shoppleyuser/customer_signup_form.html" %}
-
+				{% include "shoppleyuser/customer_signup_form.html" %}
+				<input type="submit" id="customer-cancel" value="{% trans "Cancel" %}" />                    
     			<div class="clear">&nbsp;</div>
     			</div>
     		
@@ -55,7 +55,8 @@
     				by txting offers to shoppley, entirely on your terms.
     			</div>
     			<div class="signup-form merchant">
-						{% include "shoppleyuser/merchant_signup_form.html" %}
+				{% include "shoppleyuser/merchant_signup_form.html" %}
+				<input type="submit" id="merchant-cancel" value="{% trans "Cancel" %}" />                    
     			<div class="clear">&nbsp;</div>
     			</div>
     		</div>
@@ -83,15 +84,17 @@
 
 			if (customer_form_isOpen) {
 				$("#frontpage-customer-signup").fadeOut(600);
-				
+				document.getElementById("merchant-signup-button").disabled= false;
 				customer_form_isOpen = false;
 			} else {
 				$("#frontpage-customer-signup").fadeIn(600);
+				document.getElementById("merchant-signup-button").disabled= true;
 				customer_form_isOpen = true;
 			}
 		});
 		$("#customer-cancel").click(function(){
 			$("#frontpage-customer-signup").fadeOut(600);
+			document.getElementById("merchant-signup-button").disabled= false;
 			customer_form_isOpen = false;
 		});
 
@@ -99,14 +102,17 @@
 		$("#merchant-signup-button").click(function(){
 			if (merchant_form_isOpen) {
 				$("#frontpage-merchant-signup").fadeOut(600);
+				document.getElementById("customer-signup-button").disabled= false;
 				merchant_form_isOpen = false;
 			} else {
 				$("#frontpage-merchant-signup").fadeIn(600);
+				document.getElementById("customer-signup-button").disabled= true;
 				merchant_form_isOpen = true;
 			}
 		});
 		$("#merchant-cancel").click(function(){
 			$("#frontpage-merchant-signup").fadeOut(600);
+			document.getElementById("customer-signup-button").disabled= false;
 			merchant_form_isOpen = false;
 		});
 
