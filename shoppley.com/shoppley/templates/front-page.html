@@ -23,7 +23,16 @@
     		<h2 class="alt msg-box">shoppley connects businesses and customers with awesome <i>real time offers</i>. sign up today!</h2>
     	</div>
      	      <div class="clear">&nbsp;</div>
-    	<div class="span-12">
+
+	Are you a 
+	<div class="customer-signup">
+		<button id="customer-signup-button">{% trans "Customer" %}</button> 
+	</div> 
+
+	<div class="merchant-signup">
+		<button id="merchant-signup-button">{% trans "Merchant" %}</button> 
+	</div>
+    	<div class="span-12" id="frontpage-customer-signup" style="display:none;">
     		<div class="main-box">
     			<div class="signup-header customer">
     				Are you looking for <br/>
@@ -33,41 +42,12 @@
     			<div class="signup-form customer">
 						{% include "shoppleyuser/customer_signup_form.html" %}
 
-    				<!--table>
-    					<tbody>
-    					<tr>
-    						<td class="labels"><label>Email*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-    						<td class="labels"><label>User Name*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-    						<td class="labels"><label>Zip code*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-      						<td class="labels"><label>Cell phone*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					
-    					<tr>
-    						<td class="labels"><label>Password*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-      						<td class="labels"><label>Password Again*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					</tbody>
-    				</table-->
     			<div class="clear">&nbsp;</div>
     			</div>
     		
     		</div>
     	</div>
-    	<div class="span-12 last">
+    	<div class="span-12 last" id="frontpage-merchant-signup" style="display:none;">
     		<div class="main-box">
     			<div class="signup-header merchant">
     				Start pulling in new customers and<br/>
@@ -76,47 +56,10 @@
     			</div>
     			<div class="signup-form merchant">
 						{% include "shoppleyuser/merchant_signup_form.html" %}
-
-    				<!--table>
-    					<tbody>
-    					<tr>
-    						<td class="labels"><label>Email*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-    						<td class="labels"><label>Business Name*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-    						<td class="labels"><label>Business Address*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-    						<td class="labels"><label>Zip code*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-      						<td class="labels"><label>Cell phone*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					
-    					<tr>
-    						<td class="labels"><label>Password*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					<tr>
-      						<td class="labels"><label>Password Again*</label></td>
-    						<td><input type="text" /></td>
-    					</tr>
-    					</tbody>
-    				</table-->
     			<div class="clear">&nbsp;</div>
     			</div>
-    		
-    		
     		</div>
     	</div>
-
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
 	{% endif %}<!-- else if user.is_authenticated -->
@@ -133,6 +76,40 @@
 		$(function() {
 			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
 		});
+
+		var customer_form_isOpen = false;
+
+		$("#customer-signup-button").click(function(){
+
+			if (customer_form_isOpen) {
+				$("#frontpage-customer-signup").fadeOut(600);
+				
+				customer_form_isOpen = false;
+			} else {
+				$("#frontpage-customer-signup").fadeIn(600);
+				customer_form_isOpen = true;
+			}
+		});
+		$("#customer-cancel").click(function(){
+			$("#frontpage-customer-signup").fadeOut(600);
+			customer_form_isOpen = false;
+		});
+
+		var merchant_form_isOpen = false;
+		$("#merchant-signup-button").click(function(){
+			if (merchant_form_isOpen) {
+				$("#frontpage-merchant-signup").fadeOut(600);
+				merchant_form_isOpen = false;
+			} else {
+				$("#frontpage-merchant-signup").fadeIn(600);
+				merchant_form_isOpen = true;
+			}
+		});
+		$("#merchant-cancel").click(function(){
+			$("#frontpage-merchant-signup").fadeOut(600);
+			merchant_form_isOpen = false;
+		});
+
 	</script>
 {% endblock %}
 
