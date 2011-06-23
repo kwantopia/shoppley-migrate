@@ -144,8 +144,8 @@ a:hover {
   height: auto;
 }
 
-* html .signup-form.customer, .signup-form.merchant {
-	height: 360px;
+.signup-form.customer, .signup-form.merchant {
+	height: 400px;
 }
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
@@ -244,7 +244,11 @@ form.login-header-form div#div_id_password label {
 	padding-left: 12px;
 }
 div#div_id_remember.checkbox {
-	padding-top: 5px;
+	padding: 5px;
+	float: left;
+}
+div.login form.login-header-form #div_id_remember.checkbox {
+	padding-top: 7px;
 }
 div.login .form_block {
 	float: right;
@@ -303,12 +307,21 @@ div.login .form_block {
 }
 
 #feedback-tab {
-  background-color: #0087CC;
+  background-color: #35ACE4;
   background-image: url("/site_media/static/images/feedback_tab_white.png");
   background-repeat: no-repeat;
   background-position: 2px 50%;
-  border: outset 1px #0087CC;
+  border: 2px solid  #EEEEEE;
   border-left: none;
+	-webkit-box-shadow: 1px 0 1px 2px #cccccc;
+	-moz-box-shadow: 1px 0 1px 2px #cccccc;
+	box-shadow: 1px 0 1px 2px #cccccc;
+	-webkit-border-top-right-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-bottomright: 2px;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
   z-index: 100001;
   text-indent: -9000px;
   height: 100px;
@@ -320,8 +333,8 @@ div.login .form_block {
 }
 
 #feedback-tab:hover {
-  background-color: #06C;
-  border: outset 1px #06C;
+  background-color: #ED5F87;
+  border: 2px solid #DDDDDD ;
   border-left: none;      
   cursor: pointer;
 }
