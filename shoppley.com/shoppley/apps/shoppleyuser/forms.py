@@ -133,7 +133,9 @@ class MerchantProfileEditForm(forms.Form):
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=True)
 	zip_code		= forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
 	phone			= forms.CharField(max_length=20)
-	
+	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
+
+
 	def clean_zip_code(self):
 		try:
 			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
@@ -143,23 +145,32 @@ class MerchantProfileEditForm(forms.Form):
 
 	def clean_username(self):
 		username = self.cleaned_data["username"]
-		try:
-			user = User.objects.get(username__iexact=username)
+		user = User.objects.get(id=self.cleaned_data["user_id"])
 		
+		try:
+			if username == user.username:
+				return self.cleaned_data["username"]
+			user = User.objects.get(username__iexact=username)
+			
 		except User.DoesNotExist:
 			
 			return self.cleaned_data["username"]
-		
+		user.message_set.create(message=ugettext(u"This username is already registered, Please choose another."))	
 		raise forms.ValidationError(_("This username is already registered. Please choose another."))
 
 	def clean_email(self):
 		email = self.cleaned_data["email"]
+		user = User.objects.get(id=self.cleaned_data["user_id"])
+
 		try:
+			if email == user.email:
+				return self.cleaned_data["email"]
 			email = EmailAddress.objects.get(email__iexact=email)
 		except EmailAddress.DoesNotExist:
 			return self.cleaned_data["email"]
 		except EmailAddress.MultipleObjectsReturned:
-                ## TODO: This should NOT have happened
+               
+## TODO: This should NOT have happened
 			raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 
 
@@ -167,10 +178,16 @@ class MerchantProfileEditForm(forms.Form):
 		
 
 	def clean_phone(self):
+		
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
-		 
-		su = ShoppleyUser.objects.filter(phone__icontains=self.cleaned_data["phone"])
+		phone = parse_phone_number(self.cleaned_data["phone"])
+		user = User.objects.get(id=self.cleaned_data["user_id"])
+
+		merchant = Merchant.objects.get(user__id=user.id)
+		if merchant.phone == phone:
+			return self.cleaned_data["phone"]	 
+		su = ShoppleyUser.objects.filter(phone=phone)
 		if su.count()>0:
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
@@ -183,7 +200,7 @@ class MerchantProfileEditForm(forms.Form):
 		username = self.cleaned_data["username"].lower()	
 		address = self.cleaned_data["address1"].lower()
 		u = User.objects.get(pk = user_id)
-		u.username = username
+		u.username = self.validate_username(user_id)
 		u.save()
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
@@ -392,6 +409,7 @@ class CustomerSignupForm(forms.Form):
 						# address_2=self.cleaned_data["address_2"],
 						phone=phone,
 						zipcode=zipcode_obj,
+						verified=True,
 					).save()
 				
 		return username, password # required for authenticate()

@@ -204,8 +204,8 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 					'zip_code': customer.zipcode.code,
 					'phone': customer.phone, })
 
-		ctx= {
-			"form": form,		
+	ctx= {
+		"form": form,
 		}
 	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
 
@@ -216,21 +216,36 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 	if request.method=="POST":
 		form = form_class(request.POST)
 		if form.is_valid():
+			#from django import forms
+
+			#try:
 			form.save(request.user.id)
+			#except forms.ValidationError, e:
+		#		print e
+		#		user = request.user
+		#		merchant = Merchant.objects.get(user__id=user.id)
+		
+#
+#				return render_to_response(template_name, {"form": form_class(initial = {'username': user.username, 
+ #                                       'address_1': merchant.address_1,
+  #                                      'zip_code': merchant.zipcode.code,
+   #                                     'phone': merchant.phone, 
+    #                                    'business_name' :merchant.business_name,}), },context_instance=RequestContext(request))
 			return HttpResponse(reverse("merchant_profile"))
 	else: 
 		user = request.user
 		merchant = Merchant.objects.get(user__id=user.id)
 		
-		form = form_class(initial = {'username': user.username, 
+		form = form_class( initial = {'username': user.username, 
 					'address_1': merchant.address_1,
 					'zip_code': merchant.zipcode.code,
 					'phone': merchant.phone, 
-					'business_name' :merchant.business_name,})
+					'business_name' :merchant.business_name,
+					'user_id': request.user.id,})
 
-		ctx= {
-			"form": form,		
-		}
+	ctx= {
+		"form": form,		
+	}
 	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
 
 
