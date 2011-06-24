@@ -1,4 +1,4 @@
-{% extends "account/base.html" %}
+{% extends "site_base.html" %}
 {% load i18n %}
 {% load uni_form_tags %}
 
@@ -6,9 +6,9 @@
 
 
 {% block body %}
-
-    <h1>{% trans "Account" %}</h1>
-    
+<a href="{% url user_profile %}">
+  			<input type="submit" value = "{% trans "&laquo; Back" %}" />
+  		</a>
     <h2>{% trans "Email Addresses" %}</h2>
     
     {% if user.emailaddress_set.all %}
