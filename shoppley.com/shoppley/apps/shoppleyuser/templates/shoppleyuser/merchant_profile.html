@@ -1,0 +1,50 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}Shoppley{% endblock %}
+
+
+{% block body %}
+
+    <div class="container">
+  	
+    	<!--div class="clear">&nbsp;</div-->
+    	<div class="span-12">
+			<div class="profile">    		
+				<h2>Profile</h2>
+				<a href="{% url merchant_profile_edit %}">{% trans "Edit" %}</a><br/>
+				Username: {{ username }} <br/>
+				Business name: {{ business_name }} <br/>
+				Address: {{ address }} <br/>
+				zipcode: {{ zipcode }} <br/>
+				Phone: {{ phone }} <br/>
+			</div>
+		</div>
+    	<div class="span-12 last">
+			<div class="account-settings">
+				<h2>Emails</h2>
+				<a href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+
+				Email: {{ email }} <span class="email-verified">{{ verified }}</span><br/>
+				<h2>Password</h2>
+				<a href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
+				Password: *********
+			</div>
+    	</div>
+    	<div class="clear" style="height: 40px;">&nbsp;</div>
+         	<div class="clear">&nbsp;</div>
+      	
+      </div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+	<script type="text/javascript">
+		$(function() {
+			
+		});
+	</script>
+{% endblock %}
