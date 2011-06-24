@@ -27,8 +27,8 @@ from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm
-from shoppleyuser.models import Customer, ShoppleyUser
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm
+from shoppleyuser.models import Customer, ShoppleyUser, Merchant
 
 
 
@@ -128,6 +128,111 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 	return render_to_response(template_name, ctx,
 		context_instance = RequestContext(request)
 	)
+@login_required
+def user_profile (request):
+	user = request.user
+
+	suser = ShoppleyUser.objects.get(user__id=user.id)
+	if suser.is_customer():
+		return HttpResponseRedirect(reverse("customer_profile"))
+	else:
+		return HttpResponseRedirect(reverse("merchant_profile"))
+@login_required
+def customer_profile(request, template="shoppleyuser/customer_profile.html"):
+	user = request.user
+	customer = Customer.objects.get(user__id=user.id)
+	username = user.username
+	zipcode = customer.zipcode.code
+	address = customer.address_1
+	phone = customer.phone
+	frequency = customer.daily_limit
+	email = user.emailaddress_set.all()[0].email
+	print "email=", email, " or ", user.emailaddress_set.all()
+	#emails = customer.emailaddress_set
+	verified = user.emailaddress_set.all()[0].verified
+	return render_to_response(template, 
+				{
+					"username":username,
+					"zipcode":zipcode,
+					"address":address,
+					"phone":phone,
+					"frequency":frequency,
+					"email":email,
+					"verified":verified,
+				},
+				context_instance=RequestContext(request))
+
+@login_required
+def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
+	user = request.user
+	merchant = Merchant.objects.get(user__id=user.id)
+	username = user.username
+	zipcode = merchant.zipcode.code
+	address = merchant.address_1
+	phone = merchant.phone
+	business_name = merchant.business_name
+	email = user.email
+	#emails = merchant.emailaddress_set
+	verified = user.emailaddress_set.all()[0].verified
+	return render_to_response(template, 
+				{
+					"username":username,
+					"zipcode":zipcode,
+					"address":address,
+					"phone":phone,
+					"business_name":business_name,
+					"email":email,
+					"verified":verified,
+				},
+				context_instance=RequestContext(request))
+
+@login_required
+def customer_profile_edit (request, form_class=CustomerProfileEditForm,
+	template_name="shoppleyuser/customer_profile_edit.html", success_url=None):
+
+	if request.method=="POST":
+		form = form_class(request.POST)
+		if form.is_valid():
+			form.save(request.user.id)
+			return HttpResponse(reverse("customer_profile"))
+	else: 
+		user = request.user
+		customer = Customer.objects.get(user__id=user.id)
+		
+		form = form_class(initial = {'username': user.username, 
+					'address_1': customer.address_1,
+					'zip_code': customer.zipcode.code,
+					'phone': customer.phone, })
+
+		ctx= {
+			"form": form,		
+		}
+	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
+
+@login_required
+def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
+	template_name="shoppleyuser/merchant_profile_edit.html", success_url=None):
+
+	if request.method=="POST":
+		form = form_class(request.POST)
+		if form.is_valid():
+			form.save(request.user.id)
+			return HttpResponse(reverse("merchant_profile"))
+	else: 
+		user = request.user
+		merchant = Merchant.objects.get(user__id=user.id)
+		
+		form = form_class(initial = {'username': user.username, 
+					'address_1': merchant.address_1,
+					'zip_code': merchant.zipcode.code,
+					'phone': merchant.phone, 
+					'business_name' :merchant.business_name,})
+
+		ctx= {
+			"form": form,		
+		}
+	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
+
 
 def merchant_signup(request, form_class=MerchantSignupForm,
 	template_name="shoppleyuser/signup.html", success_url=None):
