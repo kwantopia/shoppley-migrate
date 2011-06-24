@@ -194,7 +194,7 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 		form = form_class(request.POST)
 		if form.is_valid():
 			form.save(request.user.id)
-			return HttpResponse(reverse("customer_profile"))
+			return HttpResponseRedirect(reverse("customer_profile"))
 	else: 
 		user = request.user
 		customer = Customer.objects.get(user__id=user.id)
@@ -202,7 +202,8 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 		form = form_class(initial = {'username': user.username, 
 					'address_1': customer.address_1,
 					'zip_code': customer.zipcode.code,
-					'phone': customer.phone, })
+					'phone': customer.phone, 
+					'user_id':request.user.id,})
 
 	ctx= {
 		"form": form,
@@ -231,7 +232,7 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
   #                                      'zip_code': merchant.zipcode.code,
    #                                     'phone': merchant.phone, 
     #                                    'business_name' :merchant.business_name,}), },context_instance=RequestContext(request))
-			return HttpResponse(reverse("merchant_profile"))
+			return HttpResponseRedirect(reverse("merchant_profile"))
 	else: 
 		user = request.user
 		merchant = Merchant.objects.get(user__id=user.id)

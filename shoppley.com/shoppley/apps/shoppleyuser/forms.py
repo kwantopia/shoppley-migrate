@@ -128,12 +128,13 @@ class MerchantSignupForm(forms.Form):
 
 
 class MerchantProfileEditForm(forms.Form):
+	user_id                 = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	username		= forms.CharField(label=_("Username"))
 	business_name		= forms.CharField(label=_("Business Name"), max_length=64, required=True)	
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=True)
 	zip_code		= forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
 	phone			= forms.CharField(max_length=20)
-	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
+#	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 
 
 	def clean_zip_code(self):
@@ -200,16 +201,18 @@ class MerchantProfileEditForm(forms.Form):
 		username = self.cleaned_data["username"].lower()	
 		address = self.cleaned_data["address1"].lower()
 		u = User.objects.get(pk = user_id)
-		u.username = self.validate_username(user_id)
+		u.username = username
 		u.save()
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 		m = Merchant.objects.get(user__pk = user_id)
-		m.address1 = self.cleaned_data["address"]
+		m.address_1 = self.cleaned_data["address1"]
 		m.business_name = self.cleaned_data["business_name"]
+		print m.address_1
 		m.save()
 
 class CustomerProfileEditForm(forms.Form):
+	user_id                 = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	username		= forms.CharField(label=_("Username"))
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
 	zip_code		= forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
@@ -224,6 +227,10 @@ class CustomerProfileEditForm(forms.Form):
 
 	def clean_username(self):
 		username = self.cleaned_data["username"]
+		user = User.objects.get(id=self.cleaned_data["user_id"])
+		if username == user.username:
+			return self.cleaned_data["username"]
+
 		try:
 			user = User.objects.get(username__iexact=username)
 		
@@ -235,6 +242,10 @@ class CustomerProfileEditForm(forms.Form):
 
 	def clean_email(self):
 		email = self.cleaned_data["email"]
+		user = User.objects.get(id=self.cleaned_data["user_id"])
+
+		if email == user.email:
+			return self.cleaned_data["email"]
 		try:
 			email = EmailAddress.objects.get(email__iexact=email)
 		except EmailAddress.DoesNotExist:
@@ -250,8 +261,13 @@ class CustomerProfileEditForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
-		 
-		su = ShoppleyUser.objects.filter(phone__icontains=self.cleaned_data["phone"])
+		phone = parse_phone_number(self.cleaned_data["phone"])
+		user = User.objects.get(id=self.cleaned_data["user_id"])
+		customer = Customer.objects.get(user__id=user.id)
+                if customer.phone == phone:
+                        return self.cleaned_data["phone"]
+ 
+		su = ShoppleyUser.objects.filter(phone=phone)
 		if su.count()>0:
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
@@ -269,7 +285,8 @@ class CustomerProfileEditForm(forms.Form):
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 		c = Customer.objects.get(user__pk = user_id)
-		c.address1 = address
+		c.address_1 = address
+		c.phone = phone
 		c.save()
 
 
