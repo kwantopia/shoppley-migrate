@@ -21,12 +21,12 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "xtolfu", 
+      "code": "wtzced", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
-      "expires": "59 minutes", 
+      "expires": "3 weeks", 
       "lon": -24.2322, 
       "phone": "6174538665", 
       "offer_code_id": 1, 
@@ -37,55 +37,71 @@ RESPONSE:
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "llkbri", 
+      "code": "rzuphd", 
+      "description": "15% off big steak and 10% off small steak", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 2, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 3, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "15% off big steak and 10% off small stea"
+    }, 
+    {
+      "code": "uixjtl", 
+      "description": "Save $15 on your purchase of suit", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 3, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 5, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Save $15 on your purchase of suit"
+    }, 
+    {
+      "code": "qvyaza", 
+      "description": "$125 for tonight only at Marriott", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 4, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 7, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "$125 for tonight only at Marriott"
+    }, 
+    {
+      "code": "hmwnvd", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 2, 
-      "expires": "59 minutes", 
+      "offer_id": 5, 
+      "expires": "3 weeks", 
       "lon": -24.2322, 
       "phone": "6178710710", 
-      "offer_code_id": 3, 
+      "offer_code_id": 9, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
-    }, 
-    {
-      "code": "ugdche", 
-      "description": "Free drink when you order $10 or more", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 3, 
-      "expires": "59 minutes", 
-      "lon": -24.2322, 
-      "phone": "6178710710", 
-      "offer_code_id": 5, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -42.2342, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Free drink when you order $10 or more"
-    }, 
-    {
-      "code": "wdaqnu", 
-      "description": "Half priced cookies", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 4, 
-      "expires": "59 minutes", 
-      "lon": -24.2322, 
-      "phone": "6178710710", 
-      "offer_code_id": 7, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -42.2342, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Half priced cookies"
     }
   ], 
-  "num_offers": 4, 
+  "num_offers": 5, 
   "result": 1, 
   "result_msg": "Returning offer details."
 }
@@ -100,12 +116,12 @@ RESPONSE:
 {
   "offers": [
     {
-      "code": "xtolfu", 
+      "code": "wtzced", 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "", 
       "offer_id": 1, 
-      "expires": "59 minutes", 
+      "expires": "3 weeks", 
       "lon": -24.2322, 
       "phone": "6174538665", 
       "offer_code_id": 1, 
@@ -116,55 +132,71 @@ RESPONSE:
       "name": "$5 off shoes brands, Nike, Reebok"
     }, 
     {
-      "code": "llkbri", 
+      "code": "rzuphd", 
+      "description": "15% off big steak and 10% off small steak", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 2, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 3, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "15% off big steak and 10% off small stea"
+    }, 
+    {
+      "code": "uixjtl", 
+      "description": "Save $15 on your purchase of suit", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 3, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 5, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Save $15 on your purchase of suit"
+    }, 
+    {
+      "code": "qvyaza", 
+      "description": "$125 for tonight only at Marriott", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 4, 
+      "expires": "3 weeks", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "offer_code_id": 7, 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "merchant_name": "Dunkin Donuts", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "$125 for tonight only at Marriott"
+    }, 
+    {
+      "code": "hmwnvd", 
       "description": "$1 off Chicken Sandwiches", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 2, 
-      "expires": "59 minutes", 
+      "offer_id": 5, 
+      "expires": "3 weeks", 
       "lon": -24.2322, 
       "phone": "6178710710", 
-      "offer_code_id": 3, 
+      "offer_code_id": 9, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -42.2342, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "$1 off Chicken Sandwiches"
-    }, 
-    {
-      "code": "ugdche", 
-      "description": "Free drink when you order $10 or more", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 3, 
-      "expires": "59 minutes", 
-      "lon": -24.2322, 
-      "phone": "6178710710", 
-      "offer_code_id": 5, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -42.2342, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Free drink when you order $10 or more"
-    }, 
-    {
-      "code": "wdaqnu", 
-      "description": "Half priced cookies", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 4, 
-      "expires": "59 minutes", 
-      "lon": -24.2322, 
-      "phone": "6178710710", 
-      "offer_code_id": 7, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -42.2342, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Half priced cookies"
     }
   ], 
-  "num_offers": 4, 
+  "num_offers": 5, 
   "result": 1, 
   "result_msg": "Returning offer details."
 }
@@ -183,7 +215,7 @@ RESPONSE:
       "offer_code_id": 1, 
       "name": "$5 off shoes brands, Nike, Reebok", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "06-23-11 18:52", 
+      "redeemed": "06-24-11 21:38", 
       "address1": "", 
       "offer_id": 1, 
       "feedback": "", 
@@ -195,9 +227,27 @@ RESPONSE:
       "txn_amount": "0.00", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "description": "$5 off shoes brands, Nike, Reebok"
+    }, 
+    {
+      "rating": 0, 
+      "offer_code_id": 5, 
+      "name": "Save $15 on your purchase of suit", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "redeemed": "06-24-11 21:38", 
+      "address1": "", 
+      "offer_id": 3, 
+      "feedback": "", 
+      "lon": -24.2322, 
+      "phone": "6174538665", 
+      "merchant_name": "Dunkin Donuts", 
+      "citystatezip": "Cambridge, MA 02139", 
+      "lat": -42.2342, 
+      "txn_amount": "0.00", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "description": "Save $15 on your purchase of suit"
     }
   ], 
-  "num_offers": 1, 
+  "num_offers": 2, 
   "result": 1, 
   "result_msg": "Returning redeemed offers."
 }
@@ -207,13 +257,13 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'llkbri',
+  'offer_code': u'rzuphd',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665']}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1, 
-  "confirm_msg": "Offer by \"llkbri\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"rzuphd\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
@@ -341,8 +391,8 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "past_month": 1, 
-  "this_week": 1, 
+  "past_month": 2, 
+  "this_week": 2, 
   "result": 1, 
   "last_week": 0, 
   "result_msg": "Number of redemptions for this week, last week and past month returned."
@@ -364,12 +414,57 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$5 off shoes brands, Nike, Reebok", 
       "dollar_off": 0.0, 
-      "expires": "59 minutes", 
+      "expires": "3 weeks", 
       "redistributable": true, 
       "redeemed": 1, 
       "redistribute_processing": false, 
       "percentage": 0, 
       "offer_id": 1, 
+      "is_processing": false
+    }, 
+    {
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "15% off big steak and 10% off small steak", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "title": "15% off big steak and 10% off small stea", 
+      "dollar_off": 0.0, 
+      "expires": "3 weeks", 
+      "redistributable": true, 
+      "redeemed": 0, 
+      "redistribute_processing": false, 
+      "percentage": 0, 
+      "offer_id": 2, 
+      "is_processing": false
+    }, 
+    {
+      "received": 2, 
+      "redeem_rate": 50.0, 
+      "description": "Save $15 on your purchase of suit", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "title": "Save $15 on your purchase of suit", 
+      "dollar_off": 0.0, 
+      "expires": "3 weeks", 
+      "redistributable": true, 
+      "redeemed": 1, 
+      "redistribute_processing": false, 
+      "percentage": 0, 
+      "offer_id": 3, 
+      "is_processing": false
+    }, 
+    {
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "$125 for tonight only at Marriott", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "title": "$125 for tonight only at Marriott", 
+      "dollar_off": 0.0, 
+      "expires": "3 weeks", 
+      "redistributable": true, 
+      "redeemed": 0, 
+      "redistribute_processing": false, 
+      "percentage": 0, 
+      "offer_id": 4, 
       "is_processing": false
     }
   ], 
@@ -393,8 +488,8 @@ PARAMS:
 RESPONSE:
 {
   "offer": {
-    "received": 2, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "10% off on entree", 
@@ -404,11 +499,11 @@ RESPONSE:
     "redeemed": 0, 
     "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 5, 
+    "offer_id": 8, 
     "is_processing": false
   }, 
-  "result": 2, 
-  "result_msg": "Offers were sent but not clear how many people reached."
+  "result": 0, 
+  "result_msg": "There were no customers that could be reached at this moment."
 }
 ****************************************************************************************************
 Start a $ off offer (units=1), duration if not specified will be next 90 minutes
@@ -438,7 +533,7 @@ RESPONSE:
     "redeemed": 0, 
     "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 6, 
+    "offer_id": 9, 
     "is_processing": false
   }, 
   "result": 0, 
@@ -470,7 +565,7 @@ RESPONSE:
     "redeemed": 0, 
     "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 7, 
+    "offer_id": 10, 
     "is_processing": false
   }, 
   "result": 0, 
@@ -479,7 +574,7 @@ RESPONSE:
 ****************************************************************************************************
 Send more of the same offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/send/more/7/
+GET URL: /m/merchant/offer/send/more/10/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
@@ -497,16 +592,16 @@ RESPONSE:
     "redeemed": 0, 
     "redistribute_processing": false, 
     "percentage": 10, 
-    "offer_id": 7, 
+    "offer_id": 10, 
     "is_processing": false
   }, 
   "result": 0, 
   "result_msg": "There were no customers that could be reached at this moment."
 }
 ****************************************************************************************************
-Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
+Result when offer cannot be sent more because already sent more (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/restart/7/
+GET URL: /m/merchant/offer/send/more/10/
 PARAMS:
 { }
 ----------------------------------------------------------------------------------------------------
@@ -519,12 +614,39 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "dollar_off": 0.0, 
+    "expires": "an hour", 
+    "redistributable": false, 
+    "redeemed": 0, 
+    "redistribute_processing": false, 
+    "percentage": 10, 
+    "offer_id": 10, 
+    "is_processing": false
+  }, 
+  "result": -4, 
+  "result_msg": "You have already redistributed this offer.  Create a new offer to reach more customers."
+}
+****************************************************************************************************
+Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
+----------------------------------------------------------------------------------------------------
+GET URL: /m/merchant/offer/restart/2/
+PARAMS:
+{ }
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offer": {
+    "received": 2, 
+    "redeem_rate": 0.0, 
+    "description": "15% off big steak and 10% off small steak", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
+    "title": "15% off big steak and 10% off small stea", 
+    "dollar_off": 0.0, 
     "expires": "Expired", 
     "redistributable": true, 
     "redeemed": 0, 
     "redistribute_processing": false, 
-    "percentage": 10, 
-    "offer_id": 7, 
+    "percentage": 0, 
+    "offer_id": 2, 
     "is_processing": false
   }, 
   "result": 1, 
@@ -535,29 +657,28 @@ Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': u'qxafaq'}
+{ 'amount': 38.05, 'code': u'qvyaza'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer_code": {
-    "code": "qxafaq", 
-    "description": "Come taste some great greek food next 30 minutes", 
+    "code": "qvyaza", 
+    "description": "$125 for tonight only at Marriott", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "address1": "", 
-    "offer_id": 5, 
-    "expires": "59 minutes", 
+    "offer_id": 4, 
+    "expires": "3 weeks", 
     "lon": -24.2322, 
     "phone": "6174538665", 
-    "offer_code_id": 14, 
+    "offer_code_id": 7, 
     "citystatezip": "Cambridge, MA 02139", 
     "lat": -42.2342, 
-    "percentage": 10, 
     "merchant_name": "Dunkin Donuts", 
     "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "10% off on entree"
+    "name": "$125 for tonight only at Marriott"
   }, 
   "result": 1, 
-  "result_msg": "Offer redemption (code: qxafaq) successful."
+  "result_msg": "Offer redemption (code: qvyaza) successful."
 }
 ****************************************************************************************************
 Show list of past offers and details (URL param: 0)
@@ -570,16 +691,16 @@ RESPONSE:
 {
   "offers": [
     {
-      "received": 0, 
-      "redeem_rate": 0, 
-      "description": "Come taste some great greek food next 30 minutes", 
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "15% off big steak and 10% off small steak", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "$10 off on entree", 
+      "title": "15% off big steak and 10% off small stea", 
       "dollar_off": 0.0, 
       "expires": "Expired", 
       "redeemed": 0, 
-      "percentage": 10, 
-      "offer_id": 7
+      "percentage": 0, 
+      "offer_id": 2
     }
   ], 
   "result": 1, 
@@ -596,16 +717,16 @@ RESPONSE:
 {
   "offers": [
     {
-      "received": 0, 
-      "redeem_rate": 0, 
-      "description": "Come taste some great greek food next 30 minutes", 
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "15% off big steak and 10% off small steak", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "$10 off on entree", 
+      "title": "15% off big steak and 10% off small stea", 
       "dollar_off": 0.0, 
       "expires": "Expired", 
       "redeemed": 0, 
-      "percentage": 10, 
-      "offer_id": 7
+      "percentage": 0, 
+      "offer_id": 2
     }
   ], 
   "result": 1, 
@@ -620,13 +741,13 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "total_redeemed": 2, 
-  "redeem_rate": 50.0, 
+  "total_redeemed": 3, 
+  "redeem_rate": 37.5, 
   "result_msg": "Summary data about the merchant's offers.", 
-  "total_received": 4, 
-  "direct_received": 4, 
+  "total_received": 12, 
+  "direct_received": 8, 
   "result": 1, 
-  "num_offers": 4
+  "num_offers": 7
 }
 ****************************************************************************************************
 Show a summary visualization for the merchants

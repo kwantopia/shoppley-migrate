@@ -596,6 +596,9 @@ def offer_send_more(request, offer_id):
 				receipt_msg = _("There were no customers that could be reached at this moment.") 
 			elif num_reached == -2:
 				receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % merchant.balance
+			elif num_reached == -3:
+				num_reached = -4
+				receipt_msg = _("You have already redistributed this offer.  Create a new offer to reach more customers.")
 
 			data["offer"] = offer.offer_detail()
 			data["result"] = num_reached 

@@ -286,7 +286,11 @@ class Offer(models.Model):
 		self.save()
 
 		if not self.redistributable:
+			# already redistributed, so not allowed any more
+			self.redistribute_processing= False
+			self.save()
 			return -3
+
 		"""
 			Offer can be redistributed multiple number of times and all the parameters would be the
 			same except extending the duration.
@@ -375,11 +379,18 @@ class Offer(models.Model):
 		self.redistribute_processing = False
 		self.save()
 		
-
 		#print "balance after redist=", self.merchant.balance
+
+		# make redistributable false even if the merchant does not have enough
+		# points to redistribute.  If the merchant refills more points, they
+		# will be able to start new offers instead of being able to redistribute
+		# just so they don't keep on trying to redistribute when they don't have
+		# enough points and throttle our server.
+		self.redistributable = False 
+		self.save()
+
 		if enough_points: 
 			# number of people sent to, it can be 0 
-			self.redistributable = False 
 			return self.num_resent_to
 
 		else:

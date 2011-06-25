@@ -58,10 +58,23 @@ def pretty_date(time=False, future=True):
 	if day_diff < 7:
 		return str(day_diff) + " days" + suffix
 	if day_diff < 31:
-		return str(day_diff/7) + " weeks" + suffix
+		days = day_diff/7
+		if days == 1:
+			return str(days) + " week" + suffix
+		else:
+			return str(days) + " weeks" + suffix
 	if day_diff < 365:
-		return str(day_diff/30) + " months" + suffix
-	return str(day_diff/365) + " years" + suffix
+		months = day_diff/30
+		if months == 1:
+			return str(months) + " month" + suffix
+		else:
+			return str(months) + " months" + suffix
+	else:
+		years = day_diff/365
+		if years == 1:
+			return str(years) + " year" + suffix
+		else:
+			return str(years) + " years" + suffix
 
 def load_zipcodes():
 	f = open(FILE_ROOT+"/data/US.txt", "r")

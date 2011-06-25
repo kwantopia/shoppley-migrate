@@ -190,16 +190,16 @@ class SimpleTest(TestCase):
 			zip codes
 		"""
 	
-		offers = ["$5 off shoes brands, Nike, Reebok"] #,
-				#"15% off big steak and 10% off small steak",
-				#				"Save $15 on your purchase of suit",
-				#				"$125 for tonight only at Marriott"]
+		offers = ["$5 off shoes brands, Nike, Reebok",
+				"15% off big steak and 10% off small steak",
+								"Save $15 on your purchase of suit",
+								"$125 for tonight only at Marriott"]
 
 		m = Merchant.objects.get(user__email="user1@merchant.com")	
 		for o in offers:
 			# start offers 30 minutes ago
 			input_time = datetime.now()-timedelta(minutes=30)
-			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, starting_time=input_time) 
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
 			offer.distribute()
 
@@ -214,7 +214,7 @@ class SimpleTest(TestCase):
 		for o in offers:
 			# start offers 30 minutes ago
 			input_time = datetime.now()-timedelta(minutes=30)
-			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, starting_time=input_time) 
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
 			offer.distribute()
 
@@ -228,8 +228,9 @@ class SimpleTest(TestCase):
 
 		u = User.objects.get(email="user1@customer.com")
 		c = u.shoppleyuser.customer
-		o = random.sample( OfferCode.objects.filter(customer=c), 1 )
+		o = random.sample( OfferCode.objects.filter(customer=c), 2 )
 		o[0].redeem()
+		o[1].redeem()
 
 	def random_offer(self):
 
@@ -406,6 +407,11 @@ class SimpleTest(TestCase):
 
 		comment = "Send more of the same offer (URL param: offer_id)"
 		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
+
+		comment = "Result when offer cannot be sent more because already sent more (URL param: offer_id)"
+		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
+
+		self.assertEqual(response["result"], -4)
 
 		# TODO: Need to expire some offers and send new offers
 		exp_offer = self.expire_offer(email=email)
