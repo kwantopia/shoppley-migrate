@@ -84,7 +84,7 @@ fieldset {padding:0/*0 1.4em 1.4em 1.4em*/;margin:0 0 0 0;border:none;}
 legend {font-weight:bold;font-size:1.2em;margin-top:-0.2em;margin-bottom:1em;}
 fieldset, #IE8#HACK {padding-top:1.4em;}
 legend, #IE8#HACK {margin-top:0;margin-bottom:0;}
-input[type=text], input[type=password], input[type=url], input[type=email], input.text, input.title, textarea {padding: 0.5em;background-image: -webkit-gradient(linear, 0% 0%, 0% 40%, from(#F2F2F2), to(#FFFFFF), color-stop(.7,#FFFFFF));background-image:-moz-linear-gradient(19% 75% 90deg,#ababab, #c9c9c9, #c7c7c7 100%);border:1px solid #bbb;color:#000;}
+input[type=text], input[type=password], input[type=url], input[type=email], input.text, input.title, textarea {padding: 0.5em;background-image: -webkit-gradient(linear, 0% 0%, 0% 40%, from(#F2F2F2), to(#FFFFFF), color-stop(.7,#FFFFFF));background-image:-moz-linear-gradient(center bottom , #FFFFFF 30%, #F3F3F3 100%);border:1px solid #bbb;color:#000;}
 input[type=text]:focus, input[type=password]:focus, input[type=url]:focus, input[type=email]:focus, input.text:focus, input.title:focus, textarea:focus {border-color:#35ACE4;}
 select {background-color:#fff;border-width:1px;border-style:solid;}
 input[type=text], input[type=password], input[type=url], input[type=email], input.text, input.title, textarea, select {margin:0.5em 0;}

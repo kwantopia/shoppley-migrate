@@ -145,7 +145,7 @@ a:hover {
 }
 
 .signup-form.customer, .signup-form.merchant {
-	height: 400px;
+	height: 480px;
 }
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
@@ -231,7 +231,7 @@ div.login form.login-header-form fieldset.inlineLabels {
 	width: 510px;
 }
 div.login form.login-header-form input#id_username, div.login form.login-header-form input#id_password {
-	width: 119px;
+	width: 95px;
 }
 
 div.login div#div_id_username, div.login div#div_id_password {

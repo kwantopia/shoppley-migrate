@@ -10,6 +10,7 @@ from django.db.models import Q, Avg
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.contrib import messages
 
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat

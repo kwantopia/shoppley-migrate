@@ -1,6 +1,6 @@
 from django.core.management.base import NoArgsCommand
 from shoppleyuser.models import *
-
+from django.contrib.sites.models import Site
 class Command(NoArgsCommand):
 
 
@@ -22,6 +22,8 @@ class Command(NoArgsCommand):
 		shop_user, created = Customer.objects.get_or_create(user=u, address_1="20 Pearl St. apt 1", zipcode = zipcode, phone="6179092101" )
 		shop_user.merchant_likes.add(shop_merchant)
 
+		shoppley, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com")
+		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
 
 		# create categories
 		categories = [("Dining & Nightlife", "dining"), ("Health & Beauty", "health"), ("Fitness","fitness"), ("Retail & Services", "retail"), ("Activities & Events", "activities"), ("Special Interests", "special")]

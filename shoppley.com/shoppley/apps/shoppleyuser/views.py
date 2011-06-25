@@ -9,11 +9,13 @@ from django.db.models import Q, Avg
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _, ugettext
 
 if "mailer" in settings.INSTALLED_APPS:
 	from mailer import send_mail
@@ -35,6 +37,12 @@ from shoppleyuser.models import Customer, ShoppleyUser, Merchant
 def home(request, template_name="front-page.html"):
 	if request.user.is_authenticated():
 		if Customer.objects.filter(user__id=request.user.id).count()>0:
+			if request.user.emailaddress_set.count()==0:
+#				request.user.message_set.create(message="You do not have an email yet. Please go to Account and add one for email notifications.")
+				messages.add_message(request, messages.INFO,
+						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
+			messages.add_message(request, messages.INFO,'You do not have an email yet. Please go to <a href="shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
+  
 			return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
 		else:
 			return render_to_response("shoppleyuser/merchant_landing_page.html", context_instance=RequestContext(request))
@@ -146,10 +154,15 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	address = customer.address_1
 	phone = customer.phone
 	frequency = customer.daily_limit
-	email = user.emailaddress_set.all()[0].email
-	print "email=", email, " or ", user.emailaddress_set.all()
+
+	if user.emailaddress_set.count()>0:
+		email = user.emailaddress_set.all()[0].email
+	#print "email=", email, " or ", user.emailaddress_set.all()
 	#emails = customer.emailaddress_set
-	verified = user.emailaddress_set.all()[0].verified
+		verified = user.emailaddress_set.all()[0].verified
+	else:
+		email=None	
+		verified=None
 	return render_to_response(template, 
 				{
 					"username":username,

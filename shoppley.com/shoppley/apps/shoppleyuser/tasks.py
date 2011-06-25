@@ -19,24 +19,28 @@ def process_sms():
 @periodic_task(run_every=crontab(hour=7, minute=0))
 def reset_offer_count():
 		from offer.management.commands.reset_offer_counts import Command
+		
 		cmd = Command()
 		cmd.handle_noargs()
 
-@periodic_task(run_every=crontab())
+@periodic_task(run_every=timedelta(minutes=1))
 def send_mail():
 		from mailer.management.commands.send_mail import Command
+		print ("Running send_mail task...\n")
 		cmd = Command()
 		cmd.handle_noargs()
 		
 
-@periodic_task(run_every=crontab())
+@periodic_task(run_every=timedelta(minutes=1))
 def emit_notices():
 		from notification.management.commands.emit_notices import Command
+		print ("Running emit_notice task...\n")
 		cmd = Command()
 		cmd.handle_noargs()
 
 @periodic_task(run_every=crontab(minute="*/20"))
 def retry_deferred():
 		from mailer.management.commands.retry_deferred import Command
+		print("Running retry deferred ...\n")
 		cmd = Command()
 		cmd.handle_noargs()

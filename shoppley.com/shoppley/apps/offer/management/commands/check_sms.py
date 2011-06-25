@@ -497,13 +497,13 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() == STOP:
 					
 						if su.active:
-							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY_NUM": DEFAULT_SHOPPLEY_NUM})
+							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": DEFAULT_SHOPPLEY_NUM})
 							self.notify(phone,customer_msg)
 							su.active = False
 							su.save()
 
 						else:
-					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY_NUM": DEFAULT_SHOPPLEY_NUM})
+					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": DEFAULT_SHOPPLEY_NUM})
 							self.notify(phone,customer_msg)
 					# ------------------- START: "start"-----------------------
 					elif parsed[0].lower() == START :

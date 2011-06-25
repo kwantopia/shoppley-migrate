@@ -20,9 +20,9 @@ PINAX_THEME = "default"
 
 # set SMS_DEBUG=True when running django tests so that
 # it doesn't send out unnecessary txt messages
-SMS_DEBUG = True 
+SMS_DEBUG = False
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -122,6 +122,7 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
+	'django.middleware.csrf.CsrfResponseMiddleware',
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
@@ -154,6 +155,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 	"messages.context_processors.inbox",
 	"friends_app.context_processors.invitations",
 	"shoppley.context_processors.combined_inbox_count",
+	"shoppley.context_processors.current_site",
 ]
 
 COMBINED_INBOX_COUNT_SOURCES = [
@@ -203,6 +205,7 @@ INSTALLED_APPS = [
 	"django_sorting",
 	"django_markup",
 	"tagging_ext",
+	"djcelery",
 	
 	# Pinax
 	"pinax.apps.account",
@@ -328,3 +331,16 @@ except ImportError:
 DEFAULT_OFFER_IMG_URL = STATIC_URL+"images/offers/offer-default.jpg"
 DEFAULT_MERCHANT_BANNER_URL = STATIC_URL+"images/merchant/restaurant_banner.png"
 CONTACT_EMAIL = "support@shoppley.com"
+
+# set django-celery autoloader 
+
+import djcelery
+djcelery.setup_loader()
+
+# set information to connect to rabbitmq (broker) 
+
+BROKER_HOST = "127.0.0.1"
+BROKER_PORT = 5672
+BROKER_VHOST = "shoppley_vhost"
+BROKER_USER = "shoppley_rabbit"
+BROKER_PASSWORD = "shoppley_rabbit"
