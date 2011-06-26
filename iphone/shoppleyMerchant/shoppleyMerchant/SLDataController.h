@@ -1,6 +1,6 @@
 //
 //  SLDataController.h
-//  shoppleyClient
+//  shoppleyMerchant
 //
 //  Created by yod on 6/14/11.
 //  Copyright 2011 Shoppley. All rights reserved.
@@ -32,10 +32,10 @@
 #pragma mark SLDataController
 @interface SLDataController : NSObject <CLLocationManagerDelegate> {
     NSString* _errorString;
-    NSArray* _currentOffers;
-    NSArray* _redeemedOffers;
-    SLDataDownloader* _currentOffersDownloader;
-    SLDataDownloader* _redeemedOffersDownloader;
+    NSArray* _activeOffers;
+    NSArray* _pastOffers;
+    SLDataDownloader* _activeOffersDownloader;
+    SLDataDownloader* _pastOffersDownloader;
     
     // Location
     BOOL _isLocationReady;
@@ -45,8 +45,8 @@
 }
 
 @property (nonatomic, retain) NSString* errorString;
-@property (nonatomic, retain) NSArray* currentOffers;
-@property (nonatomic, retain) NSArray* redeemedOffers;
+@property (nonatomic, retain) NSArray* activeOffers;
+@property (nonatomic, retain) NSArray* pastOffers;
 @property (nonatomic, retain) NSString* latitude;
 @property (nonatomic, retain) NSString* longitude;
 
@@ -68,8 +68,8 @@
 #pragma mark Offers
 
 // Return nil, if the data is not downloaded. Caller should try again later.
-- (NSArray*)obtainCurrentOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
-- (NSArray*)obtainRedeemedOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
+- (NSArray*)obtainActiveOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
+- (NSArray*)obtainPastOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload;
 
 #pragma mark -
 #pragma mark Offer

@@ -16,10 +16,27 @@
 		320CC833B8AF0ACFD35E6225 /* libThree20Style.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320CC833B8AF0ACFD35E6224 /* libThree20Style.a */; };
 		320D7DCCE32703ACAB9A45E5 /* libThree20.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320D7DCCE32703ACAB9A45E4 /* libThree20.a */; };
 		320F2C48872C2E2C4DF86205 /* libThree20UI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320F2C48872C2E2C4DF86204 /* libThree20UI.a */; };
+		D51102A813B6DB8A000C5CF0 /* SLOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102A513B6DB8A000C5CF0 /* SLOffer.m */; };
+		D51102A913B6DB8A000C5CF0 /* SLActiveOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102A713B6DB8A000C5CF0 /* SLActiveOffer.m */; };
+		D51102AC13B6E1E6000C5CF0 /* SLPastOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102AB13B6E1E6000C5CF0 /* SLPastOffer.m */; };
+		D51102C913B6E679000C5CF0 /* OffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102C613B6E679000C5CF0 /* OffersViewController.m */; };
+		D51102CA13B6E679000C5CF0 /* ActiveOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102C813B6E679000C5CF0 /* ActiveOffersViewController.m */; };
+		D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */; };
 		D561370C13B6AB150061963B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370913B6AB150061963B /* Default.png */; };
 		D561370D13B6AB150061963B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370A13B6AB150061963B /* Icon.png */; };
 		D561370E13B6AB150061963B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370B13B6AB150061963B /* logo.png */; };
 		D5D5EACD13B6B42500F85362 /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EACC13B6B42500F85362 /* Icon_ipad.png */; };
+		D5D5EBED13B6D25600F85362 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EBEC13B6D25600F85362 /* SettingsViewController.m */; };
+		D5D5EBF713B6D29200F85362 /* SLTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EBF013B6D29200F85362 /* SLTableViewDataSource.m */; };
+		D5D5EBF813B6D29200F85362 /* SLTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EBF213B6D29200F85362 /* SLTableItem.m */; };
+		D5D5EBF913B6D29200F85362 /* SLTableItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EBF413B6D29200F85362 /* SLTableItemCell.m */; };
+		D5D5EBFA13B6D29200F85362 /* SLStyleSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EBF613B6D29200F85362 /* SLStyleSheet.m */; };
+		D5D5EC2013B6D33F00F85362 /* SummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D5EC1F13B6D33F00F85362 /* SummaryViewController.m */; };
+		D5D5EC2613B6D3E100F85362 /* tab_active_offers.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EC2113B6D3E100F85362 /* tab_active_offers.png */; };
+		D5D5EC2713B6D3E100F85362 /* tab_past_offers.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EC2213B6D3E100F85362 /* tab_past_offers.png */; };
+		D5D5EC2813B6D3E100F85362 /* tab_redeem.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EC2313B6D3E100F85362 /* tab_redeem.png */; };
+		D5D5EC2913B6D3E100F85362 /* tab_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EC2413B6D3E100F85362 /* tab_settings.png */; };
+		D5D5EC2A13B6D3E100F85362 /* tab_summary.png in Resources */ = {isa = PBXBuildFile; fileRef = D5D5EC2513B6D3E100F85362 /* tab_summary.png */; };
 		D5E0040513B6A5FF009AF4F7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E0040413B6A5FF009AF4F7 /* UIKit.framework */; };
 		D5E0040713B6A5FF009AF4F7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E0040613B6A5FF009AF4F7 /* Foundation.framework */; };
 		D5E0040913B6A5FF009AF4F7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E0040813B6A5FF009AF4F7 /* CoreGraphics.framework */; };
@@ -239,10 +256,39 @@
 		320CC833B8AF0ACFD35E6220 /* Three20Style.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20Style.xcodeproj; path = ../three20/src/Three20Style/Three20Style.xcodeproj; sourceTree = SOURCE_ROOT; };
 		320D7DCCE32703ACAB9A45E0 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = ../three20/src/Three20/Three20.xcodeproj; sourceTree = SOURCE_ROOT; };
 		320F2C48872C2E2C4DF86200 /* Three20UI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20UI.xcodeproj; path = ../three20/src/Three20UI/Three20UI.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D51102A413B6DB8A000C5CF0 /* SLOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLOffer.h; sourceTree = "<group>"; };
+		D51102A513B6DB8A000C5CF0 /* SLOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLOffer.m; sourceTree = "<group>"; };
+		D51102A613B6DB8A000C5CF0 /* SLActiveOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLActiveOffer.h; sourceTree = "<group>"; };
+		D51102A713B6DB8A000C5CF0 /* SLActiveOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLActiveOffer.m; sourceTree = "<group>"; };
+		D51102AA13B6E1E6000C5CF0 /* SLPastOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPastOffer.h; sourceTree = "<group>"; };
+		D51102AB13B6E1E6000C5CF0 /* SLPastOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPastOffer.m; sourceTree = "<group>"; };
+		D51102C513B6E679000C5CF0 /* OffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OffersViewController.h; sourceTree = "<group>"; };
+		D51102C613B6E679000C5CF0 /* OffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OffersViewController.m; sourceTree = "<group>"; };
+		D51102C713B6E679000C5CF0 /* ActiveOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveOffersViewController.h; sourceTree = "<group>"; };
+		D51102C813B6E679000C5CF0 /* ActiveOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveOffersViewController.m; sourceTree = "<group>"; };
+		D51102CB13B6EA79000C5CF0 /* PastOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PastOffersViewController.h; sourceTree = "<group>"; };
+		D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PastOffersViewController.m; sourceTree = "<group>"; };
 		D561370913B6AB150061963B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
 		D561370A13B6AB150061963B /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = images/Icon.png; sourceTree = "<group>"; };
 		D561370B13B6AB150061963B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = images/logo.png; sourceTree = "<group>"; };
 		D5D5EACC13B6B42500F85362 /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_ipad.png; path = images/Icon_ipad.png; sourceTree = "<group>"; };
+		D5D5EBEB13B6D25600F85362 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		D5D5EBEC13B6D25600F85362 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		D5D5EBEF13B6D29200F85362 /* SLTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableViewDataSource.h; sourceTree = "<group>"; };
+		D5D5EBF013B6D29200F85362 /* SLTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableViewDataSource.m; sourceTree = "<group>"; };
+		D5D5EBF113B6D29200F85362 /* SLTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableItem.h; sourceTree = "<group>"; };
+		D5D5EBF213B6D29200F85362 /* SLTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableItem.m; sourceTree = "<group>"; };
+		D5D5EBF313B6D29200F85362 /* SLTableItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTableItemCell.h; sourceTree = "<group>"; };
+		D5D5EBF413B6D29200F85362 /* SLTableItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTableItemCell.m; sourceTree = "<group>"; };
+		D5D5EBF513B6D29200F85362 /* SLStyleSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLStyleSheet.h; sourceTree = "<group>"; };
+		D5D5EBF613B6D29200F85362 /* SLStyleSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLStyleSheet.m; sourceTree = "<group>"; };
+		D5D5EC1E13B6D33F00F85362 /* SummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryViewController.h; sourceTree = "<group>"; };
+		D5D5EC1F13B6D33F00F85362 /* SummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryViewController.m; sourceTree = "<group>"; };
+		D5D5EC2113B6D3E100F85362 /* tab_active_offers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_active_offers.png; path = images/tab_active_offers.png; sourceTree = "<group>"; };
+		D5D5EC2213B6D3E100F85362 /* tab_past_offers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_past_offers.png; path = images/tab_past_offers.png; sourceTree = "<group>"; };
+		D5D5EC2313B6D3E100F85362 /* tab_redeem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_redeem.png; path = images/tab_redeem.png; sourceTree = "<group>"; };
+		D5D5EC2413B6D3E100F85362 /* tab_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_settings.png; path = images/tab_settings.png; sourceTree = "<group>"; };
+		D5D5EC2513B6D3E100F85362 /* tab_summary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_summary.png; path = images/tab_summary.png; sourceTree = "<group>"; };
 		D5E0040013B6A5FF009AF4F7 /* Merchants.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Merchants.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0040413B6A5FF009AF4F7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D5E0040613B6A5FF009AF4F7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -375,6 +421,32 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D511028A13B6DB40000C5CF0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D51102A413B6DB8A000C5CF0 /* SLOffer.h */,
+				D51102A513B6DB8A000C5CF0 /* SLOffer.m */,
+				D51102A613B6DB8A000C5CF0 /* SLActiveOffer.h */,
+				D51102A713B6DB8A000C5CF0 /* SLActiveOffer.m */,
+				D51102AA13B6E1E6000C5CF0 /* SLPastOffer.h */,
+				D51102AB13B6E1E6000C5CF0 /* SLPastOffer.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		D51102A313B6DB70000C5CF0 /* Offers */ = {
+			isa = PBXGroup;
+			children = (
+				D51102C513B6E679000C5CF0 /* OffersViewController.h */,
+				D51102C613B6E679000C5CF0 /* OffersViewController.m */,
+				D51102C713B6E679000C5CF0 /* ActiveOffersViewController.h */,
+				D51102C813B6E679000C5CF0 /* ActiveOffersViewController.m */,
+				D51102CB13B6EA79000C5CF0 /* PastOffersViewController.h */,
+				D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */,
+			);
+			name = Offers;
+			sourceTree = "<group>";
+		};
 		D561370813B6AB090061963B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -382,8 +454,46 @@
 				D561370913B6AB150061963B /* Default.png */,
 				D561370A13B6AB150061963B /* Icon.png */,
 				D561370B13B6AB150061963B /* logo.png */,
+				D5D5EC2113B6D3E100F85362 /* tab_active_offers.png */,
+				D5D5EC2213B6D3E100F85362 /* tab_past_offers.png */,
+				D5D5EC2313B6D3E100F85362 /* tab_redeem.png */,
+				D5D5EC2413B6D3E100F85362 /* tab_settings.png */,
+				D5D5EC2513B6D3E100F85362 /* tab_summary.png */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		D5D5EBD213B6D21600F85362 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D5D5EBEB13B6D25600F85362 /* SettingsViewController.h */,
+				D5D5EBEC13B6D25600F85362 /* SettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		D5D5EBEE13B6D27300F85362 /* Displays */ = {
+			isa = PBXGroup;
+			children = (
+				D5D5EBEF13B6D29200F85362 /* SLTableViewDataSource.h */,
+				D5D5EBF013B6D29200F85362 /* SLTableViewDataSource.m */,
+				D5D5EBF113B6D29200F85362 /* SLTableItem.h */,
+				D5D5EBF213B6D29200F85362 /* SLTableItem.m */,
+				D5D5EBF313B6D29200F85362 /* SLTableItemCell.h */,
+				D5D5EBF413B6D29200F85362 /* SLTableItemCell.m */,
+				D5D5EBF513B6D29200F85362 /* SLStyleSheet.h */,
+				D5D5EBF613B6D29200F85362 /* SLStyleSheet.m */,
+			);
+			name = Displays;
+			sourceTree = "<group>";
+		};
+		D5D5EC1313B6D32400F85362 /* Summary */ = {
+			isa = PBXGroup;
+			children = (
+				D5D5EC1E13B6D33F00F85362 /* SummaryViewController.h */,
+				D5D5EC1F13B6D33F00F85362 /* SummaryViewController.m */,
+			);
+			name = Summary;
 			sourceTree = "<group>";
 		};
 		D5E003F513B6A5FF009AF4F7 = {
@@ -431,6 +541,11 @@
 			isa = PBXGroup;
 			children = (
 				D5E4127313B6A8CF007536E8 /* Main */,
+				D511028A13B6DB40000C5CF0 /* Model */,
+				D51102A313B6DB70000C5CF0 /* Offers */,
+				D5D5EBEE13B6D27300F85362 /* Displays */,
+				D5D5EC1313B6D32400F85362 /* Summary */,
+				D5D5EBD213B6D21600F85362 /* Settings */,
 				D5E0041813B6A5FF009AF4F7 /* shoppleyMerchant.xcdatamodeld */,
 				D5E0041B13B6A5FF009AF4F7 /* iPhone */,
 				D5E0042213B6A5FF009AF4F7 /* iPad */,
@@ -755,6 +870,11 @@
 				D561370D13B6AB150061963B /* Icon.png in Resources */,
 				D561370E13B6AB150061963B /* logo.png in Resources */,
 				D5D5EACD13B6B42500F85362 /* Icon_ipad.png in Resources */,
+				D5D5EC2613B6D3E100F85362 /* tab_active_offers.png in Resources */,
+				D5D5EC2713B6D3E100F85362 /* tab_past_offers.png in Resources */,
+				D5D5EC2813B6D3E100F85362 /* tab_redeem.png in Resources */,
+				D5D5EC2913B6D3E100F85362 /* tab_settings.png in Resources */,
+				D5D5EC2A13B6D3E100F85362 /* tab_summary.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -798,6 +918,18 @@
 				D5E4127613B6A92F007536E8 /* SLDataController.m in Sources */,
 				D5E4127B13B6A945007536E8 /* TabBarController.m in Sources */,
 				D5E4127C13B6A945007536E8 /* LoginViewController.m in Sources */,
+				D5D5EBED13B6D25600F85362 /* SettingsViewController.m in Sources */,
+				D5D5EBF713B6D29200F85362 /* SLTableViewDataSource.m in Sources */,
+				D5D5EBF813B6D29200F85362 /* SLTableItem.m in Sources */,
+				D5D5EBF913B6D29200F85362 /* SLTableItemCell.m in Sources */,
+				D5D5EBFA13B6D29200F85362 /* SLStyleSheet.m in Sources */,
+				D5D5EC2013B6D33F00F85362 /* SummaryViewController.m in Sources */,
+				D51102A813B6DB8A000C5CF0 /* SLOffer.m in Sources */,
+				D51102A913B6DB8A000C5CF0 /* SLActiveOffer.m in Sources */,
+				D51102AC13B6E1E6000C5CF0 /* SLPastOffer.m in Sources */,
+				D51102C913B6E679000C5CF0 /* OffersViewController.m in Sources */,
+				D51102CA13B6E679000C5CF0 /* ActiveOffersViewController.m in Sources */,
+				D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

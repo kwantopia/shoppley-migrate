@@ -8,9 +8,13 @@
 
 #import "AppDelegate.h"
 
+#import "ActiveOffersViewController.h"
 #import "LoginViewController.h"
-#import "SLDataController.h"
+#import "PastOffersViewController.h"
 #import "TabBarController.h"
+#import "SettingsViewController.h"
+#import "SLDataController.h"
+#import "SummaryViewController.h"
 
 @implementation AppDelegate
 
@@ -43,10 +47,10 @@
     [map from:@"shoppley://login" toViewController:[LoginViewController class]];
     
     [map from:@"shoppley://tabbar" toSharedViewController:[TabBarController class]];
-//    [map from:@"shoppley://current_offers" toSharedViewController:[CurrentOffersViewController class]];
-//    [map from:@"shoppley://redeemed_offers" toSharedViewController:[RedeemedOffersViewController class]];
-//    [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
-//    [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
+    [map from:@"shoppley://active_offers" toSharedViewController:[ActiveOffersViewController class]];
+    [map from:@"shoppley://past_offers" toSharedViewController:[PastOffersViewController class]];
+    [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
+    [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     
 //    [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
 //    [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];
@@ -89,6 +93,22 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    if ([[[TTNavigator navigator] topViewController] isKindOfClass:[LoginViewController class]]) {
+        return;
+    }
+    
+    SLDataController* dataController = [SLDataController sharedInstance];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *saved_email = [defaults stringForKey:@"email"];
+    NSString *saved_password = [defaults stringForKey:@"password"];
+    if (TTIsStringWithAnyText(saved_email) && TTIsStringWithAnyText(saved_password)) {
+        if ([dataController authenticateEmail:saved_email password:saved_password]) {
+            [dataController reloadData];
+            return;
+        }
+    }
+    [dataController logout];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

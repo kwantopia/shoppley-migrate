@@ -1,6 +1,6 @@
 //
 //  TabBarController.m
-//  shoppleyClient
+//  shoppleyMerchant
 //
 //  Created by yod on 6/13/11.
 //  Copyright 2011 Shoppley. All rights reserved.
@@ -16,8 +16,9 @@
 
 - (void)viewDidLoad {
 	[self setTabURLs:[NSArray arrayWithObjects:
-					  @"shoppley://current_offers",
-					  @"shoppley://redeemed_offers",
+                      @"shoppley://active_offers",
+                      @"shoppley://past_offers",
+					  @"shoppley://summary",
 					  @"shoppley://settings",
                       nil]];
 }

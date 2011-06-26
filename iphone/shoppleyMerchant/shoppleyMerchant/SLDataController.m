@@ -1,6 +1,6 @@
 //
 //  SLDataController.m
-//  shoppleyClient
+//  shoppleyMerchant
 //
 //  Created by yod on 6/14/11.
 //  Copyright 2011 Shoppley. All rights reserved.
@@ -10,9 +10,11 @@
 
 #import "extThree20JSON/extThree20JSON.h"
 #import "extThree20JSON/JSON.h"
+#import "SLActiveOffer.h"
+#import "SLPastOffer.h"
 
-static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
-//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+//static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 //static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
@@ -41,27 +43,14 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     }
     
     NSDictionary* endPoints = [NSDictionary dictionaryWithObjectsAndKeys:
-                             @"customer/offers/current/", @"current_offers",
-                             @"customer/offers/redeemed/", @"redeemed_offers",
+                             @"merchant/offers/active/", @"active_offers",
+                             @"merchant/offers/past/0/", @"past_offers",
                              nil];
     
     NSString* url = [kSLURLPrefix stringByAppendingString:[endPoints objectForKey:_dataType]];
     TTURLRequest* request = [TTURLRequest requestWithURL:url delegate:self];
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];
-    
-    //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //[request.parameters setValue:appDelegate.latitude forKey:@"lat"];
-    //[request.parameters setValue:appDelegate.longitude forKey:@"lon"];
-    
-    if ([_dataType isEqualToString:@"current_offers"]) {
-        [request.parameters setValue:[[SLDataController sharedInstance] latitude] forKey:@"lat"];
-        [request.parameters setValue:[[SLDataController sharedInstance] longitude] forKey:@"lon"];
-        request.httpMethod = @"POST";
-    } else if ([_dataType isEqualToString:@"redeemed_offers"]) {
-        request.httpMethod = @"GET";
-    } else {
-        TTDERROR(@"Unknown datatype");
-    }
+    request.httpMethod = @"GET";
     
     request.cachePolicy = TTURLRequestCachePolicyNone;
     
@@ -80,7 +69,13 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     NSDictionary* response = jsonResponse.rootObject;
     TTDPRINT(@"%@",response);
     
-    //TODO::
+    if ([request.urlPath rangeOfString:@"/active/"].location != NSNotFound) {
+        [[SLDataController sharedInstance] setActiveOffers:[SLActiveOffer offersArrayfromDictionary:response]];
+    } else if ([request.urlPath rangeOfString:@"/past/"].location != NSNotFound) {
+        [[SLDataController sharedInstance] setPastOffers:[SLPastOffer offersArrayfromDictionary:response]];
+    } else {
+        TTDPRINT(@"Unrecognized request.");
+    }
     
     if (_delegate) {
         [_delegate didFinishDownload];
@@ -102,7 +97,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 #pragma mark SLDataController
 
 @implementation SLDataController
-@synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers, latitude = _latitude, longitude = _longitude;
+@synthesize errorString = _errorString, activeOffers = _activeOffers, pastOffers = _pastOffers, latitude = _latitude, longitude = _longitude;
 
 + (SLDataController*)sharedInstance {
 	static SLDataController *instance = nil;
@@ -129,18 +124,18 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 }
 
 - (void)clean {
-    TT_RELEASE_SAFELY(_currentOffers);
-    TT_RELEASE_SAFELY(_redeemedOffers);
-    TT_RELEASE_SAFELY(_currentOffersDownloader);
-    TT_RELEASE_SAFELY(_redeemedOffersDownloader);
+    TT_RELEASE_SAFELY(_activeOffers);
+    TT_RELEASE_SAFELY(_pastOffers);
+    TT_RELEASE_SAFELY(_activeOffersDownloader);
+    TT_RELEASE_SAFELY(_pastOffersDownloader);
 }
 
 - (void)reloadData {
     [self updateLocation];
-    TT_RELEASE_SAFELY(_currentOffers);
-    TT_RELEASE_SAFELY(_redeemedOffers);
-    [_currentOffersDownloader download];
-    [_redeemedOffersDownloader download];
+    TT_RELEASE_SAFELY(_activeOffers);
+    TT_RELEASE_SAFELY(_pastOffers);
+    [_activeOffersDownloader download];
+    [_pastOffersDownloader download];
 }
 
 - (void)updateLocation {
@@ -242,27 +237,27 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 
 #pragma mark -
 #pragma mark Offers
-- (NSArray*)obtainCurrentOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
-    if (forcedDownload || (_currentOffers == nil)) {
-        if (!_currentOffersDownloader) {
-            _currentOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"current_offers" delegate:delegate];
+- (NSArray*)obtainActiveOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
+    if (forcedDownload || (_activeOffers == nil)) {
+        if (!_activeOffersDownloader) {
+            _activeOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"active_offers" delegate:delegate];
         }
-        [_currentOffersDownloader download];
+        [_activeOffersDownloader download];
         return nil;
     } else {
-        return _currentOffers;
+        return _activeOffers;
     }
 }
 
-- (NSArray*)obtainRedeemedOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
-    if (forcedDownload || (_redeemedOffers == nil)) {
-        if (!_redeemedOffersDownloader) {
-            _redeemedOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"redeemed_offers" delegate:delegate];
+- (NSArray*)obtainPastOffersWithDelegate:(id <SLDataDownloaderDelegate>)delegate forcedDownload:(BOOL)forcedDownload {
+    if (forcedDownload || (_pastOffers == nil)) {
+        if (!_pastOffersDownloader) {
+            _pastOffersDownloader = [[SLDataDownloader alloc] initWithDataType:@"past_offers" delegate:delegate];
         }
-        [_redeemedOffersDownloader download];
+        [_pastOffersDownloader download];
         return nil;
     } else {
-        return _redeemedOffers;
+        return _pastOffers;
     }
 }
 
@@ -303,8 +298,6 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     
     TTDPRINT(@"Location %@ %@", _latitude, _longitude);
     _isLocationReady = YES;
-    
-    [_currentOffersDownloader download];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
