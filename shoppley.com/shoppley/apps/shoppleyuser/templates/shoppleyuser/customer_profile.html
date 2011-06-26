@@ -14,7 +14,7 @@
     <div class="container">
   	
     	<!--div class="clear">&nbsp;</div-->
-    	<div class="span-12">
+    	<div class="span-17">
 			<div class="profile profile-settings main-box">    		
 				<h2>My Profile</h2>
 				<a class="shoppley-btn" href="{% url customer_profile_edit %}">{% trans "Edit" %}</a><br/>
@@ -32,9 +32,10 @@
 				</ul>
 			</div>
 		</div>
-    	<div class="span-12 last">
-			<div class="account-settings profile-settings main-box">
-				<h3>Account Setting</h3>
+    	<div class="span-7 last">
+			<div class="account-settings profile-settings side-bar">
+				<div class="sub-header"><h3>Account Setting</h3></div>
+				<div class="sub-content">
 				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
 				<ul>
 					<li>Email(s)</li>
@@ -43,7 +44,8 @@
 					<li>***********</li>
 				</ul>
 				<a href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
-			</div>
+				</div>
+				</div>
     	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
