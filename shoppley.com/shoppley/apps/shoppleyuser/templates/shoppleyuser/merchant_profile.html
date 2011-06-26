@@ -15,12 +15,20 @@
     	<div class="span-12">
 			<div class="profile">    		
 				<h2>Profile</h2>
-				<a href="{% url merchant_profile_edit %}">{% trans "Edit" %}</a><br/>
-				Username: {{ username }} <br/>
-				Business name: {{ business_name }} <br/>
-				Address: {{ address }} <br/>
-				zipcode: {{ zipcode }} <br/>
-				Phone: {{ phone }} <br/>
+				<a class="shoppley-btn" href="{% url merchant_profile_edit %}">{% trans "Edit" %}</a><br/>
+                                <ul>
+                                        <li>Username</li>
+                                        <li>{{ username }}</li>
+					<li>Business name</li>
+                                        <li>{{ business_name }}</li>
+                                        <li>Address</li>
+                                        <li>{{ address }}</li>
+                                        <li>Zipcode</li>
+                                        <li>{{ zipcode }}</li>
+                                        <li>Phone</li>
+					<li>{{ phone }}</li>
+                                       
+                                </ul>
 			</div>
 		</div>
     	<div class="span-12 last">
@@ -42,6 +50,10 @@
 
 
 {% block extra_scripts %}
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script>$("ul li:nth-child(odd)").attr("class","profile-settings-label");</script>
+        <script>$("ul li:nth-child(even)").attr("class","profile-settings-value");</script>
+
 	<script type="text/javascript">
 		$(function() {
 			

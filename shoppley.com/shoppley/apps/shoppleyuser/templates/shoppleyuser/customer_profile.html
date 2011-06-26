@@ -25,7 +25,8 @@
 					<li>{{ address }}</li>
 					<li>Zipcode</li>
 					<li>{{ zipcode }}</li>
-					<li>Phone: {{ phone }}</li>
+					<li>Phone</li> 
+					<li>{{ phone }}</li>
 					<li>Daily Offer Frequency</li>
 					<li>{{ frequency }}</li>
 				</ul>
@@ -52,6 +53,9 @@
 
 
 {% block extra_scripts %}
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script>$("ul li:nth-child(odd)").attr("class","profile-settings-label");</script>
+        <script>$("ul li:nth-child(even)").attr("class","profile-settings-value");</script>
 	<script type="text/javascript">
 		$(function() {
 			
