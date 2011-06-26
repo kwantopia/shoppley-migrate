@@ -13,7 +13,7 @@
   	
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-17">
-			<div class="profile profile-settings">    		
+			<div class="profile profile-settings main-box">    		
 				<h2>My Profile</h2>
 				<a class="shoppley-btn" href="{% url merchant_profile_edit %}">{% trans "Edit" %}</a><br/>
                                 <ul>
@@ -34,14 +34,14 @@
     	<div class="span-7 last">
 			<div class="account-settings profile-settings">
 				<h3>Account Setting</h3>
-				<a href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
 				<ul>
 					<li>Email</li>
 					<li>{{ email }} <span class="email-verified">{{ verified }}</span></li>
 					<li>Password</li>
 					<li>***********</li>
 				<ul>
-				<a href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
+				<a class="shoppley-btn" href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
 				</div>
     	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
