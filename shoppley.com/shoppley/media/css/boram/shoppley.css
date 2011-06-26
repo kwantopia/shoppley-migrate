@@ -388,4 +388,30 @@ div.login .form_block {
   cursor: pointer;
 }
 
+/* Profile Settings - Customer*/
+
+.profile-settings {
+	padding: 5px 10px 10px 10px;
+}
+
+.profile-settings ul {
+	padding-left: 0;
+} 
+
+.profile-settings-label {
+	color: #666666;
+}
+
+.profile-settings-value {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #80C247;
+}
+
+
+
+
+
+
+
 
