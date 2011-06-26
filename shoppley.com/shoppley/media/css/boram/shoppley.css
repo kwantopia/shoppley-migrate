@@ -43,12 +43,21 @@ a:hover {
 a.shoppley-btn {
 	background-color: #35ACE4;
 	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#35ACE4), to(#2E94E4), color-stop(.6,#2e94e4));
-	background-image: -moz-linear-gradient(19% 75% 90deg,#35ACE4, #2E94C4, #2E94C4 81%);
+	background-image: -moz-linear-gradient(19% 75% -90deg,#35ACE4, #2E94C4, #2E94C4 81%);
 	color: #ffffff;
 	font-weight: bold;
 	text-transform: uppercase;
 	float: right;
+	padding: 3px 8px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow:1px 1px 5px #9E9E9E;
+	-moz-box-shadow:1px 1px 5px #9E9E9E;
+	-webkit-box-shadow:1px 1px 5px #9E9E9E;
+
 }
+
 
 
 .last-call {
