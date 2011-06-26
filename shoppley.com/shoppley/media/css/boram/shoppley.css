@@ -39,6 +39,18 @@ a, a:active, a:visited {
 a:hover {
 	color: #ED5F87;
 }
+
+a.shoppley-btn {
+	background-color: #35ACE4;
+	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#35ACE4), to(#2E94E4), color-stop(.6,#2e94e4));
+	background-image: -moz-linear-gradient(19% 75% 90deg,#35ACE4, #2E94C4, #2E94C4 81%);
+	color: #ffffff;
+	font-weight: bold;
+	text-transform: uppercase;
+	float: right;
+}
+
+
 .last-call {
 	font-weight: bold;
 	color: #A80010;
@@ -396,6 +408,7 @@ div.login .form_block {
 
 .profile-settings ul {
 	padding-left: 0;
+	margin-bottom: 0;
 } 
 
 .profile-settings-label {
