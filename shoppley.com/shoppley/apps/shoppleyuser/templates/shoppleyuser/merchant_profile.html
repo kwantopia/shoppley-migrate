@@ -12,9 +12,9 @@
     <div class="container">
   	
     	<!--div class="clear">&nbsp;</div-->
-    	<div class="span-12">
-			<div class="profile">    		
-				<h2>Profile</h2>
+    	<div class="span-17">
+			<div class="profile profile-settings">    		
+				<h2>My Profile</h2>
 				<a class="shoppley-btn" href="{% url merchant_profile_edit %}">{% trans "Edit" %}</a><br/>
                                 <ul>
                                         <li>Username</li>
@@ -31,16 +31,18 @@
                                 </ul>
 			</div>
 		</div>
-    	<div class="span-12 last">
-			<div class="account-settings">
-				<h2>Emails</h2>
+    	<div class="span-7 last">
+			<div class="account-settings profile-settings">
+				<h3>Account Setting</h3>
 				<a href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
-
-				Email: {{ email }} <span class="email-verified">{{ verified }}</span><br/>
-				<h2>Password</h2>
+				<ul>
+					<li>Email</li>
+					<li>{{ email }} <span class="email-verified">{{ verified }}</span></li>
+					<li>Password</li>
+					<li>***********</li>
+				<ul>
 				<a href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
-				Password: *********
-			</div>
+				</div>
     	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
