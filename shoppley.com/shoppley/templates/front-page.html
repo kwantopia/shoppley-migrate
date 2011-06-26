@@ -24,15 +24,40 @@
     	</div>
      	      <div class="clear">&nbsp;</div>
 
-	Are you a 
-	<div class="customer-signup">
+	<div class="signup-blurb-wrapper" id="frontpage-blurb-wrapper">
+		<div class="span-12">
+			<img src="{{ STATIC_URL }}images/boram/customer-blurb.png"/>
+		
+		</div>	
+		<div class="span-12 last">
+                	<img src="{{ STATIC_URL }}images/boram/biz-blurb.png"/>
+                
+        	</div>
+	</div>  
+	<div class="clear">&nbsp;</div>
+
+	<div class="span-12" id="customer-signup-button">
+		<a href="javascript:void(0);" class="signup-buttons"><img alt="Customer signup" src="{{ STATIC_URL }}images/boram/customer-default.png" onmouseover="this.src='{{ STATIC_URL }}images/boram/customer-hover.png'" onmouseout="this.src='{{ STATIC_URL }}images/boram/customer-default.png'"></a>
+                                
+        </div>  
+        <div class="span-12 last" id="merchant-signup-button">
+                <a href="javascript:void(0);" class="signup-buttons"><img alt="Merchant signup" src="{{ STATIC_URL }}images/boram/biz-default.png" onmouseover="this.src='{{ STATIC_URL }}images/boram/biz-hover.png'" onmouseout="this.src='{{ STATIC_URL }}images/boram/biz-default.png'"></a>
+
+
+
+        </div>
+
+	<!--div class="customer-signup">
 		<button id="customer-signup-button">{% trans "Customer" %}</button> 
 	</div> 
 
 	<div class="merchant-signup">
 		<button id="merchant-signup-button">{% trans "Merchant" %}</button> 
+	</div-->
+	<div class="span-6">
+		&nbsp;
 	</div>
-    	<div class="span-12" id="frontpage-customer-signup" style="display:none;">
+    	<div class="signup-forms span-12" id="frontpage-customer-signup">
     		<div class="main-box">
     			<div class="signup-header customer">
     				Are you looking for <br/>
@@ -47,7 +72,7 @@
     		
     		</div>
     	</div>
-    	<div class="span-12 last" id="frontpage-merchant-signup" style="display:none;">
+    	<div class="signup-forms span-12" id="frontpage-merchant-signup" >
     		<div class="main-box">
     			<div class="signup-header merchant">
     				Start pulling in new customers and<br/>
@@ -61,11 +86,15 @@
     			</div>
     		</div>
     	</div>
+	<div class="span-6 last">
+		&nbsp;
+	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
 	{% endif %}<!-- else if user.is_authenticated -->
       	
       </div>
+	
 {% endblock %}
 
 
@@ -76,42 +105,63 @@
 	<script type="text/javascript">
 		$(function() {
 			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
+			$("#customer-signup-button").click(function() {
+
+				$.facebox({ div: '#frontpage-customer-signup'});
+
+			});
+
+			$("#merchant-signup-button").click(function() {
+				$.facebox({ div: '#frontpage-merchant-signup'});
+			});
+
+
 		});
 
 		var customer_form_isOpen = false;
 
-		$("#customer-signup-button").click(function(){
+		$("#customer-signup-button2").click(function(){
 
 			if (customer_form_isOpen) {
 				$("#frontpage-customer-signup").fadeOut(600);
+				$("#frontpage-blurb-wrapper").fadout(600);
 				document.getElementById("merchant-signup-button").disabled= false;
 				customer_form_isOpen = false;
 			} else {
 				$("#frontpage-customer-signup").fadeIn(600);
+				$("#frontpage-blurb-wrapper").fadeIn(600);
 				document.getElementById("merchant-signup-button").disabled= true;
 				customer_form_isOpen = true;
 			}
 		});
 		$("#customer-cancel").click(function(){
 			$("#frontpage-customer-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
 			document.getElementById("merchant-signup-button").disabled= false;
 			customer_form_isOpen = false;
 		});
 
 		var merchant_form_isOpen = false;
-		$("#merchant-signup-button").click(function(){
+		$("#merchant-signup-button2").click(function(){
 			if (merchant_form_isOpen) {
 				$("#frontpage-merchant-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
 				document.getElementById("customer-signup-button").disabled= false;
 				merchant_form_isOpen = false;
 			} else {
 				$("#frontpage-merchant-signup").fadeIn(600);
+                                $("#frontpage-blurb-wrapper").fadeIn(600);
+
 				document.getElementById("customer-signup-button").disabled= true;
 				merchant_form_isOpen = true;
 			}
 		});
 		$("#merchant-cancel").click(function(){
 			$("#frontpage-merchant-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
 			document.getElementById("customer-signup-button").disabled= false;
 			merchant_form_isOpen = false;
 		});

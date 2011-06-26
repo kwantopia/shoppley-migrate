@@ -175,7 +175,8 @@ INSTALLED_APPS = [
 	"django.contrib.humanize",
 	"django.contrib.markup",
 	"django.contrib.staticfiles",
-	
+	"django.contrib.gis",
+	#"world",	
 	"pinax.templatetags",
 	
 	# external

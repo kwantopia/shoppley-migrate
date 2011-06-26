@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.gis.db.models import PointField
 
 from datetime import datetime, timedelta
 from sorl.thumbnail import ImageField
@@ -8,6 +9,8 @@ from sorl.thumbnail import ImageField
 
 # Create your models here.
 
+#class Location(models.Model):
+	#location = PointField()
 class Country(models.Model):
 	name      = models.CharField(max_length=64)
 	code      = models.CharField(max_length=10)

@@ -65,6 +65,8 @@
     <!--link rel="stylesheet" href="{{ STATIC_URL }}css/boram/print.css" type="text/css" media="print" /-->
 	<!--[if IE]><link rel="stylesheet" href="{{ STATIC_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]--> 
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/redmond/jquery-ui.css" type="text/css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/boram/facebox.css" type="text/css"/>
+
 	<!-- [template css] end -->
     <!--link rel="stylesheet" href="{{ STATIC_URL }}css/boram/shoppley.css" /-->
 
@@ -171,14 +173,16 @@
     <script  type="text/javascript" src="{{ STATIC_URL }}js/coda-slider.1.1.1.js"></script>
     <script  type="text/javascript" src="{{ STATIC_URL }}js/jquery-easing-compatibility.1.2.pack.js"></script>
     <script  type="text/javascript" src="{{ STATIC_URL }}js/jquery-easing.1.2.pack.js"></script>
+    <script  type="text/javascript" src="{{ STATIC_URL }}js/facebox.js"></script>
     {% block extra_scripts %}
     {% endblock %}
   {% endblock %}
 
   <!-- scripts concatenated and minified via ant build script-->
   <script src="{{ STATIC_URL }}js/plugins.js"></script>
-  <script src="{{ STATIC_URL }}js/script.js"></script>
-  <!-- end scripts-->
+  <script src="{{ STATIC_URL }}js/script.js"></script> 
+ 
+ <!-- end scripts-->
 
 
   <!--[if lt IE 7 ]>
@@ -186,7 +190,6 @@
     <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
   <![endif]-->
 
-  {% include "facebox_js.html" %}
   {% block extra_body_base %}
       {% block extra_body %}{% endblock %}
   {% endblock %}

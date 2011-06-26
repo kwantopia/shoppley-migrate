@@ -172,6 +172,27 @@ a:hover {
 .signup-form input {
 	width: 180px;
 }
+
+.signup-buttons {
+	padding-left:90px;
+}
+
+.signup-forms {
+	display: None;
+	padding-top:20px;
+	
+}
+
+.signup-blurb-wrapper img {
+	padding-left:20px;
+}
+
+.signup-form #merchant-cancel, .signup-form #customer-cancel {
+	float:right;
+	margin-top:15px;
+}
+
+
 .green-text {
 	color: #D4DA30;
 	font-size: 1.5em;
