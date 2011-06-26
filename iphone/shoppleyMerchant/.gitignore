@@ -1,0 +1,5 @@
+*.svn/
+
+shoppleyMerchant.xcodeproj/project.xcworkspace/
+shoppleyMerchant.xcodeproj/xcuserdata/
+shoppleyMerchantTests/
