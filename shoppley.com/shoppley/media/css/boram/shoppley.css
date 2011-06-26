@@ -241,6 +241,34 @@ a:hover {
 	background-position: top left;
 }
 
+#customer-step1 {
+		background: transparent url(../../images/boram/customer_s1.png) no-repeat;
+}
+
+#customer-step2 {
+		background: transparent url(../../images/boram/customer_s2.png) no-repeat;
+}
+
+#customer-step3 {
+		background: transparent url(../../images/boram/customer_s3.png) no-repeat;
+}
+#merchant-step1 {
+		background: transparent url(../../images/boram/merchant_s1.png) no-repeat;
+}
+
+#merchant-step2 {
+		background: transparent url(../../images/boram/merchant_s2.png) no-repeat;
+}
+
+#merchant-step3 {
+		background: transparent url(../../images/boram/merchant_s3.png) no-repeat;
+}
+
+#customer-step1, #customer-step2, #customer-step3, #merchant-step1, #merchant-step2, #merchant-step3 {
+			background-position: top right;
+					height: 160px;
+}
+
 /*header login section fix */
 div.login div#div_id_username.ctrHolder, div.login div#div_id_password.ctrHolder {
 	padding-bottom: 0px;
