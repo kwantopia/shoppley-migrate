@@ -15,27 +15,33 @@
   	
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-12">
-			<div class="profile">    		
-				<h2>Profile</h2>
-				<a href="{% url customer_profile_edit %}">{% trans "Edit" %}</a><br/>
-				Username: {{ username }} <br/>
-				Address: {{ address }} <br/>
-				Zipcode: {{ zipcode }} <br/>
-				Phone: {{ phone }} <br/>
-				Daily Offer Frequency: {{ frequency }} <br/>
-	
-				
-				
+			<div class="profile profile-settings main-box">    		
+				<h2>My Profile</h2>
+				<a class="shoppley-btn" href="{% url customer_profile_edit %}">{% trans "Edit" %}</a><br/>
+				<ul>
+					<li>Username</li>
+					<li>{{ username }}</li>
+					<li>Address</li>
+					<li>{{ address }}</li>
+					<li>Zipcode</li>
+					<li>{{ zipcode }}</li>
+					<li>Phone: {{ phone }}</li>
+					<li>Daily Offer Frequency</li>
+					<li>{{ frequency }}</li>
+				</ul>
 			</div>
 		</div>
     	<div class="span-12 last">
-			<div class="account-settings">
-				<h2>Emails</h2>
-				<a href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
-				Email: {{ email }} <span class="email-verified">{{ verified }}</span><br/>
-				<h2>Password</h2>
+			<div class="account-settings profile-settings main-box">
+				<h3>Account Setting</h3>
+				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+				<ul>
+					<li>Email(s)</li>
+					<li>{{ email }}<span class="email-verified">{{ verified }}</span></li>
+					<li>Password</li>
+					<li>***********</li>
+				</ul>
 				<a href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
-				Password: *********
 			</div>
     	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
