@@ -26,6 +26,7 @@ redemption_code_re = re.compile(pattern)
 # Pattern used to parse text 
 customer_pattern = "#" + Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
 merchant_pattern = customer_pattern
+phone_pattern =Optional("(") + Word(nums, exact=3) +Optional(")") + Optional("-") + Word(nums,exact=3)+ Optional("-")+ Word(nums,exact=4)
 
 DEFAULT_SHOPPLEY_NUM="508-690-0888"
 DEFAULT_SITE = "www.shoppley.com"
@@ -49,6 +50,8 @@ MERCHANT_SIGNUP = "merchant"
 HELP = "help"
 ZIPCODE = ["zip", "zipcode"]
 
+import logging
+sms_logger = logging.getLogger(__name__)
 
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
@@ -59,6 +62,18 @@ class Command(NoArgsCommand):
 		else:
 			sms_notify(phone,msg)
 
+	def validate_number(self, number, phone):
+		try:
+			a = phone_pattern.parseString(number)
+			return parse_phone_number(number)
+		except ParseException:
+			t = TxtTemplates()
+			msg = t.render(TxtTemplates.templates["SHARED"]["INVALID_NUMBER"],
+					{
+								"number": number,
+					})
+			self.notify(phone, msg)
+			raise CommandError("INVALID NUMBER: %s is not a valid number." % number)
 
 	def info(self, offercode):
 			t = TxtTemplates()
@@ -135,6 +150,8 @@ class Command(NoArgsCommand):
 			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["INVALID_ZIPCODE"],{"zipcode": code,})
 			self.notify(phone,receipt_msg)
 			raise CommandError("Zipcode does not exist")
+		except MultipleObjectsReturned:
+			return code
 
 	def check_phone(self,phone):
 		try:
@@ -163,7 +180,9 @@ class Command(NoArgsCommand):
 		t= TxtTemplates()
 		print "new message %s" % msg
 		msg["from"] = parse_phone_number(msg["from"])
-		if msg["from"] != "Me":
+		#sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
+		print "logged"
+		if msg["from"] != "Me" and msg["from"] != "":
 			su = map_phone_to_user(msg["from"])
 
 			# ****************************** MERCHANT COMMANDS ***********************
@@ -183,12 +202,12 @@ class Command(NoArgsCommand):
 					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
 					elif parsed[0].lower()==REDEEM:
 						offer_code = self.check_offercode(parsed[1],su.phone)
-						phone = parse_phone_number(parsed[2])
+						phone = self.validate_number(parsed[2],su.phone)
 						if offer_code.offer.merchant != su.merchant:
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_WRONG_MERCHANT"],{"code": offer_code.code})
 							self.notify(su.phone,receipt_msg)
 							raise CommandError ("Merchant attempts to redeem an offer he does not own")
-						phone = parse_phone_number(parsed[2])
+					
 						try:
 							current_time = datetime.now()
 							#print "total =" , OfferCode.objects.filter(code__iexact=offer_code.code)
@@ -276,7 +295,7 @@ class Command(NoArgsCommand):
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						code = self.check_zipcode(parsed[1],su.phone)
-						zipcode = ZipCode.objects.get(code=code)
+						zipcode = ZipCode.objects.filter(code=code)[0]
 						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
 						su.merchant.zipcode=zipcode
 						su.merchant.save()
@@ -348,7 +367,7 @@ class Command(NoArgsCommand):
 							try:
 								trackingcode = TrackingCode.objects.get(code__iexact=code)
 							except TrackingCode.DoesNotExist:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_INVALID_TRACKING"],{"code":trackingcode.code})
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_INVALID_TRACKING"],{"code":code})
 								self.notify(su.phone,receipt_msg)
 								raise CommandError ("Tracking code not found")
 							offer = trackingcode.offer
@@ -405,8 +424,9 @@ class Command(NoArgsCommand):
 								trackingcode = TrackingCode.objects.get(code__iexact=code)
 								
 							except TrackingCode.DoesNotExist:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_INVALID_CODE"],{"code":trackingcode.code})
+								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_INVALID_CODE"],{"code":code})
 								self.notify(su.phone,receipt_msg)
+								#sms_logger.exception("Tracking code not found:")
 								raise CommandError ("Tracking code not found")
 							offer = trackingcode.offer
 							if offer.merchant.id != su.merchant.id:
@@ -523,7 +543,7 @@ class Command(NoArgsCommand):
 							self.notify(su.phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						code = self.check_zipcode(parsed[1], su.phone)
-						zipcode = ZipCode.objects.get(code=code)
+						zipcode = ZipCode.objects.filter(code=code)[0]
 						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
 						su.customer.zipcode=zipcode
 						su.customer.save()
@@ -545,7 +565,7 @@ class Command(NoArgsCommand):
 							raise CommandError("Fail to forward! Customer attempts to forward an offercode he doesnt own")
 
 						#f_state,created = ForwardState.objects.get_or_create(customer=su.customer,offer=ori_offer)
-						parsed_numbers = [parse_phone_number(i) for i in parsed[2:]]
+						parsed_numbers = [self.validate_number(i,su.phone) for i in parsed[2:]]
 						#print "created:" , created
 						#print "remaining:", f_state.remaining
 						valid_receivers=set([ i for i in parsed_numbers if ori_offer.offercode_set.filter(customer__phone=i).count()==0 or Customer.objects.filter(phone=i).count()==0]) # those who havenot received the offer: new customers or customers who have not got the offer before
@@ -622,7 +642,7 @@ class Command(NoArgsCommand):
 							randompassword = gen_random_pw()
 							new_user = User.objects.create_user(email,email,randompassword)
 							EmailAddress.objects.add_email(new_user,email)
-							zipcode_obj = ZipCode.objects.get(code=parsed_zip)
+							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 							print "creating new merchant..."
 							new_merchant = Merchant(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
@@ -660,7 +680,7 @@ class Command(NoArgsCommand):
 							self.notify(phone,receipt_msg)
 							new_user = User.objects.create_user(parsed_email,parsed_email,randompassword)
 							EmailAddress.objects.add_email(new_user,parsed_email)
-							zipcode_obj = ZipCode.objects.get(code=parsed_zip)
+							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)		
 							new_customer = Customer(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True).save()
 
@@ -671,7 +691,7 @@ class Command(NoArgsCommand):
 					except ParseException:
 						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": "508-690-0888" })
 							
-						self.notify(phone,receipt_msg)
+						self.notify(parse_phone_number(msg["from"]),receipt_msg)
 	def handle_noargs(self, **options):
 		voice = Voice()
 		voice.login()
@@ -684,17 +704,23 @@ class Command(NoArgsCommand):
 			#print datetime.now(), "- processing: ", msg
 			try:
 				self.test_handle(msg)
+				sms_logger.info("success: %s" % msg)
 			except CommandError:
 				continue
 			except ObjectDoesNotExist, e:
 				print str(e)
+				sms_logger.exception ("\"%s\" causes an error:" % msg)
 				continue
 			except MultipleObjectsReturned, e:
 				print str(e)
+                                sms_logger.exception ("\"%s\" causes an error:" % msg)
+
 				continue
 			except Exception, e:
 			#	skipped_sms.append(index)
 				print str(e)
+                                sms_logger.exception ("\"%s\" causes an error:" % msg)
+
 				continue
 		
 		for message in voice.sms().messages:

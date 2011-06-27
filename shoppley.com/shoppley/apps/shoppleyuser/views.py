@@ -41,7 +41,7 @@ def home(request, template_name="front-page.html"):
 #				request.user.message_set.create(message="You do not have an email yet. Please go to Account and add one for email notifications.")
 				messages.add_message(request, messages.INFO,
 						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
-			messages.add_message(request, messages.INFO,'You do not have an email yet. Please go to <a href="shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
+			#messages.add_message(request, messages.INFO,'You do not have an email yet. Please go to <a href="shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
   
 			return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
 		else:
@@ -290,7 +290,7 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 						'username': user.username
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
-				signup_msg = _("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!")
+				signup_msg = unicode(_("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!"))
 				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 				return HttpResponseRedirect(success_url)
@@ -328,7 +328,8 @@ def customer_signup(request, form_class=CustomerSignupForm,
 						'username': user.username
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
-				signup_msg = _("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!")
+				signup_msg =unicode(_("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!"))
+				print signup_msg
 				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 
 

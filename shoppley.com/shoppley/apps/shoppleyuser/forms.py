@@ -9,7 +9,9 @@ from emailconfirmation.models import EmailAddress
 from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City
 from shoppleyuser.utils import parse_phone_number
 alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
-phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
+#phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
+# add white spaces
+phone_red = re.compile('^\(?[\s]*?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}?[\s]*)$')
 
 class MerchantSignupForm(forms.Form):
 	email = forms.EmailField(label = _("Email"), required = True, widget=forms.TextInput())
@@ -212,12 +214,18 @@ class MerchantProfileEditForm(forms.Form):
 		m.save()
 
 class CustomerProfileEditForm(forms.Form):
+	LIMIT_CHOICES = (
+		(0,'None'),
+		(5,'1-5'),
+		(10,'6-10' ),
+		(9223372036854775807,'unlimited')) 
 	user_id                 = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	username		= forms.CharField(label=_("Username"))
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
 	zip_code		= forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
 	phone			= forms.CharField(max_length=20)
 
+	daily_limit		= forms.ChoiceField(choices=LIMIT_CHOICES)
 	def clean_zip_code(self):
 		try:
 			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
@@ -287,6 +295,7 @@ class CustomerProfileEditForm(forms.Form):
 		c = Customer.objects.get(user__pk = user_id)
 		c.address_1 = address
 		c.phone = phone
+		c.daily_limit = self.cleaned_data["daily_limit"]
 		c.save()
 
 

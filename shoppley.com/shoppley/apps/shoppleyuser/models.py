@@ -124,8 +124,15 @@ class Customer(ShoppleyUser):
 			( 5, 'Once a week'),
 			)
 
+	LIMIT_CHOICES= (
+			( 0, 'None'),
+			( 5, '1-5'),
+			( 10, '6-10'),
+			( 9223372036854775807, 'Unlimited'),
+			)
+
 	frequency = models.IntegerField(choices=FREQUENCY_CHOICES, default=4)
-	daily_limit = models.IntegerField(default=5) # daily limit on num of offers
+	daily_limit = models.IntegerField(choices=LIMIT_CHOICES, default=5) # daily limit on num of offers
 	offer_count = models.IntegerField(default=0) # track offer received each day
 	weekdays_only = models.BooleanField(default=False)
 	weekends_only = models.BooleanField(default=False)

@@ -156,6 +156,7 @@ class TxtTemplates:
 		},
 		"SHARED": {
 			"INVALID_EMAIL": "\"{{ email }}\" is not a valid email address. Please provide a new and valid email.",
+			"INVALID_NUMBER": "\"{{ number }}\" is not a valid phone number. Please provide a new and valid phone number without spaces.",
 			"EMAIL_TAKEN": "\"{{ email }}\" is already registered with shoppley. Please provide another email.",
 			"PHONE_TAKEN": "\"{{ phone }}\" is already registered with shoppley. You can now use our services.",
 			"OFFERCODE_NOT_EXIST": "Offercode {{ code }} does not exist.",

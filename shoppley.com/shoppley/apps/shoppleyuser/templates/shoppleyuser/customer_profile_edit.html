@@ -10,10 +10,9 @@
 
 
 {% block body %}
-<a href="{% url user_profile %}">
-  			<input type="submit" value = "{% trans "&laquo; Back" %}" />
-  		</a>
-    <div class="container">
+<a class="shoppley-btn" style="float:left;" href="{% url user_profile %}">{% trans "&laquo; Back" %}</a>
+     <div class="clear">&nbsp;</div>
+	<div class="container">
   	
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-17 last">
@@ -23,7 +22,10 @@
 			    <fieldset class="inlineLabels">
 			        {{ form|as_uni_form }}
 			        <div  class="form_block">
-			            <input type="submit" value="{% trans "Submit &raquo;" %}" />
+				<!--a class="shoppley-btn" style="float:left;" href="{% url customer_profile_edit %}">{% trans "Submit &raquo;" %}</a>
+     <div class="clear">&nbsp;</div-->
+
+			            <input type="submit" style="float:left;" class="shoppley-btn" value="{% trans "Submit &raquo;" %}" />
 			        </div>
 			    </fieldset>
 			</form>	
