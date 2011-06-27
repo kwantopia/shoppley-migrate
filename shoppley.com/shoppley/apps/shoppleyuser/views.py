@@ -41,10 +41,12 @@ def home(request, template_name="front-page.html"):
 #				request.user.message_set.create(message="You do not have an email yet. Please go to Account and add one for email notifications.")
 				messages.add_message(request, messages.INFO,
 						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
-			#messages.add_message(request, messages.INFO,'You do not have an email yet. Please go to <a href="shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
-  
 			return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
 		else:
+			if not Merchant.objects.get(user__id=request.user.id).address_1:
+				messages.add_message(request, messages.INFO,
+                                                'We do not have your business address. Please go to <a href="{% url user_profile %}">Account</a> and add one.')
+
 			return render_to_response("shoppleyuser/merchant_landing_page.html", context_instance=RequestContext(request))
 	else:
 		return	render_to_response(template_name,{
@@ -153,7 +155,8 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	zipcode = customer.zipcode.code
 	address = customer.address_1
 	phone = customer.phone
-	frequency = customer.daily_limit
+	#print customer.print_daily_limit()
+	frequency =customer.print_daily_limit()
 
 	if user.emailaddress_set.count()>0:
 		email = user.emailaddress_set.all()[0].email
@@ -216,7 +219,7 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 					'address_1': customer.address_1,
 					'zip_code': customer.zipcode.code,
 					'phone': customer.phone, 
-					'user_id':request.user.id,})
+					'user_id':request.user.id,'daily_limit':customer.daily_limit,})
 
 	ctx= {
 		"form": form,

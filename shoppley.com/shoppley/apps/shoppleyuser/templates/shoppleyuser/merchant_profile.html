@@ -34,7 +34,7 @@
     	<div class="span-7 last">
 			<div class="account-settings profile-settings">
 				<h3>Account Setting</h3>
-				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+				
 				<ul>
 					<li>Email</li>
 					<li>{{ email }} </li>
@@ -43,10 +43,12 @@
                                                 {% else %}
                                                 <span class="email-verified" style="color:#ED5F87;">unverified</span>
                                                 {% endifequal %}</li>
-
+				</ul>
+                                <a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+				<ul>
 					<li>Password</li>
 					<li>***********</li>
-				<ul>
+				</ul>
 				<a class="shoppley-btn" href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
 				</div>
     	</div>

@@ -218,7 +218,7 @@ class CustomerProfileEditForm(forms.Form):
 		(0,'None'),
 		(5,'1-5'),
 		(10,'6-10' ),
-		(9223372036854775807,'unlimited')) 
+		(100000,'unlimited')) 
 	user_id                 = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	username		= forms.CharField(label=_("Username"))
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)

@@ -17,12 +17,17 @@
     	<div class="span-17">
 			<div class="profile profile-settings main-box">    		
 				<h2>My Profile</h2>
-				<a class="shoppley-btn" href="{% url customer_profile_edit %}">{% trans "Edit" %}</a><br/>
+                                <a class="shoppley-btn" href="{% url customer_profile_edit %}">{% trans "Edit" %}</a><br/>
+
 				<ul>
 					<li>Username</li>
 					<li>{{ username }}</li>
 					<li>Address</li>
+					{% if address %}
 					<li>{{ address }}</li>
+					{% else %}
+					<li>{% trans "Not given" %}</li>
+					{% endif %}
 					<li>Zipcode</li>
 					<li>{{ zipcode }}</li>
 					<li>Phone</li> 
@@ -35,15 +40,17 @@
     	<div class="span-7 last">
 			<div class="account-settings profile-settings">
 				<h3>Account Setting</h3>
-				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+
 				<ul>
 					<li>Email(s)</li>
-					<li>{{ email }}
+					<li>{{ email }}</li>
 						{% ifequal verified "True" %}
 						<span class="email-verified" style="color:#d4da30;">verified</span>
 						{% else %}
                                                 <span class="email-verified" style="color:#ED5F87;">unverified</span>
-						{% endifequal %}</li>
+						{% endifequal %}	                	</ul>        
+			        <a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
+				<ul>
 					<li>Password</li>
 					<li>***********</li>
 				</ul>

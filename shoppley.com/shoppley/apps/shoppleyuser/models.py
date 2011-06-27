@@ -128,7 +128,7 @@ class Customer(ShoppleyUser):
 			( 0, 'None'),
 			( 5, '1-5'),
 			( 10, '6-10'),
-			( 9223372036854775807, 'Unlimited'),
+			( 100000, 'Unlimited'),
 			)
 
 	frequency = models.IntegerField(choices=FREQUENCY_CHOICES, default=4)
@@ -139,6 +139,16 @@ class Customer(ShoppleyUser):
 	merchant_likes = models.ManyToManyField(Merchant, related_name="fans")
 	merchant_dislikes = models.ManyToManyField(Merchant, related_name="antifans")
 	customer_friends = models.ManyToManyField("self", related_name="friends")
+
+	def print_daily_limit(self):
+		if self.daily_limit==0:
+			return "none"
+		elif self.daily_limit==5:
+			return "1-5"
+		elif self.daily_limit==10:
+			return "6-10"
+		else:
+			return "unlimited"
 
 	def is_taking_offers(self):
 		return self.offer_count < self.daily_limit
