@@ -66,7 +66,7 @@
     			</div>
     			<div class="signup-form customer">
 				{% include "shoppleyuser/customer_signup_form.html" %}
-				<input type="submit" id="customer-cancel" onclick="$(document).trigger('close.facebox')" value="{% trans "Cancel" %}" />                    
+				<input type="submit" id="customer-cancel" value="{% trans "Cancel" %}" />                    
     			<div class="clear">&nbsp;</div>
     			</div>
     		
@@ -81,7 +81,7 @@
     			</div>
     			<div class="signup-form merchant">
 				{% include "shoppleyuser/merchant_signup_form.html" %}
-				<input type="submit" id="merchant-cancel" onclick="$(document).trigger('close.facebox')" value="{% trans "Cancel" %}" />                    
+				<input type="submit" id="merchant-cancel" value="{% trans "Cancel" %}" />                    
     			<div class="clear">&nbsp;</div>
     			</div>
     		</div>
@@ -116,6 +116,54 @@
 			});
 
 
+		});
+
+		var customer_form_isOpen = false;
+
+		$("#customer-signup-button2").click(function(){
+
+			if (customer_form_isOpen) {
+				$("#frontpage-customer-signup").fadeOut(600);
+				$("#frontpage-blurb-wrapper").fadout(600);
+				document.getElementById("merchant-signup-button").disabled= false;
+				customer_form_isOpen = false;
+			} else {
+				$("#frontpage-customer-signup").fadeIn(600);
+				$("#frontpage-blurb-wrapper").fadeIn(600);
+				document.getElementById("merchant-signup-button").disabled= true;
+				customer_form_isOpen = true;
+			}
+		});
+		$("#customer-cancel").click(function(){
+			$("#frontpage-customer-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
+			document.getElementById("merchant-signup-button").disabled= false;
+			customer_form_isOpen = false;
+		});
+
+		var merchant_form_isOpen = false;
+		$("#merchant-signup-button2").click(function(){
+			if (merchant_form_isOpen) {
+				$("#frontpage-merchant-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
+				document.getElementById("customer-signup-button").disabled= false;
+				merchant_form_isOpen = false;
+			} else {
+				$("#frontpage-merchant-signup").fadeIn(600);
+                                $("#frontpage-blurb-wrapper").fadeIn(600);
+
+				document.getElementById("customer-signup-button").disabled= true;
+				merchant_form_isOpen = true;
+			}
+		});
+		$("#merchant-cancel").click(function(){
+			$("#frontpage-merchant-signup").fadeOut(600);
+                                $("#frontpage-blurb-wrapper").fadout(600);
+
+			document.getElementById("customer-signup-button").disabled= false;
+			merchant_form_isOpen = false;
 		});
 
 	</script>
