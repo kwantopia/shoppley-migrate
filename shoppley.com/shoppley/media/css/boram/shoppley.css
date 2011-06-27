@@ -432,7 +432,10 @@ div.login .form_block {
 }
 
 
-
+.txt-command {
+	font-weight: bold;
+	color: #000;
+}
 
 
 

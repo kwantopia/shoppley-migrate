@@ -38,7 +38,12 @@
 				<a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>
 				<ul>
 					<li>Email(s)</li>
-					<li>{{ email }}<span class="email-verified">{{ verified }}</span></li>
+					<li>{{ email }}
+						{% ifequal verified "True" %}
+						<span class="email-verified" style="color:#d4da30;">verified</span>
+						{% else %}
+                                                <span class="email-verified" style="color:#ED5F87;">unverified</span>
+						{% endifequal %}</li>
 					<li>Password</li>
 					<li>***********</li>
 				</ul>
