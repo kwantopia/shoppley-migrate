@@ -56,7 +56,7 @@ class SimpleTest(TestCase):
 		u.set_password("hello")
 		u.save()
 		
-		num = parse_phone_number("6179092101")
+		num = parse_phone_number("6174538710")
 		if not Customer.objects.filter(user=u).exists():
 			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone=num, balance=1000)
 			c.active = True
