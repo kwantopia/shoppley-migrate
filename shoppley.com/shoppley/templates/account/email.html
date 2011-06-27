@@ -6,9 +6,9 @@
 
 
 {% block body %}
-<a href="{% url user_profile %}">
-  			<input type="submit" value = "{% trans "&laquo; Back" %}" />
-  		</a>
+     <a class="shoppley-btn" style="float:left;" href="{% url user_profile %}">{% trans "&laquo; Back" %}</a>
+     <div class="clear">&nbsp;</div>
+
     <h2>{% trans "Email Addresses" %}</h2>
     
     {% if user.emailaddress_set.all %}
@@ -65,7 +65,7 @@
             {{ add_email_form|as_uni_form }}
              <div class = "form_block">
                  <input type="hidden" name="action" value="add"/>
-                 <input type="submit" value="{% trans "add" %}"/>
+                 <input type="submit" class="shoppley-btn" style="float:left;" value="{% trans "add" %}"/>
             </div>
         </fieldset>
     </form>
