@@ -1,12 +1,12 @@
 server {
     listen 80; 
-    server_name www.shoppley.com;
-    rewrite ^/(.*) http://shoppley.com/$1 permanent;
+    server_name shoppley.com;
+    rewrite ^/(.*) http://www.shoppley.com/$1 permanent;
 }
 
 server {
     listen 80;
-    server_name shoppley.com;
+    server_name www.shoppley.com;
 
     access_log /home/www/shoppley.com/nginx/logs/access.log;
     error_log /home/www/shoppley.com/nginx/logs/error.log;

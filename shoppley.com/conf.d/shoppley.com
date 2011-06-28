@@ -2,9 +2,9 @@
 WSGIRestrictStdout Off
 
 <VirtualHost 127.0.0.1:8089>
-    ServerName www.shoppley.com
-    ServerAlias shoppley.com
-    ServerAdmin webmaster@shoppley.com
+    ServerName shoppley.com
+    ServerAlias www.shoppley.com
+    ServerAdmin support@shoppley.com
 
     #<Directory /home/www/shoppley.com/shoppley/static>
     #	Order deny,allow
