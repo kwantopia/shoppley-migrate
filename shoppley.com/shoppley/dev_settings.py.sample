@@ -27,7 +27,7 @@ EMAIL_DEBUG = DEBUG
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
+        "ENGINE": "postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
         "NAME": "flashon",                       # Or path to database file if using sqlite3.
         "USER": "flashon",                             # Not used with sqlite3.
         "PASSWORD": "flashonnohsalf",                         # Not used with sqlite3.
