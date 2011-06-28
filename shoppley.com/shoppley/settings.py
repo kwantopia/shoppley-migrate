@@ -18,11 +18,14 @@ GOOGLE_API_KEY = "ABQIAAAAtw1JH2yMfNAUgmPaNN9VkBTXP1I12cNpFhrTXkYpZhbq5Uv9LRT-1q
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
+# Following DEBUG flags get overridden in local_settings.py in dev and deployment
+# SMS_DEBUG, DEBUG, TEMPLATE_DEBUG, SERVE_MEDIA
+
 # set SMS_DEBUG=True when running django tests so that
 # it doesn't send out unnecessary txt messages
-SMS_DEBUG = True
+SMS_DEBUG = True 
 
-DEBUG = True
+DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -46,6 +49,7 @@ DEBUG_TOOLBAR_PANELS = (
 ADMINS = [
     # ("Your Name", "your_email@domain.com"),
 	("Meng", "smengl@shoppley.com"),
+
 ]
 
 MANAGERS = ADMINS
@@ -347,6 +351,7 @@ BROKER_VHOST = "shoppley_vhost"
 BROKER_USER = "shoppley_rabbit"
 BROKER_PASSWORD = "shoppley_rabbit"
 
+
 # logging config starts here...
 import logging
 # Get an instance of a logger
@@ -422,3 +427,4 @@ LOGGING = {
     }
 }
 # end of logging config
+

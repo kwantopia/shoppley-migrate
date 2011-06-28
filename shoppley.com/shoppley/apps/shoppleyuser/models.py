@@ -9,8 +9,10 @@ from sorl.thumbnail import ImageField
 
 # Create your models here.
 
+
 class Location(models.Model):
 	location = PointField()
+
 
 class Country(models.Model):
 	name      = models.CharField(max_length=64)

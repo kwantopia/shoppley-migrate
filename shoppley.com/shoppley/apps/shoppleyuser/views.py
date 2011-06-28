@@ -35,6 +35,8 @@ from shoppleyuser.models import Customer, ShoppleyUser, Merchant
 
 
 def home(request, template_name="front-page.html"):
+	#return HttpResponseRedirect("http://webuy-dev.mit.edu")
+
 	if request.user.is_authenticated():
 		if Customer.objects.filter(user__id=request.user.id).count()>0:
 			if request.user.emailaddress_set.count()==0:

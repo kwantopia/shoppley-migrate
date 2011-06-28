@@ -63,6 +63,48 @@ $ python manage.py syncdb
 
 If models have changed we need to delete dev.db and syncdb
 
+== create POSTGIS template ==
+sudo su postgres
+./create_template_postgis-1.5.sh
+
+== create new DB with POSTGIS template ==
+sudo su postgres
+createdb flashon -T template_postgis -E unicode -O flashon
+exit
+
+== Celeryd setup ==
+#Create rabbitmq user and vhost
+sudo rabbitmqctl add_user shoppley_rabbit shoppley_rabbit
+sudo rabbitmqctl add_vhost shoppley_vhost
+sudo rabbitmqctl set_permissions -p shoppley_vhost shoppley_rabbit ".*" ".*" ".*"
+
+# in settings.py add these
+# set django-celery autoloader 
+
+import djcelery
+djcelery.setup_loader()
+
+# set information to connect to rabbitmq (broker) 
+
+BROKER_HOST = "127.0.0.1"
+BROKER_PORT = 5672
+BROKER_VHOST = "shoppley_vhost"
+BROKER_USER = "shoppley_rabbit"
+BROKER_PASSWORD = "shoppley_rabbit"
+
+
+#Run celeryd as daemon
+# read celeryd.default if u need to change the DIR
+ln -s /home/www/shoppley.com/shoppley/celeryd.default /etc/default/celeryd
+ln -s /home/www/shoppley.com/shoppley/celeryd /etc/init.d/celeryd
+ln -s /home/www/shoppley.com/shoppley/celerybeat /etc/init.d/celerybeat
+ln -s /home/www/shoppley.com/shoppley/celeryevcam /etc/init.d
+
+sudo /etc/init.d/rabbitmq-server restart
+sudo /etc/init.d/celeryd start
+sudo /etc/init.d/celerybeat start
+
+
 == test data ==
 
 # Updated by Kwan 
@@ -73,10 +115,11 @@ python manage.py test_offer_mobile
 
 To add more test data edit apps/mobile/tests.py "setUp" method
 
+
 == DEPLOYMENT ==
 
 source /home/virtual/shoppley-env/bin/activate
 cd /home/www/shoppley.com/shoppley
 # this django command is used to assemble static files (part of django 1.3)
 python manage.py collectstatic 
-cp local_settings.py.sample local_settings.py
+cp deploy_settings.py.sample local_settings.py

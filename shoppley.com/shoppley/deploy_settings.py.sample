@@ -4,6 +4,7 @@ import os.path
 import posixpath
 import pinax
 
+SHOPPLEY_NUM = "5086900888"
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
@@ -17,8 +18,9 @@ STATICFILES_DIRS = [
 	os.path.join(PYTHON_ROOT, "uni_form", "media"),
 ]
 
-SMS_DEBUG = False
+# override DEBUG flags
 DEBUG = False 
+SMS_DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
 SERVE_MEDIA = False 
@@ -26,13 +28,18 @@ EMAIL_DEBUG = DEBUG
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
+#	"ENGINE": "postgresql_psycopg2",
+        "ENGINE": "postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
         "NAME": "flashon",                       # Or path to database file if using sqlite3.
         "USER": "flashon",                             # Not used with sqlite3.
         "PASSWORD": "flashonnohsalf",                         # Not used with sqlite3.
+#	"NAME": "flashon2",
+#	"USER": "smengl",
+#	"PASSWORD": "smenglon",
         "HOST": "",                             # Set to empty string for localhost. Not used with sqlite3.
         "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
-    },
+    }}
+"""
     "test": {
         "ENGINE": "django.db.backends.postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
         "NAME": "shoppley",                       # Or path to database file if using sqlite3.
@@ -42,8 +49,8 @@ DATABASES = {
         "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
     }
 
+"""
 
-}
 
 MEDIA_URL = "http://media.shoppley.com/site_media/media/"
 STATIC_URL = "http://media.shoppley.com/site_media/static/"

@@ -89,10 +89,10 @@ def register_customer(request):
 		c.save()
 
 		# send a text message and e-mail with random password
-		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password.") %{ "password": rand_passwd }
+		message = _("Here's your temporary password: %(password)s.	Please login to http://www.shoppley.com and update your password.  The web site also provides a quick introduction on how to make the best use of Shoppley.") %{ "password": rand_passwd }
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
-		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
+		txt_msg = _("%(password)s is temporary password from Shoppley. Send #help to %(shoppley)s to see list of txt commands.") % { "password": rand_passwd, "shoppley": settings.SHOPPLEY_NUM }
 		sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 
