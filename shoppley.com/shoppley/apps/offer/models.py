@@ -470,8 +470,8 @@ class OfferCode(models.Model):
 							"phone": self.offer.merchant.phone,
 							"address1": self.offer.merchant.address_1,
 							"citystatezip": self.offer.merchant.zipcode.citystate(),
-							"lat": -42.2342,
-							"lon": -24.2322,
+							"lat": 42.365005, 
+							"lon": -71.103329, 
 							"img": self.offer.get_image(),
 							"banner": self.offer.merchant.get_banner()
 						}
@@ -500,8 +500,8 @@ class OfferCode(models.Model):
 							"phone": self.offer.merchant.phone,
 							"address1": self.offer.merchant.address_1,
 							"citystatezip": self.offer.merchant.zipcode.citystate(),
-							"lat": -42.2342,
-							"lon": -24.2322,
+							"lat": 42.365005, 
+							"lon": -71.103329, 
 							"img": self.offer.get_image(),
 							"banner": self.offer.merchant.get_banner()
 						}

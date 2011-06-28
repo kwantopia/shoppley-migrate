@@ -51,7 +51,7 @@ HELP = "help"
 ZIPCODE = ["zip", "zipcode"]
 
 import logging
-sms_logger = logging.getLogger(__name__)
+sms_logger = logging.getLogger("offer.management.commands.check_sms")
 
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
@@ -171,6 +171,7 @@ class Command(NoArgsCommand):
 			return offercode
 		except OfferCode.DoesNotExist:
 			t = TxtTemplates()
+			sms_logger.exception("hello")
 			receipt_msg=t.render(TxtTemplates.templates["SHARED"]["OFFERCODE_NOT_EXIST"], {"code":code})
 			self.notify(phone,receipt_msg)
 			OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV",invalid_code=code).save()
@@ -180,7 +181,7 @@ class Command(NoArgsCommand):
 		t= TxtTemplates()
 		print "new message %s" % msg
 		msg["from"] = parse_phone_number(msg["from"])
-		#sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
+		sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
 		print "logged"
 		if msg["from"] != "Me" and msg["from"] != "":
 			su = map_phone_to_user(msg["from"])
