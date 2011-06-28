@@ -89,10 +89,10 @@ def register_customer(request):
 		c.save()
 
 		# send a text message and e-mail with random password
-		message = _("Here's your temporary password: %(password)s.	Please login to http://www.shoppley.com and update your password.  The web site also provides a quick introduction on how to make the best use of Shoppley.") %{ "password": rand_passwd }
+		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password.  The web site also provides a quick introduction on how to make the best use of Shoppley.") %{ "password": rand_passwd }
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
-		txt_msg = _("%(password)s is temporary password from Shoppley. Send #help to %(shoppley)s to see list of txt commands.") % { "password": rand_passwd, "shoppley": settings.SHOPPLEY_NUM }
+		txt_msg = _("%(password)s is temporary password for shoppley.com. Txt #help to %(shoppley)s to get started.") % { "password": rand_passwd, "shoppley": settings.SHOPPLEY_NUM }
 		sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 
@@ -264,6 +264,7 @@ def offer_forward(request):
 	"""
 		:param offer_code: the code that is forwarded
 		:param phones: list of phone numbers
+		:param emails: list of emails 
 		:param note: a note for the friend
 
 	"""
@@ -274,7 +275,9 @@ def offer_forward(request):
 
 	offer_code = request.POST.get("offer_code", None)
 	phones = request.POST.getlist("phones")
+	emails = request.POST.getlist("emails")
 	notes = request.POST.get("note", "")
+
 	if offer_code and len(phones) > 0:
 		if OfferCode.objects.filter(code__iexact=offer_code).exists():
 			original_code = OfferCode.objects.filter(code__iexact=offer_code)[0]
@@ -283,7 +286,7 @@ def offer_forward(request):
 				new_code, random_pw = offer.gen_forward_offercode(original_code, phone)
 				# text the user the user name and password
 
-				customer_msg = _("%(customer)s forwarded you offer!\n*from: %(merchant)s\n*title: %(description)s\n*expires: %(expiration)s\nCome redeem w/ [%(code)s]\n")%{
+				customer_msg = _("%(customer)s forwarded you an offer!\n*from: %(merchant)s\n*title: %(description)s\n*expires: %(expiration)s\nCome redeem w/ [%(code)s]\n")%{
 						"customer": customer.phone,
 						"merchant": offer.merchant,
 						"expiration": pretty_date(original_code.expiration_time),
@@ -291,14 +294,16 @@ def offer_forward(request):
 						"dollar_off": offer.dollar_off,
 						"code": new_code.code,
 						}
-				#TODO: if the personal do not mind receiving txt
+				#TODO: if the person do not mind receiving txt
 				sms_notify(phone,customer_msg, SMS_DEBUG)
 
 				if random_pw:
 					new_customer = new_code.customer
 					#print "created a customer for %s" % friend_num
-					account_msg = _("Welcome to Shoppley! Here is your shoppley.com login info:\n - username: %(name)s\n - password: %(password)s")%{"name":new_customer.user.username,"password":random_pw,}
+					account_msg = _("Welcome to Shoppley! shoppley.com login info:\n-username: %(name)s\n-password: %(password)s\nTxt #help to %(shoppley)s to get started.")%{"name":new_customer.user.username,"password":random_pw, "shoppley": settings.SHOPPLEY_NUM}
 					sms_notify(phone,account_msg, SMS_DEBUG)
+
+
 
 			forwarder_msg= _('Offer by "%s" was forwarded to ') % offer_code
 			forwarder_msg= forwarder_msg+ ''.join([str(i)+' ' for i in phones]) + "\nYou will receive points when they redeem their offers."
@@ -405,7 +410,7 @@ def register_merchant(request):
 		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password and you will be given free points to start sending Shoppley offers.") %{ "password": rand_passwd }
 		recipients = [email]
 		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
-		txt_msg = _("%(password)s is temporary password from Shoppley") % { "password": rand_passwd }
+		txt_msg = _("%(password)s is temporary password for shoppley.com. Txt #help to %(shoppley)s to get started.") % { "password": rand_passwd, "shoppley":settings.SHOPPLEY_NUM }
 		sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 

@@ -2,6 +2,11 @@
 
 Prerequisites: Python 2.7
 
+# Install spatialite for local testing and dev
+$ sudo port install spatialite # mac
+$ sudo apt-get install sptialite-bin libspatialite2 libspatialite-dev
+
+
 #Install latest virtualenv
 $ sudo pip install virtualenv
 $ sudo pip install virtualenvwrapper
@@ -24,15 +29,17 @@ $ source ~/Document/virtual/shoppley-env/bin/activate
 # For DEV or DEPLOYMENT
 $ source /home/virtual/shoppley-env/bin/activate
 
-# DEPLOYMENT: go to where you have checked out the shoppley code
+# go to where you have checked out the shoppley code
+# DEPLOYMENT 
 $ cd /home/www/shoppley.com/shoppley 
 # DEV SERVER
 $ cd /home/www/webuy.mit.edu/shoppley 
 
-# install requirements
-$ pip install Django (will install 1.3 the latest)
-$ pip install Pinax (will install the latest 0.9)
-$ pip install -r requirements.txt
+# install requirements by running bootstrap.py
+#$ pip install Django (will install 1.3 the latest)
+#$ pip install Pinax (will install the latest 0.9)
+#$ pip install -r requirements/apps.txt
+./bootstrap.py
 
 == Dev server ==
 # If you are on dev server create a softlink to easily access the project
@@ -61,11 +68,16 @@ $ ./download.sh
 
 $ python manage.py syncdb
 
-If models have changed we need to delete dev.db and syncdb
+If models have changed we need to delete dev.db and syncdb again
 
 == create POSTGIS template ==
 sudo su postgres
 ./create_template_postgis-1.5.sh
+# on Mac you might have permission issues so copy the script to tmp and execute
+
+cp create_template_postgis-1.5.sh /tmp/
+sudo su postgres
+/tmp/create_template_postgis-1.5.sh
 
 == create new DB with POSTGIS template ==
 sudo su postgres

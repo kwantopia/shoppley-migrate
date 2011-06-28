@@ -1,10 +1,8 @@
-# copy this file to local_settings.py in the dev server
+# copy this file to local_settings.py on local server
 
 import os.path
 import posixpath
 import pinax
-
-SITE_ID = 3
 
 SHOPPLEY_NUM = "5086900888"
 # tells Pinax to use the default theme
@@ -12,7 +10,8 @@ PINAX_THEME = "default"
 
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
+# TODO: change this directory to your virtual environment path
+PYTHON_ROOT = os.path.abspath("/Users/kwan/workspace/virtual/shoppley-env/lib/python2.7/site-packages")
 
 STATICFILES_DIRS = [
 	os.path.join(PROJECT_ROOT, "media"),
@@ -20,25 +19,28 @@ STATICFILES_DIRS = [
 	os.path.join(PYTHON_ROOT, "uni_form", "media"),
 ]
 
-SMS_DEBUG = False
+# override DEBUG flags
 DEBUG = True 
+SMS_DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
-SERVE_MEDIA = False
+SERVE_MEDIA = True 
 EMAIL_DEBUG = DEBUG
 
 DATABASES = {
     "default": {
+#	"ENGINE": "postgresql_psycopg2",
         "ENGINE": "postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
         "NAME": "flashon",                       # Or path to database file if using sqlite3.
         "USER": "flashon",                             # Not used with sqlite3.
         "PASSWORD": "flashonnohsalf",                         # Not used with sqlite3.
+#	"NAME": "flashon2",
+#	"USER": "smengl",
+#	"PASSWORD": "smenglon",
         "HOST": "",                             # Set to empty string for localhost. Not used with sqlite3.
         "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
-    }
-}
+    }}
 """
-,
     "test": {
         "ENGINE": "django.db.backends.postgresql_psycopg2", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
         "NAME": "shoppley",                       # Or path to database file if using sqlite3.
@@ -48,14 +50,11 @@ DATABASES = {
         "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
     }
 
-
-}
 """
-MEDIA_URL = "http://webuy-dev.mit.edu/site_media/media/"
-STATIC_URL = "http://webuy-dev.mit.edu/site_media/static/"
-ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
+
 
 DEFAULT_FROM_EMAIL = "support@shoppley.com"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_SUBJECT_PREFIX = "[ Shoppley ] "
-EMAIL_BACKEND = "mailer.backend.DbBackend"
+
+
