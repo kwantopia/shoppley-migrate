@@ -20,9 +20,9 @@ PINAX_THEME = "default"
 
 # set SMS_DEBUG=True when running django tests so that
 # it doesn't send out unnecessary txt messages
-SMS_DEBUG = False
+SMS_DEBUG = True
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -45,6 +45,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 ADMINS = [
     # ("Your Name", "your_email@domain.com"),
+	("Meng", "smengl@shoppley.com"),
 ]
 
 MANAGERS = ADMINS
@@ -345,3 +346,79 @@ BROKER_PORT = 5672
 BROKER_VHOST = "shoppley_vhost"
 BROKER_USER = "shoppley_rabbit"
 BROKER_PASSWORD = "shoppley_rabbit"
+
+# logging config starts here...
+import logging
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+
+nullhandler = logger.addHandler(NullHandler())
+LOG_DIR = os.path.join(PROJECT_ROOT, "log")
+LOG_FILE = os.path.join(PROJECT_ROOT, "log", "django.log")
+if not os.path.exists(LOG_DIR):
+	try:
+		os.mkdir(LOG_DIR)
+	except OSError, e:
+		print e
+		os.mkdir(os.path.join(PROJECT_ROOT, "log"))
+if not os.path.exists(LOG_FILE):
+	fd = os.open(LOG_FILE, os.O_RDONLY|os.O_CREAT)
+	os.close(fd)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+
+    'handlers': {
+        'null': {
+            'level':'DEBUG',
+            'class':'django.utils.log.NullHandler',
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'log_file':{
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE,
+            'maxBytes': '16777216', # 16megabytes
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+	'offer.management.commands.check_sms':{
+	   'handlers': ['log_file','mail_admins'],
+	   'level': 'INFO',
+	   'propagate': True,
+	},
+   	 'apps': {
+            'handlers': ['log_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
+# end of logging config

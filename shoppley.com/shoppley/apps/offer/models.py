@@ -153,11 +153,11 @@ class Offer(models.Model):
 
 	def gen_forward_offercode(self,original_code,phone):
 	
-		forwarder = OfferCode.objects.filter(code__iexact=original_code)
+		#forwarder = OfferCode.objects.filter(code__iexact=original_code)
 		
 		gen_code = gen_offer_code()
 		phone =parse_phone_number(phone)
-		ori_code = OfferCode.objects.filter(code_iexact=original_code)
+	
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
 		forwarder=original_code.customer
@@ -170,7 +170,7 @@ class Offer(models.Model):
 				code = gen_code,
 				forwarder=forwarder,
 				time_stamp=datetime.now(),
-				expiration_time=ori_code.expiration_time)
+				expiration_time=original_code.expiration_time)
 			o.save()
 			forwarder.customer_friends.add(friend)
 			return o, None # for existing customer
@@ -196,7 +196,7 @@ class Offer(models.Model):
 				code = gen_code,
 				forwarder=forwarder,
 				time_stamp=datetime.now(),
-				expiration_time=ori_code.expiration_time)
+				expiration_time=original_code.expiration_time)
 			o.save()
 			forwarder.customer_friends.add(friend)
 			return o, rand_passwd  # for new customer

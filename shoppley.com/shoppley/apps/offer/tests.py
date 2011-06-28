@@ -480,6 +480,7 @@ class SimpleTest(TestCase):
 		msg7={"from":"0000000001", "text": "#forward 00002 000-000-0002 000-000-0001"}
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder[0].customer_friends.count(),0)
+		print "offercode" , OfferCode.objects.get(code="00002")
 		cmd.test_handle(msg7)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
@@ -501,22 +502,22 @@ class SimpleTest(TestCase):
 		self.failIfEqual(oc.code,oc_ori[0].code)
 		print "************* TEST 5a: FORWARD TO NON-CUSTOMER***************"
 
-		msg7a={"from":"0000000001", "text": "#forward 00002 0000-000-10"}
+		msg7a={"from":"0000000001", "text": "#forward 00002 000-000-0100"}
 		cmd.test_handle(msg7a)
 		forwarder = Customer.objects.filter(phone__iexact="0000000001")
 		self.failUnlessEqual(forwarder.count(),1)
 		forwarder = forwarder[0]
 		self.failUnlessEqual(forwarder.customer_friends.count(),3)
-		rec_user = User.objects.filter(username__iexact="000000010")
+		rec_user = User.objects.filter(username__iexact="0000000100")
 		self.failUnlessEqual(rec_user.count(),1)
 		print rec_user[0].email
 		self.failUnlessEqual(rec_user[0].email,"")
-		receiver = Customer.objects.filter(phone__iexact="000000010")
+		receiver = Customer.objects.filter(phone__iexact="0000000100")
 		self.failUnlessEqual(receiver.count(),1)
 		receiver = receiver[0]
 		self.failUnlessEqual(receiver.customer_friends.count(),1)
 		self.failUnlessEqual(forwarder in receiver.customer_friends.all(),True)
-		oc2 = OfferCode.objects.filter(offer__id=oc_ori[0].offer.id,customer__phone="000000010")
+		oc2 = OfferCode.objects.filter(offer__id=oc_ori[0].offer.id,customer__phone="0000000100")
 		self.failUnlessEqual(oc2.count(),1)
 		oc2 = oc2[0]
 		self.failUnlessEqual(oc2.forwarder.id,forwarder.id)
@@ -526,12 +527,12 @@ class SimpleTest(TestCase):
 		self.failIfEqual(oc2.code,oc.code)
 		print "************* TEST 5b: FORWARD REACH LIMIT***************"
 
-		msg7b={"from":"0000000001", "text": "#forward 00002 000000010"}
+		msg7b={"from":"0000000001", "text": "#forward 00002 0000000100"}
 		cmd.test_handle(msg7b)
 
 		print "************* TEST 5c: FORWARD A CODE THE CUSTOMER DOES NOT OWN***************"
 		# forward code not the customer's
-		msg7c={"from":"0000000002", "text": "#forward 00002 000000010"}
+		msg7c={"from":"0000000002", "text": "#forward 00002 0000000100"}
 		offercode = OfferCode.objects.get(code = "00002")
 		customer = Customer.objects.get(phone__iexact="0000000002")
 		self.failIfEqual(offercode.customer, customer)
@@ -546,7 +547,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(customer.customer_friends.count(),1)
 		# forward code that does not exist
 		print "************* TEST 5d: FORWARD A CODE THAT DOES NOT EXIST***************"
-		msg7d={"from":"0000000002", "text": "#forward 0000X 000000010"}
+		msg7d={"from":"0000000002", "text": "#forward 0000X 0000000100"}
 		error = False
 		try:
 			cmd.test_handle(msg7d)
@@ -556,7 +557,7 @@ class SimpleTest(TestCase):
 		self.failUnlessEqual(customer.customer_friends.count(),1)
 		# forward to someone who already has the offer
 		print "************* TEST 5e: FORWARD TO SOMEONE WHO ALREADY HAS THE OFFER***************"
-		msg7e={"from":"0000000002", "text": "#forward 00001 000000010"}
+		msg7e={"from":"0000000002", "text": "#forward 00001 0000000100"}
 		error = False
 		try:
 			cmd.test_handle(msg7e)
