@@ -28,7 +28,6 @@ customer_pattern = "#" + Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*(
 merchant_pattern = customer_pattern
 phone_pattern =Optional("(") + Word(nums, exact=3) +Optional(")") + Optional("-") + Word(nums,exact=3)+ Optional("-")+ Word(nums,exact=4)
 
-DEFAULT_SHOPPLEY_NUM="508-690-0888"
 DEFAULT_SITE = "www.shoppley.com"
 
 # Customer commands:
@@ -518,13 +517,13 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() == STOP:
 					
 						if su.active:
-							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": DEFAULT_SHOPPLEY_NUM})
+							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
 							self.notify(phone,customer_msg)
 							su.active = False
 							su.save()
 
 						else:
-					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": DEFAULT_SHOPPLEY_NUM})
+					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
 							self.notify(phone,customer_msg)
 					# ------------------- START: "start"-----------------------
 					elif parsed[0].lower() == START :
@@ -687,10 +686,10 @@ class Command(NoArgsCommand):
 
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
-							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": "508-690-0888" })
+							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
 							self.notify(phone,receipt_msg)
 					except ParseException:
-						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": "508-690-0888" })
+						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
 							
 						self.notify(parse_phone_number(msg["from"]),receipt_msg)
 	def handle_noargs(self, **options):
