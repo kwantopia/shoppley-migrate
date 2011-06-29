@@ -42,3 +42,8 @@ Success. You can now start the database server using:
 or
     /opt/local/lib/postgresql90/bin/pg_ctl -D /opt/local/var/db/postgresql90/defaultdb -l logfile start
 
+
+
+# permission for directory needs to be changed in case postgres user has 
+# permission problems
+sudo chown postgres /opt/local/var/db/postgresql90/
