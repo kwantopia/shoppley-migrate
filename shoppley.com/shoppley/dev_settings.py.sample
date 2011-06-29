@@ -20,7 +20,7 @@ STATICFILES_DIRS = [
 	os.path.join(PYTHON_ROOT, "uni_form", "media"),
 ]
 
-SMS_DEBUG = False
+SMS_DEBUG = True 
 DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through django.views.static.serve.
