@@ -79,7 +79,8 @@ static CLLocationDegrees kLongitudeDelta = 0.02;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    MKMapView *mapView = [[[MKMapView alloc] initWithFrame:self.view.bounds] autorelease];
+    CGRect mapRect = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height - 44.0f);
+    MKMapView *mapView = [[[MKMapView alloc] initWithFrame:mapRect  ] autorelease];
     mapView.delegate = self;
     
     // Region and Zoom    
