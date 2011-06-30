@@ -13,8 +13,8 @@
 #import "SLActiveOffer.h"
 #import "SLPastOffer.h"
 
-//static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
-static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 //static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
@@ -54,7 +54,8 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     
     request.cachePolicy = TTURLRequestCachePolicyNone;
     
-    TTDPRINT(@"%@",request.parameters);
+    TTDPRINT(@"%@", url);
+    TTDPRINT(@"%@", request.parameters);
     [request send];
 }
 
@@ -131,7 +132,7 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 }
 
 - (void)reloadData {
-    [self updateLocation];
+    //[self updateLocation];
     TT_RELEASE_SAFELY(_activeOffers);
     TT_RELEASE_SAFELY(_pastOffers);
     [_activeOffersDownloader download];
@@ -169,6 +170,30 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
     }
     _errorString = @"Connection Error. Please try again later.";
     return NO;
+}
+
+- (NSDictionary*)sendGetRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint {
+    TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:endpoint] delegate:self];
+    request.response = [[[TTURLJSONResponse alloc] init] autorelease];
+    [request.parameters setDictionary:parameters];
+    request.httpMethod = @"GET";
+    request.cachePolicy = TTURLRequestCachePolicyNone;
+    
+    TTDPRINT(@"%@", request.parameters);
+    [request sendSynchronously];
+    
+    TTURLJSONResponse* jsonResponse = request.response;
+    
+    if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* response = jsonResponse.rootObject;
+        if ([[response valueForKey:@"result"] intValue]== 1) {
+            return response;            
+        }
+        _errorString = [response valueForKey:@"result_msg"];
+        return response;
+    }
+    _errorString = @"Connection Error. Please try again later.";
+    return NULL;
 }
 
 #pragma mark -
@@ -264,27 +289,15 @@ static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 #pragma mark -
 #pragma mark Offer
 
+- (NSDictionary*)sendMoreWithOfferId:(NSNumber*)offerId {
+    return [self sendGetRequestWithParameters:[NSDictionary dictionaryWithObjectsAndKeys:nil] endpoint:[NSString stringWithFormat:@"merchant/offer/send/more/%@/", offerId]];
+}
+
 - (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId {
     NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
     [parameters setValue:feedback forKey:@"feedback"];
     [parameters setValue:offerCodeId forKey:@"offer_code_id"];
     return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/feedback/"];
-}
-
-- (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId {
-    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
-    [parameters setValue:rate forKey:@"rating"];
-    [parameters setValue:offerCodeId forKey:@"offer_code_id"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/rate/"];
-}
-
-- (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode {
-    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
-    [parameters setValue:note forKey:@"note"];
-    [parameters setValue:offerCode forKey:@"offer_code"];
-    [parameters setValue:[phones JSONRepresentation] forKey:@"phones"];
-    [parameters setValue:[emails JSONRepresentation] forKey:@"emails"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/forward/"];
 }
 
 #pragma mark -

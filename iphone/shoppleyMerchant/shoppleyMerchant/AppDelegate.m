@@ -10,10 +10,12 @@
 
 #import "ActiveOffersViewController.h"
 #import "LoginViewController.h"
+#import "OfferDetailViewController.h"
 #import "PastOffersViewController.h"
 #import "TabBarController.h"
 #import "SettingsViewController.h"
 #import "SLDataController.h"
+#import "SLStyleSheet.h"
 #import "SummaryViewController.h"
 
 @implementation AppDelegate
@@ -32,7 +34,7 @@
     [[SLDataController sharedInstance] updateLocation];
     
     // Style Sheet
-    //[TTStyleSheet setGlobalStyleSheet:[[[SLStyleSheet alloc] init] autorelease]];
+    [TTStyleSheet setGlobalStyleSheet:[[[SLStyleSheet alloc] init] autorelease]];
     
     // Navigator
     TTNavigator *navigator = [TTNavigator navigator];
@@ -52,7 +54,7 @@
     [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     
-//    [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
+    [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
 //    [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];
 //    [map from:@"shoppley://offer/rate" toViewController:[OfferRateViewController class]];
 //    [map from:@"shoppley://offer/forward" toViewController:[OfferForwardViewController class]];
