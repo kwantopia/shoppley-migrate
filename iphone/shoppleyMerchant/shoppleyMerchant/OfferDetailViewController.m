@@ -79,6 +79,8 @@
     [super viewWillAppear:animated];
 }
 
+#pragma mark send more offers
+
 - (void)sendMoreOffersClicked {
     self.tableView.tableFooterView = NULL;
     self.dataSource = [TTListDataSource dataSourceWithObjects:[TTTableActivityItem itemWithText:@"Processing..."], nil];
@@ -121,6 +123,8 @@
     
     [pool release];
 }
+
+#pragma mark restart offer
 
 - (void)restartOffer {
     TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/new"] autorelease];

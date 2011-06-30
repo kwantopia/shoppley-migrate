@@ -76,5 +76,6 @@
 #pragma mark Offer
 
 - (NSDictionary*)sendMoreWithOfferId:(NSNumber*)offerId;
+- (BOOL)redeemCode:(NSString*)code amount:(NSNumber*)amount;
     
 @end

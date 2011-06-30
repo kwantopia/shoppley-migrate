@@ -293,11 +293,11 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     return [self sendGetRequestWithParameters:[NSDictionary dictionaryWithObjectsAndKeys:nil] endpoint:[NSString stringWithFormat:@"merchant/offer/send/more/%@/", offerId]];
 }
 
-- (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId {
+- (BOOL)redeemCode:(NSString*)code amount:(NSNumber*)amount {
     NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
-    [parameters setValue:feedback forKey:@"feedback"];
-    [parameters setValue:offerCodeId forKey:@"offer_code_id"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/feedback/"];
+    [parameters setValue:amount forKey:@"amount"];
+    [parameters setValue:code forKey:@"code"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"merchant/offer/redeem/"];
 }
 
 #pragma mark -

@@ -12,6 +12,7 @@
 #import "LoginViewController.h"
 #import "OfferDetailViewController.h"
 #import "PastOffersViewController.h"
+#import "RedeemViewController.h"
 #import "TabBarController.h"
 #import "SettingsViewController.h"
 #import "SLDataController.h"
@@ -53,6 +54,7 @@
     [map from:@"shoppley://past_offers" toSharedViewController:[PastOffersViewController class]];
     [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
+    [map from:@"shoppley://redeem" toSharedViewController:[RedeemViewController class]];
     
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
 //    [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];

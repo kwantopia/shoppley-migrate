@@ -18,7 +18,8 @@
 	[self setTabURLs:[NSArray arrayWithObjects:
                       @"shoppley://active_offers",
                       @"shoppley://past_offers",
-					  @"shoppley://summary",
+					  @"shoppley://redeem",
+                      @"shoppley://summary",
 					  @"shoppley://settings",
                       nil]];
 }

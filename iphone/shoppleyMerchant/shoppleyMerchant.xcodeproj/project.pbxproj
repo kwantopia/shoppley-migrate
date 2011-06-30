@@ -22,6 +22,7 @@
 		D51102C913B6E679000C5CF0 /* OffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102C613B6E679000C5CF0 /* OffersViewController.m */; };
 		D51102CA13B6E679000C5CF0 /* ActiveOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102C813B6E679000C5CF0 /* ActiveOffersViewController.m */; };
 		D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */; };
+		D5265E4F13BC2BF100D9D4D7 /* RedeemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5265E4E13BC2BF100D9D4D7 /* RedeemViewController.m */; };
 		D549EF7213B7D61000FFF856 /* OfferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D549EF7113B7D61000FFF856 /* OfferDetailViewController.m */; };
 		D561370C13B6AB150061963B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370913B6AB150061963B /* Default.png */; };
 		D561370D13B6AB150061963B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370A13B6AB150061963B /* Icon.png */; };
@@ -269,6 +270,8 @@
 		D51102C813B6E679000C5CF0 /* ActiveOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveOffersViewController.m; sourceTree = "<group>"; };
 		D51102CB13B6EA79000C5CF0 /* PastOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PastOffersViewController.h; sourceTree = "<group>"; };
 		D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PastOffersViewController.m; sourceTree = "<group>"; };
+		D5265E4D13BC2BF100D9D4D7 /* RedeemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedeemViewController.h; sourceTree = "<group>"; };
+		D5265E4E13BC2BF100D9D4D7 /* RedeemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedeemViewController.m; sourceTree = "<group>"; };
 		D549EF7013B7D61000FFF856 /* OfferDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferDetailViewController.h; sourceTree = "<group>"; };
 		D549EF7113B7D61000FFF856 /* OfferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferDetailViewController.m; sourceTree = "<group>"; };
 		D561370913B6AB150061963B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
@@ -452,6 +455,15 @@
 			name = Offers;
 			sourceTree = "<group>";
 		};
+		D5265E5013BC2BFA00D9D4D7 /* Redeem */ = {
+			isa = PBXGroup;
+			children = (
+				D5265E4D13BC2BF100D9D4D7 /* RedeemViewController.h */,
+				D5265E4E13BC2BF100D9D4D7 /* RedeemViewController.m */,
+			);
+			name = Redeem;
+			sourceTree = "<group>";
+		};
 		D561370813B6AB090061963B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -547,8 +559,9 @@
 			children = (
 				D5E4127313B6A8CF007536E8 /* Main */,
 				D511028A13B6DB40000C5CF0 /* Model */,
-				D51102A313B6DB70000C5CF0 /* Offers */,
 				D5D5EBEE13B6D27300F85362 /* Displays */,
+				D51102A313B6DB70000C5CF0 /* Offers */,
+				D5265E5013BC2BFA00D9D4D7 /* Redeem */,
 				D5D5EC1313B6D32400F85362 /* Summary */,
 				D5D5EBD213B6D21600F85362 /* Settings */,
 				D5E0041813B6A5FF009AF4F7 /* shoppleyMerchant.xcdatamodeld */,
@@ -936,6 +949,7 @@
 				D51102CA13B6E679000C5CF0 /* ActiveOffersViewController.m in Sources */,
 				D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */,
 				D549EF7213B7D61000FFF856 /* OfferDetailViewController.m in Sources */,
+				D5265E4F13BC2BF100D9D4D7 /* RedeemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
