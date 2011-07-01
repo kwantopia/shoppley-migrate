@@ -1,0 +1,17 @@
+[auth]
+# Google Account email address (one associated w/ your Voice account)
+email=shoppley1@gmail.com
+
+# Raw password used or login
+password=shoppleyhe
+
+[gvoice]
+# Number to place calls from (eg, your google voice number)
+forwardingNumber=6176829536
+
+# Default phoneType for your forwardingNumber as defined below
+#  1 - Home
+#  2 - Mobile
+#  3 - Work
+#  7 - Gizmo
+phoneType=3
