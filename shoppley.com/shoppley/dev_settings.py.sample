@@ -6,7 +6,7 @@ import pinax
 
 SITE_ID = 3
 
-SHOPPLEY_NUM = "5086900888"
+SHOPPLEY_NUM = "6176829536"
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
