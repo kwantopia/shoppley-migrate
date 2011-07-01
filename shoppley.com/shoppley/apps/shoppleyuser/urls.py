@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 
 from shoppleyuser.views import *
-from shoppleyuser.forms import MerchantSignupForm
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm
 
 urlpatterns = patterns('',
 	url(r'^merchant/signup/$', merchant_signup, name="merchant_signup"),
@@ -19,6 +19,10 @@ urlpatterns = patterns('',
 	url(r'^customer/signup-success/$',direct_to_template,{"template": "shoppleyuser/customer_landing_page.html"},name="customer_landing_page"),
 	url(r'^merchant/signup-success/$',direct_to_template,{"template": "shoppleyuser/merchant_landing_page.html"},name="merchant_landing_page"),
 	url(r'customer/offer-frequency-set/$',offer_frequency_set, name ="offer_frequency_set"),
+
+	url(r'^customer/facebox/signup/$', direct_to_template, {"template": "shoppleyuser/customer_signup_facebox.html", "extra_context": {"form": CustomerSignupForm}}, name="customer_signup_facebox"),
+	url(r'^merchant/facebox/signup/$', direct_to_template, {"template": "shoppleyuser/merchant_signup_facebox.html", "extra_context": {"form": MerchantSignupForm}}, name="merchant_signup_facebox"),
+
 )
 
 

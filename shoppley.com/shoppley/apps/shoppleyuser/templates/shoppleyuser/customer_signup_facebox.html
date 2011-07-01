@@ -1,0 +1,57 @@
+<!doctype html>
+
+{% load i18n %}
+{% load i18n %}
+{% load uni_form_tags %}
+ 
+
+<head>
+	{% include "main_css.html" %}
+</head>
+
+<body>
+	<div class="signup-forms span-12" id="frontpage-customer-signup">
+		<div class="main-box">
+			<div class="signup-header customer">
+				Are you looking for <br/>
+				<span class="highlight">incredible deals?</span>  <br/>
+				Receive discount offer txts from your local stores on your cellphone.
+			</div>
+			<div class="signup-form customer">
+
+    {% if user.is_authenticated %}
+        <p>{% trans "You are already logged in." %}</p>
+    {% else %}
+        <!--p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p-->
+        
+			<form class="customer-signup-front-form uniForm" id="signup_form" method="post" action="{% url customer_signup %}" style="border_style:none;">
+				{% csrf_token %}
+				<fieldset class="inlineLabels">
+						{{ form|as_uni_form }}
+						<div  class="form_block">
+						<input type="submit" value="{% trans "Sign Up &raquo;" %}" />
+						</div>
+				</fieldset>
+			</form>
+    {% endif %}
+
+		<input type="submit" id="customer-cancel" onclick="$(document).trigger('close.facebox')" value="{% trans "Cancel" %}" />                    
+			<div class="clear">&nbsp;</div>
+			</div>
+		
+		</div>
+	</div>
+
+	{% include "main_js.html" %}
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tipsy.js"></script>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/tipsy.css" type="text/css" />
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.maskedinput.js"></script>
+
+
+	<script type="text/javascript">
+			$("#id_phone").mask("(999) 999-9999");
+			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
+	</script>
+</body>
+</html>

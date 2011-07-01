@@ -6,3 +6,4 @@ git clone https://github.com/joshuaclayton/blueprint-css.git
 hg clone https://pygooglevoice.googlecode.com/hg/ pygooglevoice
 git clone git://github.com/jaz303/tipsy.git
 git clone https://github.com/defunkt/facebox.git
+git clone https://github.com/digitalBush/jquery.maskedinput.git

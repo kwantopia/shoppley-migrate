@@ -55,8 +55,6 @@ def home(request, template_name="front-page.html"):
 			return render_to_response("shoppleyuser/merchant_landing_page.html", context_instance=RequestContext(request))
 	else:
 		return	render_to_response(template_name,{
-					"form":CustomerSignupForm,
-					"mform":MerchantSignupForm,
 					"lform":LoginForm,
 				},context_instance=RequestContext(request))
 
