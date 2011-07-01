@@ -53,7 +53,10 @@ class Offer(models.Model):
 
 	def __unicode__(self):
 		return self.title
-	
+
+	def update_expired_code(self):
+		for oc in self.offercode_set.all():
+			pass	
 	def is_active(self):
 	#	print "description: ",self.description
 		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()

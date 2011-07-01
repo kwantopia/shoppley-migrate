@@ -19,7 +19,7 @@ def process_sms():
 @periodic_task(run_every=crontab(hour=7, minute=0))
 def reset_offer_count():
 		from offer.management.commands.reset_offer_counts import Command
-		
+	 	print ("Resetting offer counts...\n")	
 		cmd = Command()
 		cmd.handle_noargs()
 

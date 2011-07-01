@@ -132,7 +132,10 @@
   <!-- JavaScript at the bottom for fast page loading -->
 	{% include "main_js.html" %}
 
+
   {% block extra_scripts_base %}
+    <script  type="text/javascript" src="{{ STATIC_URL }}js/facebox.js"></script>
+    
     {% block extra_scripts %}
     {% endblock %}
   {% endblock %}
@@ -140,6 +143,24 @@
   {% block extra_body_base %}
       {% block extra_body %}{% endblock %}
   {% endblock %}
+
+  <!-- mathiasbynens.be/notes/async-analytics-snippet Change UA-XXXXX-X to be your site's ID -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-24037084-1']);
+	  _gaq.push(['_setDomainName', '.shoppley.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+
+
 
 </body>
 </html>

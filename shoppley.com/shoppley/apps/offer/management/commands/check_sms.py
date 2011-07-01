@@ -190,7 +190,7 @@ class Command(NoArgsCommand):
 				text = msg["text"].strip()
 				try:
 					parsed = merchant_pattern.parseString(text)
-				
+					
 					# offer code being redeemed by the customer
 					# merchant sends offer code and the customer's phone number
 					del parsed[0]
@@ -311,7 +311,7 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() == OFFER:
 						if len(parsed)<2:
 							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["OFFER_COMMAND_ERROR"])
-							self.notify(su.phone,receipt_msg)
+							self.notify(phone,receipt_msg)
 							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
 						# This is an offer made by the merchant, not a redemption code
 
@@ -338,8 +338,8 @@ class Command(NoArgsCommand):
 								"number": offer.num_received(),
 								"code": offer.gen_tracking_code(),
 							})
-						
-						self.notify(su.phone, receipt_msg)
+						print msg["from"], su.phone
+						self.notify(msg["from"], receipt_msg)
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() == REOFFER:
 						if len(parsed)==1:
