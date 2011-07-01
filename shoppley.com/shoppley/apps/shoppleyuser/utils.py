@@ -27,7 +27,8 @@ def pretty_date(time=False, future=True):
 	if type(time) is int:
 		diff = now - datetime.fromtimestamp(time)
 	elif isinstance(time,datetime):
-		diff = now - time 
+		#diff = now - time 
+		diff = time - now
 	elif isinstance(time,timedelta):
 		diff = time
 	elif not time:

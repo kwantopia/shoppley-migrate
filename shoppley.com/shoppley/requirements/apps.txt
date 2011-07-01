@@ -68,3 +68,4 @@ sorl-thumbnail
 django-wakawaka
 Celery
 django-celery
+Fabric

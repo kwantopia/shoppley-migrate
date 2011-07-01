@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user
+from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user, pretty_date
 from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
@@ -81,7 +81,7 @@ class Command(NoArgsCommand):
 								"offercode": offercode.code,
 								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
-								"expiration": pretty_datetime(offercode.expiration_time) 
+								"expiration": pretty_date(offercode.expiration_time, True) 
 						})
 
 			#return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
@@ -97,7 +97,7 @@ class Command(NoArgsCommand):
 			return t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_INFO"],{
 								"description": offercode.offer.description,
 								"merchant": offercode.offer.merchant,
-								"expires": pretty_datetime(offercode.expiration_time) 
+								"expires": pretty_date(offercode.expiration_time, True) 
 						})
 
 	def update_expired(self):
@@ -201,6 +201,12 @@ class Command(NoArgsCommand):
 
 					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
 					elif parsed[0].lower()==REDEEM:
+						if len(parsed) < 3:
+							# non enough parameters
+							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_PARAM_ERRORS"], {})
+							self.notify(su.phone,receipt_msg)
+							raise CommandError ("Merchant attempted redeem command without offer code or phone number: %s"%msg["text"])
+							
 						offer_code = self.check_offercode(parsed[1],su.phone)
 						phone = self.validate_number(parsed[2],su.phone)
 						if offer_code.offer.merchant != su.merchant:
@@ -569,7 +575,7 @@ class Command(NoArgsCommand):
 						#print "created:" , created
 						#print "remaining:", f_state.remaining
 						valid_receivers=set([ i for i in parsed_numbers if ori_offer.offercode_set.filter(customer__phone=i).count()==0 or Customer.objects.filter(phone=i).count()==0]) # those who havenot received the offer: new customers or customers who have not got the offer before
-						invalid_receivers= set(parsed_numbers) - valid_receivers # those who have
+						invalid_receivers= set(parsed_numbers) - valid_receivers - set([su.phone]) # those who have
 						#allowed_forwards = f_state.allowed_forwards(len(valid_receivers))
 						for r in invalid_receivers:
 							su.customer.customer_friends.add(Customer.objects.get(phone=r))

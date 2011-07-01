@@ -17,11 +17,11 @@ def pretty_datetime(time):
 	return time.strftime("%Y/%m/%d %I:%M%p")
 
 
-def gen_tracking_code(chars=string.digits):
+def gen_tracking_code(chars=string.lowercase):
 	return ''.join([random.choice(chars) for i in xrange(settings.TRACKING_CODE_LENGTH)])
 
 ### offer code only is only alphabetic
-def gen_offer_code(chars=string.lowercase):
+def gen_offer_code(chars=string.digits):
 	#start = random.randint(0,28)
 	#new_code = str(uuid.uuid4())[start:start+settings.OFFER_CODE_LENGTH]
 
@@ -83,6 +83,7 @@ from django.template import Context, Template
 class TxtTemplates:
 	templates = {
 		"MERCHANT": {
+			"REDEEM_PARAM_ERRORS": "Usage: #redeem <offer code> <customer phone>.  Command needs the offer code and the phone number of the customer.",
 			"REDEEM_WRONG_MERCHANT": "Redeem Fail! {{ code }} was initiated by a different business, and not by you.",
 			"REDEEM_SUCCESS": "{{ offer_code }} is a valid offer code! Redeemed by {{ customer }}.",
 			"REDEEM_CODE_REUSE": "Code reuse! {{ offer_code }} was redeemed by {{ customer }} at {{ time }}.",
@@ -140,7 +141,7 @@ class TxtTemplates:
 			"ZIPCODE" : "{{ zipcode }} is your new zipcode. You will receive offers from this new area.",
 			"FORWARD_COMMAND_ERROR": "Failure to forward offer! Please txt \"#forward offercode(s)\" followed by one or more friends\' numbers separated by spaces",
 			"FORWARD_WRONG_FORWARDER":"{{ code }}: Failure to forward! You are not the owner of this offercode." ,
-			"FORWARD_ALL_RECEIVED": "[{{ code }}] All phone numbers that were forwarded the code, has already received the offer.",
+			"FORWARD_ALL_RECEIVED": "[{{ code }}] All phone numbers that were forwarded the code, have already received the offer.",
 			"FORWARD_SUCCESS": "Offer [{{ code }}] was forwarded to {{ numbers }}. You will receive points when it is redeemed.",
 			"FORWARD_CUSTOMER_MSG": "{{ customer }} forwarded you an offer: {{ info }}. Use [{{ code }}] to redeem offer",
 			"FORWARD_INFO":"{{ merchant }} \"{{ description }}\" [expires: {{ expires }}]",
