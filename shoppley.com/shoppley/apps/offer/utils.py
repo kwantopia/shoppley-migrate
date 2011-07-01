@@ -13,8 +13,11 @@ def pretty_datetime(time):
 	changed date separator to "/" since "-" makes
 	it look like a number in smart phone txt message
 	app, making it clickable [kwan]
+
+	took out the year since it's obvious it's current year [kwan]
 	"""
-	return time.strftime("%Y/%m/%d %I:%M%p")
+	return time.strftime("%m/%d %I:%M%p")
+	#return time.strftime("%Y/%m/%d %I:%M%p")
 
 
 def gen_tracking_code(chars=string.lowercase):
@@ -84,7 +87,7 @@ class TxtTemplates:
 	templates = {
 		"MERCHANT": {
 			"REDEEM_PARAM_ERRORS": "Usage: #redeem <offer code> <customer phone>.  Command needs the offer code and the phone number of the customer.",
-			"REDEEM_WRONG_MERCHANT": "Redeem Fail! {{ code }} was initiated by a different business, and not by you.",
+			"REDEEM_WRONG_MERCHANT": "Redeem Fail! \"{{ code }}\" was initiated by a different business, and not by you.",
 			"REDEEM_SUCCESS": "{{ offer_code }} is a valid offer code! Redeemed by {{ customer }}.",
 			"REDEEM_CODE_REUSE": "Code reuse! {{ offer_code }} was redeemed by {{ customer }} at {{ time }}.",
 			"REDEEM_WRONG_CUSTOMER": "Redeem failed! {{ offer_code }} does not belong to {{ customer }}",
@@ -94,20 +97,20 @@ class TxtTemplates:
 			"ZIPCODE_CHANGE_SUCCESS": "{{ zipcode }} is your new zipcode. Your future offers will be distributed to customers in this new area.",
 			"BALANCE": "You have {{ points }} points.",
 			"OFFER_COMMAND_ERROR": "Command Error! To start an offer, please use this command: #offer offer_description",
-			"OFFER_NO_CUSTOMER" : "There were no customers that could be reached at this moment. Txt #status {{ code }} to track this offer.",
+			"OFFER_NO_CUSTOMER" : "There were no customers that could be reached at this moment. Txt \"#status {{ code }}\" to track offer.",
 		
 			"OFFER_NOTENOUGH_BALANCE": "Your balance is {{ points }} points. At this time, you do not have enough points to reach customers.",
-			"OFFER_SUCCESS": "We have received your offer at {{ time }}, {{ number }} users have been reached. Txt #status {{ code }} to track this offer: {{ offer }}",
+			"OFFER_SUCCESS": "We have received your offer at {{ time }}, {{ number }} users have been reached. Txt \"#status {{ code }}\" to track offer: {{ offer }}",
 			"REOFFER_ZERO_CUSTOMER":"There were no new customers that could be reached at this moment. Txt #status {{ code }} to track this offer.",
 			"REOFFER_SUCCESS": "{{ title }} was resent to {{ resentto }} new customers.",
 			"REOFFER_NO_OFFER": "Failure to redistribute your offer! You have not started an offer yet. To start an offer, txt #offer description",
-			"REOFFER_INVALID_TRACKING" : "The tracking code {{ code }} can not be found. Please re-enter a tracking code.",
-			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code {{ code }} was not initated by you. Please re-input your tracking code",
+			"REOFFER_INVALID_TRACKING" : "The tracking code \"{{ code }}\" can not be found. Please re-enter a tracking code.",
+			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code \"{{ code }}\" was not initiated by you. Please re-input your tracking code",
 			"REOFFER_NOT_ALLOWED": "Sorry, you are not allowed to redistribute this offer, {{ offer }}, more than once.", 
 			"STATUS_SUCCESS": "[{{ code }}] Offer: {{ offer }} [sent to {{ sentto }}], [forwarded to {{ forwarded }}], [redeemed by {{ redeemer }}]. Txt #status {{ code }} to track the offer",
 			"STATUS_NO_OFFER": "Failure to get status! Offer has not yet been initiated. To start an offer, txt #offer description",
-			"STATUS_INVALID_CODE": "The tracking code {{ code }} can not be found. Please re-enter a tracking code.",
-			"STATUS_WRONG_MERCHANT" : "Sorry, offer by {{ code }} was not initiated by you. Please re-enter the tracking code",
+			"STATUS_INVALID_CODE": "The tracking code \"{{ code }}\" can not be found. Please re-enter a tracking code.",
+			"STATUS_WRONG_MERCHANT" : "Sorry, offer by \"{{ code }}\" was not initiated by you. Please re-enter the tracking code",
 			
 			"RESIGNUP": "You are already a Shoppley merchant.",
 			"HELP": "{{ help }}",
