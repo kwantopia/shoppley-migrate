@@ -36,18 +36,21 @@ from shoppleyuser.models import Customer, ShoppleyUser, Merchant
 
 def home(request, template_name="front-page.html"):
 	#return HttpResponseRedirect("http://webuy-dev.mit.edu")
-
-	if request.user.is_authenticated():
-		if Customer.objects.filter(user__id=request.user.id).count()>0:
+	user = request.user
+	if user.is_authenticated():
+		if user.shoppleyuser.is_customer():
 			if request.user.emailaddress_set.count()==0:
 #				request.user.message_set.create(message="You do not have an email yet. Please go to Account and add one for email notifications.")
 				messages.add_message(request, messages.INFO,
 						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
 			return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
 		else:
-			if not Merchant.objects.get(user__id=request.user.id).address_1:
+
+			if not user.shoppleyuser.merchant.address_1:
 				messages.add_message(request, messages.INFO,
                                                 'We do not have your business address. Please go to <a href="{% url user_profile %}">Account</a> and add one.')
+	#		messages.add_message(request, messages.INFO,
+         #                                       'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
 
 			return render_to_response("shoppleyuser/merchant_landing_page.html", context_instance=RequestContext(request))
 	else:
@@ -165,6 +168,11 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	#print "email=", email, " or ", user.emailaddress_set.all()
 	#emails = customer.emailaddress_set
 		verified = user.emailaddress_set.all()[0].verified
+		if verified:
+		
+			verified = "verified" 
+		else:
+			verified = "unverified" 
 	else:
 		email=None	
 		verified=None
@@ -189,9 +197,18 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	address = merchant.address_1
 	phone = merchant.phone
 	business_name = merchant.business_name
-	email = user.email
+	if user.emailaddress_set.count()>0:
+		email = user.emailaddress_set.all()[0].email
+		
 	#emails = merchant.emailaddress_set
-	verified = user.emailaddress_set.all()[0].verified
+		verified = user.emailaddress_set.all()[0].verified
+		if verified:
+			verified = "verified"
+		else:
+			verified = "unverified"
+	else:
+		email=None
+		verified=None
 	return render_to_response(template, 
 				{
 					"username":username,
@@ -218,7 +235,7 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 		customer = Customer.objects.get(user__id=user.id)
 		
 		form = form_class(initial = {'username': user.username, 
-					'address_1': customer.address_1,
+					'address1': customer.address_1,
 					'zip_code': customer.zipcode.code,
 					'phone': customer.phone, 
 					'user_id':request.user.id,'daily_limit':customer.daily_limit,})
@@ -256,7 +273,7 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 		merchant = Merchant.objects.get(user__id=user.id)
 		
 		form = form_class( initial = {'username': user.username, 
-					'address_1': merchant.address_1,
+					'address1': merchant.address_1,
 					'zip_code': merchant.zipcode.code,
 					'phone': merchant.phone, 
 					'business_name' :merchant.business_name,

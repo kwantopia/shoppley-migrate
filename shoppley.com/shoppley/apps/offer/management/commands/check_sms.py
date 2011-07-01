@@ -170,7 +170,7 @@ class Command(NoArgsCommand):
 			return offercode
 		except OfferCode.DoesNotExist:
 			t = TxtTemplates()
-			sms_logger.exception("hello")
+	#		sms_logger.exception("hello")
 			receipt_msg=t.render(TxtTemplates.templates["SHARED"]["OFFERCODE_NOT_EXIST"], {"code":code})
 			self.notify(phone,receipt_msg)
 			OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV",invalid_code=code).save()

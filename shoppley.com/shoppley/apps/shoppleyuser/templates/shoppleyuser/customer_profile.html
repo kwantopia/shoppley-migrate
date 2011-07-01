@@ -44,9 +44,11 @@
 				<ul>
 					<li>Email(s)</li>
 					<li>{{ email }}</li>
-						{% ifequal verified "True" %}
+						{% ifequal verified "verified" %}
 						<span class="email-verified" style="color:#d4da30;">verified</span>
-						{% else %}
+						{% endifequal %}
+                                                {% ifequal verified "unverified" %}
+                                                
                                                 <span class="email-verified" style="color:#ED5F87;">unverified</span>
 						{% endifequal %}	                	</ul>        
 			        <a class="shoppley-btn" href="{% url acct_email %}">{% trans "Edit" %}</a><br/>

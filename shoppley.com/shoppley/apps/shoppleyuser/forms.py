@@ -210,6 +210,7 @@ class MerchantProfileEditForm(forms.Form):
 		m = Merchant.objects.get(user__pk = user_id)
 		m.address_1 = self.cleaned_data["address1"]
 		m.business_name = self.cleaned_data["business_name"]
+		m.zipcode= zipcode_obj
 		print m.address_1
 		m.save()
 
@@ -296,6 +297,7 @@ class CustomerProfileEditForm(forms.Form):
 		c.address_1 = address
 		c.phone = phone
 		c.daily_limit = self.cleaned_data["daily_limit"]
+		c.zipcode = zipcode_objc
 		c.save()
 
 

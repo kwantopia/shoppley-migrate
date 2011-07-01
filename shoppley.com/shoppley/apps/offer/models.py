@@ -55,7 +55,7 @@ class Offer(models.Model):
 		return self.title
 	
 	def is_active(self):
-		print "description: ",self.description
+	#	print "description: ",self.description
 		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 		if not active:
 			self.expired = False
