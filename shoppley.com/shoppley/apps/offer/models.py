@@ -68,6 +68,16 @@ class Offer(models.Model):
 			self.save()
 		return active
 
+	def expire(self, reset_duration=False):
+		"""
+			expire the offer
+		"""
+		self.expired = True
+		if reset_duration:
+			# shorten duration manually
+			self.duration = 0	
+		self.save() 
+
 	def num_forwarded(self):
 		return self.offercode_set.count()-self.num_init_sentto-self.num_resent_to
 

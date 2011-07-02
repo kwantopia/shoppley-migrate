@@ -249,14 +249,10 @@ class SimpleTest(TestCase):
 		expired_offers = Offer.objects.filter(merchant=m, expired=True)
 		if expired_offers.exists():
 			return random.sample( expired_offers, 1 )[0]
-		valid_offers =  Offer.objects.filter(merchant=m)
+		valid_offers =  Offer.objects.filter(merchant=m, expired=False)
 		if valid_offers.exists():
 			o = random.sample(valid_offers, 1)[0]
-			o.expired = True
-
-			# shorten duration manually
-			o.duration = 0 
-			o.save()
+			o.expire(True)
 			# expire all offer codes
 			for c in o.offercode_set.all():
 				c.expiration_time = datetime.now()
