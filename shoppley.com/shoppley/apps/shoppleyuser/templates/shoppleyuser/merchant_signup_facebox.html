@@ -46,7 +46,8 @@
 	<script type="text/javascript">
 		$(function() {
 			$("#id_phone").mask("(999) 999-9999");
-			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
+			$(".zip_code").mask("99999");
+			$('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: '5 digit US zip code'});
 		});
 	</script>
 </body>

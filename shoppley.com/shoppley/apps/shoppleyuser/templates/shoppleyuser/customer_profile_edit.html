@@ -34,5 +34,15 @@
          	<div class="clear">&nbsp;</div>
       	
       </div>
+	        {% include "main_js.html" %}
+
+	<script type="text/javascript">
+                $(function() {
+                        //console.log("Everything has been loaded.");
+                        $("#id_phone").mask("(999) 999-9999");
+                        $('.zip_code').tipsy({trigger: 'focus', gravity: 'w', fallback: 'use 02139 and 02142 for now'});
+                });
+        </script>
+
 {% endblock %}
 

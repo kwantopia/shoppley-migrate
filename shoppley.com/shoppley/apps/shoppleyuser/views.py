@@ -44,7 +44,12 @@ def home(request, template_name="front-page.html"):
 				messages.add_message(request, messages.INFO,
 						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
 			zipcode = user.shoppleyuser.customer.zipcode
+
 			number = Merchant.objects.filter(zipcode__id=zipcode.id).count()
+
+			messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> stores in your area have signed up with Shoppley. Tell your favorite stores to use Shoppley to send you any last minute offers for free.' % number)
+
+			
 			return render_to_response("shoppleyuser/customer_landing_page.html", {"number":number,},context_instance=RequestContext(request))
 		else:
 
@@ -54,6 +59,9 @@ def home(request, template_name="front-page.html"):
 	
 			zipcode = user.shoppleyuser.merchant.zipcode
 			number = Customer.objects.filter(zipcode__id=zipcode.id).count()
+
+			essages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> people in your area have signed up to receive offer. Tell your customers to sign up for Shoppley to receive last minute offers for free.' % number)
+
 			return render_to_response("shoppleyuser/merchant_landing_page.html", {"number":number,},context_instance=RequestContext(request))
 	else:
 		return	render_to_response(template_name,{
@@ -160,9 +168,9 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	zipcode = customer.zipcode.code
 	address = customer.address_1
 	phone = customer.phone
-
+	print customer.print_daily_limit()
 	frequency = customer.print_daily_limit()
-
+	print frequency
 
 	if user.emailaddress_set.count()>0:
 		email = user.emailaddress_set.all()[0].email

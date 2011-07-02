@@ -219,7 +219,7 @@ class CustomerProfileEditForm(forms.Form):
 		(0,'None'),
 		(5,'1-5'),
 		(10,'6-10' ),
-		(100000,'unlimited')) 
+		(100000,'Unlimited')) 
 	user_id                 = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	username		= forms.CharField(label=_("Username"))
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
@@ -297,7 +297,7 @@ class CustomerProfileEditForm(forms.Form):
 		c.address_1 = address
 		c.phone = phone
 		c.daily_limit = self.cleaned_data["daily_limit"]
-		c.zipcode = zipcode_objc
+		c.zipcode = zipcode_obj
 		c.save()
 
 

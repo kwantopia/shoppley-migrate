@@ -161,7 +161,7 @@ class Customer(ShoppleyUser):
 		return self.offer_count < self.daily_limit
 
 	def print_daily_limit(self):
-		if self.daily_limit == -1:
+		if self.daily_limit == 100000:
 			return "Unlimited"
 		elif self.daily_limit == 0:
 			return "none"
