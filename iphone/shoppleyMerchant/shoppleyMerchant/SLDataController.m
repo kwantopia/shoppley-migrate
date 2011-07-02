@@ -162,7 +162,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     
     if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary* response = jsonResponse.rootObject;
-        if ([[response valueForKey:@"result"] intValue]== 1) {
+        if ([[response valueForKey:@"result"] intValue] >= 0) {
             return YES;            
         }
         _errorString = [response valueForKey:@"result_msg"];
@@ -298,6 +298,32 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     [parameters setValue:amount forKey:@"amount"];
     [parameters setValue:code forKey:@"code"];
     return [self sendPostRequestWithParameters:parameters endpoint:@"merchant/offer/redeem/"];
+}
+
+- (BOOL)createNewOffer:(SLNewOffer*)offer {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:offer.name forKey:@"title"];
+    [parameters setValue:offer.description forKey:@"description"];
+    [parameters setValue:offer.duration forKey:@"duration"];
+    [parameters setValue:offer.unit forKey:@"units"];
+    [parameters setValue:offer.amount forKey:@"amount"];
+    
+    if (offer.startTime) {
+        NSDateFormatter* d = [[[NSDateFormatter alloc] init] autorelease];
+        [d setDateFormat:@"YYYY-MM-dd"];
+        NSString* date = [d stringFromDate:offer.startTime];
+        
+        NSDateFormatter* f = [[[NSDateFormatter alloc] init] autorelease];
+        [f setDateFormat:@"hh:mm:ss a"];
+        NSString* time = [f stringFromDate:offer.startTime];
+        
+        [parameters setValue:date forKey:@"date"];
+        [parameters setValue:time forKey:@"time"];
+        [parameters setValue:[NSNumber numberWithBool:NO] forKey:@"now"];
+    } else {
+        [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"now"];
+    }
+    return [self sendPostRequestWithParameters:parameters endpoint:@"merchant/offer/start/"];
 }
 
 #pragma mark -

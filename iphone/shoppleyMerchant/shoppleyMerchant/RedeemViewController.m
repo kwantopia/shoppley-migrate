@@ -22,6 +22,8 @@
         self.tableViewStyle = UITableViewStyleGrouped;
         self.variableHeightRows = YES;
         self.tableView.scrollEnabled = NO;
+        
+        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancel)] autorelease];
     }
     return self;
 }
@@ -138,6 +140,11 @@
     
     [self performSelectorOnMainThread:@selector(createModel) withObject:nil waitUntilDone:NO];
     [pool release];
+}
+
+- (void)cancel {
+    [self.offerCodeField resignFirstResponder];
+    [self.totalPaidField resignFirstResponder];
 }
 
 #pragma UITextFieldDelegate

@@ -10,12 +10,15 @@
 
 #import "ActiveOffersViewController.h"
 #import "LoginViewController.h"
+#import "NewOfferViewController.h"
 #import "OfferDetailViewController.h"
 #import "PastOffersViewController.h"
 #import "RedeemViewController.h"
 #import "TabBarController.h"
 #import "SettingsViewController.h"
 #import "SLDataController.h"
+#import "SLSelectAmountViewController.h"
+#import "SLSelectDateViewController.h"
 #import "SLStyleSheet.h"
 #import "SummaryViewController.h"
 
@@ -57,13 +60,11 @@
     [map from:@"shoppley://redeem" toSharedViewController:[RedeemViewController class]];
     
     [map from:@"shoppley://offer" toViewController:[OfferDetailViewController class]];
-//    [map from:@"shoppley://offer/feedback" toViewController:[OfferFeedbackViewController class]];
-//    [map from:@"shoppley://offer/rate" toViewController:[OfferRateViewController class]];
-//    [map from:@"shoppley://offer/forward" toViewController:[OfferForwardViewController class]];
+    [map from:@"shoppley://offer/new" toModalViewController:[NewOfferViewController class]];
     
-//    [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)" toViewController:[SLMapViewController class]];
-//    [map from:@"shoppley://map/(initWithLatitude:)/(longitude:)/(title:)/(subtitle:)" toViewController:[SLMapViewController class]];
-    
+    [map from:@"shoppley://controller/select_amount" toViewController:[SLSelectAmountViewController class]];
+    [map from:@"shoppley://controller/select_date" toViewController:[SLSelectDateViewController class]];
+
     [navigator openURLAction:[TTURLAction actionWithURLPath:@"shoppley://login"]];
     
     return YES;

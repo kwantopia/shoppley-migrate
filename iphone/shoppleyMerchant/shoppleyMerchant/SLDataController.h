@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import "SLNewOffer.h"
+
 #pragma mark -
 #pragma mark SLDataDownloader
 
@@ -77,5 +79,6 @@
 
 - (NSDictionary*)sendMoreWithOfferId:(NSNumber*)offerId;
 - (BOOL)redeemCode:(NSString*)code amount:(NSNumber*)amount;
+- (BOOL)createNewOffer:(SLNewOffer*)offer;
     
 @end

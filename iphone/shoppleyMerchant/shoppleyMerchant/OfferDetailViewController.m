@@ -41,7 +41,9 @@
     NSMutableArray* stats = [[[NSMutableArray alloc] init] autorelease];
     [stats addObject:[SLRightValueTableItem itemWithText:@"Sent to" value:[NSString stringWithFormat:@"%@", _offer.received]]];
     [stats addObject:[SLRightValueTableItem itemWithText:@"Redeemed" value:[NSString stringWithFormat:@"%@", _offer.redeemed]]];
-    [stats addObject:[SLRightValueTableItem itemWithText:@"Percentage" value:[NSString stringWithFormat:@"%.2f%%", [_offer.redeemed floatValue] / [_offer.received floatValue]]]];
+    if ([_offer.received intValue] > 0) {
+        [stats addObject:[SLRightValueTableItem itemWithText:@"Percentage" value:[NSString stringWithFormat:@"%.2f%%", [_offer.redeemed floatValue] / [_offer.received floatValue]]]];
+    }
     [items addObject:stats];
     [sections addObject:@""];
 

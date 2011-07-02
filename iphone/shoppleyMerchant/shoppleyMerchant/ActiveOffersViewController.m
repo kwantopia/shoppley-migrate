@@ -9,6 +9,7 @@
 #import "ActiveOffersViewController.h"
 
 #import "SLActiveOffer.h"
+#import "SLNewOffer.h"
 #import "SLTableViewDataSource.h"
 
 @implementation ActiveOffersViewController
@@ -20,6 +21,8 @@
         
         self.tableViewStyle = UITableViewStylePlain;
         self.variableHeightRows = YES;
+        
+        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"New Offer..." style:UIBarButtonItemStyleBordered target:self action:@selector(newOffer)] autorelease];
     }
     return self;
 }
@@ -40,6 +43,13 @@
                            [TTTableActivityItem itemWithText:@"Processing..."],
                            nil];
     }
+}
+
+- (void)newOffer {
+    TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/new"] autorelease];
+    urlAction.query = [NSDictionary dictionaryWithObject:[[[SLNewOffer alloc] init] autorelease] forKey:@"offer"];
+    urlAction.animated = YES;
+    [[TTNavigator navigator] openURLAction:urlAction];
 }
 
 @end

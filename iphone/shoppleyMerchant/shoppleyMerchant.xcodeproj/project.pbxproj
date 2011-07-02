@@ -61,6 +61,10 @@
 		D5E4127B13B6A945007536E8 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5E4127813B6A945007536E8 /* TabBarController.m */; };
 		D5E4127C13B6A945007536E8 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5E4127A13B6A945007536E8 /* LoginViewController.m */; };
 		D5E4127E13B6A9B9007536E8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E4127D13B6A9B9007536E8 /* CoreLocation.framework */; };
+		D5F6EBAC13BD4AA800CB7B2C /* NewOfferViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F6EBAB13BD4AA800CB7B2C /* NewOfferViewController.m */; };
+		D5F6EBC513BD50EF00CB7B2C /* SLNewOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F6EBC413BD50EF00CB7B2C /* SLNewOffer.m */; };
+		D5F6EBC813BD635F00CB7B2C /* SLSelectDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F6EBC713BD635E00CB7B2C /* SLSelectDateViewController.m */; };
+		D5F6EBE413BD75BA00CB7B2C /* SLSelectAmountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F6EBE313BD75BA00CB7B2C /* SLSelectAmountViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -326,6 +330,14 @@
 		D5E4127913B6A945007536E8 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D5E4127A13B6A945007536E8 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		D5E4127D13B6A9B9007536E8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D5F6EBAA13BD4AA800CB7B2C /* NewOfferViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOfferViewController.h; sourceTree = "<group>"; };
+		D5F6EBAB13BD4AA800CB7B2C /* NewOfferViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOfferViewController.m; sourceTree = "<group>"; };
+		D5F6EBC313BD50EF00CB7B2C /* SLNewOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLNewOffer.h; sourceTree = "<group>"; };
+		D5F6EBC413BD50EF00CB7B2C /* SLNewOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLNewOffer.m; sourceTree = "<group>"; };
+		D5F6EBC613BD635D00CB7B2C /* SLSelectDateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSelectDateViewController.h; sourceTree = "<group>"; };
+		D5F6EBC713BD635E00CB7B2C /* SLSelectDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSelectDateViewController.m; sourceTree = "<group>"; };
+		D5F6EBE213BD75BA00CB7B2C /* SLSelectAmountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSelectAmountViewController.h; sourceTree = "<group>"; };
+		D5F6EBE313BD75BA00CB7B2C /* SLSelectAmountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSelectAmountViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -436,6 +448,8 @@
 				D51102A713B6DB8A000C5CF0 /* SLActiveOffer.m */,
 				D51102AA13B6E1E6000C5CF0 /* SLPastOffer.h */,
 				D51102AB13B6E1E6000C5CF0 /* SLPastOffer.m */,
+				D5F6EBC313BD50EF00CB7B2C /* SLNewOffer.h */,
+				D5F6EBC413BD50EF00CB7B2C /* SLNewOffer.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -561,6 +575,7 @@
 				D511028A13B6DB40000C5CF0 /* Model */,
 				D5D5EBEE13B6D27300F85362 /* Displays */,
 				D51102A313B6DB70000C5CF0 /* Offers */,
+				D5F6EBC913BD637900CB7B2C /* New Offer */,
 				D5265E5013BC2BFA00D9D4D7 /* Redeem */,
 				D5D5EC1313B6D32400F85362 /* Summary */,
 				D5D5EBD213B6D21600F85362 /* Settings */,
@@ -646,6 +661,19 @@
 				D5E4127A13B6A945007536E8 /* LoginViewController.m */,
 			);
 			name = Main;
+			sourceTree = "<group>";
+		};
+		D5F6EBC913BD637900CB7B2C /* New Offer */ = {
+			isa = PBXGroup;
+			children = (
+				D5F6EBAA13BD4AA800CB7B2C /* NewOfferViewController.h */,
+				D5F6EBAB13BD4AA800CB7B2C /* NewOfferViewController.m */,
+				D5F6EBC613BD635D00CB7B2C /* SLSelectDateViewController.h */,
+				D5F6EBC713BD635E00CB7B2C /* SLSelectDateViewController.m */,
+				D5F6EBE213BD75BA00CB7B2C /* SLSelectAmountViewController.h */,
+				D5F6EBE313BD75BA00CB7B2C /* SLSelectAmountViewController.m */,
+			);
+			name = "New Offer";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -950,6 +978,10 @@
 				D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */,
 				D549EF7213B7D61000FFF856 /* OfferDetailViewController.m in Sources */,
 				D5265E4F13BC2BF100D9D4D7 /* RedeemViewController.m in Sources */,
+				D5F6EBAC13BD4AA800CB7B2C /* NewOfferViewController.m in Sources */,
+				D5F6EBC513BD50EF00CB7B2C /* SLNewOffer.m in Sources */,
+				D5F6EBC813BD635F00CB7B2C /* SLSelectDateViewController.m in Sources */,
+				D5F6EBE413BD75BA00CB7B2C /* SLSelectAmountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
