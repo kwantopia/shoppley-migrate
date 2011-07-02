@@ -87,7 +87,7 @@ class TxtTemplates:
 	templates = {
 		"MERCHANT": {
 			"REDEEM_PARAM_ERRORS": "Usage: #redeem <offer code> <customer phone>.  Command needs the offer code and the phone number of the customer.",
-			"REDEEM_EXPIRED": "Sorry, offer \"{{ offer }}\" already expired.",
+			"REDEEM_EXPIRED": "Sorry, offer by \"{{ offer }}\" already expired.",
 			"REDEEM_WRONG_MERCHANT": "Redeem Fail! \"{{ code }}\" was initiated by a different business, and not by you.",
 			"REDEEM_SUCCESS": "{{ offer_code }} is a valid offer code! Redeemed by {{ customer }}.",
 			"REDEEM_CODE_REUSE": "Code reuse! {{ offer_code }} was redeemed by {{ customer }} at {{ time }}.",
@@ -104,7 +104,7 @@ class TxtTemplates:
 			"OFFER_SUCCESS": "We have received your offer at {{ time }}, {{ number }} users have been reached. Txt \"#status {{ code }}\" to track offer: {{ offer }}",
 			"REOFFER_ZERO_CUSTOMER":"There were no new customers that could be reached at this moment. Txt #status {{ code }} to track this offer.",
 			"REOFFER_SUCCESS": "{{ title }} was resent to {{ resentto }} new customers.",
-			"REOFFER_NO_OFFER": "Failure to redistribute your offer! You have not started an offer yet. To start an offer, txt #offer description",
+			"REOFFER_NO_OFFER": "Failure to redistribute your offer! You have not started an offer yet or your offers all have expired. To start a new offer, txt #offer description",
 			"REOFFER_INVALID_TRACKING" : "The tracking code \"{{ code }}\" can not be found. Please re-enter a tracking code.",
 			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code \"{{ code }}\" was not initiated by you. Please re-input your tracking code",
 			"REOFFER_NOT_ALLOWED": "Sorry, you are not allowed to redistribute this offer, {{ offer }}, more than once.", 
@@ -155,7 +155,7 @@ class TxtTemplates:
 			"COMMAND_NOT_STARTED_W_#": "{{ command }} is not a valid command. Our commands start with \"#\". Txt #help for all commands",
 			"HELP": "- #info offercode(s): lists information about offercode(s) separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance",
 			"SIGNUP_COMMAND_ERROR": "Signup Error! To signup, please txt \"#signup email zipcode\"",
-			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently,{{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
+			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
 			  
 
 		},
