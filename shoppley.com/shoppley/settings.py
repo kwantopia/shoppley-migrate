@@ -48,8 +48,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 ADMINS = [
     # ("Your Name", "your_email@domain.com"),
-	("Meng", "smengl@shoppley.com"),
-
+	("Dev Team", "devteam@shoppley.com"),
 ]
 
 MANAGERS = ADMINS

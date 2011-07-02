@@ -235,6 +235,9 @@ a.shoppley-btn, input.shoppley-btn {
 	color: #666666;
 }
 
+#messages{
+	background: #35ACE4;
+}
 #get-offers {
 	background: transparent url(../../images/boram/landing-customer-getoffers.png) no-repeat;	
 }

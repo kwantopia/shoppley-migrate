@@ -135,3 +135,4 @@ cd /home/www/shoppley.com/shoppley
 # this django command is used to assemble static files (part of django 1.3)
 python manage.py collectstatic 
 cp deploy_settings.py.sample local_settings.py
+cp apps/googlevoice/gvoice.production apps/googlevoice/gvoice

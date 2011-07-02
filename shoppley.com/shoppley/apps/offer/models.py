@@ -60,14 +60,6 @@ class Offer(models.Model):
 				oc.code = oc.code + self.trackingcode.code
 				oc.save()
 	
-	def is_active(self):
-	#	print "description: ",self.description
-		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
-		if not active:
-			self.expired = False
-			self.save()
-		return active
-
 	def expire(self, reset_duration=False):
 		"""
 			expire the offer
@@ -77,6 +69,13 @@ class Offer(models.Model):
 			# shorten duration manually
 			self.duration = 0	
 		self.save() 
+
+	def is_active(self):
+	#	print "description: ",self.description
+		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
+		if not active:
+			self.expire()
+		return active
 
 	def num_forwarded(self):
 		return self.offercode_set.count()-self.num_init_sentto-self.num_resent_to
@@ -161,9 +160,9 @@ class Offer(models.Model):
 			if customer.is_taking_offers():
 				self.gen_offer_code(customer)
 				count = count +1
-				print count, customer
+				#print count, customer
 				customer.update_offer_count()
-		print "reached " , count
+		#print "reached " , count
 		return count
 
 
@@ -179,7 +178,7 @@ class Offer(models.Model):
 		forwarder=original_code.customer
 		try: 
 			friend = Customer.objects.get(phone=(phone))
-			print phone
+			#print phone
 			
 			o=self.offercode_set.create(
 				customer=friend,
@@ -196,7 +195,7 @@ class Offer(models.Model):
 			# create a customer
 			# create a username with phone num and create random password
 
-			print "Creating NEW user with username:", phone
+			#print "Creating NEW user with username:", phone
 			u, created = User.objects.get_or_create(username=phone)
 			u.email=""
 			s = string.letters+string.digits
@@ -239,7 +238,7 @@ class Offer(models.Model):
 		enough_points = True 
 		t = TxtTemplates()
 
-		print "Sending out offers"
+		#print "Sending out offers"
 
 		# 70 percent of old customers, 30 percent of new
 		max_offers = self.max_offers
@@ -251,8 +250,8 @@ class Offer(models.Model):
 		# TODO: geographically filter
 		nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
-		print "Num fans:",fans.count()
-		print "Num nonfans:",nonfans.count()
+		#print "Num fans:",fans.count()
+		#print "Num nonfans:",nonfans.count()
 		fan_target = set(list(fans))
 		nonfan_target = set(list(nonfans))	
 		target = fan_target | nonfan_target
@@ -264,8 +263,8 @@ class Offer(models.Model):
 		from worldbank.models import Transaction
 
 		allowed_number =int( self.merchant.balance/abs(Transaction.points_table["MOD"]))
-		print "balance=" ,self.merchant.balance
-		print "allowed_number", allowed_number
+		#print "balance=" ,self.merchant.balance
+		#print "allowed_number", allowed_number
 		if allowed_number == 0:
 			# check if there's enough balance
 			enough_points = False
@@ -273,7 +272,7 @@ class Offer(models.Model):
 		if len(target_list) > allowed_number:
 			target_list = random.sample(target_list, allowed_number)
 		sentto = self.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
-		print "count=" , self.offercode_set.all().count()
+		#print "count=" , self.offercode_set.all().count()
 		for o in self.offercode_set.all():
 			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["OFFER_RECEIVED"],{ "merchant":self.merchant.business_name, "title":self.title, "code":o.code })		
 			sms_notify(o.customer.phone, offer_msg, SMS_DEBUG)
@@ -355,8 +354,8 @@ class Offer(models.Model):
 		# TODO: geographically filter
 		nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).exclude(pk__in=old_pks).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
-		print "Num fans:",fans.count()
-		print "Num nonfans:",nonfans.count()
+		#print "Num fans:",fans.count()
+		#print "Num nonfans:",nonfans.count()
 		fan_target = set(list(fans))
 		nonfan_target = set(list(nonfans))	
 		target = fan_target | nonfan_target

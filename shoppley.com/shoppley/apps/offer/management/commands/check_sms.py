@@ -106,11 +106,10 @@ class Command(NoArgsCommand):
 		t = TxtTemplates()
 		for offer in expired_offers:
 			offer.is_merchant_txted=True
-			offer.expired = True
-			offer.save()
+			offer.expire()
 			offer.update_expired_codes()
-			print "tracking:", offer.trackingcode.code
-			print offer.offercode_set.values_list('code',flat=True)
+			#print "tracking:", offer.trackingcode.code
+			#print offer.offercode_set.values_list('code',flat=True)
 			sentto = offer.num_init_sentto + offer.num_resent_to
 			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
 			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
@@ -159,7 +158,7 @@ class Command(NoArgsCommand):
 	def check_phone(self,phone):
 		try:
 			phone = parse_phone_number(phone)
-			print phone			
+			#print phone			
 			customer = ShoppleyUser.objects.get(phone__icontains=phone)
 			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["PHONE_TAKEN"],{"phone":phone,})
 			self.notify(phone,receipt_msg)
@@ -186,10 +185,10 @@ class Command(NoArgsCommand):
 		
 	def test_handle(self,msg): # take msg: dict("from":phonenumber, "text":text)
 		t= TxtTemplates()
-		print "new message %s" % msg
+		#print "new message %s" % msg
 		msg["from"] = parse_phone_number(msg["from"])
-		sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
-		print "logged"
+		#sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
+		#print "logged"
 		if msg["from"] != "Me" and msg["from"] != "":
 			su = map_phone_to_user(msg["from"])
 
@@ -295,7 +294,8 @@ class Command(NoArgsCommand):
 									self.notify(su.phone, receipt_msg)
 								except MultipleObjectsReturned, e:
 									# Multiple customers registered with the same phone number, should be prevented
-									print e
+									#print e
+									sms_logger.exception ("\"%s\" causes an error:" % msg)
 							
 							except ObjectDoesNotExist:
 								# The offer code is not found, or an invalid one
@@ -305,7 +305,9 @@ class Command(NoArgsCommand):
 								self.notify(su.phone, receipt_msg)
 								OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offer_code.code).save()
 							except MultipleObjectsReturned, e:																	# Multiple offer codes found, which indicates a programming error
-								print e
+								#print e
+								sms_logger.exception ("\"%s\" causes an error:" % msg)
+
 					# --------------------------- ZIPCODE: "zipcode "---------------
 					elif parsed[0].lower() in ZIPCODE:
 						if len(parsed)<2:
@@ -351,7 +353,7 @@ class Command(NoArgsCommand):
 								"number": offer.num_received(),
 								"code": offer.gen_tracking_code(),
 							})
-						print msg["from"], su.phone
+						#print msg["from"], su.phone
 						self.notify(msg["from"], receipt_msg)
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() == REOFFER:
@@ -361,7 +363,7 @@ class Command(NoArgsCommand):
 								offer = offers.order_by("-time_stamp")[0]
 								resentto = offer.redistribute()
 
-								print "redistributed -- DONE", resentto
+								#print "redistributed -- DONE", resentto
 								if resentto == 0:
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
 								elif resentto==-2:
@@ -417,7 +419,7 @@ class Command(NoArgsCommand):
 							offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
 							if offers.count()>0:
 								offer=offers[0]
-								print offer
+								#print offer
 								trackingcode =offer.trackingcode
 								sentto  = offer.num_init_sentto + offer.num_resent_to
 								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
@@ -516,15 +518,28 @@ class Command(NoArgsCommand):
 								parsed_offercode =i
 								try:
 									offercode = self.check_offercode(parsed_offercode,phone)			
-									print "offercode",offercode		
+									#print "offercode",offercode		
 									if offercode == -1:
-									
-										customer_msg = customer_msg + "[%s] already expired;" % i
+										offercodes = su.customer.offercode_set.filter(code__icontains=parsed_offercode)
+										if offercodes.count()==1:
+											t = TxtTemplates()
+											offercode = offercodes[0]
+											customer_msg = customer_msg +  t.render(TxtTemplates.templates["CUSTOMER"]["INFO"],
+                                        							{	
+                                                               						 "offercode": offercode.code[0:settings.OFFER_CODE_LENGTH],
+                                                                					"description": offercode.offer.description,
+                                                                					"merchant": offercode.offer.merchant,
+                                                                					"expiration": "expired",
+                                                						})
+
+											#customer_msg = customer_msg + self.info(offercodes[0])
+										else:
+											customer_msg = customer_msg + "[%s] already expired;" % i
 									else:
 										customer_msg = customer_msg+ self.info(offercode) + ";"
 								except CommandError:		
 									continue
-							print "customer_msg" ,customer_msg
+							#print "customer_msg" ,customer_msg
 							if customer_msg != "":
 								self.notify(phone,customer_msg)
 					# ------------------- IWANT: "#iwant ..."----------------------
@@ -676,10 +691,10 @@ class Command(NoArgsCommand):
 							EmailAddress.objects.add_email(new_user,email)
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
-							print "creating new merchant..."
+							#print "creating new merchant..."
 							new_merchant = Merchant(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
 										business_name = business, verified=True).save()
-							print "merchant created!"
+							#print "merchant created!"
 
 							number = Customer.objects.filter(zipcode__code= parsed_zip).count()
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_SUCCESS"], {
@@ -742,17 +757,17 @@ class Command(NoArgsCommand):
 			except CommandError:
 				continue
 			except ObjectDoesNotExist, e:
-				print str(e)
+				#print str(e)
 				sms_logger.exception ("\"%s\" causes an error:" % msg)
 				continue
 			except MultipleObjectsReturned, e:
-				print str(e)
+				#print str(e)
                                 sms_logger.exception ("\"%s\" causes an error:" % msg)
 
 				continue
 			except Exception, e:
 			#	skipped_sms.append(index)
-				print str(e)
+				#print str(e)
                                 sms_logger.exception ("\"%s\" causes an error:" % msg)
 
 				continue

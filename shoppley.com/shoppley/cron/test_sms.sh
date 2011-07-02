@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PROAREA=/home
+PROAREA=/home/www/shoppley.com
 WORKON_HOME=/home/virtual
 PROJECT_ROOT=$PROAREA/shoppley
 

@@ -1,0 +1,62 @@
+diff --git .gitignore .gitignore
+old mode 100644
+new mode 100755
+diff --git LICENSE LICENSE
+old mode 100644
+new mode 100755
+diff --git README.md README.md
+old mode 100644
+new mode 100755
+diff --git examples/css/example.css examples/css/example.css
+old mode 100644
+new mode 100755
+diff --git examples/images/logo.png examples/images/logo.png
+old mode 100644
+new mode 100755
+diff --git examples/images/stairs.jpg examples/images/stairs.jpg
+old mode 100644
+new mode 100755
+diff --git examples/index.html examples/index.html
+old mode 100644
+new mode 100755
+diff --git examples/remote.html examples/remote.html
+old mode 100644
+new mode 100755
+diff --git examples/test.html examples/test.html
+old mode 100644
+new mode 100755
+diff --git examples/test_programmatic.html examples/test_programmatic.html
+old mode 100644
+new mode 100755
+diff --git lib/jquery.js lib/jquery.js
+old mode 100644
+new mode 100755
+diff --git src/closelabel.png src/closelabel.png
+old mode 100644
+new mode 100755
+diff --git src/facebox.css src/facebox.css
+old mode 100644
+new mode 100755
+diff --git src/facebox.js src/facebox.js
+old mode 100644
+new mode 100755
+index 7d0e39d..5621469
+--- src/facebox.js
++++ src/facebox.js
+@@ -84,13 +84,13 @@
+     settings: {
+       opacity      : 0.2,
+       overlay      : true,
+-      loadingImage : '/facebox/loading.gif',
+-      closeImage   : '/facebox/closelabel.png',
++      loadingImage : 'http://media.shoppley.com/site_media/static/images/facebox/loading.gif',
++      closeImage   : 'http://media.shoppley.com/site_media/static/images/facebox/closelabel.png',
+       imageTypes   : [ 'png', 'jpg', 'jpeg', 'gif' ],
+       faceboxHtml  : '\
+     <div id="facebox" style="display:none;"> \
+       <div class="popup"> \
+-        <div class="content"> \
++        <div class="content" style="width:500px;"> \
+         </div> \
+         <a href="#" class="close"></a> \
+       </div> \

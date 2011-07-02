@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # TODO: adjust paths for production and crontab should indicate how often sms's are checked
-
-PROAREA=/home/www/webuy.mit.edu
+PROAREA=/home/www/shoppley.com
+#PROAREA=/home/www/webuy.mit.edu
 WORKON_HOME=/home/virtual
 PROJECT_ROOT=$PROAREA/shoppley
 

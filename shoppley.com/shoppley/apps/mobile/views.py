@@ -470,6 +470,7 @@ def splash_view(request):
 	
 	return JSONHttpResponse(data)	
 	
+@never_cache
 @csrf_exempt
 @login_required
 def offers_active(request):

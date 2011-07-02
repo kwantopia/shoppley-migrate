@@ -7,14 +7,14 @@ X="$PWD"
 # dev server
 SHOPPLEY_HOME=/home/www/webuy-dev.mit.edu/shoppley
 # deployment
-#SHOPPLEY_HOME=/home/www/shoppley.com/shoppley
+SHOPPLEY_HOME=/home/www/shoppley.com/shoppley
 # local
 #SHOPPLEY_HOME=$HOME/workspace/shoppley
 
 # TODO: need to modify PINAX_HOME to the home of your pinax environment
 PINAX_HOME=/home/virtual/shoppley-env
 #PINAX_HOME=$HOME/Documents/virtual/shoppley-env
-PINAX_HOME=$HOME/workspace/virtual/shoppley-env
+#PINAX_HOME=$HOME/workspace/virtual/shoppley-env
 cp profiles.patch $PINAX_HOME/lib/python2.7/site-packages/pinax/apps/profiles
 cd $PINAX_HOME/lib/python2.7/site-packages/pinax/apps/profiles
 patch urls.py < profiles.patch
