@@ -87,6 +87,7 @@ class TxtTemplates:
 	templates = {
 		"MERCHANT": {
 			"REDEEM_PARAM_ERRORS": "Usage: #redeem <offer code> <customer phone>.  Command needs the offer code and the phone number of the customer.",
+			"REDEEM_EXPIRED": "Sorry, offer \"{{ offer }}\" already expired.",
 			"REDEEM_WRONG_MERCHANT": "Redeem Fail! \"{{ code }}\" was initiated by a different business, and not by you.",
 			"REDEEM_SUCCESS": "{{ offer_code }} is a valid offer code! Redeemed by {{ customer }}.",
 			"REDEEM_CODE_REUSE": "Code reuse! {{ offer_code }} was redeemed by {{ customer }} at {{ time }}.",
@@ -94,7 +95,7 @@ class TxtTemplates:
 			"REDEEM_INVALID_CUSTOMER_NUM": "{{ phone }} is not in our record. {{ offer_code }} offercode was not processed",
 			"REDEEM_INVALID_CODE": "{{ offer_code }} is not a valid offer code!",
 			"ZIPCODE_COMMAND_ERROR": "Command Error! To change your zipcode, please reply with #zipcode new_zipcode",
-			"ZIPCODE_CHANGE_SUCCESS": "{{ zipcode }} is your new zipcode. Your future offers will be distributed to customers in this new area.",
+			"ZIPCODE_CHANGE_SUCCESS": "{{ zipcode }} is your new zipcode. Your future offers will be distributed to customers in this new area.{{ number }} people in this area are signed up to receive offers. Tell your customers to sign up at Shoppley to receive last minute offers for free.",
 			"BALANCE": "You have {{ points }} points.",
 			"OFFER_COMMAND_ERROR": "Command Error! To start an offer, please use this command: #offer offer_description",
 			"OFFER_NO_CUSTOMER" : "There were no customers that could be reached at this moment. Txt \"#status {{ code }}\" to track offer.",
@@ -119,7 +120,7 @@ class TxtTemplates:
 			"EXPIRE_INFO": "{{ offer }} expired [sent to {{ sentto }}] [forwarded {{ forwarded }}] [redeemed {{ redeem }}]"	,
 			"HELP": "- #redeem offercode number: redeem a customer's offercode\n- #offer description: start an offer with its description.\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)- #status trackingcode: check the status of an offer you started\n- #balance: check point balance"	,
 			"SIGNUP_COMMAND_ERROR":"Sign up error. To sign up, txt \"#merchant email zipcode business_name\""	,
-			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}, password: {{ password }}"
+			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}, password: {{ password }}. Currently, {{ number }} people in your area are signed up to receive offers. Tell your customers to sign up at Shoppley to receive last minute offers for free."
 		
 		},
 		"CUSTOMER": {
@@ -141,7 +142,7 @@ class TxtTemplates:
 			"START": "Welcome back! Dragons will re-start finding perfect deals for you.",
 			"RESTART": "You are active and receiving offer messages.",
 			"ZIPCODE_COMMAND_ERROR": "Command Error! To change your zipcode, please use this command: #zipcode new_zipcode",
-			"ZIPCODE" : "{{ zipcode }} is your new zipcode. You will receive offers from this new area.",
+			"ZIPCODE" : "{{ zipcode }} is your new zipcode. You will receive offers from this new area. There are {{ number }} stores signed up in this area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
 			"FORWARD_COMMAND_ERROR": "Failure to forward offer! Please txt \"#forward offercode(s)\" followed by one or more friends\' numbers separated by spaces",
 			"FORWARD_WRONG_FORWARDER":"{{ code }}: Failure to forward! You are not the owner of this offercode." ,
 			"FORWARD_ALL_RECEIVED": "[{{ code }}] All phone numbers that were forwarded the code, have already received the offer.",
@@ -154,7 +155,7 @@ class TxtTemplates:
 			"COMMAND_NOT_STARTED_W_#": "{{ command }} is not a valid command. Our commands start with \"#\". Txt #help for all commands",
 			"HELP": "- #info offercode(s): lists information about offercode(s) separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance",
 			"SIGNUP_COMMAND_ERROR": "Signup Error! To signup, please txt \"#signup email zipcode\"",
-			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}",
+			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently,{{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
 			  
 
 		},
