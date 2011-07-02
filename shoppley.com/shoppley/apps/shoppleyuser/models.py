@@ -8,6 +8,8 @@ from sorl.thumbnail import ImageField
 
 
 # Create your models here.
+class Location(models.Model):
+	location = PointField()
 
 
 class Location(models.Model):
@@ -131,7 +133,9 @@ class Customer(ShoppleyUser):
 			( 0, 'None'),
 			( 5, '1-5'),
 			( 10, '6-10'),
+
 			( 100000, 'Unlimited'),
+
 			)
 
 	frequency = models.IntegerField(choices=FREQUENCY_CHOICES, default=4)
@@ -156,6 +160,15 @@ class Customer(ShoppleyUser):
 	def is_taking_offers(self):
 		return self.offer_count < self.daily_limit
 
+	def print_daily_limit(self):
+		if self.daily_limit == -1:
+			return "Unlimited"
+		elif self.daily_limit == 0:
+			return "none"
+		elif self.daily_limit == 5:
+			return "5"
+		elif self.daily_limit == 10:
+			return "10"
 	def update_offer_count(self):
 		self.offer_count=self.offer_count + 1
 		self.save()
