@@ -10,6 +10,7 @@
 
 #import "SLActiveOffer.h"
 #import "SLDataController.h"
+#import "SLNewOffer.h"
 #import "SLPastOffer.h"
 #import "SLTableViewDataSource.h"
 #import "SLTableItem.h"
@@ -129,8 +130,17 @@
 #pragma mark restart offer
 
 - (void)restartOffer {
+    SLNewOffer* offer = [[[SLNewOffer alloc] init] autorelease];
+    offer.name = _offer.name;
+    offer.description = _offer.description;
+    if ([_offer isKindOfClass:[SLPastOffer class]]) {
+        offer.duration = ((SLPastOffer*)_offer).duration;
+        offer.amount = ((SLPastOffer*)_offer).amount;
+        offer.unit = ((SLPastOffer*)_offer).unit;
+    }
+    
     TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer/new"] autorelease];
-    urlAction.query = [NSDictionary dictionaryWithObject:_offer forKey:@"offer"];
+    urlAction.query = [NSDictionary dictionaryWithObject:offer forKey:@"offer"];
     urlAction.animated = YES;
     [[TTNavigator navigator] openURLAction:urlAction];
 }

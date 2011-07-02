@@ -323,7 +323,7 @@ FORCE_LOWERCASE_TAGS = True
 # YAHOO_MAPS_API_KEY = ""
 
 DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": True,
+    "INTERCEPT_REDIRECTS": False,
 }
 
 # local_settings.py can be used to override environment-specific settings

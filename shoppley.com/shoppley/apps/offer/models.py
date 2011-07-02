@@ -98,8 +98,16 @@ class Offer(models.Model):
 		data["offer_id"] = self.id
 		data["title"] = self.title
 		data["description"] = self.description
-		data["percentage"] = self.percentage	# shows percentage off, 0 if no % off
-		data["dollar_off"] = self.dollar_off	# shows dollar discount, 0 if no discount
+		
+		if self.dollar_off != 0:
+		    data["amount"] = self.dollar_off
+		    data["unit"] = 1
+		elif self.percentage != 0:
+		    data["amount"] = self.percentage
+		    data["unit"] = 2
+		
+		data["duration"] = self.duration
+		
 		expire_time = self.starting_time + timedelta(minutes=self.duration)
 		data["expires"] = pretty_date(expire_time-datetime.now())
 

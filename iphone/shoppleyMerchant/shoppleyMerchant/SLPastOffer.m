@@ -10,8 +10,12 @@
 
 
 @implementation SLPastOffer
+@synthesize duration, amount, unit;
 
 - (void)dealloc {
+    TT_RELEASE_SAFELY(duration);
+    TT_RELEASE_SAFELY(amount);
+    TT_RELEASE_SAFELY(unit);
     [super dealloc];
 }
 
@@ -30,6 +34,9 @@
 
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
+    self.duration = [data objectForKey:@"duration"];
+    self.amount = [data objectForKey:@"amount"];
+    self.unit = [data objectForKey:@"unit"];
 }
 
 #pragma mark -
@@ -37,12 +44,24 @@
 
 - (id)initWithCoder:(NSCoder*)decoder {
     if ((self = [super initWithCoder:decoder])) {
+        self.duration = [decoder decodeObjectForKey:@"duration"];
+        self.amount = [decoder decodeObjectForKey:@"amount"];
+        self.unit = [decoder decodeObjectForKey:@"unit"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder*)encoder {
     [super encodeWithCoder:encoder];
+    if (self.duration) {
+        [encoder encodeObject:self.duration forKey:@"duration"];
+    }
+    if (self.amount) {
+        [encoder encodeObject:self.amount forKey:@"amount"];
+    }
+    if (self.unit) {
+        [encoder encodeObject:self.unit forKey:@"unit"];
+    }
 }
 
 @end

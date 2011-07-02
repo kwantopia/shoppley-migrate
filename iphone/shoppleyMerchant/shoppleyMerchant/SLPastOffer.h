@@ -14,6 +14,10 @@
     
 }
 
+@property (nonatomic, retain) NSNumber* duration;
+@property (nonatomic, retain) NSNumber* amount;
+@property (nonatomic, retain) NSNumber* unit;
+
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data;
 
 - (void)populateFromDictionary:(NSDictionary*)data;
