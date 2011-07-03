@@ -35,7 +35,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[SLDataController sharedInstance] updateLocation];
+    //[[SLDataController sharedInstance] updateLocation];
     
     // Style Sheet
     [TTStyleSheet setGlobalStyleSheet:[[[SLStyleSheet alloc] init] autorelease]];

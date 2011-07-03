@@ -34,9 +34,13 @@
         
         if (offer.name.length) {
             self.titleLabel.text = offer.name;
+        } else {
+            self.titleLabel.text = @"";
         }
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
+        } else {
+            self.detailTextLabel.text = @"";
         }
         if (offer.expires) {
             self.captionLabel.text = [NSString stringWithFormat:@"Expires: %@", [offer.expires formatFutureRelativeTime]];
@@ -87,9 +91,13 @@
         
         if (offer.name.length) {
             self.titleLabel.text = offer.name;
+        } else {
+            self.titleLabel.text = @"";
         }
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
+        } else {
+            self.detailTextLabel.text = @"";
         }
         if (offer.expires) {
             self.captionLabel.text = [NSString stringWithFormat:@"Expired: %@", [offer.expires formatFutureRelativeTime]];

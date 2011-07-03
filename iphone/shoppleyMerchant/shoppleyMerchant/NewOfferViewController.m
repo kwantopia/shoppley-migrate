@@ -49,7 +49,7 @@
         self.durationField.keyboardType = UIKeyboardTypeNumberPad;
         self.durationField.clearButtonMode = UITextFieldViewModeWhileEditing;
         self.durationField.returnKeyType = UIReturnKeyDefault;
-        
+
         self.titleField.text = self.offer.name;
         self.descriptionField.text = self.offer.description;
         
@@ -65,6 +65,10 @@
 - (void)dealloc {
     [[TTNavigator navigator].URLMap removeURL:[self selectStartTimeURL]];
     [[TTNavigator navigator].URLMap removeURL:[self selectAmountURL]];
+    TT_RELEASE_SAFELY(_offer);
+    TT_RELEASE_SAFELY(titleField);
+    TT_RELEASE_SAFELY(descriptionField);
+    TT_RELEASE_SAFELY(durationField);
     [super dealloc];
 }
 
@@ -90,6 +94,15 @@
         } 
     }
     
+    // (yod) hack to fix unknown error.
+    // error: click edit amount and go back. the textview is gone???
+    self.descriptionField = [[[UITextView alloc] init] autorelease];
+    self.descriptionField.delegate = self;
+    self.descriptionField.font = TTSTYLEVAR(font);
+    self.descriptionField.keyboardType = UIKeyboardTypeDefault;
+    self.descriptionField.returnKeyType = UIReturnKeyDefault;
+    self.descriptionField.text = self.offer.description;
+    
     self.dataSource = [SLSectionedDataSource dataSourceWithObjects:
                        @"Title", self.titleField,
                        @"Description", self.descriptionField,
@@ -106,11 +119,10 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-#pragma submit
+#pragma mark submit
 - (void)submitClicked {
     self.dataSource = [TTListDataSource dataSourceWithObjects:[TTTableActivityItem itemWithText:@"Processing..."], nil];
     [self performSelectorInBackground:@selector(submit) withObject:self];
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)submitDone {
@@ -188,7 +200,7 @@
     [[TTNavigator navigator] openURLAction:urlAction];
 }
 
-#pragma UITextFieldDelegate
+#pragma mark UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {    
     if (textField == self.titleField) {
@@ -197,13 +209,18 @@
     return YES;
 }
 
-#pragma SLSelectDateDelegate
+#pragma mark UITextViewDelegate
+- (void)textViewDidChange:(UITextView *)textView {
+    self.offer.description = textView.text;
+}
+
+#pragma mark SLSelectDateDelegate
 
 - (void)didSelectDate:(NSDate *)date {
     self.offer.startTime = date;
 }
 
-#pragma SLSelectAmountDelegate
+#pragma mark SLSelectAmountDelegate
 
 - (void)didSelectAmount:(NSNumber*)amount {
     self.offer.amount = amount;
