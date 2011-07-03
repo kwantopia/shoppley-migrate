@@ -33,7 +33,7 @@ from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBe
 from shoppleyuser.models import Customer, ShoppleyUser, Merchant
 
 
-
+# view for home, depending on whether request user is cutomer/merchant
 def home(request, template_name="front-page.html"):
 	#return HttpResponseRedirect("http://webuy-dev.mit.edu")
 	user = request.user
