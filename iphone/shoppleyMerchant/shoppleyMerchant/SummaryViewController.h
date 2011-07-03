@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface SummaryViewController : TTTableViewController {
-    
+
 }
 
 @end

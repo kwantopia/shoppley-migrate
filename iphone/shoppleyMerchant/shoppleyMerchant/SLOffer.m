@@ -28,9 +28,16 @@
     self.name = [data objectForKey:@"title"];
     self.description = [data objectForKey:@"description"];
     self.img = [data objectForKey:@"img"];
-    self.expires = [data objectForKey:@"expires"];
+    self.expires = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"expires"] intValue]];
     self.redeemed = [data objectForKey:@"redeemed"];
     self.received = [data objectForKey:@"received"];
+}
+
+- (NSNumber*) redeemedPercentage {
+    if ([self.received intValue] == 0) {
+        return [NSNumber numberWithFloat:0];
+    }
+    return [NSNumber numberWithFloat:(100 * [self.redeemed floatValue] / [self.received floatValue])];
 }
 
 #pragma mark -

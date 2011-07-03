@@ -17,9 +17,11 @@
 @property (nonatomic, retain) NSString* name;
 @property (nonatomic, retain) NSString* description;
 @property (nonatomic, retain) NSString* img;
-@property (nonatomic, retain) NSString* expires;
+@property (nonatomic, retain) NSDate* expires;
 @property (nonatomic, retain) NSNumber* redeemed;
 @property (nonatomic, retain) NSNumber* received;
+
+@property (readonly) NSNumber* redeemedPercentage;
 
 - (void)populateFromDictionary:(NSDictionary*)data;
 

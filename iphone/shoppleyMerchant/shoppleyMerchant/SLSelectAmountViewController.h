@@ -13,7 +13,7 @@
 - (void)didselectUnit:(NSNumber*)unit;
 @end
 
-@interface SLSelectAmountViewController : TTTableViewController <UITextFieldDelegate> {
+@interface SLSelectAmountViewController : TTTableViewController {
     id<SLSelectAmountDelegate> _delegate;
     UITextField* _amountField;
     UISegmentedControl* _unitSelector;

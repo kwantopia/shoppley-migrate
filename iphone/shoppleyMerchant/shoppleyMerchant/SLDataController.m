@@ -319,11 +319,19 @@ static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
         
         [parameters setValue:date forKey:@"date"];
         [parameters setValue:time forKey:@"time"];
+        [parameters setValue:[NSNumber numberWithInt:[offer.startTime timeIntervalSince1970]] forKey:@"start_unixtime"];
         [parameters setValue:[NSNumber numberWithBool:NO] forKey:@"now"];
     } else {
         [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"now"];
     }
     return [self sendPostRequestWithParameters:parameters endpoint:@"merchant/offer/start/"];
+}
+
+#pragma mark -
+#pragma mark Summary
+
+- (NSDictionary*)getSummary {
+    return [self sendGetRequestWithParameters:[NSDictionary dictionaryWithObjectsAndKeys:nil] endpoint:@"merchant/summary/"];
 }
 
 #pragma mark -

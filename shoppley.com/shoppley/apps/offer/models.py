@@ -10,7 +10,7 @@ from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty
 from sorl.thumbnail import ImageField
 
 from datetime import datetime, timedelta
-import random, string
+import random, string, time
 
 SMS_DEBUG = settings.SMS_DEBUG
 
@@ -109,7 +109,7 @@ class Offer(models.Model):
 		data["duration"] = self.duration
 		
 		expire_time = self.starting_time + timedelta(minutes=self.duration)
-		data["expires"] = pretty_date(expire_time-datetime.now())
+		data["expires"] = epoch = int(time.mktime(expire_time.timetuple())) #pretty_date(expire_time-datetime.now())
 
 		# currently received does not account for forwarded code
 		#data["total_received"] = self.num_received()

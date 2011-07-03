@@ -8,11 +8,11 @@
 
 #import "SLTableItemCell.h"
 
-#import <Three20Core/NSDateAdditions.h>
 #import <Three20Style/UIFontAdditions.h>
 #import <Three20UI/UIViewAdditions.h>
 
 #import "SLActiveOffer.h"
+#import "SLAdditions.h"
 #import "SLPastOffer.h"
 
 @implementation SLActiveOfferTableItemCell
@@ -38,24 +38,29 @@
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
         }
-        if (offer.expires.length) {
-            self.timestampLabel.text = offer.expires;
+        if (offer.expires) {
+            self.captionLabel.text = [NSString stringWithFormat:@"Expires: %@", [offer.expires formatFutureRelativeTime]];
             //self.timestampLabel.text = [item.timestamp formatShortTime];
         }
         if (offer.img) {
             self.imageView2.urlPath = offer.img;
         }
+        if (offer.redeemedPercentage && offer.received) {
+            self.timestampLabel.text = [NSString stringWithFormat:@"%@ (%.0f%%)", offer.received, [offer.redeemedPercentage floatValue]];
+        }
     }
+}
+
+- (UILabel*)captionLabel {
+    UILabel* captionLabel = [super captionLabel];
+    captionLabel.textColor = [UIColor redColor];
+    return captionLabel;
 }
 
 - (UILabel*)timestampLabel {
     if (!_timestampLabel) {
-        _timestampLabel = [[UILabel alloc] init];
-        _timestampLabel.font = TTSTYLEVAR(tableTimestampFont);
-        _timestampLabel.textColor = [UIColor redColor];
-        _timestampLabel.highlightedTextColor = [UIColor whiteColor];
-        _timestampLabel.contentMode = UIViewContentModeLeft;
-        [self.contentView addSubview:_timestampLabel];
+        [super timestampLabel];
+        _timestampLabel.font = [UIFont boldSystemFontOfSize:14];
     }
     return _timestampLabel;
 }
@@ -77,8 +82,8 @@
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         self.selectionStyle = TTSTYLEVAR(tableSelectionStyle);
         
-        SLPastOfferTableItem* item = object;
-        SLPastOffer* offer = item.offer;
+        SLActiveOfferTableItem* item = object;
+        SLActiveOffer* offer = item.offer;
         
         if (offer.name.length) {
             self.titleLabel.text = offer.name;
@@ -86,24 +91,29 @@
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
         }
-        if (offer.expires.length) {
-            self.timestampLabel.text = offer.expires;
+        if (offer.expires) {
+            self.captionLabel.text = [NSString stringWithFormat:@"Expired: %@", [offer.expires formatFutureRelativeTime]];
             //self.timestampLabel.text = [item.timestamp formatShortTime];
         }
         if (offer.img) {
             self.imageView2.urlPath = offer.img;
         }
+        if (offer.redeemedPercentage && offer.received) {
+            self.timestampLabel.text = [NSString stringWithFormat:@"%@ (%.0f%%)", offer.received, [offer.redeemedPercentage floatValue]];
+        }
     }
+}
+
+- (UILabel*)captionLabel {
+    UILabel* captionLabel = [super captionLabel];
+    captionLabel.textColor = [UIColor redColor];
+    return captionLabel;
 }
 
 - (UILabel*)timestampLabel {
     if (!_timestampLabel) {
-        _timestampLabel = [[UILabel alloc] init];
-        _timestampLabel.font = TTSTYLEVAR(tableTimestampFont);
-        _timestampLabel.textColor = [UIColor redColor];
-        _timestampLabel.highlightedTextColor = [UIColor whiteColor];
-        _timestampLabel.contentMode = UIViewContentModeLeft;
-        [self.contentView addSubview:_timestampLabel];
+        [super timestampLabel];
+        _timestampLabel.font = [UIFont boldSystemFontOfSize:14];
     }
     return _timestampLabel;
 }

@@ -484,7 +484,7 @@ def offers_active(request):
 		merchant = u.shoppleyuser.merchant
 
 		data["offers"] = []
-		for o in Offer.objects.filter(merchant=merchant, expired=False):
+		for o in Offer.objects.filter(merchant=merchant, expired=False).order_by('-starting_time'):
 			data["offers"].append( o.offer_detail() )
 
 		data["result"] = 1
@@ -699,7 +699,7 @@ def offers_past(request, days=0):
 		merchant = u.shoppleyuser.merchant
 		data["offers"] = []
 		if days == 0:
-			for o in Offer.objects.filter(merchant=merchant, expired=True):
+			for o in Offer.objects.filter(merchant=merchant, expired=True).order_by('-starting_time'):
 				data["offers"].append( o.offer_detail(past=True) )
 		else:
 			start_date = datetime.now()-timedelta(days=days)
@@ -743,8 +743,8 @@ def merchant_summary(request, days=7):
 			total_recvd += o.num_received()
 			total_redeemed += o.num_redeemed()	
 
-		data["direct_received"] = direct_recvd
 		data["total_received"] = total_recvd
+		data["total_forwarded"] = total_recvd - direct_recvd
 		data["total_redeemed"] = total_redeemed
 		if direct_recvd == 0:
 			data["redeem_rate"] = 0

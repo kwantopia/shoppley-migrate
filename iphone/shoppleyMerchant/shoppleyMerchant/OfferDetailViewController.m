@@ -9,6 +9,7 @@
 #import "OfferDetailViewController.h"
 
 #import "SLActiveOffer.h"
+#import "SLAdditions.h"
 #import "SLDataController.h"
 #import "SLNewOffer.h"
 #import "SLPastOffer.h"
@@ -43,7 +44,7 @@
     [stats addObject:[SLRightValueTableItem itemWithText:@"Sent to" value:[NSString stringWithFormat:@"%@", _offer.received]]];
     [stats addObject:[SLRightValueTableItem itemWithText:@"Redeemed" value:[NSString stringWithFormat:@"%@", _offer.redeemed]]];
     if ([_offer.received intValue] > 0) {
-        [stats addObject:[SLRightValueTableItem itemWithText:@"Percentage" value:[NSString stringWithFormat:@"%.2f%%", [_offer.redeemed floatValue] / [_offer.received floatValue]]]];
+        [stats addObject:[SLRightValueTableItem itemWithText:@"Percentage" value:[NSString stringWithFormat:@"%.2f%%", [_offer.redeemedPercentage floatValue]]]];
     }
     [items addObject:stats];
     [sections addObject:@""];
@@ -192,9 +193,9 @@
         redLabel.font = [UIFont systemFontOfSize:14];
         NSString* redLabelText = @"";
         if (isActiveOffer) {
-            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>expires: %@</b></span>", offer.expires];
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>expires: %@</b></span>", [offer.expires formatFullDateTime]];
         } else {
-            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Expired on: %@</b></span>", offer.expires];
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Expired on: %@</b></span>", [offer.expires formatFullDateTime]];
         }
         redLabel.text = [TTStyledText textFromXHTML:redLabelText lineBreaks:YES URLs:YES];
         redLabel.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);

@@ -80,5 +80,10 @@
 - (NSDictionary*)sendMoreWithOfferId:(NSNumber*)offerId;
 - (BOOL)redeemCode:(NSString*)code amount:(NSNumber*)amount;
 - (BOOL)createNewOffer:(SLNewOffer*)offer;
+
+#pragma mark -
+#pragma mark Summary
+
+- (NSDictionary*)getSummary;
     
 @end

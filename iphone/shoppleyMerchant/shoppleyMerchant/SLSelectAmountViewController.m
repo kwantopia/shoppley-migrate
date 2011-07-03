@@ -25,7 +25,6 @@
         NSNumber* unit = [query objectForKey:@"unit"];
         
         self.amountField = [[[UITextField alloc] init] autorelease];
-        self.amountField.delegate = self;
         self.amountField.font = [UIFont boldSystemFontOfSize:16];
         self.amountField.keyboardType = UIKeyboardTypeDecimalPad;
         self.amountField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -62,16 +61,15 @@
     [self.delegate didselectUnit:[NSNumber numberWithInt:(self.unitSelector.selectedSegmentIndex + 1)]];
 }
 
-#pragma UITextFieldDelegate
-
-- (void)textFieldDidEndEditing:(UITextField *)textField {
+-(void) viewWillDisappear:(BOOL)animated {
     NSNumberFormatter* f = [[[NSNumberFormatter alloc] init] autorelease];
     [f setNumberStyle:NSNumberFormatterDecimalStyle];
     NSNumber* amount = [f numberFromString:self.amountField.text];
-
+    
     if (amount != nil) {
         [self.delegate didSelectAmount:amount];
     }
+    [super viewWillDisappear:animated];
 }
 
 @end

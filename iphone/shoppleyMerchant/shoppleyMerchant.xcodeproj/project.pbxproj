@@ -24,6 +24,7 @@
 		D51102CD13B6EA79000C5CF0 /* PastOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51102CC13B6EA79000C5CF0 /* PastOffersViewController.m */; };
 		D5265E4F13BC2BF100D9D4D7 /* RedeemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5265E4E13BC2BF100D9D4D7 /* RedeemViewController.m */; };
 		D549EF7213B7D61000FFF856 /* OfferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D549EF7113B7D61000FFF856 /* OfferDetailViewController.m */; };
+		D5585A4013BFEB8800FCD043 /* SLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D5585A3F13BFEB8800FCD043 /* SLAdditions.m */; };
 		D561370C13B6AB150061963B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370913B6AB150061963B /* Default.png */; };
 		D561370D13B6AB150061963B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370A13B6AB150061963B /* Icon.png */; };
 		D561370E13B6AB150061963B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D561370B13B6AB150061963B /* logo.png */; };
@@ -278,6 +279,8 @@
 		D5265E4E13BC2BF100D9D4D7 /* RedeemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedeemViewController.m; sourceTree = "<group>"; };
 		D549EF7013B7D61000FFF856 /* OfferDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferDetailViewController.h; sourceTree = "<group>"; };
 		D549EF7113B7D61000FFF856 /* OfferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferDetailViewController.m; sourceTree = "<group>"; };
+		D5585A3E13BFEB8800FCD043 /* SLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLAdditions.h; sourceTree = "<group>"; };
+		D5585A3F13BFEB8800FCD043 /* SLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLAdditions.m; sourceTree = "<group>"; };
 		D561370913B6AB150061963B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
 		D561370A13B6AB150061963B /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = images/Icon.png; sourceTree = "<group>"; };
 		D561370B13B6AB150061963B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = images/logo.png; sourceTree = "<group>"; };
@@ -514,6 +517,8 @@
 				D5D5EBF413B6D29200F85362 /* SLTableItemCell.m */,
 				D5D5EBF513B6D29200F85362 /* SLStyleSheet.h */,
 				D5D5EBF613B6D29200F85362 /* SLStyleSheet.m */,
+				D5585A3E13BFEB8800FCD043 /* SLAdditions.h */,
+				D5585A3F13BFEB8800FCD043 /* SLAdditions.m */,
 			);
 			name = Displays;
 			sourceTree = "<group>";
@@ -982,6 +987,7 @@
 				D5F6EBC513BD50EF00CB7B2C /* SLNewOffer.m in Sources */,
 				D5F6EBC813BD635F00CB7B2C /* SLSelectDateViewController.m in Sources */,
 				D5F6EBE413BD75BA00CB7B2C /* SLSelectAmountViewController.m in Sources */,
+				D5585A4013BFEB8800FCD043 /* SLAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

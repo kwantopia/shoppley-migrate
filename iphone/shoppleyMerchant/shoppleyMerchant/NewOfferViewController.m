@@ -207,9 +207,6 @@
 
 - (void)didSelectAmount:(NSNumber*)amount {
     self.offer.amount = amount;
-    
-    // this data might change after the view reappears
-    [self createModel];
 }
 
 - (void)didselectUnit:(NSNumber*)unit {
