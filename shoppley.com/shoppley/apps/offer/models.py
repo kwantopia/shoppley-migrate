@@ -45,8 +45,9 @@ class Offer(models.Model):
 	num_resent_to		= models.IntegerField(default=0) # number of customers the offer was resent to
 	is_merchant_txted	= models.BooleanField(default=False) # True if the merchant was informed the status of the offer after it's expired
 	img				= ImageField(upload_to='offers/')
-	expired = models.BooleanField(default=False)
 
+	expired = models.BooleanField(default=False)
+	expired_time = models.DateTimeField(null=True, blank=True)
 	redistributable = models.BooleanField(default=True)
 	is_processing = models.BooleanField(default=False)
 	redistribute_processing = models.BooleanField(default=False)

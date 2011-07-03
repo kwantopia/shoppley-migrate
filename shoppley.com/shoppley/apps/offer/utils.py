@@ -153,7 +153,7 @@ class TxtTemplates:
 			"RESIGNUP": "You are already a Shoppley customer",
 			"INCORRECT_COMMAND": "{{ command }} command is not available. Available commands are:\n {{ help }}",
 			"COMMAND_NOT_STARTED_W_#": "{{ command }} is not a valid command. Our commands start with \"#\". Txt #help for all commands",
-			"HELP": "- #info offercode(s): lists information about offercode(s) separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance",
+			"HELP": "- #info offercode(s): lists information about offercode(s) separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#iwant request: request a deal\n-#zip new_zipcode: change to a new zipcode (only support 02139 02142)\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance",
 			"SIGNUP_COMMAND_ERROR": "Signup Error! To signup, please txt \"#signup email zipcode\"",
 			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
 			  

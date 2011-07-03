@@ -236,8 +236,9 @@ a.shoppley-btn, input.shoppley-btn {
 }
 
 #messages{
-	background: #35ACE4;
+	background:#AFDCEC;
 }
+
 #get-offers {
 	background: transparent url(../../images/boram/landing-customer-getoffers.png) no-repeat;	
 }
@@ -317,6 +318,7 @@ div#div_id_username label, div#div_id_password label {
 form.login-header-form div#div_id_password label {
 	padding-left: 12px;
 }
+
 div#div_id_remember.checkbox {
 	padding: 5px;
 	float: left;
@@ -333,11 +335,11 @@ div.login .form_block {
 	text-align: right;
 }
 
-.login #div_id_remember.checkbox {
+form.login #div_id_remember.checkbox {
 	float: right;
 }
 
-.login .form_block input {
+form.login .form_block input {
 	float: right;
 } 
 

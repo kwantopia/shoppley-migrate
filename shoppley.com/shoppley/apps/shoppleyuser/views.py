@@ -42,7 +42,7 @@ def home(request, template_name="front-page.html"):
 			if request.user.emailaddress_set.count()==0:
 
 				messages.add_message(request, messages.INFO,
-						'You do not have an email yet. Please go to <a href="{% url user_profile %}">Account</a> and add one for email notifications')
+						'You do not have an email yet. Please go to <a href="/shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
 			zipcode = user.shoppleyuser.customer.zipcode
 
 			number = Merchant.objects.filter(zipcode__id=zipcode.id).count()
@@ -55,7 +55,7 @@ def home(request, template_name="front-page.html"):
 
 			if not user.shoppleyuser.merchant.address_1:
 				messages.add_message(request, messages.INFO,
-                                                'We do not have your business address. Please go to <a href="{% url user_profile %}">Account</a> and add one.')
+                                                'We do not have your business address. Please go to <a href="/shoppleyuser/merchant/profile-settings/">Account</a> and add one.')
 	
 			zipcode = user.shoppleyuser.merchant.zipcode
 			number = Customer.objects.filter(zipcode__id=zipcode.id).count()
@@ -71,7 +71,8 @@ def home(request, template_name="front-page.html"):
 
 def account_test (request, template_name = "account/account.html"):
 	try:
-		shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)	
+		shoppleyuser = request.user.shoppleyuser
+		##shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)	
 		return render_to_response(template_name,{
 					"shoppleyuser":shoppleyuser,
 			}, context_instance=RequestContext(request))
@@ -80,7 +81,8 @@ def account_test (request, template_name = "account/account.html"):
 
 def account_info(request, template_name="shoppleyuser/account_info.html"):
 	try:
-		shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)
+		shoppleyuser = request.user.shoppleyuser
+		#shoppleyuser =ShoppleyUser.objects.get(user__id=request.user.id)
 		return render_to_response(template_name,{
 					"shoppleyuser":shoppleyuser,
 				}, context_instance=RequestContext(request))
@@ -94,7 +96,8 @@ def account_set_offer_limit(request, template_name="shoppleyuser/account_set_off
 
 def offer_frequency_set(request, template_name="shoppleyuser/offer_frequency_set.html"):
 	try:
-		customer = Customer.objects.get(user__id = request.user.id)
+		customer = request.user.shoppleyuser.customer
+		#customer = Customer.objects.get(user__id = request.user.id)
 		return render_to_response(template_name,{
 					"frequency":customer.frequency,
 				}, context_instance=RequestContext(request))
@@ -121,7 +124,8 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 			# if form.login(request):
 				form.login(request)
 				try:
-					s = ShoppleyUser.objects.get(user__id=request.user.id)
+					s = request.user.shoppleyuser
+					#s = ShoppleyUser.objects.get(user__id=request.user.id)
 					s.verified=True
 					s.save()
 				except ShoppleyUser.DoesNotExist:	
@@ -154,8 +158,8 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 @login_required
 def user_profile (request):
 	user = request.user
-
-	suser = ShoppleyUser.objects.get(user__id=user.id)
+	suser = user.shoppleyuser
+	#suser = ShoppleyUser.objects.get(user__id=user.id)
 	if suser.is_customer():
 		return HttpResponseRedirect(reverse("customer_profile"))
 	else:
@@ -163,10 +167,13 @@ def user_profile (request):
 @login_required
 def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	user = request.user
-	customer = Customer.objects.get(user__id=user.id)
+	customer = user.shoppleyuser.customer
+	#customer = Customer.objects.get(user__id=user.id)
 	username = user.username
 	zipcode = customer.zipcode.code
 	address = customer.address_1
+	if not address:
+		address = "No address given"
 	phone = customer.phone
 	print customer.print_daily_limit()
 	frequency = customer.print_daily_limit()
@@ -200,10 +207,13 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 @login_required
 def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	user = request.user
-	merchant = Merchant.objects.get(user__id=user.id)
+	#merchant = Merchant.objects.get(user__id=user.id)
+	merchant = user.shoppleyuser.merchant
 	username = user.username
 	zipcode = merchant.zipcode.code
 	address = merchant.address_1
+	if not address:
+		address = "No address given"
 	phone = merchant.phone
 	business_name = merchant.business_name
 	if user.emailaddress_set.count()>0:
@@ -241,8 +251,8 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 			return HttpResponseRedirect(reverse("customer_profile"))
 	else: 
 		user = request.user
-		customer = Customer.objects.get(user__id=user.id)
-		
+		#customer = Customer.objects.get(user__id=user.id)
+		customer = user.shoppleyuser.customer
 		form = form_class(initial = {'username': user.username, 
 					'address1': customer.address_1,
 					'zip_code': customer.zipcode.code,
@@ -281,8 +291,8 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 			return HttpResponseRedirect(reverse("merchant_profile"))
 	else: 
 		user = request.user
-		merchant = Merchant.objects.get(user__id=user.id)
-		
+		#merchant = Merchant.objects.get(user__id=user.id)
+		merchant = user.shoppleyuser.merchant
 		form = form_class( initial = {'username': user.username, 
 					'address1': merchant.address_1,
 					'zip_code': merchant.zipcode.code,
