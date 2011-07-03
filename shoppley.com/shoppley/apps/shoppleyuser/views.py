@@ -60,7 +60,7 @@ def home(request, template_name="front-page.html"):
 			zipcode = user.shoppleyuser.merchant.zipcode
 			number = Customer.objects.filter(zipcode__id=zipcode.id).count()
 
-			essages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> people in your area have signed up to receive offer. Tell your customers to sign up for Shoppley to receive last minute offers for free.' % number)
+			messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> people in your area have signed up to receive offer. Tell your customers to sign up for Shoppley to receive last minute offers for free.' % number)
 
 			return render_to_response("shoppleyuser/merchant_landing_page.html", {"number":number,},context_instance=RequestContext(request))
 	else:
