@@ -100,7 +100,7 @@
             self.detailTextLabel.text = @"";
         }
         if (offer.expires) {
-            self.captionLabel.text = [NSString stringWithFormat:@"Expired: %@", [offer.expires formatFutureRelativeTime]];
+            self.captionLabel.text = [NSString stringWithFormat:@"Expired: %@", [offer.expires formatFullDateTime]];
             //self.timestampLabel.text = [item.timestamp formatShortTime];
         }
         if (offer.img) {
