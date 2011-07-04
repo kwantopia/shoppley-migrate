@@ -4,7 +4,7 @@ import os.path
 import posixpath
 import pinax
 
-SHOPPLEY_NUM = "5086900888"
+SHOPPLEY_NUM = "6176829536"
 # tells Pinax to use the default theme
 PINAX_THEME = "default"
 
