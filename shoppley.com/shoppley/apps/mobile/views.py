@@ -484,7 +484,9 @@ def offers_active(request):
 		merchant = u.shoppleyuser.merchant
 
 		data["offers"] = []
-		for o in Offer.objects.filter(merchant=merchant, expired=False).order_by('-starting_time'):
+		#active_offers = [o for o in Offer.objects.filter(merchant=merchant, expired_time__gt=datetime.now())].order_by('-starting_time')
+		for o in Offer.objects.filter(merchant=merchant, expired_time__gt=datetime.now()).order_by('-starting_time'):
+		
 			data["offers"].append( o.offer_detail() )
 
 		data["result"] = 1
@@ -705,12 +707,16 @@ def offers_past(request, days=0):
 		merchant = u.shoppleyuser.merchant
 		data["offers"] = []
 		if days == 0:
-			for o in Offer.objects.filter(merchant=merchant, expired=True).order_by('-starting_time'):
+			
+			for o in Offer.objects.filter(merchant=merchant, expired_time__lt=datetime.now()).order_by('-starting_time'):
+			
 				data["offers"].append( o.offer_detail(past=True) )
 		else:
 			start_date = datetime.now()-timedelta(days=days)
 			end_date = datetime.now()
-			for o in Offer.objects.filter(merchant=merchant, expired=True, starting_time__range=(start_date, end_date)):
+			#offers = [ o for o in Offer.objects.filter(merchant=merchant, starting_time__range=(start_date,end_date)) if o.is_active()==False]
+			for o in Offer.objects.filter(merchant=merchant, expired_time__lt=datetime.now(), starting_time__range=(start_date, end_date)):
+			
 				data["offers"].append( o.offer_detail(past=True) )
 
 		data["result"] = 1

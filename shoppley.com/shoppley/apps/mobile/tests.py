@@ -293,11 +293,16 @@ class SimpleTest(TestCase):
 	def expire_offer(self, email):
 		u = User.objects.get(email=email)
 		m = u.shoppleyuser.merchant
+		
+		#expired_offers = Offer.objects.filter(merchant=m, expired=True)
+		expired_offers = Offer.objects.filter(merchant=m, expired_time__lt=datetime.now())
 
-		expired_offers = Offer.objects.filter(merchant=m, expired=True)
 		if expired_offers.exists():
+		
 			return random.sample( expired_offers, 1 )[0]
-		valid_offers =  Offer.objects.filter(merchant=m, expired=False)
+		
+		#valid_offers =  Offer.objects.filter(merchant=m, expired=False)
+		valid_offers= Offer.objects.filter(merchant=m, expired_time__gt=datetime.now())
 		if valid_offers.exists():
 			o = random.sample(valid_offers, 1)[0]
 			o.expire(True)
@@ -313,8 +318,8 @@ class SimpleTest(TestCase):
 	def get_offer_code(self, email):
 		u = User.objects.get(email=email)
 		m = u.shoppleyuser.merchant
-
-		offers = Offer.objects.filter(merchant=m, expired=False)
+		
+		offers = Offer.objects.filter(merchant=m, expired_time__gt=datetime.now())
 		codes = []	
 		for o in offers:
 			for c in o.offercode_set.all():

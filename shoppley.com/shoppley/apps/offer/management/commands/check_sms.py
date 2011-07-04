@@ -101,8 +101,8 @@ class Command(NoArgsCommand):
 						})
 
 	def update_expired(self):
-		
-		expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
+		expired_offers = Offer.objects.filter(is_merchant_txted=False, expired_time__lt=datetime.now())
+		#expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
 		t = TxtTemplates()
 		for offer in expired_offers:
 			offer.is_merchant_txted=True
@@ -358,9 +358,10 @@ class Command(NoArgsCommand):
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() == REOFFER:
 						if len(parsed)==1:
-							offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
+							offers = su.merchant.offers_published.filter(expired_time__gt=datetime.now())
+							#offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
 							#offers = su.merchant.offers_published.filter(expired=False)
-							if offers:
+							if offers.exists():
 								offer = offers.order_by("-time_stamp")[0]
 								resentto = offer.redistribute()
 
