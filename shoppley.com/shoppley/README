@@ -64,25 +64,34 @@ You need to download blueprint css, tipsy
 $ cd packages
 $ ./download.sh
 
+
+== create POSTGIS template ==
+$ sudo port install postgresql90 postgresql90-server
+# setup postgresql90 defaultdb according to the instructions displayed after port install
+$ sudo port install geos proj postgis gdal libgeoip
+
+$ sudo su postgres
+$ ./create_template_postgis-1.5.sh
+# on Mac you might have permission issues so copy the script to tmp and execute
+
+$ cp create_template_postgis-1.5.sh /tmp/
+$ sudo su postgres
+$ /tmp/create_template_postgis-1.5.sh
+
+== create new DB with POSTGIS template ==
+$ sudo su postgres
+$ createuser flashon
+$ psql -d template1
+$ template1 => ALTER USER flashon WITH ENCRYPTED PASSWORD 'flashonnohsalf';
+$ template1 => \q
+$ createdb flashon -T template_postgis -E unicode -O flashon
+exit
+
 == syncdb ==
 
 $ python manage.py syncdb
 
-If models have changed we need to delete dev.db and syncdb again
-
-== create POSTGIS template ==
-sudo su postgres
-./create_template_postgis-1.5.sh
-# on Mac you might have permission issues so copy the script to tmp and execute
-
-cp create_template_postgis-1.5.sh /tmp/
-sudo su postgres
-/tmp/create_template_postgis-1.5.sh
-
-== create new DB with POSTGIS template ==
-sudo su postgres
-createdb flashon -T template_postgis -E unicode -O flashon
-exit
+Due to Postgis the local django will only work with postgresql90 install and postgis related tools
 
 == Celeryd setup ==
 #Create rabbitmq user and vhost
