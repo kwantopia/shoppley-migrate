@@ -56,16 +56,16 @@ class Offer(models.Model):
 		return self.title
 
 	def update_expired_codes(self):
-		if self.expired:
-			for oc in self.offercode_set.all():
-				oc.code = oc.code + self.trackingcode.code
-				oc.save()
+	
+		for oc in self.offercode_set.all():
+			oc.code = oc.code + self.trackingcode.code
+			oc.save()
 	
 	def expire(self, reset_duration=False):
 		"""
 			expire the offer
 		"""
-		self.expired = True
+		#self.expired = True
 		if reset_duration:
 			# shorten duration manually
 			self.duration = 0	
@@ -73,7 +73,10 @@ class Offer(models.Model):
 
 	def is_active(self):
 	#	print "description: ",self.description
-		active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
+		if self.expired_time:
+			active = self.expired_time > datetime.now()
+		else:
+			active = self.starting_time+timedelta(minutes=self.duration) > datetime.now()
 		if not active:
 			self.expire()
 		return active
@@ -158,6 +161,7 @@ class Offer(models.Model):
 			time_stamp=self.time_stamp,
 			expiration_time=self.starting_time+timedelta(minutes=self.duration)
 		)
+		
 	
 	def gen_offer_codes(self, customers):
 		"""
@@ -196,6 +200,7 @@ class Offer(models.Model):
 				time_stamp=datetime.now(),
 				expiration_time=original_code.expiration_time)
 			o.save()
+			
 			forwarder.customer_friends.add(friend)
 			return o, None # for existing customer
 
@@ -222,6 +227,7 @@ class Offer(models.Model):
 				time_stamp=datetime.now(),
 				expiration_time=original_code.expiration_time)
 			o.save()
+			
 			forwarder.customer_friends.add(friend)
 			return o, rand_passwd  # for new customer
 
@@ -294,6 +300,7 @@ class Offer(models.Model):
 
 		self.num_init_sentto =sentto
 		self.is_processing = False
+		self.expired_time = self.starting_time + timedelta(minutes=self.duration)
 		self.save()
 
 	
@@ -343,6 +350,7 @@ class Offer(models.Model):
 			oc.expiration_time = datetime.now() + timedelta(minutes=self.duration)
 			#print "time added" , datetime.now() + timedelta(minutes=self.duration)
 			oc.save()
+			
 			#print "set expiration to " , pretty_datetime(oc.expiration_time)
 			offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_EXTENSION"],{
 						"code": oc.code,
@@ -412,6 +420,7 @@ class Offer(models.Model):
 		# just so they don't keep on trying to redistribute when they don't have
 		# enough points and throttle our server.
 		self.redistributable = False 
+		self.expired_time = datetime.now() + timedelta(minutes=self.duration)
 		self.save()
 
 		if enough_points: 

@@ -106,7 +106,7 @@ class Command(NoArgsCommand):
 		t = TxtTemplates()
 		for offer in expired_offers:
 			offer.is_merchant_txted=True
-			offer.expire()
+			#offer.expire()
 			offer.update_expired_codes()
 			#print "tracking:", offer.trackingcode.code
 			#print offer.offercode_set.values_list('code',flat=True)
@@ -171,7 +171,7 @@ class Command(NoArgsCommand):
 		t = TxtTemplates()
 		offercodes = OfferCode.objects.filter(code__icontains = code)
 		if offercodes.count() == 1:
-			if offercodes[0].offer.expired:
+			if not offercodes[0].offer.is_active():
 				return -1
 			else:
 				return offercodes[0]
@@ -358,7 +358,8 @@ class Command(NoArgsCommand):
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() == REOFFER:
 						if len(parsed)==1:
-							offers = su.merchant.offers_published.filter(expired=False)
+							offers = [o if o in su.merchant.offers_published.all() if o.is_active()==True]
+							#offers = su.merchant.offers_published.filter(expired=False)
 							if offers:
 								offer = offers.order_by("-time_stamp")[0]
 								resentto = offer.redistribute()
@@ -415,8 +416,9 @@ class Command(NoArgsCommand):
 						# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
 					elif parsed[0].lower() == STATUS:
 						if (len(parsed)==1):
-							 
-							offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
+				
+							offers = su.merchant.offers_published.order_by("-time_stamp")
+							#offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
 							if offers.count()>0:
 								offer=offers[0]
 								#print offer
@@ -532,7 +534,7 @@ class Command(NoArgsCommand):
                                                                 					"expiration": "expired",
                                                 						})
 
-											#customer_msg = customer_msg + self.info(offercodes[0])
+										
 										else:
 											customer_msg = customer_msg + "[%s] already expired;" % i
 									else:
