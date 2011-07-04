@@ -358,7 +358,7 @@ class Command(NoArgsCommand):
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() == REOFFER:
 						if len(parsed)==1:
-							offers = [o if o in su.merchant.offers_published.all() if o.is_active()==True]
+							offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
 							#offers = su.merchant.offers_published.filter(expired=False)
 							if offers:
 								offer = offers.order_by("-time_stamp")[0]
