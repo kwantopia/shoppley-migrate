@@ -299,6 +299,9 @@ a.shoppley-btn, input.shoppley-btn {
 div.login div#div_id_username.ctrlHolder, div.login div#div_id_password.ctrlHolder {
 	padding-bottom: 0px;
 }
+p#hint_id_remember {
+	display: none;
+}
 div#hint_id_remember {
 	display: none;
 }
