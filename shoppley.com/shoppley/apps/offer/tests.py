@@ -797,9 +797,10 @@ class SimpleTest(TestCase):
 		msg = {"from":"6170000002", "text": "#offer EXpIRED"}
 		cmd.test_handle(msg)
 		o = Offer.objects.get(merchant = m, description="EXpIRED")
-		
-		o.duration = 0
+		o.expired_time = datetime.now()
+		#o.duration = 0
 		o.save()
+		print Offer.objects.values_list("expired_time",flat=True)
 		self.assertEqual(cmd.update_expired(),1)
 		for oc in o.offercode_set.all():
 			msg = {"from": "%s" % oc.customer.phone, "text": "#info %s" % oc.code[0:6]}
