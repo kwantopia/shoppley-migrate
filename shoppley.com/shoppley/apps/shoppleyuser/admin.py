@@ -5,7 +5,7 @@ from django.contrib import admin
 
 class MerchantAdmin(admin.ModelAdmin):
 	list_display = ('business_name', 'admin', 'merchant_email', 'phone', 'address_1', 'zipcode')
-	list_filter = ('business_name', 'zipcode')
+	#list_filter = ('zipcode',)
 	search_fields = ('business_name', 'admin', 'merchant_email', 'zipcode')
 
 	def merchant_email(self, obj):
