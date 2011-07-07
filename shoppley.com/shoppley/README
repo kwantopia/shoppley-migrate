@@ -75,6 +75,7 @@ $ ./create_template_postgis-1.5.sh
 # on Mac you might have permission issues so copy the script to tmp and execute
 
 $ cp create_template_postgis-1.5.sh /tmp/
+$ chmod 777 /tmp/create_template_postgis-1.5.sh
 $ sudo su postgres
 $ /tmp/create_template_postgis-1.5.sh
 

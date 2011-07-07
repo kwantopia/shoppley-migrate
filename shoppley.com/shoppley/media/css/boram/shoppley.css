@@ -453,10 +453,39 @@ form.login .form_block input {
 	color: #80C247;
 }
 
+h3 {
+	color: #80C247;
+}
+
+.txt-commands-wrapper {
+  margin-top: 20px;
+}
 
 .txt-command {
+  font-size: 1.1em;
 	font-weight: bold;
 	color: #000;
+}
+
+.txt-param {
+  font-size: 1.1em;
+  font-style: italic;
+	color: #000;
+}
+
+.txt-command-description {
+}
+
+.txt-command-example {
+  font-family: Monospace, courier;
+}
+
+.txt-command-result {
+  color: #AAA;
+}
+
+.txt-command-item {
+  margin-bottom: 15px;
 }
 
 

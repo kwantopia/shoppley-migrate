@@ -18,12 +18,277 @@
 		<div class="span-24 last">
 			Download the TXT commands cheat sheet: <a href="{{ STATIC_URL }}images/cheatsheet/TXTCommands.pdf">here</a>
 		</div>
-		<div class="span-24 last">
-			<img width="750" src="{{ STATIC_URL }}images/cheatsheet/merchantcheat.png"/>
-		</div>
-		<div class="span-24 last">
-			<img width="750" src="{{ STATIC_URL }}images/cheatsheet/customercheat.png"/>
-		</div>
+
+		<div class="txt-commands-wrapper span-24 last">
+
+      <div class="span-12">
+        <h3>Merchant</h3>
+        
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#merchant</span> <span class="txt-param">email</span> <span class="txt-param">zipcode</span> <span class="txt-param">business_name</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Sign up for a merchant account.
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: A random password is returned that user uses to login to the web site.
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #merchant joes@bakery.com 02142 Joe’s Bakery 
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#offer</span> <span class="txt-param">offer_description</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Creates an offer. <span class="txt-param">offer_description</span> should have a headline description and can be up to 128 characters. 
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: A <span class="txt-param">tracking_number</span> that can be used with <span class="txt-command">#status</span> commands
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #offer Extra $5 off any pair of pants that are on sale
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#status</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Checks the status of the latest offer. 
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: How many people have been reached and how many redeemed.
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#status</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Checks the status of the latest offer. 
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: How many people have been reached and how many redeemed.
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #status itrwpo
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#redeem</span> <span class="txt-param">offer_code</span> <span class="txt-param">customer_number</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Redeems the customer’s offer.  You will receive points back.  <span class="txt-param">customer_number</span> is the customer’s phone number.  Customer’s phone number is used to verify that the offer belongs to the customer and to reward points to the customer.
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: Confirmation or error that the reward code is invalid 
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #redeem 728234 6172372009 
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#balance</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: The point balance on your account 
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#zipcode</span> <span class="txt-param">new_zip</span> <br>
+            <span class="txt-command">#zip</span> <span class="txt-param">new_zip</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Change the active zip code
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: Confirmation or error that the zip code is invalid 
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #zipcode 94112 (changing to San Francisco for mobile merchant)
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#help</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: List of commands and brief descriptions
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+      </div><!-- merchant span-12 -->
+
+      <div class="span-12 last">
+
+        <h3>Customers</h3>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#signup</span> <span class="txt-param">email</span> <span class="txt-param">zip_code</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Sign up new user with email address <span class="txt-param">email</span> and <span class="txt-param">zip_code</span>. 
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: A random password is returned that you can use to login to the web site. 
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #signup john@example.com 02139
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#info</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: Detailed information about the most recent offer code which details the store location and phone number. 
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#info</span> <span class="txt-param">offer_code</span> <span class="txt-param">more_offer_codes</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Offer codes are listed separated by space.
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: Detailed information about one or more offer codes which details the store location and phone number.
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #info 823145 982415
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#forward</span> <span class="txt-param">offer_code</span> <span class="txt-param">friend_num</span> <span class="txt-param">more_friend_nums</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Forwards the <span class="txt-param">offer_code</span> to one or more number of friends.  List the phone numbers separated by space.  When your friends redeem an offer, you will get points.
+          </div>
+          <div class="txt-command-result span-12 last">
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #forward 982415 6179092424 781-234-2342 9782342225
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#iwant</span> <span class="txt-param">any message, brand, product, service describing what you want</span>
+          </div>
+          <div class="txt-command-description span-12 last">
+            Submit to Shoppley what type offers you would like to receive
+          </div>
+          <div class="txt-command-result span-12 last">
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #iwant offers on cheap designer jeans
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#stop</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Stop receiving offers
+          </div>
+          <div class="txt-command-result span-12 last">
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#start</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Start receiving offers
+          </div>
+          <div class="txt-command-result span-12 last">
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#balance</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: The point balance on your account 
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#zipcode</span> <span class="txt-param">new_zip</span> <br>
+            <span class="txt-command">#zip</span> <span class="txt-param">new_zip</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+            Change the active zip code
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: Confirmation or error that the zip code is invalid 
+          </div>
+          <div class="txt-command-example span-12 last">
+            example: #zipcode 94112 (changing to San Francisco for mobile merchant)
+          </div>
+        </div>
+
+        <div class="txt-command-item span-12 last">
+          <div class="txt-command-header span-12 last">
+            <span class="txt-command">#help</span> 
+          </div>
+          <div class="txt-command-description span-12 last">
+          </div>
+          <div class="txt-command-result span-12 last">
+            return: List of commands and brief descriptions
+          </div>
+          <div class="txt-command-example span-12 last">
+          </div>
+        </div>
+
+      </div><!-- customer -->
+
+    </div><!-- all commands -->
 
   </div><!-- inner span-24 containing all body -->
 

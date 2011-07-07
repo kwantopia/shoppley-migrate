@@ -4,6 +4,8 @@
 Django
 Pinax
 
+virtualenvwrapper
+
 # Get all requirements formerly known as "external_libs" explicitly
 # hashlib
 python-dateutil==1.5
