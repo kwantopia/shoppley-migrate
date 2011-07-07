@@ -1,20 +1,18 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.contrib.gis.db.models import PointField
 
 from datetime import datetime, timedelta
 from sorl.thumbnail import ImageField
-
+from timezones.forms import PRETTY_TIMEZONE_CHOICES  
 
 # Create your models here.
 class Location(models.Model):
-	location = PointField()
-
-
-class Location(models.Model):
-	location = PointField()
-
+        location = models.PointField(null=True, blank=True, srid=32140)
+        objects = models.GeoManager()
+#        name2= models.CharField(max_length=5)
+#        name = models.CharField(max_length=3)
+#        users = models.ManyToManyField(User,related_name="user_locations")
 
 class Country(models.Model):
 	name      = models.CharField(max_length=64)
@@ -75,7 +73,8 @@ class ShoppleyUser(models.Model):
 	active 			= models.BooleanField(default=True)
 	#: verified by logging in when invited by friends
 	verified		= models.BooleanField(default=False) 
-
+	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )  
+	locations		= models.ManyToManyField(Location)
 	def is_customer(self):
 		return hasattr(self, "customer")
 
@@ -99,7 +98,7 @@ class ShoppleyUser(models.Model):
 class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)
-	banner			= ImageField(upload_to="banners/")
+	banner			= ImageField(upload_to="banners/", blank=True)
 	url				= models.URLField(null=True, blank=True)
 
 	
@@ -207,6 +206,8 @@ class ZipCodeChange(models.Model):
 
 	def __unicode__(self):
 		return "%s, user %s switched his zipcode from %s to %s" % (self.time_stamp, self.user, self.user.zipcode, self.zipcode)
+
+
 
 #capture relationship between users
 #class Relationship(models.Model):

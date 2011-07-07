@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
-from shoppleyuser.models import Customer, Merchant, ShoppleyUser
+from shoppleyuser.models import Customer, Merchant, ShoppleyUser, Location
 from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
 
@@ -44,14 +44,14 @@ class Offer(models.Model):
 	num_init_sentto		= models.IntegerField(default=0) # number of customers the offer was sent to
 	num_resent_to		= models.IntegerField(default=0) # number of customers the offer was resent to
 	is_merchant_txted	= models.BooleanField(default=False) # True if the merchant was informed the status of the offer after it's expired
-	img				= ImageField(upload_to='offers/')
+	img				= ImageField(upload_to='offers/', blank=True)
 
 	expired = models.BooleanField(default=False)
 	expired_time = models.DateTimeField(null=True, blank=True)
 	redistributable = models.BooleanField(default=True)
 	is_processing = models.BooleanField(default=False)
 	redistribute_processing = models.BooleanField(default=False)
-
+	locations = models.ManyToManyField(Location)
 	def __unicode__(self):
 		return self.title
 
