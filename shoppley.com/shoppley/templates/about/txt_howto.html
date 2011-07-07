@@ -47,7 +47,7 @@
             Creates an offer. <span class="txt-param">offer_description</span> should have a headline description and can be up to 128 characters. 
           </div>
           <div class="txt-command-result span-12 last">
-            return: A <span class="txt-param">tracking_number</span> that can be used with <span class="txt-command">#status</span> commands
+            return: A <span class="txt-param">tracking_code</span> that can be used with <span class="txt-command">#status</span> commands
           </div>
           <div class="txt-command-example span-12 last">
             example: #offer Extra $5 off any pair of pants that are on sale
@@ -68,10 +68,10 @@
 
         <div class="txt-command-item span-12 last">
           <div class="txt-command-header span-12 last">
-            <span class="txt-command">#status</span> 
+            <span class="txt-command">#status</span> <span class="txt-param">tracking_code</span>
           </div>
           <div class="txt-command-description span-12 last">
-            Checks the status of the latest offer. 
+            Checks the status of the offer with <span class="txt-param">tracking_code</span>. 
           </div>
           <div class="txt-command-result span-12 last">
             return: How many people have been reached and how many redeemed.
