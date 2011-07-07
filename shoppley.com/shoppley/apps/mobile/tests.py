@@ -113,7 +113,10 @@ class SimpleTest(TestCase):
 	
 	def iphone_review(self):
 
-		zipcode1 = ZipCode.objects.get(code="96727")
+		us, created = Country.objects.get_or_create(name="United States", code="US")
+		region, created = Region.objects.get_or_create(name="Hawaii", code="HI", country=us)
+		city, created = City.objects.get_or_create(name="Huna", region=region)
+		zipcode1, created = ZipCode.objects.get_or_create(code="96727", city=city)
 
 		# create users
 		u, created = User.objects.get_or_create(username="user1@customer.com")
