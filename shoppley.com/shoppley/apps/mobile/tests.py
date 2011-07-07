@@ -84,7 +84,7 @@ class SimpleTest(TestCase):
 		#617-453-8665 Meng's googlevoice number
 		num = parse_phone_number("6174538665")
 		if not Merchant.objects.filter(user=u).exists():
-			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
+			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Jane's Shoe Store", admin="Jake Sullivan", url="http://www.shoppley.com")
 			m.active = True
 			m.verified = True
 			m.save()
@@ -146,9 +146,9 @@ class SimpleTest(TestCase):
 		shop_user.merchant_likes.add(shop_merch)
 
 		offers = ["$5 off shoes brands, Nike, Reebok",
-				"15% off big steak and 10% off small steak",
-								"Save $15 on your purchase of suit",
-								"$125 for tonight only at Marriott"]
+				"10% off Abercrombie flip flops",
+								"Save $15 on your purchase of dress shoes",
+								"Buy dress shoes today & get free socks"]
 
 		m = Merchant.objects.get(user__email="user1@merchant.com")	
 		for o in offers:
@@ -157,7 +157,6 @@ class SimpleTest(TestCase):
 			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
 			offer.distribute()
-
 
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
