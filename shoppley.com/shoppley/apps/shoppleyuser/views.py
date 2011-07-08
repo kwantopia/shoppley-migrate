@@ -339,7 +339,10 @@ def merchant_signup(request, form_class=MerchantSignupForm,
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
 				signup_msg = unicode(_("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!"))
-				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+				try:
+					sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+				except ValidationError:
+					pass
 
 				return HttpResponseRedirect(success_url)
 	else:
@@ -378,8 +381,10 @@ def customer_signup(request, form_class=CustomerSignupForm,
 				from shoppleyuser.utils import parse_phone_number,sms_notify
 				signup_msg =unicode(_("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!"))
 				print signup_msg
-				sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
-
+				try :
+					sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
+				except ValidationError:
+					pass
 
 				return HttpResponseRedirect(success_url)
 	else:

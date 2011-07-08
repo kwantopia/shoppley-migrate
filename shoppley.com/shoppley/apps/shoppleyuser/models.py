@@ -106,8 +106,10 @@ class ShoppleyUser(models.Model):
 			address =self.get_full_address()
 		from shoppleyuser.utils import get_lat_long
 		latlon = get_lat_long(address)
-		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
-		self.save()
+		print address, latlon
+		if latlon!=-1:
+			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
+			self.save()
 
 	def set_location_from_latlon(self,lat , lon):
 		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat,lon))))
