@@ -319,6 +319,8 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
 						su.merchant.zipcode=zipcode
 						su.merchant.save()
+						su.merchant.get_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
+
 						number = Customer.objects.filter(zipcode__code=code).count()
 						receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
@@ -592,6 +594,7 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
 						su.customer.zipcode=zipcode
 						su.customer.save()
+						su.customer.get_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
 						number = Merchant.objects.filter(zipcode__code=code).count()
 						receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE"],{"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
@@ -695,8 +698,9 @@ class Command(NoArgsCommand):
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 							#print "creating new merchant..."
-							new_merchant = Merchant(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
-										business_name = business, verified=True).save()
+							new_merchant = Merchant.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
+										business_name = business, verified=True)
+							new_merchant.set_location_from_address()
 							#print "merchant created!"
 
 							number = Customer.objects.filter(zipcode__code= parsed_zip).count()
@@ -734,7 +738,8 @@ class Command(NoArgsCommand):
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 									
-							new_customer = Customer(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True).save()
+							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True)
+							new_customer.set_location_from_address()
 
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
