@@ -1,6 +1,6 @@
 from shoppleyuser.models import City, Region, Category, ShoppleyUser, Country
 from shoppleyuser.models import Merchant, Customer, MerchantOfTheDay, ZipCode
-
+from shoppleyuser.models import Location
 from django.contrib import admin
 
 class MerchantAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class MerchantAdmin(admin.ModelAdmin):
 	def merchant_email(self, obj):
 		return obj.user.email 
 	merchant_email.short_description = 'E-mail'
-
+admin.site.register(Location)
 admin.site.register(Country)
 admin.site.register(City)
 admin.site.register(Region)

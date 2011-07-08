@@ -119,13 +119,14 @@ class MerchantSignupForm(forms.Form):
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		new_merchant = Merchant(user=new_user,
+		new_merchant = Merchant.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
 						phone=phone,
 						zipcode=zipcode_obj,
 						business_name=self.cleaned_data["business_name"]
-					).save()
+					)
+		new_merchant.set_location_from_address()
 		return username, password # required for authenticate()
 
 
@@ -213,6 +214,7 @@ class MerchantProfileEditForm(forms.Form):
 		m.zipcode= zipcode_obj
 		print m.address_1
 		m.save()
+		m.set_location_from_address()
 
 class CustomerProfileEditForm(forms.Form):
 	LIMIT_CHOICES = (
@@ -299,7 +301,7 @@ class CustomerProfileEditForm(forms.Form):
 		c.daily_limit = self.cleaned_data["daily_limit"]
 		c.zipcode = zipcode_obj
 		c.save()
-
+		c.set_location_from_address()
 
 class PasswordChangeForm(forms.Form):
 	old_password		= forms.CharField(label=_("Old Password"), widget=forms.PasswordInput(render_value=False))
@@ -432,14 +434,14 @@ class CustomerSignupForm(forms.Form):
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		new_customer = Customer(user=new_user,
+		new_customer = Customer.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
 						phone=phone,
 						zipcode=zipcode_obj,
 						verified=True,
-					).save()
-				
+					)
+		new_customer.set_location_from_address()
 		return username, password # required for authenticate()
 
 ##############

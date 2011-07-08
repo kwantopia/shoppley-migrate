@@ -5,10 +5,12 @@ from django.conf import settings
 from datetime import datetime, timedelta
 from sorl.thumbnail import ImageField
 from timezones.forms import PRETTY_TIMEZONE_CHOICES  
+from django.contrib.gis.geos import fromstr
+
 
 # Create your models here.
 class Location(models.Model):
-        location = models.PointField(null=True, blank=True, srid=32140)
+	location = models.PointField( )
         objects = models.GeoManager()
 #        name2= models.CharField(max_length=5)
 #        name = models.CharField(max_length=3)
@@ -74,7 +76,8 @@ class ShoppleyUser(models.Model):
 	#: verified by logging in when invited by friends
 	verified		= models.BooleanField(default=False) 
 	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )  
-	locations		= models.ManyToManyField(Location)
+	location		= models.ForeignKey(Location, null=True, blank=True)
+	
 	def is_customer(self):
 		return hasattr(self, "customer")
 
@@ -94,7 +97,24 @@ class ShoppleyUser(models.Model):
 				return self.user.username
 		else:
 			return "%s (%s)" % (self.merchant.business_name, self.user.username)
-	
+
+	def get_full_address(self):
+		return self.address_1 + " "+ self.zipcode.city.name + " " + self.zipcode.city.region.name + " " + self.zipcode.code
+
+	def set_location_from_address(self, address = None):
+		if not address:
+			address =self.get_full_address()
+		from shoppleyuser.utils import get_lat_long
+		latlon = get_lat_long(address)
+		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
+		self.save()
+
+	def set_location_from_latlon(self,lat , lon):
+		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat,lon))))
+		self.save()
+
+
+
 class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)
@@ -158,6 +178,14 @@ class Customer(ShoppleyUser):
 
 	def is_taking_offers(self):
 		return self.offer_count < self.daily_limit
+
+	def get_offers_within_mile(self,x):
+		from offer.models import Offer
+		from geopy.distance import distance as geopy_distance
+		for i in Offer.objects.all():
+			print geopy_distance(self.location.location,i.merchant.location.location).mi
+
+		return [i for i in Offer.objects.all() if geopy_distance(self.location.location,i.merchant.location.location).mi<=x]
 
 	def print_daily_limit(self):
 		if self.daily_limit == 100000:

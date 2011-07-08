@@ -6,10 +6,22 @@ from django.conf import settings
 
 import os, csv
 from googlevoice import Voice
+import sys
+import urllib
 
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
-
+def get_lat_long(location):
+	key = settings.GOOGLE_API_KEY
+	output= "csv"
+	location = urllib.quote_plus(location)
+	request = "http://maps.google.com/maps/geo?q=%s&output=%s&key=%s" % (location, output, key)
+	data = urllib.urlopen(request).read()
+	dlist = data.split(',')
+	if dlist[0]=='200':
+		return [dlist[2],dlist[3]]
+	else:
+		return -1
 
 def pretty_date(time=False, future=True):
 	"""
