@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
-from shoppleyuser.models import Customer, Merchant, ShoppleyUser, Location
+from shoppleyuser.models import Customer, Merchant, ShoppleyUser#, Location
 from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
 
@@ -51,7 +51,7 @@ class Offer(models.Model):
 	redistributable = models.BooleanField(default=True)
 	is_processing = models.BooleanField(default=False)
 	redistribute_processing = models.BooleanField(default=False)
-	locations = models.ManyToManyField(Location)
+	#locations = models.ManyToManyField(Location)
 	def __unicode__(self):
 		return self.title
 
@@ -92,6 +92,14 @@ class Offer(models.Model):
 
 	def num_received(self):
 		return self.offercode_set.count()
+
+
+	def get_customers_within_miles(self,x):
+		from geopy.distance import distance as geopy_distance
+		print self.merchant.address_1 + " " + self.merchant.zipcode.code, self.merchant.location.location.x, self.merchant.location.location.y
+		for i in Customer.objects.all():
+			print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.merchant.location.location).mi
+		return [ i for i in Customer.objects.all() if geopy_distance(i.location.location,self.merchant.location.location).mi<=x]
 
 	def offer_detail(self, past=False):
 		"""
@@ -218,7 +226,7 @@ class Offer(models.Model):
 			u.save()
 			
 			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone, balance=1000)
-				
+			friend.set_location_from_address()	
 			# send out a new offercode
 			o=self.offercode_set.create(
 				customer = friend,
