@@ -106,7 +106,7 @@ class ShoppleyUser(models.Model):
 			address =self.get_full_address()
 		from shoppleyuser.utils import get_lat_long
 		latlon = get_lat_long(address)
-		print address, latlon
+		#print address, latlon
 		if latlon!=-1:
 			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
 			self.save()
@@ -140,6 +140,24 @@ class Merchant(ShoppleyUser):
 		else:
 			return settings.DEFAULT_MERCHANT_BANNER_URL
 
+	# return a list of pk's of customers within x miles from the merchant's lat/lon
+	def get_customers_within_miles(self,x=5):
+		from geopy.distance import distance as geopy_distance
+		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
+		#for i in Customer.objects.all():
+			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
+		return [ i.pk for i in Customer.objects.all() if geopy_distance(i.location.location,self.location.location).mi<=x]
+
+	# faster than get_customers_within_miles().count() because dont have to create a new list
+	def count_customers_within_miles(self, x=5):
+		from geopy.distance import distance as geopy_distance
+
+		count = 0
+		for i in  Customer.objects.all():
+			if geopy_distance(i.location.location,self.location.location).mi<=x:
+				count = count + 1
+		return count
+			
 class Customer(ShoppleyUser):
 	FREQUENCY_CHOICES = (
 			( 0, 'Every Hour'),
@@ -181,14 +199,39 @@ class Customer(ShoppleyUser):
 	def is_taking_offers(self):
 		return self.offer_count < self.daily_limit
 
-	def get_offers_within_mile(self,x):
+	def get_offers_within_miles(self,x):
 		from offer.models import Offer
 		from geopy.distance import distance as geopy_distance
-		for i in Offer.objects.all():
-			print geopy_distance(self.location.location,i.merchant.location.location).mi
+		#for i in Offer.objects.all():
+			#print geopy_distance(self.location.location,i.merchant.location.location).mi
 
 		return [i for i in Offer.objects.all() if geopy_distance(self.location.location,i.merchant.location.location).mi<=x]
 
+	def count_offers_within_miles (self, x=5):
+		from offer.models import Offer
+		from geopy.distance import distance as geopy_distance
+		count = 0
+		for i in Offer.objects.all():
+			if geopy_distance(self.location.location,i.merchant.location.location).mi<=x:
+				count = count + 1
+		return count 
+
+        # return a list of pk's of merchants within x miles from the customer's lat/lon
+	def get_merchants_within_miles(self,x=5):
+		from geopy.distance import distance as geopy_distance
+		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
+		#for i in Merchant.objects.all():
+			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
+		return [ i.pk for i in Merchant.objects.all() if geopy_distance(i.location.location,self.location.location).mi<=x]
+
+
+	def count_merchants_within_miles(self, x=5):
+		from geopy.distance import distance as geopy_distance
+		count = 0
+		for i in Merchant.objects.all() :
+			if geopy_distance(i.location.location,self.location.location).mi<=x:
+				count = count + 1
+		return count
 	def print_daily_limit(self):
 		if self.daily_limit == 100000:
 			return "Unlimited"
@@ -205,6 +248,7 @@ class Customer(ShoppleyUser):
 	def daily_reset(self):
 		self.offer_count=0
 		self.save()
+
 
 	def save(self, *args, **kwargs):
 		if not self.pk:

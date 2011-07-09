@@ -92,14 +92,7 @@ class Offer(models.Model):
 
 	def num_received(self):
 		return self.offercode_set.count()
-
-
-	def get_customers_within_miles(self,x):
-		from geopy.distance import distance as geopy_distance
-		print self.merchant.address_1 + " " + self.merchant.zipcode.code, self.merchant.location.location.x, self.merchant.location.location.y
-		for i in Customer.objects.all():
-			print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.merchant.location.location).mi
-		return [ i for i in Customer.objects.all() if geopy_distance(i.location.location,self.merchant.location.location).mi<=x]
+	
 
 	def offer_detail(self, past=False):
 		"""
@@ -226,7 +219,8 @@ class Offer(models.Model):
 			u.save()
 			
 			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone, balance=1000)
-			friend.set_location_from_address()	
+			if created:
+				friend.set_location_from_address()	
 			# send out a new offercode
 			o=self.offercode_set.create(
 				customer = friend,
@@ -239,7 +233,9 @@ class Offer(models.Model):
 			forwarder.customer_friends.add(friend)
 			return o, rand_passwd  # for new customer
 
-	def distribute(self):
+	
+	# distribute within x-mile radius from the merchant
+	def distribute(self, radius = 5):
 		"""
 			identify all customers that this offer should go to
 			Generate messages, and send messages to them
@@ -256,9 +252,11 @@ class Offer(models.Model):
 			- report back the number of customers being reached
 			
 		"""
+		
 		self.is_processing = True
 		self.save()
 		enough_points = True 
+		
 		t = TxtTemplates()
 
 		#print "Sending out offers"
@@ -268,10 +266,14 @@ class Offer(models.Model):
 		existing_num = int(round(0.7*max_offers))
 
 		merchant = self.merchant
-		fans = merchant.fans.exclude(active=False).exclude(verified=False).order_by('?').values_list('pk', flat=True)
+		
+		nearby_customers = self.merchant.get_customers_within_miles(radius)
+		fans = merchant.fans.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
 		# TODO: geographically filter
-		nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
+		
+		nonfans = Customer.objects.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).values_list('pk',flat=True)
+		#nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
 		#print "Num fans:",fans.count()
 		#print "Num nonfans:",nonfans.count()
@@ -321,7 +323,7 @@ class Offer(models.Model):
 			# not enough points to send to
 			return -2
 			
-	def redistribute(self):
+	def redistribute(self,radius=5):
 		self.redistribute_processing=True
 		self.save()
 
@@ -372,12 +374,13 @@ class Offer(models.Model):
 		# customers who have received the offers
 		old_pks = old_offercodes.values_list('customer',flat=True)
 		#print "old_pks", old_pks
-		fans = merchant.fans.exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
+		nearby_customers = self.merchant.get_customers_within_miles(radius)
+		fans = merchant.fans.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
+		#fans = merchant.fans.exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
-		#old_pks = merchant.offer_set.customer
 
 		# TODO: geographically filter
-		nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).exclude(pk__in=old_pks).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
+		nonfans = Customer.objects.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).exclude(pk__in=old_pks).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
 		#print "Num fans:",fans.count()
 		#print "Num nonfans:",nonfans.count()

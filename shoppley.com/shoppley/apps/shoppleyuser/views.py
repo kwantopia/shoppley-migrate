@@ -46,7 +46,7 @@ def home(request, template_name="front-page.html"):
 						'You do not have an email yet. Please go to <a href="/shoppleyuser/customer/profile-settings/">Account</a> and add one for email notifications')
 				zipcode = user.shoppleyuser.customer.zipcode
 
-				number = Merchant.objects.filter(zipcode__id=zipcode.id).count()
+				number = user.shoppleyuser.customer.count_merchants_within_miles()
 
 				messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> stores in your area have signed up with Shoppley. Tell your favorite stores to use Shoppley to send you any last minute offers for free.' % number)
 
@@ -59,7 +59,7 @@ def home(request, template_name="front-page.html"):
                                                 'We do not have your business address. Please go to <a href="/shoppleyuser/merchant/profile-settings/">Account</a> and add one.')
 	
 				zipcode = user.shoppleyuser.merchant.zipcode
-				number = Customer.objects.filter(zipcode__id=zipcode.id).count()
+				number = user.shoppleyuser.merchant.count_customers_within_miles()
 
 				messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> people in your area have signed up to receive offer. Tell your customers to sign up for Shoppley to receive last minute offers for free.' % number)
 

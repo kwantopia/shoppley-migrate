@@ -319,9 +319,9 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
 						su.merchant.zipcode=zipcode
 						su.merchant.save()
-						su.merchant.get_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
+						su.merchant.set_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
 
-						number = Customer.objects.filter(zipcode__code=code).count()
+						number = su.merchant.count_customers_within_miles()
 						receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
 					# ------------------------OFFER : "offer<SPACE>description" ---------------
@@ -594,8 +594,8 @@ class Command(NoArgsCommand):
 						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
 						su.customer.zipcode=zipcode
 						su.customer.save()
-						su.customer.get_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
-						number = Merchant.objects.filter(zipcode__code=code).count()
+						su.customer.set_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
+						number = su.customer.count_merchants_within_miles()
 						receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE"],{"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
 					#-------------------- FORWARD: "#forward<SPACE>offercode<SPACE>number+"---------------------
@@ -647,7 +647,8 @@ class Command(NoArgsCommand):
 									if random_pw:
 										new_customer = friend_code.customer
 										#print "created a customer for %s" % friend_num
-										account_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_NON_CUSTOMER_LOGIN"],{"name":new_customer.user.username,"password":random_pw,})
+										number = new_customer.count_merchants_within_miles()
+										account_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_NON_CUSTOMER_LOGIN"],{"name":new_customer.user.username,"password":random_pw,"number": number})
 										self.notify(friend_num,account_msg)
 
 								forwarder_msg= t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_SUCCESS"], {"code": ori_code.code, "numbers": ', '.join([str(i) for i in valid_receivers])}) 
@@ -703,7 +704,7 @@ class Command(NoArgsCommand):
 							new_merchant.set_location_from_address()
 							#print "merchant created!"
 
-							number = Customer.objects.filter(zipcode__code= parsed_zip).count()
+							number = new_merchant.count_customers_within_miles()
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_SUCCESS"], {
 
 								"email": email,
@@ -726,13 +727,8 @@ class Command(NoArgsCommand):
 							zipcode= self.check_zipcode(parsed[2],phone)
 							phone =self.check_phone(phone)
 							randompassword = gen_random_pw()
-							number = Merchant.objects.filter(zipcode__code=parsed_zip).count()
-							receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
-								"email": email,
-								"number": number,
-								"password": randompassword,
-								})
-							self.notify(phone,receipt_msg)
+
+
 							new_user = User.objects.create_user(parsed_email,parsed_email,randompassword)
 							EmailAddress.objects.add_email(new_user,parsed_email)
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
@@ -740,6 +736,13 @@ class Command(NoArgsCommand):
 									
 							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True)
 							new_customer.set_location_from_address()
+							number = new_customer.count_merchants_within_miles()
+                                                        receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
+                                                                "email": email,
+                                                                "number": number,
+                                                                "password": randompassword,
+                                                                })
+                                                        self.notify(phone,receipt_msg)
 
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------

@@ -54,7 +54,24 @@ class SimpleTest(TestCase):
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
+			if created:
+				c.set_location_from_address()
+	def create_geo_customers(self):
+		customers=[["a1@mit.edu", "94002", "12345", "1000000000"],
+#				["a2@mit.edu", "02135", "12345", "1000000001"],
+#				["a3@mit.edu", "02142", "12345", "1000000002"],
+				["a4@mit.edu", "10026", "12345", "1000000003"],
+				["a5@mit.edu", "01101", "12345", "1000000004"],]
 
+		m = Command()
+		m.DEBUG = True
+		for c in customers:
+			msg = {"from": "%s" % c[3], "text": "#signup %s %s" % (c[0], c[1]) }
+			#m = Command()
+			m.test_handle(msg)
+			u = Customer.objects.get(phone = "%s" % c[3])
+			print u.location.location.x , u.location.location.y
+			
 	def create_more_customers(self): #for resent
 		customers=[["c5@mit.edu","12345", "0000000005"],
 								["c6@mit.edu","12345", "0000000006"],
@@ -67,7 +84,8 @@ class SimpleTest(TestCase):
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
-
+			if created:
+				c.set_location_from_address()
 	def create_offers(self):
 
 		offer_reader = [["617-000-0001", "Kwan's Pizza1","$5 off everything in our menu","kool1@mit.edu",5,10,10,"00001",],
@@ -103,8 +121,39 @@ class SimpleTest(TestCase):
 																										customer=c, 
 																										time_stamp=datetime.now(), 
 																										expiration_time=datetime.now() + timedelta(minutes=o.duration))
-		
 
+	def create_geo_merchants(self):
+		zip_reader = [
+                                        ["US", "02135", "Brighton", "Massachusetts", "MA", "kool4@mit.edu", "Kwan's Pizza4", "313 Allston Street", "", "-42.23432", "42.23432", "617-000-0004"],
+                                        ["US", "94002", "Belmont", "California", "CA", "kool5@mit.edu", "Kwan's Pizza5", "1000 Continentals Way", "", "-42.23432", "42.23432", "617-000-0005"],
+                                        ["US", "10026", "Manhattan", "New York", "NY", "kool6@mit.edu", "Kwan's Pizza6", "", "", "-42.23432", "42.23432", "617-000-0006"],
+                                        ["US", "01101", "Springfield", "Massachusetts", "MA", "kool7@mit.edu", "Kwan's Pizza7", "", "", "-42.23432", "42.23432", "617-000-0007"],]
+
+
+
+		for row in zip_reader:
+			country_obj, created = Country.objects.get_or_create(name="United States", code=row[0])
+			phone = parse_phone_number(row[11])
+			zip_code = row[1]
+			city = row[2]
+			region = row[3]
+			region_code = row[4]
+			latitude = row[9]
+			longitude = row[10]
+			region_obj, created = Region.objects.get_or_create(name=region,
+                			code=region_code, country=country_obj)
+			city_obj, created = City.objects.get_or_create(name=city, region=region_obj)
+			zip_obj, created = ZipCode.objects.get_or_create(code=zip_code,
+                                        city=city_obj, latitude=latitude, longitude=longitude)
+		for row in zip_reader:
+			u, created = User.objects.get_or_create(username=row[5], email=row[5])
+			u.set_password("hello")
+			u.is_active=True
+			u.save()
+
+			zipcode = ZipCode.objects.filter(code="%s" % row[1])[0]
+			m, created = Merchant.objects.get_or_create(user=u, address_1="%s" % row[7],zipcode=zipcode, phone=phone, balance=100, business_name=row[6], admin="Kwan")
+			m.set_location_from_address()
 	def create_merchants(self):
 
 		zip_reader = [
@@ -134,7 +183,7 @@ class SimpleTest(TestCase):
 
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			m, created = Merchant.objects.get_or_create(user=u, address_1="15 Pearl St.",zipcode=cambridge, phone=phone, balance=100, business_name=row[6], admin="Kwan")
-						
+			m.set_location_from_address()
 
 	def setUp(self):
 		# create some customers and merchants
@@ -176,6 +225,7 @@ class SimpleTest(TestCase):
 
 	
 	def test_redistribute(self):
+		#self.create_geo_customers()
 		cmd = Command()
 		cmd.DEBUG = True
 		settings.DEBUG=True
@@ -379,11 +429,20 @@ class SimpleTest(TestCase):
 		offers3 = OfferCode.objects.filter(offer=offer_id3).count()
 		self.failIfEqual(offers3, 0)		
 		
+	def test_geo_integration(self):
+		cmd = Command()
+		cmd.DEBUG = True
+                settings.DEBUG=True
+		self.create_geo_merchants()
+		self.create_geo_customers()
+
 	def test_txt_messages(self):
 		cmd = Command()
 		cmd.DEBUG = True
 		settings.DEBUG=True
 		self.failIfEqual(cmd.DEBUG,False)
+		self.create_geo_merchants()
+		self.create_geo_customers()
 		msg1= {"from":"8043329436", "text":"#signup smengl@mit.edu 02139"}
 		pattern = "#"+Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
 		eles=pattern.parseString(msg1["text"])
@@ -780,7 +839,7 @@ class SimpleTest(TestCase):
 		cmd.test_handle(msg14)
 		
 		offer = Offer.objects.get(description="All you can eat for $10")
-		self.assertEqual(Customer.objects.filter(verified=True).count()-2, offer.num_init_sentto)
+		self.assertEqual(Customer.objects.filter(verified=True).count()-5, offer.num_init_sentto)
 		code = offer.offercode_set.filter(customer = customer1)
 		self.assertEqual(code.count(),0)
 		code = offer.offercode_set.filter(customer = customer2)
