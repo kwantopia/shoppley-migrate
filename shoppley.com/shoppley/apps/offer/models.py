@@ -114,7 +114,7 @@ class Offer(models.Model):
 		data["duration"] = self.duration
 		
 		expire_time = self.starting_time + timedelta(minutes=self.duration)
-		data["expires"] = epoch = int(time.mktime(expire_time.timetuple())) #pretty_date(expire_time-datetime.now())
+		data["expires"] = int(time.mktime(expire_time.timetuple())) #pretty_date(expire_time-datetime.now())
 
 		# currently received does not account for forwarded code
 		#data["total_received"] = self.num_received()
@@ -505,20 +505,21 @@ class OfferCode(models.Model):
 			Used to report to customer mobile phone
 		"""
 		offer_detail = {"offer_code_id": self.id,
-							"offer_id": self.offer.id,
-							"code": self.code,
-							"name": self.offer.title,
-							"merchant_name": self.offer.merchant.business_name,
-							"description": self.offer.description,
-							"expires": pretty_date(self.expiration_time-datetime.now()),
-							"phone": self.offer.merchant.phone,
-							"address1": self.offer.merchant.address_1,
-							"citystatezip": self.offer.merchant.zipcode.citystate(),
-							"lat": 42.365005, 
-							"lon": -71.103329, 
-							"img": self.offer.get_image(),
-							"banner": self.offer.merchant.get_banner()
-						}
+				"offer_id": self.offer.id,
+				"code": self.code,
+				"name": self.offer.title,
+				"merchant_name": self.offer.merchant.business_name,
+				"description": self.offer.description,
+				"expires": pretty_date(self.expiration_time-datetime.now()),
+				"expires_time": int(time.mktime(self.expiration_time.timetuple())),
+				"phone": self.offer.merchant.phone,
+				"address1": self.offer.merchant.address_1,
+				"citystatezip": self.offer.merchant.zipcode.citystate(),
+				"lat": 42.365005, 
+				"lon": -71.103329, 
+				"img": self.offer.get_image(),
+				"banner": self.offer.merchant.get_banner()
+				}
 		if self.offer.percentage:
 			offer_detail["percentage"] = self.offer.percentage
 		elif self.offer.dollar_off:
@@ -530,25 +531,26 @@ class OfferCode(models.Model):
 
 	def offer_redeemed(self):
 		"""
-			Used to report to customer mobile phone
+/m/customer/offers/current/			Used to report to customer mobile phone
 		"""
 		offer_detail = {"offer_code_id": self.id,
-							"offer_id": self.offer.id,
-							"name": self.offer.title,
-							"merchant_name": self.offer.merchant.business_name,
-							"description": self.offer.description,
-							"redeemed": self.redeem_time.strftime("%m-%d-%y %H:%M"),
-							"txn_amount": "%.2f"%self.txn_amount,
-							"feedback": self.feedback,
-							"rating": self.rating,
-							"phone": self.offer.merchant.phone,
-							"address1": self.offer.merchant.address_1,
-							"citystatezip": self.offer.merchant.zipcode.citystate(),
-							"lat": 42.365005, 
-							"lon": -71.103329, 
-							"img": self.offer.get_image(),
-							"banner": self.offer.merchant.get_banner()
-						}
+				"offer_id": self.offer.id,
+				"name": self.offer.title,
+				"merchant_name": self.offer.merchant.business_name,
+				"description": self.offer.description,
+				"redeemed": self.redeem_time.strftime("%m-%d-%y %H:%M"),
+				"redeemed_time": int(time.mktime(self.redeem_time.timetuple())),
+				"txn_amount": "%.2f"%self.txn_amount,
+				"feedback": self.feedback,
+				"rating": self.rating,
+				"phone": self.offer.merchant.phone,
+				"address1": self.offer.merchant.address_1,
+				"citystatezip": self.offer.merchant.zipcode.citystate(),
+				"lat": 42.365005, 
+				"lon": -71.103329, 
+				"img": self.offer.get_image(),
+				"banner": self.offer.merchant.get_banner()
+				}
 		if self.offer.percentage:
 			offer_detail["percentage"] = self.offer.percentage
 		elif self.offer.dollar_off:
