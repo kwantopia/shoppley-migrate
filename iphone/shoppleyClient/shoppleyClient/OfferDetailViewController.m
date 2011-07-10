@@ -8,6 +8,7 @@
 
 #import "OfferDetailViewController.h"
 
+#import "SLAdditions.h"
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 #import "SLTableViewDataSource.h"
@@ -68,7 +69,7 @@
     
     if (_isCurrentOffer) {
         NSMutableArray* redeemCode = [[[NSMutableArray alloc] init] autorelease];
-        [redeemCode addObject:[SLRightValueTableItem itemWithText:@"Your personal redeem code" value:_offer.code]];
+        [redeemCode addObject:[SLRightValueTableItem itemWithText:@"Your personal redemption code" value:_offer.code]];
         [items addObject:redeemCode];
         [sections addObject:@""];
         
@@ -169,9 +170,9 @@
         redLabel.font = [UIFont systemFontOfSize:14];
         NSString* redLabelText = @"";
         if (isCurrentOffer) {
-            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>expires: %@</b></span>", ((SLCurrentOffer*)offer).expires];
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Expires: %@</b></span>", [((SLCurrentOffer*)offer).expires formatFullDateTime]];
         } else {
-            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Redeemed on: %@</b></span>", ((SLRedeemedOffer*)offer).redeemedOn];
+            redLabelText = [NSString stringWithFormat:@"<span class=\"redText\"><b>Redeemed on: %@</b></span>", [((SLRedeemedOffer*)offer).redeemedOn formatFullDateTime]];
         }
         redLabel.text = [TTStyledText textFromXHTML:redLabelText lineBreaks:YES URLs:YES];
         redLabel.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);

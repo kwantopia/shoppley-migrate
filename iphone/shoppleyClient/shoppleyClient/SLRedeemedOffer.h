@@ -14,7 +14,7 @@
 }
 
 @property (nonatomic, retain) NSNumber* rating;
-@property (nonatomic, retain) NSString* redeemedOn;
+@property (nonatomic, retain) NSDate* redeemedOn;
 @property (nonatomic, retain) NSNumber* txnAmount;
 
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data;

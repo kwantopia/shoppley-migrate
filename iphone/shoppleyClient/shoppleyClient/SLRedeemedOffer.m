@@ -34,7 +34,7 @@
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
     self.rating = [data objectForKey:@"rating"];
-    self.redeemedOn = [data objectForKey:@"redeemed"];
+    self.redeemedOn = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"redeemed_time"] intValue]];
     self.txnAmount = [data objectForKey:@"txn_amount"];
 }
 

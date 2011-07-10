@@ -12,6 +12,7 @@
 #import <Three20Style/UIFontAdditions.h>
 #import <Three20UI/UIViewAdditions.h>
 
+#import "SLAdditions.h"
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
@@ -43,9 +44,8 @@
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
         }
-        if (offer.expires.length) {
-            self.timestampLabel.text = offer.expires;
-            //self.timestampLabel.text = [item.timestamp formatShortTime];
+        if (offer.expires) {
+            self.timestampLabel.text = [offer.expires formatFutureRelativeTime];
         }
         if (offer.img) {
             self.imageView2.urlPath = offer.img;
@@ -95,9 +95,8 @@
         if (offer.description.length) {
             self.detailTextLabel.text = offer.description;
         }
-        if (offer.redeemedOn.length) {
-            self.timestampLabel.text = offer.redeemedOn;
-            //self.timestampLabel.text = [item.timestamp formatShortTime];
+        if (offer.redeemedOn) {
+            self.timestampLabel.text = [offer.redeemedOn formatShortDate];
         }
         if (offer.img) {
             self.imageView2.urlPath = offer.img;

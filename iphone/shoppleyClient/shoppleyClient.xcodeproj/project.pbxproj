@@ -18,6 +18,7 @@
 		320F2C48872C2E2C4DF86205 /* libThree20UI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 320F2C48872C2E2C4DF86204 /* libThree20UI.a */; };
 		D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */; };
 		D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D522C99613AF0F710047F385 /* OfferRateViewController.m */; };
+		D52EC4C313C93D9A006A7EEE /* SLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D52EC4C213C93D9A006A7EEE /* SLAdditions.m */; };
 		D549299013B2DC790089E34A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D549298E13B2DC790089E34A /* Default.png */; };
 		D549299113B2DC790089E34A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D549298F13B2DC790089E34A /* Icon.png */; };
 		D549299413B2DDE10089E34A /* star15.png in Resources */ = {isa = PBXBuildFile; fileRef = D549299213B2DDE10089E34A /* star15.png */; };
@@ -266,6 +267,8 @@
 		D522C99313AEF6810047F385 /* OfferFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferFeedbackViewController.m; sourceTree = "<group>"; };
 		D522C99513AF0F710047F385 /* OfferRateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferRateViewController.h; sourceTree = "<group>"; };
 		D522C99613AF0F710047F385 /* OfferRateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferRateViewController.m; sourceTree = "<group>"; };
+		D52EC4C113C93D9A006A7EEE /* SLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLAdditions.h; sourceTree = "<group>"; };
+		D52EC4C213C93D9A006A7EEE /* SLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLAdditions.m; sourceTree = "<group>"; };
 		D549298E13B2DC790089E34A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
 		D549298F13B2DC790089E34A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = images/Icon.png; sourceTree = "<group>"; };
 		D549299213B2DDE10089E34A /* star15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star15.png; path = images/star15.png; sourceTree = "<group>"; };
@@ -589,6 +592,8 @@
 				D5E72F2713AB0FCA00415F18 /* SLTableItemCell.m */,
 				D5D7821F13ADABB100493478 /* SLStyleSheet.h */,
 				D5D7822013ADABB100493478 /* SLStyleSheet.m */,
+				D52EC4C113C93D9A006A7EEE /* SLAdditions.h */,
+				D52EC4C213C93D9A006A7EEE /* SLAdditions.m */,
 				D5544A8713AE6105004CABBE /* SLMapViewController.h */,
 				D5544A8813AE6105004CABBE /* SLMapViewController.m */,
 			);
@@ -944,6 +949,7 @@
 				D522C99413AEF6820047F385 /* OfferFeedbackViewController.m in Sources */,
 				D522C99713AF0F720047F385 /* OfferRateViewController.m in Sources */,
 				D59431F813B031ED0010EC23 /* OfferForwardViewController.m in Sources */,
+				D52EC4C313C93D9A006A7EEE /* SLAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

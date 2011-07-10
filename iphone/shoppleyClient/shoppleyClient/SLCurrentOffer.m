@@ -31,7 +31,7 @@
 
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
-    self.expires = [data objectForKey:@"expires"];
+    self.expires = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"expires_time"] intValue]];
 }
 
 #pragma mark -
