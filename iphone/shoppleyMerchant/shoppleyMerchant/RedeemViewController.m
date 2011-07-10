@@ -39,7 +39,7 @@
     self.offerCodeField.delegate = self;
     self.offerCodeField.placeholder = @"Offer Code";
     self.offerCodeField.font = TTSTYLEVAR(font);
-    self.offerCodeField.keyboardType = UIKeyboardTypeEmailAddress;
+    self.offerCodeField.keyboardType = UIKeyboardTypeNumberPad;
     self.offerCodeField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.offerCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.offerCodeField.autocapitalizationType = UITextAutocapitalizationTypeNone;
