@@ -59,6 +59,7 @@ def current_site(request):
 	data = {}
 
 	data["GOOGLE_API_KEY"] = settings.GOOGLE_API_KEY
+	data["DEBUG"] = settings.DEBUG
 
 	'''
 		A context processor to add the "current site" to the current Context
