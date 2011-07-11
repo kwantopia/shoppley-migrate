@@ -132,7 +132,7 @@ class TxtTemplates:
 			"REOFFER_EXTENSION": "[{{ code }}] {{ title }}, by {{ merchant }} at {{ address }}, is extended until {{ expiration }}",
 			"REOFFER_NEWCUSTOMER_RECEIVED": "[{{ code }}] {{ title }} by {{ merchant }} (reply \"info {{ code }}\" for address)",
 
-			"INFO_NO_OFFER" : "Offer not found. Offers have not been received yet.",
+			"INFO_NO_OFFER" : "Offer not found. You have not received any offer yet.",
 			"INFO" : "Redeem [{{ offercode }}] at {{ merchant }} \"{{ description }}\" [expires: {{ expiration }}]",
 			"IWANT": "We have received your request: {{ request }}. Our dragons are hard at work finding the perfect deals for you.",
 			"IWANT_COMMAND_ERROR": "Command Error! To request a deal, please reply with #iwant your_request",

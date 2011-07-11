@@ -62,8 +62,8 @@ class MerchantSignupForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
-		 
-		su=ShoppleyUser.objects.filter(phone=self.cleaned_data["phone"])
+		phone = parse_phone_number(self.cleaned_data["phone"]) 
+		su=ShoppleyUser.objects.filter(phone=phone)
 		if su.count()>0:
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		#except Exception, e:
@@ -375,8 +375,8 @@ class CustomerSignupForm(forms.Form):
 	def clean_phone(self):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
-		 
-		su = ShoppleyUser.objects.filter(phone__icontains=self.cleaned_data["phone"])
+		phone = parse_phone_number(self.cleaned_data["phone"]) 
+		su = ShoppleyUser.objects.filter(phone__icontains=phone)
 		if su.count()>0:
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:

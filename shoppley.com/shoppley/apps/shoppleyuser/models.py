@@ -101,6 +101,9 @@ class ShoppleyUser(models.Model):
 	def get_full_address(self):
 		return self.address_1 + " "+ self.zipcode.city.name + " " + self.zipcode.city.region.name + " " + self.zipcode.code
 
+	def get_zipcode_address(self):
+		return self.zipcode.city.name + " " + self.zipcode.city.region.name + " " + self.zipcode.code
+
 	def set_location_from_address(self, address = None):
 		if not address:
 			address =self.get_full_address()
@@ -110,7 +113,13 @@ class ShoppleyUser(models.Model):
 		if latlon!=-1:
 			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
 			self.save()
-
+			return
+		
+		latlon = get_lat_long(self.get_zipcode_address())
+		if latlon!=-1:
+			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
+			self.save()
+		
 	def set_location_from_latlon(self,lat , lon):
 		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat,lon))))
 		self.save()
@@ -146,7 +155,7 @@ class Merchant(ShoppleyUser):
 		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
 		#for i in Customer.objects.all():
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
-		return [ i.pk for i in Customer.objects.all() if geopy_distance(i.location.location,self.location.location).mi<=x]
+		return [ i.pk for i in Customer.objects.all() if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
 	# faster than get_customers_within_miles().count() because dont have to create a new list
 	def count_customers_within_miles(self, x=5):
@@ -154,8 +163,9 @@ class Merchant(ShoppleyUser):
 
 		count = 0
 		for i in  Customer.objects.all():
-			if geopy_distance(i.location.location,self.location.location).mi<=x:
-				count = count + 1
+			if i.location and self.location:
+				if geopy_distance(i.location.location,self.location.location).mi<=x:
+					count = count + 1
 		return count
 			
 class Customer(ShoppleyUser):
@@ -205,15 +215,16 @@ class Customer(ShoppleyUser):
 		#for i in Offer.objects.all():
 			#print geopy_distance(self.location.location,i.merchant.location.location).mi
 
-		return [i for i in Offer.objects.all() if geopy_distance(self.location.location,i.merchant.location.location).mi<=x]
+		return [i for i in Offer.objects.all() if self.location and i.merchant.location and geopy_distance(self.location.location,i.merchant.location.location).mi<=x]
 
 	def count_offers_within_miles (self, x=5):
 		from offer.models import Offer
 		from geopy.distance import distance as geopy_distance
 		count = 0
 		for i in Offer.objects.all():
-			if geopy_distance(self.location.location,i.merchant.location.location).mi<=x:
-				count = count + 1
+			if self.location and i.merchant.location:
+				if geopy_distance(self.location.location,i.merchant.location.location).mi<=x:
+					count = count + 1
 		return count 
 
         # return a list of pk's of merchants within x miles from the customer's lat/lon
@@ -222,16 +233,18 @@ class Customer(ShoppleyUser):
 		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
 		#for i in Merchant.objects.all():
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
-		return [ i.pk for i in Merchant.objects.all() if geopy_distance(i.location.location,self.location.location).mi<=x]
+		return [ i.pk for i in Merchant.objects.all() if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
 
 	def count_merchants_within_miles(self, x=5):
 		from geopy.distance import distance as geopy_distance
 		count = 0
 		for i in Merchant.objects.all() :
-			if geopy_distance(i.location.location,self.location.location).mi<=x:
-				count = count + 1
+			if i.location and self.location:
+				if geopy_distance(i.location.location,self.location.location).mi<=x:
+					count = count + 1
 		return count
+
 	def print_daily_limit(self):
 		if self.daily_limit == 100000:
 			return "Unlimited"
