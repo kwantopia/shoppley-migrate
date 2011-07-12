@@ -752,6 +752,7 @@ class Command(NoArgsCommand):
 						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
 							
 						self.notify(parse_phone_number(msg["from"]),receipt_msg)
+
 	def handle_noargs(self, **options):
 		voice = Voice()
 		voice.login()
@@ -773,14 +774,13 @@ class Command(NoArgsCommand):
 				continue
 			except MultipleObjectsReturned, e:
 				#print str(e)
-                                sms_logger.exception ("\"%s\" causes an error:" % msg)
+				sms_logger.exception ("\"%s\" causes an error:" % msg)
 
 				continue
 			except Exception, e:
-			#	skipped_sms.append(index)
+				#	skipped_sms.append(index)
 				#print str(e)
-                                sms_logger.exception ("\"%s\" causes an error:" % msg)
-
+				sms_logger.exception ("\"%s\" causes an error:" % msg)
 				continue
 		
 		for message in voice.sms().messages:
