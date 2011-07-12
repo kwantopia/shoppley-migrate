@@ -31,23 +31,23 @@ phone_pattern =Optional("(") + Word(nums, exact=3) +Optional(")") + Optional("-"
 DEFAULT_SITE = "www.shoppley.com"
 
 # Customer commands:
-BALANCE= "balance"
-INFO = "info"
-STOP = "stop"
-START = "start"
-FORWARD = "forward"
-IWANT = "iwant"
+BALANCE= ["balance","b"]
+INFO = ["info","i"]
+STOP = ["stop"]
+START = ["start"]
+FORWARD = ["forward","f"]
+IWANT = ["iwant", "w"]
 
 # Merchant commands:
-REDEEM = "redeem"
-OFFER = "offer"
-STATUS = "status"
-REOFFER = "reoffer"
+REDEEM = ["redeem","r"]
+OFFER = ["offer","o"]
+STATUS = ["status","s"]
+REOFFER = ["reoffer","re"]
 # others
-SIGNUP = "signup"
-MERCHANT_SIGNUP = "merchant"
-HELP = "help"
-ZIPCODE = ["zip", "zipcode"]
+SIGNUP = ["signup","c"]
+MERCHANT_SIGNUP = ["merchant","m"]
+HELP = ["help","h"]
+ZIPCODE = ["zip", "zipcode","z"]
 
 import logging
 sms_logger = logging.getLogger("offer.management.commands.check_sms")
@@ -202,12 +202,12 @@ class Command(NoArgsCommand):
 					# merchant sends offer code and the customer's phone number
 					del parsed[0]
 					# --------------------------- BALANCE: "balance"---------------
-					if parsed[0].lower()==BALANCE:
+					if parsed[0].lower() in BALANCE:
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["BALANCE"],{"points": su.balance})
 						self.notify(su.phone, receipt_msg)
 
 					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
-					elif parsed[0].lower()==REDEEM:
+					elif parsed[0].lower() in REDEEM:
 						if len(parsed) < 3:
 							# non enough parameters
 							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_PARAM_ERRORS"], {})
@@ -325,7 +325,7 @@ class Command(NoArgsCommand):
 						receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
 					# ------------------------OFFER : "offer<SPACE>description" ---------------
-					elif parsed[0].lower() == OFFER:
+					elif parsed[0].lower() in OFFER:
 						if len(parsed)<2:
 							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["OFFER_COMMAND_ERROR"])
 							self.notify(phone,receipt_msg)
@@ -358,7 +358,7 @@ class Command(NoArgsCommand):
 						#print msg["from"], su.phone
 						self.notify(msg["from"], receipt_msg)
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
-					elif parsed[0].lower() == REOFFER:
+					elif parsed[0].lower() in REOFFER:
 						if len(parsed)==1:
 							offers = su.merchant.offers_published.filter(expired_time__gt=datetime.now())
 							#offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
@@ -417,7 +417,7 @@ class Command(NoArgsCommand):
 											})
 								self.notify(su.phone,merchant_msg)
 						# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
-					elif parsed[0].lower() == STATUS:
+					elif parsed[0].lower() in STATUS:
 						if (len(parsed)==1):
 				
 							offers = su.merchant.offers_published.order_by("-time_stamp")
@@ -474,12 +474,12 @@ class Command(NoArgsCommand):
 
 								self.notify(su.phone,receipt_msg)
 					# --------------------- RESIGNUP -------------------------
-					elif parsed[0].lower() == MERCHANT_SIGNUP:
+					elif parsed[0].lower() in MERCHANT_SIGNUP:
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["RESIGNUP"], {})
 						self.notify(su.phone, receipt_msg)
 		
 					# --------------------- HELP: "help" -------------------------
-					elif parsed[0].lower() == HELP:
+					elif parsed[0].lower() in HELP:
 						commands = self.merchant_help()
 						self.notify(su.phone, commands)
 
@@ -501,11 +501,11 @@ class Command(NoArgsCommand):
 					del parsed[0]
 					phone = su.phone
 					# --------------------------- REDEEM: "#balance"---------------
-					if parsed[0].lower()==BALANCE:
+					if parsed[0].lower() in BALANCE:
 						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["BALANCE"], {"points":su.balance})
 						self.notify(su.phone, receipt_msg)		
 					# ----------------- INFO : "#info<SPACE>offercode+"----------------
-					elif parsed[0].lower() == INFO:
+					elif parsed[0].lower() in  INFO:
 						if (len(parsed)==1):
 							offercodes = OfferCode.objects.filter(customer=su.customer).order_by("-time_stamp")
 							if offercodes.count()>0:
@@ -548,7 +548,7 @@ class Command(NoArgsCommand):
 							if customer_msg != "":
 								self.notify(phone,customer_msg)
 					# ------------------- IWANT: "#iwant ..."----------------------
-					elif parsed[0].lower() == IWANT:
+					elif parsed[0].lower() in IWANT:
 						if len(parsed)<2:
 							receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["IWANT_COMMAND_ERROR"], {})
 							self.notify(su.phone,receipt_msg)
@@ -561,7 +561,7 @@ class Command(NoArgsCommand):
 						self.notify(su.phone, customer_msg)
 
 					# ------------------- STOP: "stop"----------------------
-					elif parsed[0].lower() == STOP:
+					elif parsed[0].lower() in STOP:
 					
 						if su.active:
 							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
@@ -573,7 +573,7 @@ class Command(NoArgsCommand):
 					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
 							self.notify(phone,customer_msg)
 					# ------------------- START: "start"-----------------------
-					elif parsed[0].lower() == START :
+					elif parsed[0].lower() in START :
 					
 						if not su.active:
 							su.active = True
@@ -599,7 +599,7 @@ class Command(NoArgsCommand):
 						receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE"],{"zipcode": zipcode.code,"number":number})
 						self.notify(su.phone,receipt_msg)
 					#-------------------- FORWARD: "#forward<SPACE>offercode<SPACE>number+"---------------------
-					elif parsed[0].lower() ==FORWARD:
+					elif parsed[0].lower() in FORWARD:
 						# TODO add sender to dst's friend list
 						if (len(parsed) < 3):
 							forwarder_msg=t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_COMMAND_ERROR"], {})
@@ -655,11 +655,11 @@ class Command(NoArgsCommand):
 								#% f_state.remaining
 								self.notify(su.phone,forwarder_msg)
 					# --------------------- HELP: "help" -------------------------
-					elif parsed[0].lower() == HELP:
+					elif parsed[0].lower() in HELP:
 						commands = self.customer_help()
 						self.notify(su.phone, commands)
 					# --------------------- RESIGNUP -------------------------
-					elif parsed[0].lower() == SIGNUP:
+					elif parsed[0].lower() in SIGNUP:
 						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESIGNUP"],{})
 						self.notify(su.phone, receipt_msg)
 				
@@ -680,7 +680,7 @@ class Command(NoArgsCommand):
 						parsed = customer_pattern.parseString(text)
 						del parsed[0]
 						#------------------------------- MERCHANT SIGNUP: "merchant<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
-						if  parsed[0].lower() == MERCHANT_SIGNUP:
+						if  parsed[0].lower() in MERCHANT_SIGNUP:
 							if (len(parsed)<4):
 								receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"],{})
 								self.notify(phone,receipt_msg)      
@@ -715,7 +715,7 @@ class Command(NoArgsCommand):
 							self.notify(phone,receipt_msg)	
 
 						# ----------------------------------- SIGNUP: "signup<SPACE>email<SPACE>zipcode" ----------------
-						elif parsed[0].lower() ==SIGNUP:
+						elif parsed[0].lower() in SIGNUP:
 							if (len(parsed) <3):
 								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_COMMAND_ERROR"],{})
 								self.notify(phone,receipt_msg)
