@@ -5,6 +5,8 @@ import uuid
 
 MAX_CHARS = 160
 
+def to_user_timezone(time):
+	pass
 
 def pretty_datetime(time):
 	"""

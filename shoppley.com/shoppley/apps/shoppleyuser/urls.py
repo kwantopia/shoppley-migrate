@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 	url(r'^customer/facebox/signup/$', direct_to_template, {"template": "shoppleyuser/customer_signup_facebox.html", "extra_context": {"form": CustomerSignupForm}}, name="customer_signup_facebox"),
 	url(r'^merchant/facebox/signup/$', direct_to_template, {"template": "shoppleyuser/merchant_signup_facebox.html", "extra_context": {"form": MerchantSignupForm}}, name="merchant_signup_facebox"),
 
+	url(r'^post/shoppleyuser/timezone/$', set_user_timezone, name="set_user_timezone"),
 )
 
 

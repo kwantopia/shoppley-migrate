@@ -31,7 +31,7 @@ from account.utils import get_default_redirect
 from account.forms import LoginForm
 from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm
 from shoppleyuser.models import Customer, ShoppleyUser, Merchant
-
+from django.views.decorators.csrf import csrf_exempt
 
 # view for home, depending on whether request user is cutomer/merchant
 def home(request, template_name="front-page.html"):
@@ -108,6 +108,24 @@ def offer_frequency_set(request, template_name="shoppleyuser/offer_frequency_set
 				}, context_instance=RequestContext(request))
 	except Customer.DoesNotExist:
 		pass
+
+@login_required
+@csrf_exempt
+def set_user_timezone(request):
+	#print "anything here"
+	#return HttpResponse("1")
+	if request.method=="POST":
+		print "hello"
+		timezone = request.POST["tz"]
+		print "timezone" , timezone
+		u= request.user.shoppleyuser
+		if u:
+			#u = request.user.shoppleyuser
+			u.timezone = timezone
+			u.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
 
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,

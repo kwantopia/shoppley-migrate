@@ -211,7 +211,7 @@ INSTALLED_APPS = [
 	"django_markup",
 	"tagging_ext",
 	"djcelery",
-	
+	#"south",		
 	# Pinax
 	"pinax.apps.account",
 	"pinax.apps.signup_codes",
