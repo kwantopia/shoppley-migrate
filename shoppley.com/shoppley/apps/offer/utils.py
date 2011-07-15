@@ -168,7 +168,7 @@ class TxtTemplates:
 			"PHONE_TAKEN": "\"{{ phone }}\" is already registered with shoppley. You can now use our services.",
 			"OFFERCODE_NOT_EXIST": "Offercode {{ code }} does not exist.",
 			"INVALID_ZIPCODE": "Zipcode {{ zipcode }} does not exist. Please re-enter a zipcode.",
-			"NON_USER": "Welcome to Shoppley! To sign up, visit shoppley @ {{ site }} or send a text message to {{ shoppley_num }} with this command: \"#signup email zipcode\" to sign up as a customer OR \"merchant email zipcode business_name\" to sign up as a business"
+			"NON_USER": "Welcome to Shoppley! To sign up, visit shoppley @ {{ site }} or send a text message to {{ shoppley_num }} with this command: \"#signup email zipcode\" to sign up as a customer OR \"#merchant email zipcode business_name\" to sign up as a business"
 		}
 	}
 
