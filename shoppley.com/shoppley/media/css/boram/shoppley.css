@@ -37,12 +37,13 @@ a, a:active, a:visited {
 }
 
 a:hover {
-	color: #ED5F87;
-}
+	color: #2E94C4; 	
+	text-decoration: underline;
+	}
 
 a.shoppley-btn, input.shoppley-btn {
 	background-color: #35ACE4;
-	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#35ACE4), to(#2E94E4), color-stop(.6,#2e94e4));
+	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#35ACE4), to(#2E94C4), color-stop(.6,#2E94C4));
 	background-image: -moz-linear-gradient(0% 56% 270deg,#35ACE4, #2E94C4);
 	color: #ffffff;
 	font-weight: bold;
@@ -346,6 +347,26 @@ form.login .form_block input {
 	float: right;
 } 
 
+/*Front-Page*/
+.landing h2 {
+	border-bottom: 2px solid #CDCDCD;
+}
+
+.recent-merc ul li {
+	height: 150px;
+	padding-left: 180px;
+	background: no-repeat;
+}
+
+#cafe-luna {
+	background-image: url(../../images/boram/new-merc/cafe-luna.png);
+}
+#harvest-of-india {
+	background-image: url(../../images/boram/new-merc/harvest-of-india.png);
+}
+#momogoose {
+	background-image: url(../../images/boram/new-merc/momogoose.png);
+}
 
 /* for About Us page */
 .about-header {
@@ -427,7 +448,7 @@ form.login .form_block input {
 
 #feedback-tab:hover {
   background-color: #ED5F87;
-  border: 2px solid #DDDDDD ;
+  border: 2px solid #EEEEEE;
   border-left: none;      
   cursor: pointer;
 }
