@@ -1,15 +1,16 @@
 
 body {
 	background: transparent url(../../images/boram/bg.png);
-	background-repeat: repeat-x;
-	/*background: #FAFAFA;
-	background-image:	-webkit-gradient(linear, 0% 0%, 0% 30%, from(#F2F2F2), to(#FFFFFF), color-stop(.6,#FFFFFF));
+	/*background: #F9F9F9;*/
+	/*background-image:	-webkit-gradient(linear, 0% 0%, 0% 30%, from(#F2F2F2), to(#FFFFFF), color-stop(.6,#FFFFFF));
 
-	border-top: 2px solid #DADA30;
+	border-top: 3px solid #DADA30;
 */}
 
 /*.container {
-	border: 1px solid red;
+	background-color: #FFFFFF;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 */
 .logo {
@@ -26,9 +27,13 @@ body {
 	padding-top: 10px;
 }
 .legal {
-	background-color: #FAFAFA;
-padding: 40px 40px 100px 40px;
-	border-top: 1px solid #D4DA30;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-color: #FFF;
+	padding: 40px 40px 60px 40px;
+	border: 1px solid #D4DA30;
+	margin-bottom: 20px;
 }
 
 a, a:active, a:visited {
@@ -70,11 +75,13 @@ a.shoppley-btn, input.shoppley-btn {
 
 }
 .msg-box {
-	background-color: #F2EEEC;
+	background-color: #fff;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	padding: 15px;
+	border: 1px solid #DADA30;
+	color: #666;
 	
 }
 .main-box, .msg-box {
@@ -356,15 +363,32 @@ form.login .form_block input {
 	padding-left: 0px;
 }
 
+.landing ul li {
+	padding: 8px;
+	background-color: #FFF;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #DDDDDD;
+	margin-bottom: 15px;
+
+}
+
+.landing ul li ul li {
+	padding: 0;
+	border: none;
+	margin: 5px;
+}
+
 .landing ul li ul li:first-child {
 	font-weight: bold;
 	font-size: 1.2em;
 }
 
 .recent-merc ul li {
-	height: 150px;
+	height: 123px;
 	padding-left: 180px;
-	background: no-repeat;
+	padding-bottom: 0;
 }
 
 .recent-merc ul li ul li {
@@ -372,13 +396,13 @@ form.login .form_block input {
 	height: 20px;
 }
 #cafe-luna {
-	background-image: url(../../images/boram/new-merc/cafe-luna.png);
+	background: #FFF url(../../images/boram/new-merc/cafe-luna.png) no-repeat;
 }
 #harvest-of-india {
-	background-image: url(../../images/boram/new-merc/harvest-of-india.png);
+	background: #FFF url(../../images/boram/new-merc/harvest-of-india.png) no-repeat;
 }
 #momogoose {
-	background-image: url(../../images/boram/new-merc/momogoose.png);
+	background: #FFF url(../../images/boram/new-merc/momogoose.png) no-repeat;
 }
 
 /* for About Us page */
