@@ -358,6 +358,20 @@ form.login .form_block input {
 	background: no-repeat;
 }
 
+.recent-merc ul li ul {
+	padding-left: 0px;
+}
+
+.recent-merc ul li ul li {
+	padding-left: 0px;
+	height: 20px;
+}
+
+.recent-merc ul li ul li:first-child {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
 #cafe-luna {
 	background-image: url(../../images/boram/new-merc/cafe-luna.png);
 }
