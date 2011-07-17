@@ -246,31 +246,37 @@ a.shoppley-btn, input.shoppley-btn {
 }
 
 #messages{
-	background:#AFDCEC;
+	background:#FEEDF4;
+	border: 1px solid #FDD7E7;
+	padding: 10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
+
 #get-offers {
-	background: transparent url(../../images/boram/landing-customer-getoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-customer-getoffers.png) no-repeat;	
 }
 
 #redeem-offers {
-	background: transparent url(../../images/boram/landing-customer-redeemoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-customer-redeemoffers.png) no-repeat;	
 }
 
 #share-offers {
-	background: transparent url(../../images/boram/landing-customer-shareoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-customer-shareoffers.png) no-repeat;	
 }
 
 #merc-get-offers {
-	background: transparent url(../../images/boram/landing-merchant-getoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-merchant-getoffers.png) no-repeat;	
 }
 
 #merc-redeem-offers {
-	background: transparent url(../../images/boram/landing-merchant-redeemoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-merchant-redeemoffers.png) no-repeat;	
 }
 
 #merc-track-offers {
-	background: transparent url(../../images/boram/landing-merchant-trackoffers.png) no-repeat;	
+	background: #FFFFFF url(../../images/boram/landing-merchant-trackoffers.png) no-repeat;	
 }
 #get-offers, #redeem-offers, #share-offers, #merc-get-offers, #merc-redeem-offers, #merc-track-offers {
 	background-position: top left;
