@@ -74,6 +74,12 @@ a.shoppley-btn, input.shoppley-btn {
 		border: 1px solid #F3F3F3;
 
 }
+
+.main-box, .msg-box {
+	margin-right: 15px;
+}
+
+
 .msg-box {
 	background-color: #fff;
 	-moz-border-radius: 3px;
@@ -82,12 +88,8 @@ a.shoppley-btn, input.shoppley-btn {
 	padding: 15px;
 	border: 1px solid #DADA30;
 	color: #666;
-	
+	margin-right: 0;	
 }
-.main-box, .msg-box {
-	margin-right: 15px;
-}
-
 
 .main-box, .side-bar {
 	-webkit-border-radius: 3px;
