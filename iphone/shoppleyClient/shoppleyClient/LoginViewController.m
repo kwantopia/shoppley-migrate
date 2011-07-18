@@ -33,7 +33,6 @@
     [super viewDidLoad];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    self.tableView.scrollEnabled = NO;
     self.tableView.backgroundColor = RGBCOLOR(230,230,230);
     
     _emailField = [[UITextField alloc] init];
@@ -56,10 +55,12 @@
     _passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _passwordField.returnKeyType = UIReturnKeyGo;
     
-    _loginDataSource = [[TTListDataSource dataSourceWithObjects:_emailField, _passwordField, nil] retain];
-    self.dataSource = _loginDataSource;
+    TTTableButton* loginButton = [TTTableButton itemWithText:@"Log In" delegate:self selector:@selector(authenticate)];
     
-    [_emailField becomeFirstResponder];
+    TTTableTextItem* signup = [TTTableTextItem itemWithText:@"Sign up for a new account." URL:@"shoppley://signup"];
+    
+    _loginDataSource = [[TTSectionedDataSource dataSourceWithObjects:@"", _emailField, _passwordField, loginButton, @"", signup, nil] retain];
+    self.dataSource = _loginDataSource;
     
     // Retrieve saved email / password
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -81,18 +82,11 @@
     logoView.image = [UIImage imageNamed:@"logo.png"];
     [headerView addSubview:logoView];
     self.tableView.tableHeaderView = headerView;
-    
-    TTStyledTextLabel* label = [[[TTStyledTextLabel alloc] initWithFrame:self.view.bounds] autorelease];
-    label.font = [UIFont systemFontOfSize:14];
-    label.text = [TTStyledText textFromXHTML:@"Register at <a href='http://www.shoppley.com/'>http://www.shoppley.com/</a>" lineBreaks:YES URLs:YES];
-    label.contentInset = UIEdgeInsetsMake(10, 10, 10, 10);
-    label.backgroundColor = [UIColor clearColor];
-    [label sizeToFit];
-    label.frame = CGRectMake(15, 0, label.frame.size.width, label.frame.size.height);
-    
-    UIView* footerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)] autorelease];
-    [footerView addSubview:label];
-    self.tableView.tableFooterView = footerView;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 #pragma mark Login

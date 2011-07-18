@@ -214,6 +214,37 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     return NO;
 }
 
+- (BOOL)registerEmail:(NSString*)email password:(NSString*)password phone:(NSString*)phone zipcode:(NSString*)zipcode {
+    TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:@"customer/register/"] delegate:self];
+    request.response = [[[TTURLJSONResponse alloc] init] autorelease];
+    [request.parameters setValue:email forKey:@"email"];
+    [request.parameters setValue:password forKey:@"password"];
+    [request.parameters setValue:phone forKey:@"phone"];
+    [request.parameters setValue:zipcode forKey:@"zipcode"];
+    request.httpMethod = @"POST";
+    request.cachePolicy = TTURLRequestCachePolicyNone;
+    [request sendSynchronously];
+    
+    TTURLJSONResponse* jsonResponse = request.response;
+    
+    if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* response = jsonResponse.rootObject;
+        if ([[response valueForKey:@"result"] intValue]== 1) {
+            // Persist username/password
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:email forKey:@"email"];
+            [defaults setObject:password forKey:@"password"];
+            [defaults synchronize];
+            
+            return YES;            
+        }
+        _errorString = [response valueForKey:@"result_msg"];
+        return NO;
+    }
+    _errorString = @"Connection Error. Please try again later.";
+    return NO;
+}
+
 - (BOOL)_logout {
     TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:@"logout/"] delegate:self];
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];

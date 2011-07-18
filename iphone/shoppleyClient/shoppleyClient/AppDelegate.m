@@ -16,6 +16,7 @@
 #import "OfferRateViewController.h"
 #import "RedeemedOffersViewController.h"
 #import "SettingsViewController.h"
+#import "SignUpViewController.h"
 #import "SLDataController.h"
 #import "SLMapViewController.h"
 #import "SLStyleSheet.h"
@@ -53,6 +54,7 @@
     //[map from:@"http*" toViewController:[TTWebController class]];
     
     [map from:@"shoppley://login" toViewController:[LoginViewController class]];
+    [map from:@"shoppley://signup" toViewController:[SignUpViewController class]];
     
     [map from:@"shoppley://tabbar" toSharedViewController:[TabBarController class]];
     [map from:@"shoppley://current_offers" toSharedViewController:[CurrentOffersViewController class]];

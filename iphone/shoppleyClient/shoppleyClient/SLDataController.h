@@ -62,6 +62,7 @@
 #pragma mark -
 #pragma mark User
 - (BOOL)authenticateEmail:(NSString*)email password:(NSString*)password;
+- (BOOL)registerEmail:(NSString*)email password:(NSString*)password phone:(NSString*)phone zipcode:(NSString*)zipcode;
 - (void)logout;
 
 #pragma mark -
