@@ -63,7 +63,9 @@ a.shoppley-btn, input.shoppley-btn {
 	-webkit-box-shadow:1px 1px 5px #9E9E9E;
 
 }
-
+.fancy-text {
+text-shadow: 0px 1px 3px #333333;
+}
 
 
 .last-call {
@@ -423,24 +425,50 @@ form.login .form_block input {
 
 .about-person-box { 
 	color: #000000;
-	padding: 10px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	background-color: #FFFFFF;
 }
 
 .about-person-header {
   border-bottom:1px solid #D4DA30;  
   font-size: 1.2em;
 	color: #333333;
-	margin-top: 10px;
+	padding: 10px 10px 5px 10px;
 	font-weight: bold;
+	background-color: #FFFFFF;
+	margin-bottom: 10px;
 }
+
 
 .about-person-body {
-	background-color: #FDFDFD;
-  padding-left: 20px;
-  padding-bottom: 20px;
-	padding-top: 10px;
+  padding: 0 20px 10px 141px;
+	min-height: 131px;
 }
 
+#kwan {
+	background: url(../../images/boram/kwan.png) no-repeat;
+}
+
+#dawei {
+	background: #FDFDFD url(../../images/boram/dawei.png) no-repeat; 
+}
+
+#doug {
+	background: #FDFDFD url(../../images/boram/doug.png) no-repeat;
+}
+#boram {
+	background: #FDFDFD url(../../images/boram/boram.png) no-repeat;
+}
+#meng {
+	background: #FDFDFD url(../../images/boram/meng.png) no-repeat;
+}
+#yod {
+	background: #FDFDFD url(../../images/boram/yod.png) no-repeat;
+}
+#eunice {
+	background: url(../../images/boram/eunice.png) no-repeat;
+}
 /* for FAQ page */
 .faq-section {
   margin-top: 15px;
