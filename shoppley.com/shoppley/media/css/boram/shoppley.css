@@ -247,7 +247,7 @@ text-shadow: 0px 1px 3px #333333;
 	color: #666666;
 }
 
-#messages li{
+#messages li, .error, .alert {
 	background:#FEEDF4;
 	border: 1px solid #FDD7E7;
 	padding: 10px;
