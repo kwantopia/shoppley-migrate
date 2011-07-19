@@ -1,4 +1,5 @@
 from common.user import clean_phone_number, check_email, check_zipcode, check_phone
+from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -89,7 +90,8 @@ def customer_register(email, username, zipcode, phone, password, address, method
 		welcome_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS_NO_PASSWORD"], args)
 	
 	if email is not None:
-		EmailAddress.objects.add_email(user, email, verified =True, primary=True)
+		e = EmailAddress(user=user, email=email, verified=True, primary=True)
+		e.save()
 		send_mail('Welcome to Shoppley', welcome_msg, 'support@shoppley.com', [email], fail_silently=True)		
 		
 	if phone is not None:
