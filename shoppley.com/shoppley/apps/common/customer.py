@@ -65,8 +65,13 @@ def customer_register(email, username, zipcode, phone, password, address, method
 		password = ''.join(random.sample(s,6))
 		is_random_password = True
 	
-	user = User.objects.create_user(username, "", password)
-	user.save()
+	try:
+		user = User.objects.create_user(username, "", password)
+		user.save()
+	except IntegrityError:
+		data["result"] = -5
+		data["result_msg"] = "'" + username + "' is used by the other user."
+		return data
 	
 	# create customer information
 	c = Customer(user=user, zipcode=zipcode, phone=phone, verified=True)
