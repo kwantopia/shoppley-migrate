@@ -158,8 +158,10 @@ class TxtTemplates:
 			"HELP": "- #info offercode(s): lists information about offercode(s) separated by spaces\n- #forward offercode number(s): forward an offer to your friend(s) separated by spaces\n-#iwant request: request desired offers\n-#zip new_zipcode: change to a new zipcode\n-#stop: stop receiving messages from us\n- #start: restart receiving messages from us\n- #help: list available commands\n- #balance: check point balance",
 			"SIGNUP_COMMAND_ERROR": "Signup Error! To signup, please txt \"#signup email zipcode\"",
 			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",
-			  
-
+			"SIGNUP_SUCCESS_NO_PASSWORD": "Sign up successful! You can use Username: {{ email }} to log in with your password. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free.",  
+			"VERIFY_PHONE": "Thank you for using Shoppley. Please reply with '1' to verify this phone, or '0' if you do not wish to receive messeges from us.",
+			"VERIFY_SUCCESS": "Thank you for verifying your phone number. We will start sending you offers form your favorite stores.",
+			"VERIFY_NO_SUCCESS": "We will not send any more messages to you.",
 		},
 		"SHARED": {
 			"INVALID_EMAIL": "\"{{ email }}\" is not a valid email address. Please provide a new and valid email.",

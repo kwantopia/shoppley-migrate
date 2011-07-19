@@ -22,6 +22,7 @@ else:
 		from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
+from common.customer import customer_authenticate, customer_register
 from shoppleyuser.utils import sms_notify, parse_phone_number, pretty_date
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
@@ -61,58 +62,18 @@ def mobile_logout(request):
 
 @csrf_exempt
 def register_customer(request):
-	data = {}
-	
-	# input parameters
 	email = request.POST['email'].lower()
 	phone = parse_phone_number(request.POST['phone'])
 	zipcode = request.POST['zipcode']
+	password = request.POST['password']
+    
+	#TODO check null
+	data = customer_register(email, None, zipcode, phone, password, None, None)
 	
-	# need to clean up phone
-
-	if not ZipCode.objects.filter(code=zipcode).exists():
-		# ERROR: zip code is invalid
-		data["result"] = -2
-		data["result_msg"] = "Zip Code is invalid or not in the system."
-		return JSONHttpResponse(data)	
-	else:
-		zipcode_obj = ZipCode.objects.get(code=zipcode)
-
-	u, created = User.objects.get_or_create(username=email, email=email)
-	if created:
-		s = string.lowercase+string.digits
-		rand_passwd = ''.join(random.sample(s,6))
-		u.set_password(rand_passwd)	
-		u.save()
-		# create customer information
-		c = Customer(user=u, zipcode=zipcode_obj, phone=phone)
-		c.save()
-
-		# send a text message and e-mail with random password
-		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password.  The web site also provides a quick introduction on how to make the best use of Shoppley.") %{ "password": rand_passwd }
-		recipients = [email]
-		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
-		txt_msg = _("%(password)s is temporary password for shoppley.com. Txt #help to %(shoppley)s to get started.") % { "password": rand_passwd, "shoppley": settings.SHOPPLEY_NUM }
-		sms_notify(phone, txt_msg, SMS_DEBUG)
-	else:
-		# ERROR: User exists, ask user to login with their password 
-		data["result"] = -1
-		data["result_msg"] = "User already exists so you should login with their password."
-		return JSONHttpResponse(data)	
-
-	# you can start viewing offers	
-	user = authenticate(username=email, password=rand_passwd)
-	if user is not None:
-		login(request, user)
-		#logger.debug( "User %s authenticated and logged in"%email )
-		data["result"] = 1
-		data["result_msg"] = "User registered and authenticated successfully."
-		return JSONHttpResponse(data)	 
-	else:
-		# ERROR: problem authenticating user
-		data["result"] = -3
-		data["result_msg"] = "Authentication error, possibly the user is not activated."
-		return JSONHttpResponse(data)
+	if data["result"] == 1:
+		data = customer_authenticate(request, data["username"], data["password"]);
+		
+	return JSONHttpResponse(data)
 			
 @csrf_exempt
 @login_required
