@@ -84,6 +84,7 @@ $ sudo su postgres
 $ createuser flashon
 $ psql -d template1
 $ template1 => ALTER USER flashon WITH ENCRYPTED PASSWORD 'flashonnohsalf';
+$ template1 => ALTER ROLE flashon WITH CREATEDB;
 $ template1 => \q
 $ createdb flashon -T template_postgis -E unicode -O flashon
 exit
