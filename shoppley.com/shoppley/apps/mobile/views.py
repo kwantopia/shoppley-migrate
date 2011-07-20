@@ -80,8 +80,8 @@ def register_customer(request):
 def offers_current(request):
 	"""
 
-		:param lat: current latitude
-		:param lon: current longitude
+		:param lat: current latitude (can be "")
+		:param lon: current longitude (can be "")
 
 		:rtype: JSON
 
@@ -103,7 +103,7 @@ def offers_current(request):
 		lon = request.POST.get("lon", None)
 			
 		if (lat is not None) and (lon is not None):
-			if (lat != 0) or (lon != 0): # for iphone ver 1
+			if (lat != "") and (lon != ""):
 				customer.set_location_from_latlon(lat, lon)
 		
 		v = request.POST.get("v", 0)
