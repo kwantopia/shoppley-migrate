@@ -365,13 +365,13 @@ class SimpleTest(TestCase):
 		"""
 		
 		comment = "Show current offers, it also returns offer details"
-		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
+		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
 
 		print "Num offers: %d"%len(response["offers"])
 		offer_code_to_forward = response["offers"][1]["code"]
 
 		comment = "Show narrow geographical offers, it also returns offer details"
-		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
+		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
 
 		self.redeem_offer()
 		comment = "Show redeemed offers, it also returns offer details"
@@ -389,11 +389,11 @@ class SimpleTest(TestCase):
 		response = self.post_json( reverse("m_offer_rate"), {'offer_code_id': review_offer_id, 'rating':5}, comment)
 
 		# test points
-		comment = "Shows a summary of accumulated points for customer"
-		response = self.get_json( reverse("m_customer_point_summary"), {}, comment)
-
-		comment = "Shows a list of point offers one can use to redeem (details too)"
-		response = self.get_json( reverse("m_customer_point_offers"), {}, comment)
+		# comment = "Shows a summary of accumulated points for customer"
+		# response = self.get_json( reverse("m_customer_point_summary"), {}, comment)
+		# 
+		# comment = "Shows a list of point offers one can use to redeem (details too)"
+		# response = self.get_json( reverse("m_customer_point_offers"), {}, comment)
 
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment)
@@ -406,7 +406,7 @@ class SimpleTest(TestCase):
 													'password': password}, comment)
 
 		comment = "Show current offers, it also returns offer details (This one contains offer forwarded by another customer)"
-		response = self.post_json( reverse("m_offers_current"), {'lat':47.78799, 'lon':98.99890}, comment)
+		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
 
 
 		comment = "Customer logout"
@@ -428,8 +428,8 @@ class SimpleTest(TestCase):
 		response = self.post_json( reverse("m_login"), {'email': email,
 													'password': password}, comment)
 	
-		comment = "Splash view for the merchant"
-		response = self.get_json( reverse("m_splash_view"), {}, comment)
+		# comment = "Splash view for the merchant"
+		# response = self.get_json( reverse("m_splash_view"), {}, comment)
 
 		comment = "Show active offers for the merchant, returns offer details"
 		response = self.get_json( reverse("m_offers_active"), {}, comment)

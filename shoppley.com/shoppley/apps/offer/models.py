@@ -135,6 +135,44 @@ class Offer(models.Model):
 			data["redistribute_processing"] = self.redistribute_processing
 
 		return data
+		
+	def customer_offer_detail(self, user):
+		"""
+			Used to report to customer mobile phone
+		"""
+		location = self.merchant.location.location
+		
+		offer_detail = {
+			"offer_id": self.id,
+			"name": self.title,
+			"merchant_name": self.merchant.business_name,
+			"description": self.description,
+			# expires for older version only
+			"expires": pretty_date(self.expired_time - datetime.now()),
+			"expires_time": int(time.mktime(self.expired_time.timetuple())),
+			"phone": self.merchant.phone,
+			"address1": self.merchant.address_1,
+			"citystatezip": self.merchant.zipcode.citystate(),
+			"lat": location.y,
+			"lon": location.x,
+			"img": self.get_image(),
+			"banner": self.merchant.get_banner()
+		}
+		if self.percentage:
+			offer_detail["percentage"] = self.percentage
+		elif self.dollar_off:
+			offer_detail["dollar_off"] = self.dollar_off
+		
+		try:
+			offercode = OfferCode.objects.get(offer=self, customer=user)
+			offer_detail["offer_code_id"] = offercode.id
+			offer_detail["code"] = offercode.code
+			if offercode.forwarder:
+				offer_detail["forwarder"] = str(offercode.forwarder)
+		except OfferCode.DoesNotExist:
+			pass
+
+		return offer_detail
 
 	def get_image(self):
 		if self.img:
@@ -531,7 +569,7 @@ class OfferCode(models.Model):
 
 	def offer_redeemed(self):
 		"""
-/m/customer/offers/current/			Used to report to customer mobile phone
+			Used to report to customer mobile phone
 		"""
 		offer_detail = {"offer_code_id": self.id,
 				"offer_id": self.offer.id,

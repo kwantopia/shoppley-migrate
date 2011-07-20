@@ -209,7 +209,7 @@ class Customer(ShoppleyUser):
 	def is_taking_offers(self):
 		return self.offer_count < self.daily_limit
 
-	def get_offers_within_miles(self,x):
+	def get_offers_within_miles(self,x=5):
 		from offer.models import Offer
 		from geopy.distance import distance as geopy_distance
 		#for i in Offer.objects.all():

@@ -97,30 +97,37 @@ def offers_current(request):
 
 	u = request.user
 	if u.shoppleyuser.is_customer():
-
-		# TODO: need to also dynamically generate offers based on current location
-		# TODO: notify the merchant that another user has seen (update sent offers)
-		# TODO: log the location it was seen from lat/lon, timestamp
-
+		customer = u.shoppleyuser.customer
+		
 		lat = request.POST.get("lat", None)
 		lon = request.POST.get("lon", None)
 			
-		if lat == None or lon == None:
-			# invalid location specified
-			data["result"] = -2
-			data["result_msg"] = "No latitude and longitude specified."
-			return JSONHttpResponse(data) 
-			
-		customer = u.shoppleyuser.customer
-		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
-		data["num_offers"] = user_offers.count()
-		data["offers"] = []
+		if (lat is not None) and (lon is not None):
+			if (lat != 0) or (lon != 0): # for iphone ver 1
+				customer.set_location_from_latlon(lat, lon)
+		
+		v = request.POST.get("v", 0)
+		if v == 0:
+			user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
+			data["num_offers"] = user_offers.count()
+			data["offers"] = []
 
-		#"expiration": str(time.mktime(o.expiration_time.timetuple())),
-		for o in user_offers:
-			data["offers"].append(o.offer_detail())	
-		data["result"] = 1
-		data["result_msg"] = "Returning offer details."
+			#"expiration": str(time.mktime(o.expiration_time.timetuple())),
+			for o in user_offers:
+				data["offers"].append(o.offer_detail())	
+			data["result"] = 1
+			data["result_msg"] = "Returning offer details."
+		else:
+			# (yod) 5 is magic number
+			user_offers = customer.get_offers_within_miles(5)
+			data["num_offers"] = len(user_offers)
+			data["offers"] = []
+
+			#"expiration": str(time.mktime(o.expiration_time.timetuple())),
+			for o in user_offers:
+				data["offers"].append(o.customer_offer_detail(customer))	
+			data["result"] = 1
+			data["result_msg"] = "Returning offer details."
 	else:
 		data["result"] = -1
 		data["result_msg"] = "User is not a customer."
