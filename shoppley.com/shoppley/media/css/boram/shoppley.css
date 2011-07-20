@@ -138,7 +138,6 @@ text-shadow: 0px 1px 3px #333333;
 
 .side-bar .sub-content {
 	color: #F2EEEC;
-	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
 }
 
 
@@ -154,7 +153,6 @@ text-shadow: 0px 1px 3px #333333;
 	padding: 15px 30px 15px 140px;
 	color: #666666;
 	font-size: 1.2em;
-	font-family:"Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
 }
 
 .signup-header span {
@@ -171,16 +169,24 @@ text-shadow: 0px 1px 3px #333333;
 .signup-header.merchant {
 	background: transparent url(../../images/boram/temp_merchant_100.png) no-repeat;
 }
+.fb-connect {
+	color: #666666;
+	font-size: 1.2em;
+	border-top: 1px solid #A8B2CE;
+	border-bottom: 1px solid #A8B2CE;
+	background-color: #EDEFF4;
+	padding: 10px;
+}
+
 
 .signup-form.customer, .signup-form.merchant {
 	padding: 15px 50px;
-	min-height: 360px;
-  height: auto;
 }
 
-.signup-form.customer, .signup-form.merchant {
-	/*height: 480px;*/
+.signup-form.customer {
+	padding-top: 5px;
 }
+
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
 	text-align: right;
