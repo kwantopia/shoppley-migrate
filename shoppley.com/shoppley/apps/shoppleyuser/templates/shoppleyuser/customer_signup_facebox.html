@@ -9,15 +9,20 @@
 </head>
 
 <body>
-	<div class="signup-forms span-12" id="frontpage-customer-signup">
+	<div class="signup-forms span-14" id="frontpage-customer-signup">
 		<div class="main-box">
 			<div class="signup-header customer">
 				Are you looking for <br/>
 				<span class="highlight">incredible deals?</span>  <br/>
 				Receive discount offer txts from your local stores on your cellphone.
-			</div>
+				You're only a few steps away!
+				</div>
+				<div>&nbsp;</div>
+				<div class="fb-connect" id="fb-connect-customer">
+				You can either sign up by connecting your Facebook account or start fresh.	
+				<img src="http://placekitten.com/194/25"/>
+				</div>
 			<div class="signup-form customer">
-
     {% if user.is_authenticated %}
         <p>{% trans "You are already logged in." %}</p>
     {% else %}
@@ -36,9 +41,9 @@
 
 		<input type="submit" id="customer-cancel" onclick="$(document).trigger('close.facebox')" value="{% trans "Cancel" %}" />                    
 			<div class="clear">&nbsp;</div>
-			</div>
-		
-		</div>
+			</div>	
+	
+	
 	</div>
 
 	{% include "main_js.html" %}
