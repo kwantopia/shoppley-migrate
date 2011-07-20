@@ -109,3 +109,4 @@ def customer_register(email, username, zipcode, phone, password, address, method
 	
 	return data;
 	
+	
