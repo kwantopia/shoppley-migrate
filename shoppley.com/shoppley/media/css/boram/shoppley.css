@@ -177,16 +177,28 @@ text-shadow: 0px 1px 3px #333333;
 	background-color: #EDEFF4;
 	padding: 10px;
 }
-
+#fb-connect-customer.fb-connect img {
+	padding-left: 300px;
+	padding-top: 10px;
+}
 
 .signup-form.customer, .signup-form.merchant {
 	padding: 15px 50px;
 }
 
 .signup-form.customer {
-	padding-top: 5px;
+	padding: 5px 30px 50px 10px;
 }
-
+.signup-form.customer span.highlight {
+	color: #666666;
+	background-color: #f8f8da;	
+	border:1px solid #DADA30; 
+	font-size: 1.5em;
+	font-weight: bold;
+	line-height: 0em;
+	float: left;
+	padding: 20px;
+}
 
 .signup-form.customer .ctrlHolder, .signup-form.merchant .ctrlHolder {
 	text-align: right;
