@@ -200,7 +200,6 @@ class Offer(models.Model):
 			time_stamp=self.time_stamp,
 			expiration_time=self.starting_time+timedelta(minutes=self.duration)
 		)
-		
 	
 	def gen_offer_codes(self, customers):
 		"""

@@ -140,38 +140,76 @@ def offers_current_filter(request):
 		Returns a filtered version by filtering to a reduced set of those in current location
 	"""
 	data = {}
+	data["result"] = -999
+	data["result_msg"] = "Don't call me."
+	return JSONHttpResponse(data)
+
+	# u = request.user
+	# if u.shoppleyuser.is_customer():
+	# 
+	# 	# TODO: need to also dynamically generate offers based on current location
+	# 	# TODO: notify the merchant that another user has seen (update sent offers)
+	# 	# TODO: log the location it was seen from lat/lon, timestamp
+	# 
+	# 	lat = request.POST.get("lat", None)
+	# 	lon = request.POST.get("lon", None)
+	# 		
+	# 	if lat == None or lon == None:
+	# 		# invalid location specified
+	# 		data["result"] = -2
+	# 		data["result_msg"] = "No latitude and longitude specified."
+	# 		return JSONHttpResponse(data) 
+	# 		
+	# 	customer = u.shoppleyuser.customer
+	# 	# need to narrow this query to just return those very close to lat, lon
+	# 	user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
+	# 	data["num_offers"] = user_offers.count()
+	# 	data["offers"] = []
+	# 
+	# 	#"expiration": str(time.mktime(o.expiration_time.timetuple())),
+	# 	for o in user_offers:
+	# 		data["offers"].append(o.offer_detail())	
+	# 	data["result"] = 1
+	# 	data["result_msg"] = "Returning offer details."
+	# else:
+	# 	data["result"] = -1
+	# 	data["result_msg"] = "User is not a customer."
+	# return JSONHttpResponse(data)	
+
+@csrf_exempt
+@login_required
+def offer_get_offercode(request):
+	"""
+		:param offer_id: offer id to generate code for
+	"""
+	data = {}
+	
+	offer_id = request.POST.get("offer_id", None)
+	if offer_id is None:
+		data["result"] = -2
+		data["result_msg"] = "offer_id is required."
+		return JSONHttpResponse(data)
 
 	u = request.user
 	if u.shoppleyuser.is_customer():
-
-		# TODO: need to also dynamically generate offers based on current location
-		# TODO: notify the merchant that another user has seen (update sent offers)
-		# TODO: log the location it was seen from lat/lon, timestamp
-
-		lat = request.POST.get("lat", None)
-		lon = request.POST.get("lon", None)
-			
-		if lat == None or lon == None:
-			# invalid location specified
-			data["result"] = -2
-			data["result_msg"] = "No latitude and longitude specified."
-			return JSONHttpResponse(data) 
-			
 		customer = u.shoppleyuser.customer
-		# need to narrow this query to just return those very close to lat, lon
-		user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
-		data["num_offers"] = user_offers.count()
-		data["offers"] = []
-
-		#"expiration": str(time.mktime(o.expiration_time.timetuple())),
-		for o in user_offers:
-			data["offers"].append(o.offer_detail())	
-		data["result"] = 1
-		data["result_msg"] = "Returning offer details."
+		
+		try:
+			o = Offer.objects.get(id=offer_id)
+			o.gen_offer_code(customer)
+			
+			data["offer"] = o.customer_offer_detail(customer)
+			data["result"] = 1
+			data["result_msg"] = "^_^"
+			
+		except Offer.DoesNotExist:
+			data["result"] = -3
+			data["result_msg"] = "Offer does not exists."
 	else:
 		data["result"] = -1
 		data["result_msg"] = "User is not a customer."
-	return JSONHttpResponse(data)	
+
+	return JSONHttpResponse(data)
 
 @csrf_exempt
 @login_required

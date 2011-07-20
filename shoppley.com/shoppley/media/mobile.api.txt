@@ -29,8 +29,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "507479", 
-      "expires_time": 1313548676, 
+      "code": "577402", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -46,8 +46,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "172241", 
-      "expires_time": 1313548676, 
+      "code": "407207", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -63,8 +63,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "187171", 
-      "expires_time": 1313548676, 
+      "code": "887353", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -80,8 +80,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "913743", 
-      "expires_time": 1313548677, 
+      "code": "385038", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -97,8 +97,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "code": "898396", 
-      "expires_time": 1313548677, 
+      "code": "695701", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -113,7 +113,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "expires_time": 1313548677, 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -128,7 +128,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "expires_time": 1313548677, 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -141,134 +141,33 @@ RESPONSE:
   "result_msg": "Returning offer details."
 }
 ****************************************************************************************************
-Show narrow geographical offers, it also returns offer details
+Request offercode for offer.
 ----------------------------------------------------------------------------------------------------
-POST URL: /m/customer/offers/current/
+POST URL: /m/customer/offer/offercode/
 PARAMS:
-{ 'lat': 42.3647559, 'lon': -71.1032591, 'v': 1}
+{ 'offer_id': 6, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "offers": [
-    {
-      "offer_code_id": 1, 
-      "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 1, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "507479", 
-      "expires_time": 1313548676, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$5 off shoes brands, Nike, Reebok"
-    }, 
-    {
-      "offer_code_id": 4, 
-      "description": "15% off big steak and 10% off small steak", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 2, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "172241", 
-      "expires_time": 1313548676, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "15% off big steak and 10% off small stea"
-    }, 
-    {
-      "offer_code_id": 7, 
-      "description": "Save $15 on your purchase of suit", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 3, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "187171", 
-      "expires_time": 1313548676, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Save $15 on your purchase of suit"
-    }, 
-    {
-      "offer_code_id": 10, 
-      "description": "$125 for tonight only at Marriott", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 4, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "913743", 
-      "expires_time": 1313548677, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$125 for tonight only at Marriott"
-    }, 
-    {
-      "offer_code_id": 13, 
-      "description": "$1 off Chicken Sandwiches", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 5, 
-      "expires": "3 weeks", 
-      "lon": 42.3609484, 
-      "phone": "6178710710", 
-      "code": "898396", 
-      "expires_time": 1313548677, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$1 off Chicken Sandwiches"
-    }, 
-    {
-      "description": "Free drink when you order $10 or more", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 6, 
-      "expires": "3 weeks", 
-      "lon": 42.3609484, 
-      "phone": "6178710710", 
-      "expires_time": 1313548677, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Free drink when you order $10 or more"
-    }, 
-    {
-      "description": "Half priced cookies", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 7, 
-      "expires": "3 weeks", 
-      "lon": 42.3609484, 
-      "phone": "6178710710", 
-      "expires_time": 1313548677, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Half priced cookies"
-    }
-  ], 
-  "num_offers": 7, 
+  "offer": {
+    "offer_code_id": 16, 
+    "description": "Free drink when you order $10 or more", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
+    "address1": "190 Mass Av.", 
+    "offer_id": 6, 
+    "expires": "3 weeks", 
+    "lon": 42.3609484, 
+    "phone": "6178710710", 
+    "code": "327085", 
+    "expires_time": 1313551604, 
+    "citystatezip": "Cambridge, MA 02139", 
+    "lat": -71.0962386, 
+    "merchant_name": "Flour Bakery", 
+    "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+    "name": "Free drink when you order $10 or more"
+  }, 
   "result": 1, 
-  "result_msg": "Returning offer details."
+  "result_msg": "^_^"
 }
 ****************************************************************************************************
 Show redeemed offers, it also returns offer details
@@ -282,13 +181,13 @@ RESPONSE:
   "offers": [
     {
       "rating": 0, 
-      "offer_code_id": 4, 
-      "name": "15% off big steak and 10% off small stea", 
+      "offer_code_id": 7, 
+      "name": "Save $15 on your purchase of suit", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-19-11 23:07", 
-      "redeemed_time": 1311131278, 
+      "redeemed": "07-19-11 23:56", 
+      "redeemed_time": 1311134205, 
       "address1": "", 
-      "offer_id": 2, 
+      "offer_id": 3, 
       "feedback": "", 
       "lon": -71.103329, 
       "phone": "6174538665", 
@@ -297,15 +196,15 @@ RESPONSE:
       "lat": 42.365005, 
       "txn_amount": "0.00", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "description": "15% off big steak and 10% off small steak"
+      "description": "Save $15 on your purchase of suit"
     }, 
     {
       "rating": 0, 
       "offer_code_id": 10, 
       "name": "$125 for tonight only at Marriott", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-19-11 23:07", 
-      "redeemed_time": 1311131278, 
+      "redeemed": "07-19-11 23:56", 
+      "redeemed_time": 1311134205, 
       "address1": "", 
       "offer_id": 4, 
       "feedback": "", 
@@ -329,14 +228,14 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'172241',
+  'offer_code': u'327085',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'],
   'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1, 
-  "confirm_msg": "Offer by \"172241\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"327085\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
@@ -344,7 +243,7 @@ Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
 PARAMS:
-{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 4, 'v': 1}
+{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 7, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -356,7 +255,7 @@ Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
 PARAMS:
-{ 'offer_code_id': 4, 'rating': 5, 'v': 1}
+{ 'offer_code_id': 7, 'rating': 5, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -406,8 +305,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "686053", 
-      "expires_time": 1313548676, 
+      "code": "912896", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -423,8 +322,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "428773", 
-      "expires_time": 1313548676, 
+      "code": "203329", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -440,8 +339,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "702623", 
-      "expires_time": 1313548676, 
+      "code": "634901", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -457,8 +356,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3647559, 
       "phone": "6174538665", 
-      "code": "781968", 
-      "expires_time": 1313548677, 
+      "code": "665468", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.1032591, 
       "merchant_name": "Jane's Shoe Store", 
@@ -474,8 +373,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "code": "839753", 
-      "expires_time": 1313548677, 
+      "code": "034999", 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -490,7 +389,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "expires_time": 1313548677, 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -505,7 +404,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 42.3609484, 
       "phone": "6178710710", 
-      "expires_time": 1313548677, 
+      "expires_time": 1313551604, 
       "citystatezip": "Cambridge, MA 02139", 
       "lat": -71.0962386, 
       "merchant_name": "Flour Bakery", 
@@ -574,7 +473,21 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$125 for tonight only at Marriott", 
       "offer_id": 4, 
-      "expires": 1313548677, 
+      "expires": 1313551604, 
+      "redistributable": true, 
+      "redeemed": 1, 
+      "redistribute_processing": false, 
+      "duration": 40320, 
+      "is_processing": false
+    }, 
+    {
+      "received": 3, 
+      "redeem_rate": 33.33333333333333, 
+      "description": "Save $15 on your purchase of suit", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "title": "Save $15 on your purchase of suit", 
+      "offer_id": 3, 
+      "expires": 1313551604, 
       "redistributable": true, 
       "redeemed": 1, 
       "redistribute_processing": false, 
@@ -584,27 +497,13 @@ RESPONSE:
     {
       "received": 3, 
       "redeem_rate": 0.0, 
-      "description": "Save $15 on your purchase of suit", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "Save $15 on your purchase of suit", 
-      "offer_id": 3, 
-      "expires": 1313548676, 
-      "redistributable": true, 
-      "redeemed": 0, 
-      "redistribute_processing": false, 
-      "duration": 40320, 
-      "is_processing": false
-    }, 
-    {
-      "received": 3, 
-      "redeem_rate": 33.33333333333333, 
       "description": "15% off big steak and 10% off small steak", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "15% off big steak and 10% off small stea", 
       "offer_id": 2, 
-      "expires": 1313548676, 
+      "expires": 1313551604, 
       "redistributable": true, 
-      "redeemed": 1, 
+      "redeemed": 0, 
       "redistribute_processing": false, 
       "duration": 40320, 
       "is_processing": false
@@ -616,7 +515,7 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$5 off shoes brands, Nike, Reebok", 
       "offer_id": 1, 
-      "expires": 1313548676, 
+      "expires": 1313551604, 
       "redistributable": true, 
       "redeemed": 0, 
       "redistribute_processing": false, 
@@ -651,7 +550,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "10% off on entree", 
     "offer_id": 8, 
-    "expires": 1311134883, 
+    "expires": 1311137809, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -687,7 +586,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 9, 
-    "expires": 1311133083, 
+    "expires": 1311136009, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -721,7 +620,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 10, 
-    "expires": 1311136683, 
+    "expires": 1311139609, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -749,7 +648,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 10, 
-    "expires": 1311136683, 
+    "expires": 1311139609, 
     "redistributable": false, 
     "amount": 10, 
     "redeemed": 0, 
@@ -777,7 +676,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 10, 
-    "expires": 1311136683, 
+    "expires": 1311139609, 
     "redistributable": false, 
     "amount": 10, 
     "redeemed": 0, 
@@ -792,26 +691,24 @@ RESPONSE:
 ****************************************************************************************************
 Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/restart/9/
+GET URL: /m/merchant/offer/restart/1/
 PARAMS:
 { 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer": {
-    "received": 1, 
+    "received": 3, 
     "redeem_rate": 0.0, 
-    "description": "Come taste some great greek food next 30 minutes", 
+    "description": "$5 off shoes brands, Nike, Reebok", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
-    "title": "$10 off on entree", 
-    "offer_id": 9, 
-    "expires": 1311131283, 
+    "title": "$5 off shoes brands, Nike, Reebok", 
+    "offer_id": 1, 
+    "expires": 1311132404, 
     "redistributable": true, 
-    "amount": 10, 
     "redeemed": 0, 
     "redistribute_processing": false, 
     "duration": 0, 
-    "unit": 2, 
     "is_processing": false
   }, 
   "result": 1, 
@@ -822,29 +719,30 @@ Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': u'187171', 'v': 1}
+{ 'amount': 38.05, 'code': u'644680', 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer_code": {
-    "code": "187171", 
-    "description": "Save $15 on your purchase of suit", 
+    "code": "644680", 
+    "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "address1": "", 
-    "offer_id": 3, 
-    "expires": "3 weeks", 
+    "offer_id": 9, 
+    "expires": "29 minutes", 
     "lon": -71.103329, 
     "phone": "6174538665", 
-    "offer_code_id": 7, 
-    "expires_time": 1313548676, 
+    "offer_code_id": 22, 
+    "expires_time": 1311136009, 
     "citystatezip": "Cambridge, MA 02139", 
     "lat": 42.365005, 
+    "percentage": 10, 
     "merchant_name": "Jane's Shoe Store", 
     "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "Save $15 on your purchase of suit"
+    "name": "$10 off on entree"
   }, 
   "result": 1, 
-  "result_msg": "Offer redemption (code: 187171) successful."
+  "result_msg": "Offer redemption (code: 644680) successful."
 }
 ****************************************************************************************************
 Show list of past offers and details (URL param: 0)
@@ -881,11 +779,11 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "total_forwarded": 4, 
+  "total_forwarded": 0, 
   "total_redeemed": 3, 
   "redeem_rate": 20.0, 
   "result_msg": "Summary data about the merchant's offers.", 
-  "total_received": 19, 
+  "total_received": 15, 
   "result": 1, 
   "num_offers": 7
 }

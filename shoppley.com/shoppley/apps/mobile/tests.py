@@ -168,7 +168,7 @@ class SimpleTest(TestCase):
 			offer.distribute()
 
 
-	def post_json(self, command, params={}, comment="No comment", redirect=False):
+	def post_json(self, command, params={}, comment="No comment", redirect=False, shouldPrint=True):
 		params["v"] = API_VERSION
 		output = []
 		output.append("*"*100+"\n")
@@ -190,10 +190,11 @@ class SimpleTest(TestCase):
 		else:
 			self.assertEqual(response.status_code, 200)
 		output.append(json.dumps(json.loads(response.content), indent=2)+"\n")
-		self.f.writelines(output)
+		if shouldPrint:
+			self.f.writelines(output)
 		return json.loads(response.content)
 
-	def get_json(self, command, params={}, comment="No comment", redirect=False):
+	def get_json(self, command, params={}, comment="No comment", redirect=False, shouldPrint=True):
 		params["v"] = API_VERSION
 		
 		output = []
@@ -216,11 +217,11 @@ class SimpleTest(TestCase):
 		else:
 			self.assertEqual(response.status_code, 200)
 		output.append(json.dumps(json.loads(response.content), indent=2)+"\n")
-		self.f.writelines(output)
+		if shouldPrint:
+			self.f.writelines(output)
 		return json.loads(response.content)
 
-	def get_web(self, command, params={}, comment="No comment"):
-		params["v"] = API_VERSION
+	def get_web(self, command, params={}, comment="No comment", shouldPrint=True):
 		output = []
 		output.append("*"*100+"\n")
 		output.append(comment+"\n")
@@ -229,10 +230,11 @@ class SimpleTest(TestCase):
 		output.append("PARAMS:\n")
 		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.get(command, params)
-		self.f.writelines(output)
+		if shouldPrint:
+			self.f.writelines(output)
 		return response
 
-	def post_web(self, command, params={}, comment="No comment"):
+	def post_web(self, command, params={}, comment="No comment", shouldPrint=True):
 		output = []
 		output.append("*"*100+"\n")
 		output.append(comment+"\n")
@@ -241,7 +243,8 @@ class SimpleTest(TestCase):
 		output.append("PARAMS:\n")
 		output.append(self.pp.pformat(params)+"\n")
 		response = self.client.post(command, params)
-		self.f.writelines(output)
+		if shouldPrint:
+			self.f.writelines(output)
 		return response
 
 	def create_test_offers(self):
@@ -367,16 +370,25 @@ class SimpleTest(TestCase):
 		comment = "Show current offers, it also returns offer details"
 		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
 
-		print "Num offers: %d"%len(response["offers"])
-		offer_code_to_forward = response["offers"][1]["code"]
+		print "Num offers: %d" % len(response["offers"])
 
-		comment = "Show narrow geographical offers, it also returns offer details"
-		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
+		offer_to_request_code = None
+		for o in response["offers"]:
+			if not "code" in o:
+				offer_to_request_code = o["offer_id"]
+				break
+
+		self.assertTrue(offer_to_request_code is not None);
+		comment = "Request offercode for offer."
+		response = self.post_json( reverse("m_offer_offercode"), {"offer_id": offer_to_request_code}, comment)
+				
+		offer_code_to_forward = response["offer"]["code"]
 
 		self.redeem_offer()
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
+		self.assertTrue(len(response["offers"]) > 0);
 		review_offer_id = response["offers"][0]["offer_code_id"]
 
 		comment = "Forward offer to a list of phone numbers (text messages are sent to them and new accounts created if they are not current users with text message showing random passwords)"
