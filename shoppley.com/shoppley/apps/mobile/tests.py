@@ -20,6 +20,7 @@ from shoppleyuser.utils import parse_phone_number
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category
 from offer.models import Offer, OfferCode
 
+API_VERSION = 1;
 
 class SimpleTest(TestCase):
 
@@ -50,6 +51,7 @@ class SimpleTest(TestCase):
 			c.active = True
 			c.verified = True
 			c.save()
+			c.set_location_from_address()
 		
 		u, created = User.objects.get_or_create(username="user2@customer.com")
 		u.email="user2@customer.com"
@@ -61,6 +63,7 @@ class SimpleTest(TestCase):
 			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone=num, balance=1000)
 			c.active = True
 			c.verified = True
+			c.set_location_from_address()
 			c.save()
 
 		u, created = User.objects.get_or_create(username="user3@customer.com")
@@ -74,6 +77,7 @@ class SimpleTest(TestCase):
 			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone=num, balance=1000)
 			c.active = True
 			c.verified = True
+			c.set_location_from_address()
 			c.save()
 
 		u, created = User.objects.get_or_create(username="user1@merchant.com")
@@ -88,6 +92,7 @@ class SimpleTest(TestCase):
 			m.active = True
 			m.verified = True
 			m.save()
+			m.set_location_from_address()
 
 		u, created = User.objects.get_or_create(username="user2@merchant.com")
 		u.email="user2@merchant.com"
@@ -100,6 +105,7 @@ class SimpleTest(TestCase):
 			m.active = True
 			m.verified = True
 			m.save()
+			m.set_location_from_address()
 
 
 		shop_user = Customer.objects.get(user__email="user1@customer.com")
@@ -163,6 +169,7 @@ class SimpleTest(TestCase):
 
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False):
+		params["v"] = API_VERSION
 		output = []
 		output.append("*"*100+"\n")
 		output.append(comment+"\n")
@@ -187,6 +194,8 @@ class SimpleTest(TestCase):
 		return json.loads(response.content)
 
 	def get_json(self, command, params={}, comment="No comment", redirect=False):
+		params["v"] = API_VERSION
+		
 		output = []
 		output.append("*"*100+"\n")
 		output.append(comment+"\n")
@@ -211,6 +220,7 @@ class SimpleTest(TestCase):
 		return json.loads(response.content)
 
 	def get_web(self, command, params={}, comment="No comment"):
+		params["v"] = API_VERSION
 		output = []
 		output.append("*"*100+"\n")
 		output.append(comment+"\n")
@@ -251,7 +261,8 @@ class SimpleTest(TestCase):
 			input_time = datetime.now()-timedelta(minutes=30)
 			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
-			offer.distribute()
+			print offer.distribute()
+			
 
 		if not settings.SMS_DEBUG:
 			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
@@ -405,7 +416,7 @@ class SimpleTest(TestCase):
 		password = "hello"
 
 		comment = "Customer registration"
-		response = self.post_json( reverse("m_register_customer"), {'email': email, 'phone': '617-885-2347', 'zipcode': '02139'}, comment)
+		response = self.post_json( reverse("m_register_customer"), {'email': email, 'phone': '6178852347', 'zipcode': '02139', 'password':password}, comment)
 	
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
