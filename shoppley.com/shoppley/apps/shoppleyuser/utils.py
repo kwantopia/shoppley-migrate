@@ -106,7 +106,7 @@ def load_zipcodes():
 		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, 
 				city=city_obj, latitude=latitude, longitude=longitude)
 
-def sms_notify(number, text, debug=False):
+def sms_notify(number, text, debug=settings.SMS_DEBUG):
 	if debug:
 		print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":text, "phone":number,}
 	else:

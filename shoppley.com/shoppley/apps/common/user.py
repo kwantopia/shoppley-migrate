@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
+from offer.utils import TxtTemplates
 from shoppleyuser.models import ZipCode, ShoppleyUser, Merchant
-	
+from shoppleyuser.utils import sms_notify
+
 def clean_phone_number(raw_number, country_code="US"):
 	cleaned_number = filter(lambda x: x.isdigit(), raw_number)
 	if country_code == "US":
@@ -38,3 +40,17 @@ def check_phone(phone):
 		return None
 	return phone
 
+def verify_phone(shoppleyUser, isVerify):
+	t = TxtTemplates()
+	
+	if isVerify:
+		shoppleyUser.verified_phone = shoppleyUser.VERIFIED_YES
+		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_SUCCESS"], {})
+
+	else:
+		shoppleyUser.verified_phone = shoppleyUser.VERIFIED_NO
+		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_NO_SUCCESS"], {})
+		
+	shoppleyUser.save()
+	sms_notify(shoppleyUser.phone, msg)
+	

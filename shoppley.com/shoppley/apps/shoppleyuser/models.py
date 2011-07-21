@@ -74,9 +74,20 @@ class ShoppleyUser(models.Model):
 	#: set to False when customer issues #stop command
 	active 			= models.BooleanField(default=True)
 	#: verified by logging in when invited by friends
-	verified		= models.BooleanField(default=False) 
+	verified		= models.BooleanField(default=False)
 	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )  
 	location		= models.ForeignKey(Location, null=True, blank=True)
+	
+	
+	VERIFIED_YES = 0
+	VERIFIED_NO = 1
+	VERIFIED_PENDING = 2
+	VERIFIED_CHOICES = (
+	    (VERIFIED_YES, 'Yes'),
+	    (VERIFIED_NO, 'No'),
+		(VERIFIED_PENDING, 'Pending'),
+	)
+	verified_phone  = models.IntegerField(default=VERIFIED_PENDING, choices=VERIFIED_CHOICES)
 	
 	def is_customer(self):
 		return hasattr(self, "customer")
