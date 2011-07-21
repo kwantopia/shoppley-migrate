@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import "SLOffer.h"
+
 #pragma mark -
 #pragma mark SLDataDownloader
 
@@ -57,7 +59,7 @@
 - (void)updateLocation;
 - (void)reloadData;
 
-- (BOOL)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint;
+- (NSDictionary*)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint;
 
 #pragma mark -
 #pragma mark User
@@ -78,5 +80,6 @@
 - (BOOL)sendFeedBack:(NSString*)feedback offerCodeId:(NSNumber*)offerCodeId;
 - (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId;
 - (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode;
+- (BOOL)getOfferCodeForOffer:(SLOffer*)offer;
     
 @end

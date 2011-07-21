@@ -10,7 +10,7 @@
 
 
 @implementation SLOffer
-@synthesize offerId, name, merchantName, description, code, offerCodeId, img, phone, lat, lon;
+@synthesize offerId, name, merchantName, description, code, offerCodeId, img, banner, phone, lat, lon;
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(offerId);
@@ -20,6 +20,7 @@
     TT_RELEASE_SAFELY(code);
     TT_RELEASE_SAFELY(offerCodeId);
     TT_RELEASE_SAFELY(img);
+    TT_RELEASE_SAFELY(banner);
     TT_RELEASE_SAFELY(phone);
     TT_RELEASE_SAFELY(lat);
     TT_RELEASE_SAFELY(lon);
@@ -34,6 +35,7 @@
     self.code = [data objectForKey:@"code"];
     self.offerCodeId = [data objectForKey:@"offer_code_id"];
     self.img = [data objectForKey:@"img"];
+    self.banner = [data objectForKey:@"banner"];
     self.phone = [data objectForKey:@"phone"];
     self.lat = [data objectForKey:@"lat"];
     self.lon = [data objectForKey:@"lon"];
@@ -51,6 +53,7 @@
         self.code = [decoder decodeObjectForKey:@"code"];
         self.offerCodeId = [decoder decodeObjectForKey:@"offerCodeId"];
         self.img = [decoder decodeObjectForKey:@"img"];
+        self.banner = [decoder decodeObjectForKey:@"banner"];
         self.phone = [decoder decodeObjectForKey:@"phone"];
         self.lat = [decoder decodeObjectForKey:@"lat"];
         self.lon = [decoder decodeObjectForKey:@"lon"];
@@ -80,6 +83,9 @@
     }
     if (self.img) {
         [encoder encodeObject:self.img forKey:@"img"];
+    }
+    if (self.banner) {
+        [encoder encodeObject:self.banner forKey:@"banner"];
     }
     if (self.phone) {
         [encoder encodeObject:self.phone forKey:@"phone"];

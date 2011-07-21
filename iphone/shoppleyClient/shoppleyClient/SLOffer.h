@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString* code;
 @property (nonatomic, retain) NSNumber* offerCodeId;
 @property (nonatomic, retain) NSString* img;
+@property (nonatomic, retain) NSString* banner;
 @property (nonatomic, retain) NSString* phone;
 @property (nonatomic, retain) NSNumber* lat;
 @property (nonatomic, retain) NSNumber* lon;

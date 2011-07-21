@@ -13,9 +13,11 @@
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
-static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
-//static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+//static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
 //static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
+
+static int kAPIVersion = 1;
 
 #pragma mark -
 #pragma mark SLDataDownloader
@@ -51,13 +53,10 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     TTURLRequest* request = [TTURLRequest requestWithURL:url delegate:self];
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];
     
-    //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //[request.parameters setValue:appDelegate.latitude forKey:@"lat"];
-    //[request.parameters setValue:appDelegate.longitude forKey:@"lon"];
-    
     if ([_dataType isEqualToString:@"current_offers"]) {
         [request.parameters setValue:[[SLDataController sharedInstance] latitude] forKey:@"lat"];
         [request.parameters setValue:[[SLDataController sharedInstance] longitude] forKey:@"lon"];
+        [request.parameters setValue:[NSNumber numberWithInt:kAPIVersion] forKey:@"v"];
         request.httpMethod = @"POST";
     } else if ([_dataType isEqualToString:@"redeemed_offers"]) {
         request.httpMethod = @"GET";
@@ -159,10 +158,11 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     [_locationManager startUpdatingLocation];
 }
 
-- (BOOL)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint {
+- (NSDictionary*)sendPostRequestWithParameters:(NSDictionary*)parameters endpoint:(NSString*)endpoint {
     TTURLRequest* request = [TTURLRequest requestWithURL:[kSLURLPrefix stringByAppendingString:endpoint] delegate:self];
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];
     [request.parameters setDictionary:parameters];
+    [request.parameters setValue:[NSNumber numberWithInt:kAPIVersion] forKey:@"v"];
     request.httpMethod = @"POST";
     request.cachePolicy = TTURLRequestCachePolicyNone;
     
@@ -173,14 +173,14 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     
     if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary* response = jsonResponse.rootObject;
-        if ([[response valueForKey:@"result"] intValue]== 1) {
-            return YES;            
+        if ([[response valueForKey:@"result"] intValue] > 0) {
+            return response;            
         }
         _errorString = [response valueForKey:@"result_msg"];
-        return NO;
+        return NULL;
     }
     _errorString = @"Connection Error. Please try again later.";
-    return NO;
+    return NULL;
 }
 
 #pragma mark -
@@ -190,6 +190,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     request.response = [[[TTURLJSONResponse alloc] init] autorelease];
     [request.parameters setValue:email forKey:@"email"];
     [request.parameters setValue:password forKey:@"password"];
+    [request.parameters setValue:[NSNumber numberWithInt:kAPIVersion] forKey:@"v"];
     request.httpMethod = @"POST";
     request.cachePolicy = TTURLRequestCachePolicyNone;
     [request sendSynchronously];
@@ -221,6 +222,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     [request.parameters setValue:password forKey:@"password"];
     [request.parameters setValue:phone forKey:@"phone"];
     [request.parameters setValue:zipcode forKey:@"zipcode"];
+    [request.parameters setValue:[NSNumber numberWithInt:kAPIVersion] forKey:@"v"];
     request.httpMethod = @"POST";
     request.cachePolicy = TTURLRequestCachePolicyNone;
     [request sendSynchronously];
@@ -229,7 +231,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     
     if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary* response = jsonResponse.rootObject;
-        if ([[response valueForKey:@"result"] intValue]== 1) {
+        if ([[response valueForKey:@"result"] intValue] == 1) {
             // Persist username/password
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:email forKey:@"email"];
@@ -311,14 +313,14 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
     [parameters setValue:feedback forKey:@"feedback"];
     [parameters setValue:offerCodeId forKey:@"offer_code_id"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/feedback/"];
+    return ([self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/feedback/"] != NULL);
 }
 
 - (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId {
     NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
     [parameters setValue:rate forKey:@"rating"];
     [parameters setValue:offerCodeId forKey:@"offer_code_id"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/rate/"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/rate/"] != NULL;
 }
 
 - (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode {
@@ -327,7 +329,21 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     [parameters setValue:offerCode forKey:@"offer_code"];
     [parameters setValue:[phones JSONRepresentation] forKey:@"phones"];
     [parameters setValue:[emails JSONRepresentation] forKey:@"emails"];
-    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/forward/"];
+    return [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/forward/"] != NULL;
+}
+
+- (BOOL)getOfferCodeForOffer:(SLOffer*)offer {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:offer.offerId forKey:@"offer_id"];
+    NSDictionary* response = [self sendPostRequestWithParameters:parameters endpoint:@"customer/offer/offercode/"];
+    if (response) {
+        response = [response objectForKey:@"offer"];
+        offer.code = [response objectForKey:@"code"];
+        offer.offerCodeId = [response objectForKey:@"offer_code_id"];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 #pragma mark -

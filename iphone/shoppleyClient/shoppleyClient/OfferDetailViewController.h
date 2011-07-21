@@ -13,6 +13,7 @@
 @interface OfferDetailViewController : TTTableViewController {
     SLOffer* _offer;
     BOOL _isCurrentOffer;
+    BOOL _isLoadingOfferCode;
 }
 
 - (NSString*)rateURL;

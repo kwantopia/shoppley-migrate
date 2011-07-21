@@ -10,6 +10,7 @@
 
 #import "SLAdditions.h"
 #import "SLCurrentOffer.h"
+#import "SLDataController.h"
 #import "SLRedeemedOffer.h"
 #import "SLTableViewDataSource.h"
 #import "SLTableItem.h"
@@ -25,6 +26,7 @@
         self.variableHeightRows = YES;
         
         _isCurrentOffer = [_offer isKindOfClass:[SLCurrentOffer class]];
+        _isLoadingOfferCode = NO;
         
         [[TTNavigator navigator].URLMap from:[self rateURL] toViewController:self selector:@selector(rateOffer)];
         [[TTNavigator navigator].URLMap from:[self feedbackURL] toViewController:self selector:@selector(feedbackOffer)];
@@ -69,7 +71,13 @@
     
     if (_isCurrentOffer) {
         NSMutableArray* redeemCode = [[[NSMutableArray alloc] init] autorelease];
-        [redeemCode addObject:[SLRightValueTableItem itemWithText:@"Your personal redemption code" value:_offer.code]];
+        if (_offer.code) {
+            [redeemCode addObject:[SLRightValueTableItem itemWithText:@"Your personal redemption code" value:_offer.code]];
+        } else if (_isLoadingOfferCode) {
+            [redeemCode addObject:[TTTableActivityItem itemWithText:@"Processing..."]];
+        } else {
+            [redeemCode addObject:[TTTableButton itemWithText:@"Request a redemption code." delegate:self selector:@selector(getOfferCodeClicked)]];
+        }
         [items addObject:redeemCode];
         [sections addObject:@""];
         
@@ -123,6 +131,33 @@
     [[TTNavigator navigator] openURLAction:urlAction];
 }
 
+- (void)getOfferCodeClicked {
+    if (!_isLoadingOfferCode) {
+        _isLoadingOfferCode = YES;
+        [self performSelectorInBackground:@selector(getOfferCode) withObject:self];
+    }
+}
+
+- (void)getOfferCode {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    if (![[SLDataController sharedInstance] getOfferCodeForOffer:_offer]) {
+        UIAlertView *alert = [[[UIAlertView alloc]
+                               initWithTitle:@""
+                               message:[SLDataController sharedInstance].errorString
+                               delegate:self
+                               cancelButtonTitle:@"OK"
+                               otherButtonTitles: nil] autorelease];
+        [alert show];
+    }
+    [self performSelectorOnMainThread:@selector(getOfferCodeDone) withObject:nil waitUntilDone:NO];
+    [pool release];
+}
+
+- (void)getOfferCodeDone {
+    _isLoadingOfferCode = NO;
+    [self createModel];
+}
+
 @end
 
 @implementation OfferDetailHeaderView
@@ -138,14 +173,25 @@
         
         BOOL isCurrentOffer = [offer isKindOfClass:[SLCurrentOffer class]];
         
+        CGFloat top = 0;
+        
+        if (TTIsStringWithAnyText(offer.banner)) {
+            TTImageView* bannerImg = [[[TTImageView alloc] init] autorelease];
+            bannerImg.frame = CGRectMake(0, 0, 320, 50);
+            bannerImg.defaultImage = [UIImage imageNamed:@"default_banner.png"];
+            bannerImg.urlPath = offer.banner;
+            [self addSubview:bannerImg];
+            top = 50;
+        }
+        
         TTImageView* imageView = [[[TTImageView alloc] init] autorelease];
         imageView.urlPath = offer.img;        
-        imageView.frame = CGRectMake(kSmallMargin, kSmallMargin, kImageWidth, kImageHeight);
+        imageView.frame = CGRectMake(kSmallMargin, top + kSmallMargin, kImageWidth, kImageHeight);
         [self addSubview:imageView];
         
         CGFloat left = kSmallMargin + kImageWidth + kLargeMargin;
         
-        TTStyledTextLabel* titleLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(left, kSmallMargin, frame.size.width - left - kSmallMargin, 100)] autorelease];
+        TTStyledTextLabel* titleLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(left, top + kSmallMargin, frame.size.width - left - kSmallMargin, 100)] autorelease];
         titleLabel.font = [UIFont systemFontOfSize:17];
         NSString* title = [NSString stringWithFormat:@"<b>%@</b> by %@", offer.name, offer.merchantName];
         titleLabel.text = [TTStyledText textFromXHTML:title lineBreaks:YES URLs:YES];
@@ -154,7 +200,7 @@
         titleLabel.backgroundColor = self.backgroundColor;
         [self addSubview:titleLabel];
         
-        CGFloat top = kSmallMargin + MAX(titleLabel.frame.size.height, kImageHeight) + kLargeMargin;
+        top += kSmallMargin + MAX(titleLabel.frame.size.height, kImageHeight) + kLargeMargin;
         TTStyledTextLabel* detailLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(kSmallMargin, top, frame.size.width - (2*kSmallMargin), 100)] autorelease];
         detailLabel.font = [UIFont systemFontOfSize:14];
         NSString* detail = offer.description;
