@@ -191,6 +191,8 @@ class Offer(models.Model):
 		return track_code
 
 	def gen_offer_code(self, customer):
+		if self.offercode_set.filter(customer=customer).exists():
+			return
 		gen_code = gen_offer_code().lower()
 		while self.offercode_set.filter(code__iexact=gen_code):
 			gen_code = gen_offer_code()
