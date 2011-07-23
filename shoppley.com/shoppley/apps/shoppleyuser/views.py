@@ -50,18 +50,23 @@ def fb_connect_init(request):
 	#	user.is_autenticated = False
 	#	user.save()
 		fbuser = request.facebook.graph.get_object("me")
-		user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
-		user.save()
+		#user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
+		#user.save()
 		if fbuser['email']:
 			try:
 				EmailAddress.objects.get(email=fbuser['email'])
-				user.delete()
-				return render_to_response("front-page.html", {"email": fbuser['email'],  }, context_instance=RequestContext(request))
-				#return HttpResponseRedirect("home") ## user already have an account with us with the email.
+				request.user.delete()
+			
+				return HttpResponseRedirect(reverse("home_fb_fail")) ## user already have an account with us with the email.
 			except EmailAddress.DoesNotExist:
+				user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
+				user.save()	
 				EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
 		su = Customer.objects.create(user = request.user, is_fb_connected=True)
 		return 	HttpResponseRedirect(reverse("fb_extra_info"))
+
+def home_fb_fail (request):
+	return  render_to_response("front-page.html",{"lform":LoginForm,"error":"1", },context_instance=RequestContext(request))
 
 def fb_login (request):
 	return HttpResponseRedirect(reverse("home"))
@@ -83,7 +88,7 @@ def fb_connect_success(request):
 	return HttpResponseRedirect(reverse("home"))
 
 # view for home, depending on whether request user is cutomer/merchant
-def home(request, template_name="front-page.html"):
+def home(request,  template_name="front-page.html"):
 	#return HttpResponseRedirect("http://webuy-dev.mit.edu")
 	user = request.user
 	if user.is_authenticated():
@@ -127,6 +132,7 @@ def home(request, template_name="front-page.html"):
                                         "lform":LoginForm,
                                 },context_instance=RequestContext(request))
 	else:
+
 		return	render_to_response(template_name,{
 					"lform":LoginForm,
 				},context_instance=RequestContext(request))
