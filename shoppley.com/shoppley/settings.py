@@ -126,7 +126,7 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
-	#'django.middleware.csrf.CsrfResponseMiddleware',
+	'django.middleware.csrf.CsrfResponseMiddleware',
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
@@ -137,6 +137,7 @@ MIDDLEWARE_CLASSES = [
 	"django_sorting.middleware.SortingMiddleware",
 	#"pinax.middleware.security.HideSensistiveFieldsMiddleware",
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
+	"socialregistration.middleware.FacebookMiddleware",
 ]
 ROOT_URLCONF = "shoppley.urls"
 
@@ -211,6 +212,7 @@ INSTALLED_APPS = [
 	"django_markup",
 	"tagging_ext",
 	"djcelery",
+	"socialregistration",
 	#"south",		
 	# Pinax
 	"pinax.apps.account",
@@ -263,9 +265,13 @@ ACCOUNT_EMAIL_VERIFICATION = False
 ACCOUNT_EMAIL_AUTHENTICATION = False 
 ACCOUNT_UNIQUE_EMAIL = EMAIL_CONFIRMATION_UNIQUE_EMAIL = False
 
-#AUTHENTICATION_BACKENDS = [
-#    "pinax.apps.account.auth_backends.AuthenticationBackend",
-#]
+AUTHENTICATION_BACKENDS= [
+  #  "pinax.apps.account.auth_backends.AuthenticationBackend",
+
+    "socialregistration.auth.FacebookAuth",
+	"django.contrib.auth.backends.ModelBackend",   
+  
+]
 
 LOGIN_URL = "/account/login/" # @@@ any way this can be a url name?
 LOGIN_REDIRECT_URLNAME = "what_next"

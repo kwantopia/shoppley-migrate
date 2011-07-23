@@ -649,4 +649,17 @@ class TrackingCode(models.Model):
 
 	def __unicode__(self):
 		return "code: %s for offer: %s" % (self.code, self.offer)
+class Vote(models.Model):
+	customer                = models.ForeignKey(Customer)
+	offer               = models.ForeignKey(Offer)
+	VOTE_CHOICES = (
+		(1, "yay"),
+		(-1,"nay"),
+		(0, "pending"),
+	)
+	vote                    = models.IntegerField(default=0, choices = VOTE_CHOICES)
+	time_stamp 		= models.DateTimeField()
+	def __unicode__(self):
+		return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
+
 

@@ -152,7 +152,7 @@ class SimpleTest(TestCase):
 			u.save()
 
 			zipcode = ZipCode.objects.filter(code="%s" % row[1])[0]
-			m, created = Merchant.objects.get_or_create(user=u, address_1="%s" % row[7],zipcode=zipcode, phone=phone, balance=100, business_name=row[6], admin="Kwan")
+			m, created = Merchant.objects.get_or_create(user=u, address_1="%s" % row[7],zipcode=zipcode, phone=phone,  business_name=row[6], admin="Kwan")
 			m.set_location_from_address()
 	def create_merchants(self):
 
@@ -182,7 +182,7 @@ class SimpleTest(TestCase):
 			u.save()
 
 			cambridge = ZipCode.objects.filter(code="02139")[0]
-			m, created = Merchant.objects.get_or_create(user=u, address_1="15 Pearl St.",zipcode=cambridge, phone=phone, balance=100, business_name=row[6], admin="Kwan")
+			m, created = Merchant.objects.get_or_create(user=u, address_1="15 Pearl St.",zipcode=cambridge, phone=phone, business_name=row[6], admin="Kwan")
 			m.set_location_from_address()
 
 	def setUp(self):
@@ -203,7 +203,7 @@ class SimpleTest(TestCase):
 		#	u.user.is_active=True
 		#	u.user.save()
 
-		
+		print settings		
 		self.create_merchants()
 
 		self.create_customers()
@@ -995,9 +995,55 @@ class SimpleTest(TestCase):
 		print "new", o.offercode_set.all()
 		self.assertEqual(codes<o.offercode_set.all().count(),True)
 
+		print "***************TEST 19: VOTE ***************"
+		c = Customer.objects.get(phone="0000000001")
+		redeemed = c.offercode_set.filter(redeem_time__isnull=False).order_by("-redeem_time")
+		print c.offercode_set.order_by("-redeem_time").values_list("offer", "redeem_time")
+		msg = {"from": "0000000001", "text": "#yay" }
+		cmd.test_handle(msg)
+		offer = redeemed[0].offer
+		self.assertEqual(offer.vote_set.count(), 1)
+		self.assertEqual(offer.vote_set.all()[0].vote, 1)
+		msg = {"from": "0000000001", "text": "#nay" }
+		cmd.test_handle(msg)
+		self.assertEqual(offer.vote_set.count(), 1)
+		self.assertEqual(offer.vote_set.all()[0].vote, 1)
+	
+		offercode = c.offercode_set.filter(redeem_time__isnull=True)[0]
+		m = offercode.offer.merchant
+		code = offercode.code
+		msg = {"from": "0000000001", "text": "#yay %s" % redeemed[0].code }
+		cmd.test_handle(msg)
+		self.assertEqual(offer.vote_set.count(), 1)
+		self.assertEqual(offer.vote_set.all()[0].vote, 1)
+        
+		msg = {"from": "%s" % m.phone, "text":"#redeem %s %s" % (code, c.phone)}
+		cmd.test_handle(msg)
+		self.assertEqual(c.offercode_set.filter(redeem_time__isnull=False).count(), 2)
+		print c.offercode_set.order_by("-redeem_time").values_list("offer", "redeem_time")
 
+		msg = {"from": "0000000001", "text": "#nay %s" % code }
+		cmd.test_handle(msg)
+		self.assertEqual(c.vote_set.count(), 2)
+		self.assertEqual(c.vote_set.order_by("-time_stamp")[0].vote, -1)
 		
+		msg = {"from": "0000000001", "text": "#nay 00010" }
+		cmd.test_handle(msg)
+		self.assertEqual(c.vote_set.count(), 2)
+
+		msg = {"from": "0000000001", "text": "#nay %s xxxxx" % code }
+		error = 0
+		try:
+			cmd.test_handle(msg)
+		except CommandError:
+			error =1
+		self.assertEqual(c.vote_set.count(), 2)
+		self.assertEqual(error, 1)
+
+
+
 	def test_basic_addition(self):
+
 		"""
 		Tests that 1 + 1 always equals 2.
 		"""

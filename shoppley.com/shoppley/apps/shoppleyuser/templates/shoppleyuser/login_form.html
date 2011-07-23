@@ -1,11 +1,19 @@
 {% load i18n %}
+{% load facebook_tags %}
+
 {% load uni_form_tags %}
    
         <!--p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p-->
-        
+	{% if lform %}
+	<div id="fb_login_button">
+        {% facebook_button "../../../../site_media/static/images/fb_login.gif" %}  {% trans "or" %}
+	</div>
+                               {% facebook_js %}
+	{% endif %}
         <form class="login-header-form uniForm" id="login_form" method="post" action="{% url shoppleyuser_login %}" style="border_style:none;">
 			{% csrf_token %}
             <fieldset class="inlineLabels">
+			
                 {{ lform|as_uni_form }}
 
 

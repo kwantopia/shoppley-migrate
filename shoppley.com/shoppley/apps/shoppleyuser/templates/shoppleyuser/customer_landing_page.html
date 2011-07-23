@@ -20,7 +20,7 @@
     <div class="container">   
     	<div class="span-24 last">
     		<h3 class="msg-box">thank you for signing up for Shoppley alpha service!<br/>
-    			our fancy web site is coming soon, enjoy txt offers in the meantime.</h3>
+    			our fancy web site is coming soon, enjoy personalized txt offers in the meantime.</h3>
     	</div>
      	      <div class="clear">&nbsp;</div>
     	<div class="span-24">
@@ -61,7 +61,7 @@
     			<div id="customer-step3">	
 					<span class="green-text">Redeem</span>
     					<ol>
-    						<li>Offers usually expire in 90 minutes.  Show up to the store before the offer expires.</li>
+    						<li>Offers usually expire in 120 minutes.  Show up to the store before the offer expires.</li>
     						<li>Tell the staff your <span style="font-style:italic;">offer code </span>and <span style="font-style:italic;">cell phone number</span>.</li>
     						<li>Enjoy!</li>
     					</ol>
@@ -78,22 +78,22 @@
   {% endblock %}
 {% block extra_scripts %}
 
-<!--script type="text/javascript">
 
-
-
-</script-->
-<!--script type="text/javascript" src="{{ STATIC_URL }}js/detect_timezone.js"></script>
 <script type="text/javascript">
-$("body").ready(function() {
-        var timezone = jstz.determine_timezone();
-   //     alert(timezone.timezone.olson_tz);
+	$("body").ready(function() {
+		//alert("hello");
+        	initiate_geolocation();
+	});
+	function initiate_geolocation() {  
+            navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
+        }  
+  
+        function handle_geolocation_query(position){  
+           // alert('Lat: ' + position.coords.latitude + ' ' +  
+            //      'Lon: ' + position.coords.latitude);  
+        } 
 
-	$.post("{% url set_user_timezone %}", {
-	"tz": timezone.timezone.olson_tz
-	})
-});
-</script-->
+</script>
      
 {% endblock %}
 

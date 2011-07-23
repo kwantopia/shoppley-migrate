@@ -152,6 +152,12 @@ class TxtTemplates:
 			"FORWARD_CUSTOMER_MSG": "{{ customer }} forwarded you an offer: {{ info }}. Use [{{ code }}] to redeem offer",
 			"FORWARD_INFO":"{{ merchant }} \"{{ description }}\" [expires: {{ expires }}]",
 			"FORWARD_NON_CUSTOMER_LOGIN": "Welcome to Shoppley! Here is your shoppley.com login info:\n - username: {{ name }}\n - password: {{ password }}" ,
+			"VOTE_SUCCESS": "Thank you for voting {{ vote }} for offer: {{ offer }}. Your votes will help our dragons find the perfect deals for you!",
+			"VOTE_COMMAND_ERROR": "Failure to vote! Please txt \"#yay/nay\" to vote the last redeemed offer or \"#yay/nay offercode\" to vote a past offer.",
+			"VOTE_REVOTE": "Thank you for voting! Unfortunately, you already voted offer: {{ offer }} once before.",
+			"VOTE_NO_OFFER": "Thank you for voting! Unfortunately, you can only vote on an offer you have redeemed.", 
+			"VOTE_UNOWNED_OFFER": "Thank you for voting! Unfortunately, you can only vote on an offer redeemed by you.",
+
 			"RESIGNUP": "You are already a Shoppley customer",
 			"INCORRECT_COMMAND": "{{ command }} command is not available. Available commands are:\n {{ help }}",
 			"COMMAND_NOT_STARTED_W_#": "{{ command }} is not a valid command. Our commands start with \"#\". Txt #help for all commands",

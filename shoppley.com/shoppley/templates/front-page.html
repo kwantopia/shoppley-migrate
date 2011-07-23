@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% load ifsetting_tag %}
-
+{% load facebook_tags %}
 
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
@@ -16,13 +16,18 @@
 
 
     <div class="container">
-  	
+	{% if email %}
+	<ul id="messages">
+		<li id="message_1">
+		You already have an account with us under {{ email }}. Please login!
+		</li>
+	</ul>
+	{% endif %}
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-24 last">
     		<h3 class="msg-box">shoppley is a FREE service that connects businesses and customers with awesome <i>real time offers</i>. sign up today!</h3>
     	</div>
      	      <div class="clear">&nbsp;</div>
-
 	<div class="signup-blurb-wrapper" id="frontpage-blurb-wrapper">
 		<div class="span-12">
 			<img src="{{ STATIC_URL }}images/boram/customer-blurb.png"/>
@@ -34,9 +39,10 @@
         	</div>
 	</div>  
 	<div class="clear">&nbsp;</div>
-
+	{% facebook_js %}
 	<div class="span-12" id="customer-signup-button">
 		<a href="{% url customer_signup_facebox %}" rel="facebox" class="signup-buttons"><img alt="Customer signup" src="{{ STATIC_URL }}images/boram/customer-default.png" onmouseover="this.src='{{ STATIC_URL }}images/boram/customer-hover.png'" onmouseout="this.src='{{ STATIC_URL }}images/boram/customer-default.png'"></a>
+	
                                 
         </div>  
         <div class="span-12 last" id="merchant-signup-button">
@@ -125,6 +131,8 @@
 
 
 {% block extra_scripts %}
+       
+
 	<script type="text/javascript">
 	
 		$(function() {

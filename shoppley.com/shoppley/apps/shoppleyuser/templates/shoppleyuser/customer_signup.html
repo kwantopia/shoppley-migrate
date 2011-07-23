@@ -2,7 +2,7 @@
 
 {% load i18n %}
 {% load uni_form_tags %}
-
+{% load facebook_tags %}
 {% block head_title %}{% trans "Customer Signup" %}{% endblock %}
 
 {% block body %}
@@ -11,7 +11,8 @@
     {% if user.is_authenticated %}
         <p>{% trans "You are already logged in." %}</p>
     {% else %}
-        <p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
+        <p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a> {% trans " or " %}
+{% facebook_button  %}{% facebook_js %}</p>
         
         <form class="customer-signup-form uniForm" id="signup_form" method="post" action="{% url customer_signup %}">
 			{% csrf_token %}

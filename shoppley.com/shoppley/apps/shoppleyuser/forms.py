@@ -216,6 +216,35 @@ class MerchantProfileEditForm(forms.Form):
 		m.save()
 		m.set_location_from_address()
 
+class ExtraInfoForm(forms.Form):
+	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
+	phone = forms.CharField(max_length=20)
+	zip_code = forms.CharField(max_length=10, widget = forms.TextInput(attrs={'class':'zip_code'}))
+	def clean_zip_code(self):
+		try:
+			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+			return self.cleaned_data["zip_code"]
+		except ZipCode.DoesNotExist:
+			raise forms.ValidationError(_("Not a valid zip code."))
+	def clean_phone(self):
+		if not phone_red.search(self.cleaned_data["phone"]):
+			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
+		phone = parse_phone_number(self.cleaned_data["phone"])
+		
+		su = ShoppleyUser.objects.filter(phone=phone)
+		if su.count()>0:
+			raise forms.ValidationError(_("This phone number is being used by another user"))
+		else:
+			return self.cleaned_data["phone"]
+
+	def save(self):
+		user = User.objects.get(pk = self.cleaned_data["user_id"])
+		su = user.shoppleyuser
+		su.phone = parse_phone_number(self.cleaned_data["phone"])
+		code = self.cleaned_data["zip_code"]
+		su.zipcode = ZipCode.objects.get(code=code)
+		su.save()
+
 class CustomerProfileEditForm(forms.Form):
 	LIMIT_CHOICES = (
 		(0,'None'),
@@ -229,6 +258,22 @@ class CustomerProfileEditForm(forms.Form):
 	phone			= forms.CharField(max_length=20)
 
 	daily_limit		= forms.ChoiceField(choices=LIMIT_CHOICES)
+	def __init__(self , *args,**kwargs):
+		super(CustomerProfileEditForm, self).__init__(*args, **kwargs)
+		#print "kwargs", kwargs
+		#print "args", args[0]["user_id"]
+		if kwargs:
+			user_id = kwargs["initial"]["user_id"]
+		if args:
+			user_id = args[0]["user_id"]
+		user = User.objects.get(id=user_id)
+		try :
+			su = user.shoppleyuser
+			if su.is_fb_connected:
+				self.fields['username'].widget = forms.HiddenInput()
+		except ShoppleyUser.DoesNotExist:
+			pass
+
 	def clean_zip_code(self):
 		try:
 			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
@@ -368,8 +413,10 @@ class CustomerSignupForm(forms.Form):
                 ## TODO: This should NOT have happened
 			raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 
-
-		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
+		if email.user.shoppleyuser.is_fb_connected:
+			raise forms.ValidationError(_(email.email + " is already registered with us via Facebook Connect. Please click on the facebook login button to login"))
+		else:
+			raise forms.ValidationError(_("This email address is already registered. Please choose another."))
 		
 
 	def clean_phone(self):

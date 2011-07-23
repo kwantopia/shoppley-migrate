@@ -24,6 +24,11 @@ urlpatterns = patterns('',
 	url(r'^merchant/facebox/signup/$', direct_to_template, {"template": "shoppleyuser/merchant_signup_facebox.html", "extra_context": {"form": MerchantSignupForm}}, name="merchant_signup_facebox"),
 
 	url(r'^post/shoppleyuser/timezone/$', set_user_timezone, name="set_user_timezone"),
+	url(r'^fb-connect-init/$', fb_connect_init, name="fb_connect_init"),
+	url(r'^fb-login/$', fb_login, name="fb_login"),
+	url(r'^fb-connect-success/$', fb_connect_success, name="fb_connect_success"),
+	url(r'^fb-extra-info/$', fb_extra_info, name="fb_extra_info"),
+
 )
 
 

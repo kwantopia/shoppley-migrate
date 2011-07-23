@@ -65,8 +65,8 @@ class ShoppleyUser(models.Model):
 	user			= models.OneToOneField(User)
 	address_1		= models.CharField(max_length=64, blank=True)
 	address_2		= models.CharField(max_length=64, blank=True)
-	zipcode			= models.ForeignKey(ZipCode) # current zipcode
-
+	zipcode			= models.ForeignKey(ZipCode, null=True, blank=True, on_delete=models.SET_NULL) # current zipcode
+	#zipcode                        = models.ForeignKey(ZipCode, blank=True)
 	phone			= models.CharField(max_length=20, blank=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
@@ -77,7 +77,7 @@ class ShoppleyUser(models.Model):
 	verified		= models.BooleanField(default=False)
 	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )  
 	location		= models.ForeignKey(Location, null=True, blank=True)
-	
+	is_fb_connected		= models.BooleanField(default=False)
 	
 	VERIFIED_YES = 0
 	VERIFIED_NO = 1
@@ -94,6 +94,12 @@ class ShoppleyUser(models.Model):
 
 	def is_merchant(self):
 		return hasattr(self, "merchant")
+	def print_name(self):
+		splits = self.user.username.split("|")
+		if len(splits)==3:
+			return splits[2]
+		else:
+			return self.user.username
 
 	def print_address(self):
 		if self.address_1=="":
@@ -146,7 +152,9 @@ class Merchant(ShoppleyUser):
 	
 	def save(self, *args, **kwargs):
 		if not self.pk:
+			
 			self.balance = settings.INIT_MERCHANT_BALANCE
+			
 
         	super(Merchant, self).save(*args, **kwargs)
 		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
@@ -280,7 +288,22 @@ class Customer(ShoppleyUser):
 			self.balance = settings.INIT_CUSTOMER_BALANCE
 			
         	super(Customer, self).save(*args, **kwargs)
-		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
+		if self.zipcode:
+			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
+#class Vote(models.Model):
+#        customer                = models.ForeignKey(Customer)
+#	from offer.models import Offer
+#        offer               = models.ForeignKey(Offer)
+#        VOTE_CHOICES = (
+#                (1, "yay"),
+#                (-1,"nay"),
+#                (0, "pending"),
+#        )
+#        vote                    = models.IntegerField(default=0, choices = VOTE_CHOICES)
+
+#       def __unicode__(self):
+#                return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
+
 
 class IWantRequest(models.Model):
 	customer		= models.ForeignKey(Customer)

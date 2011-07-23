@@ -16,6 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _, ugettext
+from emailconfirmation.models import EmailAddress
 
 if "mailer" in settings.INSTALLED_APPS:
 	from mailer import send_mail
@@ -23,15 +24,63 @@ else:
 	from django.core.mail import send_mail
 
 # Python libraries
-import os, logging, simplejson
+import os, logging, json, random
 from datetime import datetime, timedelta
 from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm
-from shoppleyuser.models import Customer, ShoppleyUser, Merchant
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm,ExtraInfoForm
+from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode
 from django.views.decorators.csrf import csrf_exempt
+from socialregistration import signals
+from socialregistration import models
+
+SAMPLE_OFFERS = ["25% off your entree if you come in next 2 hours",
+			  "FREE orange juice with late lunch",
+			  "Buy one get second pair of pants 50% off"]
+
+
+def fb_connect_init(request):
+	user = request.user
+	try:
+		su = user.shoppleyuser
+		return HttpResponseRedirect(reverse("fb_login"))
+	except ShoppleyUser.DoesNotExist:
+	#	user.is_autenticated = False
+	#	user.save()
+		fbuser = request.facebook.graph.get_object("me")
+		user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
+		user.save()
+		if fbuser['email']:
+			try:
+				EmailAddress.objects.get(email=fbuser['email'])
+				user.delete()
+				return render_to_response("front-page.html", {"email": fbuser['email'],  }, context_instance=RequestContext(request))
+				#return HttpResponseRedirect("home") ## user already have an account with us with the email.
+			except EmailAddress.DoesNotExist:
+				EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
+		su = Customer.objects.create(user = request.user, is_fb_connected=True)
+		return 	HttpResponseRedirect(reverse("fb_extra_info"))
+
+def fb_login (request):
+	return HttpResponseRedirect(reverse("home"))
+
+def fb_extra_info(request, form_class=ExtraInfoForm, template_name="shoppleyuser/fb_extra_info_html", success_url =None):
+	if request.method=="POST":
+		form = form_class(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse("fb_connect_success"))
+	else:
+		user=request.user
+		form = form_class(initial = {'user_id': request.user.id,})
+	ctx = { "form": form ,}
+	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
+
+def fb_connect_success(request):
+	friends = request.facebook.graph.get_connections("me", "friends")
+	return HttpResponseRedirect(reverse("home"))
 
 # view for home, depending on whether request user is cutomer/merchant
 def home(request, template_name="front-page.html"):
@@ -51,7 +100,10 @@ def home(request, template_name="front-page.html"):
 				messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> stores in your area have signed up with Shoppley. Tell your favorite stores to use Shoppley to send you any last minute offers for free.' % number)
 
 			
-				return render_to_response("shoppleyuser/customer_landing_page.html", {"number":number,},context_instance=RequestContext(request))
+				return render_to_response("shoppleyuser/customer_landing_page.html", 
+									{"number":number,
+									},
+								context_instance=RequestContext(request))
 			else:
 
 				if not user.shoppleyuser.merchant.address_1:
@@ -63,7 +115,13 @@ def home(request, template_name="front-page.html"):
 
 				messages.add_message(request, messages.INFO, 'Currently,<span style="font-weight:bold"> %s</span> people in your area have signed up to receive offer. Tell your customers to sign up for Shoppley to receive last minute offers for free.' % number)
 
-				return render_to_response("shoppleyuser/merchant_landing_page.html", {"number":number,},context_instance=RequestContext(request))
+				ie_offer = random.sample(SAMPLE_OFFERS, 1)[0]
+
+				return render_to_response("shoppleyuser/merchant_landing_page.html", 
+									{"number":number,
+									"ie_offer": ie_offer,
+									},
+							context_instance=RequestContext(request))
 		except ShoppleyUser.DoesNotExist:
 			return  render_to_response(template_name,{
                                         "lform":LoginForm,
@@ -193,14 +251,24 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	customer = user.shoppleyuser.customer
 	#customer = Customer.objects.get(user__id=user.id)
 	username = user.username
-	zipcode = customer.zipcode.code
+	if customer.zipcode:
+		zipcode = customer.zipcode.code
+	else:
+		zipcode = "None"
 	address = customer.address_1
 	if not address:
 		address = "No address given"
-	phone = customer.phone
+	if customer.phone:
+		phone = customer.phone
+	else:
+		phone = "None"
 	print customer.print_daily_limit()
 	frequency = customer.print_daily_limit()
 	print frequency
+	if customer.is_fb_connected:
+		is_fb_connected = "1"
+	else:
+		is_fb_connected = "0"
 
 	if user.emailaddress_set.count()>0:
 		email = user.emailaddress_set.all()[0].email
@@ -217,13 +285,14 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 		verified=None
 	return render_to_response(template, 
 				{
-					"username":username,
+					"username":user,
 					"zipcode":zipcode,
 					"address":address,
 					"phone":phone,
 					"frequency":frequency,
 					"email":email,
 					"verified":verified,
+					"is_fb_connected": is_fb_connected,	
 				},
 				context_instance=RequestContext(request))
 
@@ -270,21 +339,32 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 	if request.method=="POST":
 		form = form_class(request.POST)
 		if form.is_valid():
+			
 			form.save(request.user.id)
 			return HttpResponseRedirect(reverse("customer_profile"))
 	else: 
 		user = request.user
 		#customer = Customer.objects.get(user__id=user.id)
 		customer = user.shoppleyuser.customer
-		form = form_class(initial = {'username': user.username, 
+		if customer.zipcode:
+			zip_code = customer.zipcode.code
+		else:
+			zip_code = ""
+		if customer.phone:
+			phone = customer.phone
+		else:
+			phone = ""
+		
+		form = form_class( initial = {'username': user.username, 
 					'address1': customer.address_1,
-					'zip_code': customer.zipcode.code,
-					'phone': customer.phone, 
+					'zip_code': zip_code,
+					'phone': phone, 
 					'user_id':request.user.id,'daily_limit':customer.daily_limit,})
 
 
 	ctx= {
 		"form": form,
+	
 		}
 
 	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
@@ -325,6 +405,7 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 
 	ctx= {
 		"form": form,		
+
 	}
 	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
 

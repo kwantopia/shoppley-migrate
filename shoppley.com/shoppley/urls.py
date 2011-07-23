@@ -45,7 +45,7 @@ urlpatterns = patterns('',
     url(r'^$', 'shoppleyuser.views.home', name="home"),
     url(r'^', include('common.urls')),
     url(r'^premium/', include('premium.urls')),
-
+    
     #url(r'^comingsoon/$', direct_to_template, {
     #    "template": "comingsoon.html", "extra_context": {"form": CustomerBetaSubscribeForm, "categories":Category.objects.all()},
     #}, name="home"),
@@ -78,7 +78,7 @@ urlpatterns = patterns('',
     (r'^swaps/', include('swaps.urls')),
     (r'^flag/', include('flag.urls')),
     (r'^locations/', include('locations.urls')),
-
+    url(r'^social/', include('socialregistration.urls')),
 	(r'^offer/', include('offer.urls')),
 	(r'^shoppleyuser/', include('shoppleyuser.urls')),
 	(r'^m/', include('mobile.urls')),

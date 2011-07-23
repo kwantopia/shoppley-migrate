@@ -2,7 +2,8 @@
 
 {% load i18n %}
 {% load uni_form_tags %}
- 
+{% load facebook_tags %}
+
 
 <head>
 	{% include "main_css.html" %}
@@ -20,7 +21,10 @@
 				<div>&nbsp;</div>
 				<div class="fb-connect" id="fb-connect-customer">
 				Sign up by connecting your Facebook account <br/>	
-				<img src="http://placekitten.com/194/25"/>
+				{% facebook_button %}
+			       {% facebook_js %}
+	
+				<!--img src="http://placekitten.com/194/25"/-->
 				</div>
 			<div class="signup-form customer">
 			<span class="highlight">or use our form!</span>

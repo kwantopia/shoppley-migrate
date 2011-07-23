@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user, pretty_date
 from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest
-from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode
+from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode, Vote
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
 from worldbank.models import Transaction
 from googlevoice import Voice
@@ -37,7 +37,7 @@ STOP = ["stop"]
 START = ["start"]
 FORWARD = ["forward","f"]
 IWANT = ["iwant", "w"]
-
+VOTE = ["yay", "nay"]
 # Merchant commands:
 REDEEM = ["redeem","r"]
 OFFER = ["offer","o"]
@@ -54,7 +54,7 @@ sms_logger = logging.getLogger("offer.management.commands.check_sms")
 
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
-	DEBUG = False
+	DEBUG = True
 	def notify(self, phone, msg):
 		if self.DEBUG:
 			print _("\"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
@@ -106,7 +106,7 @@ class Command(NoArgsCommand):
 		t = TxtTemplates()
 		for offer in expired_offers:
 			offer.is_merchant_txted=True
-			#offer.expire()
+			offer.save()
 			offer.update_expired_codes()
 			#print "tracking:", offer.trackingcode.code
 			#print offer.offercode_set.values_list('code',flat=True)
@@ -170,7 +170,9 @@ class Command(NoArgsCommand):
 		code = code.lower()
 		t = TxtTemplates()
 		offercodes = OfferCode.objects.filter(code__icontains = code)
+		actives = [o for o in offercodes if o.offer.is_active() == True]
 		if offercodes.count() == 1:
+			#actives = [ o for o in offercodes if o.offer.is_active() == True]
 			if not offercodes[0].offer.is_active():
 				return -1
 			else:
@@ -559,6 +561,50 @@ class Command(NoArgsCommand):
 						iwant = IWantRequest.objects.create(customer=su.customer,request=request,time_stamp=datetime.now())
 						customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["IWANT"],{"request": request})
 						self.notify(su.phone, customer_msg)
+					#---------------------- VOTE: "#yay/nay offercode"-------------
+					elif parsed[0].lower() in VOTE:
+						vote = parsed[0].lower()
+						if vote=="yay":
+							vote_num = 1
+						else:
+							vote_num = -1
+						if len(parsed) == 1:
+							offers = su.customer.offercode_set.filter(redeem_time__isnull=False).order_by("-redeem_time")
+							if offers.count()==0:
+								receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_NO_OFFER"], {})
+								self.notify(su.phone, receipt_msg)
+								raise CommandError("Customer tried to vote but has no offer yet")
+							else:
+								offer = offers[0].offer
+								#print "votes=", offer.vote_set.all()
+								if offer.vote_set.filter(customer = su.customer).exists():
+									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title, })
+									self.notify(su.phone, receipt_msg)
+								else:	
+									v = Vote.objects.create(customer = su.customer, offer= offers[0].offer, vote=vote_num, time_stamp = datetime.now())
+									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer": offers[0].offer.title, "vote":vote, })
+									self.notify(su.phone, receipt_msg)
+						else:
+							if len(parsed) >2:
+								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_COMMAND_ERROR"],{})
+								self.notify(su.phone, receipt_msg)
+								raise CommandError("Incorrectly formed vote command")
+							else:
+								offercode = parsed[1]
+								offers = su.customer.offercode_set.filter(redeem_time__isnull=False).filter(code__contains=parsed[1]).order_by("-redeem_time")
+								if offers.count() == 0:
+									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_UNOWNED_OFFER"], {"offercode": offercode, })
+									self.notify(su.phone, receipt_msg)
+
+								elif offers.count()> 0:
+									offer = offers[0].offer
+									if offer.vote_set.filter(customer = su.customer).exists():
+										receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title, })
+										self.notify(su.phone, receipt_msg)
+									else:
+										v = Vote.objects.create(customer = su.customer, offer= offer, vote=vote_num, time_stamp = datetime.now())
+										receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer":offer.title, "vote":vote, })
+										self.notify(su.phone, receipt_msg)
 
 					# ------------------- STOP: "stop"----------------------
 					elif parsed[0].lower() in STOP:

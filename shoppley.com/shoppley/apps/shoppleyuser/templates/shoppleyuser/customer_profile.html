@@ -37,6 +37,8 @@
 				</ul>
 			</div>
 		</div>
+	{% ifequal is_fb_connected "0" %}
+	
     	<div class="span-7 last">
 			<div class="account-settings profile-settings">
 				<h3>Account Setting</h3>
@@ -59,6 +61,7 @@
 				<a class="shoppley-btn"  href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
 				</div>
     	</div>
+	{% endifequal %}
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>
       	
