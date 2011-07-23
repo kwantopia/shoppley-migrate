@@ -6,7 +6,6 @@
 {% load facebook_tags %}
 
 
-
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
   
 {% block body %}
@@ -17,13 +16,13 @@
 
 
     <div class="container">
-	{% if email %}
+	{% ifequal error "1" %}
 	<ul id="messages">
 		<li id="message_1">
-		You already have an account with us under {{ email }}. Please login!
+		The email linked to your facebook profile already registered with Shoppley. Please use our form to login!
 		</li>
 	</ul>
-	{% endif %}
+	{% endifequal %}
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-24 last">
     		<h3 class="msg-box">shoppley is a FREE service that connects businesses and customers with awesome <i>real time offers</i>. sign up today!</h3>
@@ -40,7 +39,7 @@
         	</div>
 	</div>  
 	<div class="clear">&nbsp;</div>
-	{% facebook_js %}
+
 	<div class="span-12" id="customer-signup-button">
 		<a href="{% url customer_signup_facebox %}" rel="facebox" class="signup-buttons"><img alt="Customer signup" src="{{ STATIC_URL }}images/boram/customer-default.png" onmouseover="this.src='{{ STATIC_URL }}images/boram/customer-hover.png'" onmouseout="this.src='{{ STATIC_URL }}images/boram/customer-default.png'"></a>
 	
@@ -52,7 +51,7 @@
 
 
         </div>
-
+	{% facebook_js %}
 	<!--div class="customer-signup">
 		<button id="customer-signup-button">{% trans "Customer" %}</button> 
 	</div> 
@@ -74,6 +73,15 @@
 					<ul>
 						<li>
 							<ul>
+								<li>Sign up with one quick txt msg!</li>
+								<li>Txt to 508-690-0888</li>
+								<li>Consumers: <span class="txt-command-example">#c email zipcode</span></li>
+								<li>Merchants: <span class="txt-command-example">#m email zipcode businessname</span></li>
+
+							</ul>
+						</li>
+						<li>
+							<ul>
 								<li>Exclusive and Customized Offers!</li>
 								<li>Our super computer carefully chooses recipients to make sure customers are receiving offers from businesses that are relevant to their personal lifestyle.</li>
 							</ul>
@@ -81,7 +89,9 @@
 						<li>
 							<ul>
 								<li>No Spamming!</li>
-								<li>We make sure nobody is spammed. There will be at most 1 offer sent out a day by default.</li>
+
+								<li>We make sure nobody is spammed. You will receive at most 1 offer a day by default.</li>
+
 								<li>Of course, if you enjoy receiving offers, you can choose to receive more sweet deals.</li>
 							</ul>	
 						</li>
@@ -109,7 +119,7 @@
 				<li id="harvest-of-india">
 					<ul>
 						<li>Harvest of India</li>
-						<li>Restaurnat, Asian, Indian</li>
+						<li>Restaurant, Asian, Indian</li>
 						<li>Central Square, Cambridge, MA 02139</li>
 					</ul>
 				</li>
