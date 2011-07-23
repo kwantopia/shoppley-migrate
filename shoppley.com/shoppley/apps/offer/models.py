@@ -8,9 +8,12 @@ from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
 from shoppleyuser.models import Customer, Merchant, ShoppleyUser#, Location
 from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
+import logicaldelete.models
 
 from datetime import datetime, timedelta
+
 import random, string, time
+#import logicaldelete.models.Model
 
 SMS_DEBUG = settings.SMS_DEBUG
 
@@ -30,7 +33,7 @@ class Feature(models.Model):
 		return self.merchant.name
 	
 
-class Offer(models.Model):
+class Offer(logicaldelete.models.Model):		
 	merchant		= models.ForeignKey(Merchant, related_name="offers_published")
 	title 			= models.CharField(max_length=128, blank=True, help_text="Sexy offer headline. Keep it under 100 characters.")
 	description		= models.TextField(blank=True)
@@ -49,9 +52,10 @@ class Offer(models.Model):
 	expired = models.BooleanField(default=False)
 	expired_time = models.DateTimeField(null=True, blank=True)
 	redistributable = models.BooleanField(default=True)
-	is_processing = models.BooleanField(default=False)
+	is_processing = models.BooleanField(default=True)
 	redistribute_processing = models.BooleanField(default=False)
 	#locations = models.ManyToManyField(Location)
+
 	def __unicode__(self):
 		return self.title
 
@@ -649,6 +653,7 @@ class TrackingCode(models.Model):
 
 	def __unicode__(self):
 		return "code: %s for offer: %s" % (self.code, self.offer)
+
 class Vote(models.Model):
 	customer                = models.ForeignKey(Customer)
 	offer               = models.ForeignKey(Offer)
@@ -659,7 +664,14 @@ class Vote(models.Model):
 	)
 	vote                    = models.IntegerField(default=0, choices = VOTE_CHOICES)
 	time_stamp 		= models.DateTimeField()
+
 	def __unicode__(self):
 		return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
 
+class BlackListWord(logicaldelete.models.Model):
+	word = models.CharField(max_length=128)
+
+class BlackListOffer(logicaldelete.models.Model):
+	offer = models.ForeignKey(Offer)
+	words = models.ManyToManyField(BlackListWord)
 

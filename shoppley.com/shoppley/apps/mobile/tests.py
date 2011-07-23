@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from shoppleyuser.utils import parse_phone_number
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category
-from offer.models import Offer, OfferCode
+from offer.models import Offer, OfferCode, BlackListWord
 
 API_VERSION = 1;
 
@@ -32,12 +32,13 @@ class SimpleTest(TestCase):
 		self.f = open("/tmp/shoppley.test.out.txt", "w")
 
 		us, created = Country.objects.get_or_create(name="United States", code="US")
-		region, created = Region.objects.get_or_create(name="Massachusetts", code="MA", country=us)
-		city, created = City.objects.get_or_create(name="Cambridge", region=region)
-		zipcode1, created = ZipCode.objects.get_or_create(code="02139", city=city)
-		zipcode3, created = ZipCode.objects.get_or_create(code="02142", city=city)
-		city, created = City.objects.get_or_create(name="Boston", region=region)
-		zipcode2, created = ZipCode.objects.get_or_create(code="02250", city=city)
+		region, created = Region.objects.get_or_create(name="Hawaii", code="HI", country=us)
+		city, created = City.objects.get_or_create(name="Aiea", region=region)
+		zipcode1, created = ZipCode.objects.get_or_create(code="96701", city=city)
+		city, created = City.objects.get_or_create(name="Anahola", region=region)
+		zipcode2, created = ZipCode.objects.get_or_create(code="96703", city=city)
+		city, created = City.objects.get_or_create(name="Ahualoa", region=region)
+		zipcode3, created = ZipCode.objects.get_or_create(code="96727", city=city)
 
 		# create users
 		u, created = User.objects.get_or_create(username="user1@customer.com")
@@ -88,7 +89,7 @@ class SimpleTest(TestCase):
 		#617-453-8665 Meng's googlevoice number
 		num = parse_phone_number("6174538665")
 		if not Merchant.objects.filter(user=u).exists():
-			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Jane's Shoe Store", admin="Jake Sullivan", url="http://www.shoppley.com")
+			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Jane's Shoe Store", admin="Jane Sullivan", url="http://www.shoppley.com")
 			m.active = True
 			m.verified = True
 			m.save()
@@ -101,11 +102,24 @@ class SimpleTest(TestCase):
 
 		num = parse_phone_number("6178710710")
 		if not Merchant.objects.filter(user=u).exists():
-			m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Flour Bakery", admin="John Jacobson", url="http://www.shoppley.com")
+			m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Flour Bakery", admin="Kevin Bacon", url="http://www.shoppley.com")
 			m.active = True
 			m.verified = True
 			m.save()
 			m.set_location_from_address()
+
+		u, created = User.objects.get_or_create(username="user3@merchant.com")
+		u.email="user3@merchant.com"
+		u.set_password("hello")
+		u.save()
+
+		num = parse_phone_number("6177154416")
+		if not Merchant.objects.filter(user=u).exists():
+			m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode2, phone=num, balance=10000, business_name="John's Auto", admin="John Jacobson", url="http://www.shoppley.com")
+			m.active = True
+			m.verified = True
+			m.save()
+
 
 
 		shop_user = Customer.objects.get(user__email="user1@customer.com")
@@ -254,9 +268,9 @@ class SimpleTest(TestCase):
 		"""
 	
 		offers = ["$5 off shoes brands, Nike, Reebok",
-				"15% off big steak and 10% off small steak",
-								"Save $15 on your purchase of suit",
-								"$125 for tonight only at Marriott"]
+				"10% off Abercrombie flip flops",
+								"Save $15 on your purchase of dress shoes",
+								"Buy dress shoes today & get free socks"]
 
 		m = Merchant.objects.get(user__email="user1@merchant.com")	
 		for o in offers:
@@ -264,7 +278,7 @@ class SimpleTest(TestCase):
 			input_time = datetime.now()-timedelta(minutes=30)
 			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
-			print offer.distribute()
+			#print offer.distribute()
 			
 
 		if not settings.SMS_DEBUG:
@@ -280,10 +294,83 @@ class SimpleTest(TestCase):
 			input_time = datetime.now()-timedelta(minutes=30)
 			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
-			offer.distribute()
+			#offer.distribute()
 
 		if not settings.SMS_DEBUG:
 			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
+
+		offers = ["$1 off Oil Change",
+						"20% off car wash",
+						"$30 snow tire exchange"]
+
+		m = Merchant.objects.get(user__email="user3@merchant.com")	
+		for o in offers:
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
+			offer.save()
+			#offer.distribute()
+
+		if not settings.SMS_DEBUG:
+			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
+
+	def create_spam_offers(self):
+		"""
+			Generate several offers by multiple merchants that targets two different users in two different
+			zip codes
+		"""
+	
+		offers = ["$5 off shit ass brands, Nike, Reebok",
+				"10% off American Eagle flip flops",
+								"Save $15 on your mother f** of dress shoes",
+								"Buy dress dope pal & get free socks"]
+
+		m = Merchant.objects.get(user__email="user1@merchant.com")	
+		for o in offers:
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
+			offer.save()
+			#print offer.distribute()
+			
+
+		if not settings.SMS_DEBUG:
+			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
+
+		offers = ["$1 off Chicken Fart",
+				"Free orange juice when you order $10 or more",
+								"Half priced cum cookies"]
+
+		m = Merchant.objects.get(user__email="user2@merchant.com")	
+		for o in offers:
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
+			offer.save()
+			#offer.distribute()
+
+		if not settings.SMS_DEBUG:
+			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
+
+		offers = ["$1 off Wet Oil Change",
+						"20% off car ass",
+						"$30 Summer tire exchange"]
+
+		m = Merchant.objects.get(user__email="user3@merchant.com")	
+		for o in offers:
+			# start offers 30 minutes ago
+			input_time = datetime.now()-timedelta(minutes=30)
+			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
+			offer.save()
+			#offer.distribute()
+
+		if not settings.SMS_DEBUG:
+			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
+
+	def create_blacklist_words(self):
+		bl_words = ['fuck', 'f**', 'f*', 'f***', 'f**k', 'shit', 'ass', 'cum', 'dope', 'shit', 's**t', 's*t', 'fart']
+		for w in bl_words:
+			word, created = BlackListWord.objects.get_or_create(word=w)
 
 	def redeem_offer(self):
 		"""

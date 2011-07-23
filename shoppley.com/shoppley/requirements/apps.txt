@@ -74,3 +74,5 @@ Fabric
 django-facebook
 django-socialregistration
 -e git+https://github.com/facebook/python-sdk.git#egg=facebook
+django-logicaldelete
+#-e git+https://github.com/paltman/django-logicaldelete.git#egg=django-logicaldelete

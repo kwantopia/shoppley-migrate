@@ -339,26 +339,7 @@ class Command(NoArgsCommand):
 								description=description, time_stamp=datetime.now(),
 								starting_time=datetime.now())
 						offer.save()
-						num_reached = offer.distribute()
 					
-						if num_reached ==0 :
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NO_CUSTOMER"], {"code":offer.gen_tracking_code()})
- 
-						elif num_reached == -2:
-
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NOTENOUGH_BALANCE"], {"points":su.balance})
-
-							offer.delete()
-						else:
-
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_SUCCESS"], {
-								"time": pretty_datetime(offer.time_stamp),
-								"offer": offer,
-								"number": offer.num_received(),
-								"code": offer.gen_tracking_code(),
-							})
-						#print msg["from"], su.phone
-						self.notify(msg["from"], receipt_msg)
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() in REOFFER:
 						if len(parsed)==1:

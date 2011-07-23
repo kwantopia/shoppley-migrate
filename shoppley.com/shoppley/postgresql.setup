@@ -1,3 +1,11 @@
+# for dumping db
+sudo pg_dump flashon -U flashon > /tmp/flashon.dump
+
+# for importing db
+sudo psql flashon -U flashon < /tmp/flashon.dump
+
+
+
 # For installing postgresql-9.0 on ubuntu
 # http://diegobenna.blogspot.com/2011/02/install-postgresql-90-on-ubuntu-1010.html
 # http://linfiniti.com/2011/05/running-posgresql-8-4-and-9-0-side-by-side-on-ubuntu/

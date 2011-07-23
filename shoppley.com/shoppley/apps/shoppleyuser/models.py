@@ -4,21 +4,21 @@ from django.conf import settings
 
 from datetime import datetime, timedelta
 from sorl.thumbnail import ImageField
-from timezones.forms import PRETTY_TIMEZONE_CHOICES  
+from timezones.forms import PRETTY_TIMEZONE_CHOICES
 from django.contrib.gis.geos import fromstr
 
 
 # Create your models here.
 class Location(models.Model):
 	location = models.PointField( )
-        objects = models.GeoManager()
-#        name2= models.CharField(max_length=5)
-#        name = models.CharField(max_length=3)
-#        users = models.ManyToManyField(User,related_name="user_locations")
+	objects = models.GeoManager()
+#				name2= models.CharField(max_length=5)
+#				name = models.CharField(max_length=3)
+#				users = models.ManyToManyField(User,related_name="user_locations")
 
 class Country(models.Model):
-	name      = models.CharField(max_length=64)
-	code      = models.CharField(max_length=10)
+	name			= models.CharField(max_length=64)
+	code			= models.CharField(max_length=10)
 
 class Region(models.Model):
 	name			= models.CharField(max_length=32)
@@ -66,7 +66,7 @@ class ShoppleyUser(models.Model):
 	address_1		= models.CharField(max_length=64, blank=True)
 	address_2		= models.CharField(max_length=64, blank=True)
 	zipcode			= models.ForeignKey(ZipCode, null=True, blank=True, on_delete=models.SET_NULL) # current zipcode
-	#zipcode                        = models.ForeignKey(ZipCode, blank=True)
+	#zipcode												= models.ForeignKey(ZipCode, blank=True)
 	phone			= models.CharField(max_length=20, blank=True)
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
@@ -75,7 +75,7 @@ class ShoppleyUser(models.Model):
 	active 			= models.BooleanField(default=True)
 	#: verified by logging in when invited by friends
 	verified		= models.BooleanField(default=False)
-	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )  
+	timezone		= models.CharField(max_length=255, choices=PRETTY_TIMEZONE_CHOICES, blank=True, null=True )	
 	location		= models.ForeignKey(Location, null=True, blank=True)
 	is_fb_connected		= models.BooleanField(default=False)
 	
@@ -83,11 +83,11 @@ class ShoppleyUser(models.Model):
 	VERIFIED_NO = 1
 	VERIFIED_PENDING = 2
 	VERIFIED_CHOICES = (
-	    (VERIFIED_YES, 'Yes'),
-	    (VERIFIED_NO, 'No'),
+			(VERIFIED_YES, 'Yes'),
+			(VERIFIED_NO, 'No'),
 		(VERIFIED_PENDING, 'Pending'),
 	)
-	verified_phone  = models.IntegerField(default=VERIFIED_PENDING, choices=VERIFIED_CHOICES)
+	verified_phone	= models.IntegerField(default=VERIFIED_PENDING, choices=VERIFIED_CHOICES)
 	
 	def is_customer(self):
 		return hasattr(self, "customer")
@@ -152,16 +152,14 @@ class Merchant(ShoppleyUser):
 	
 	def save(self, *args, **kwargs):
 		if not self.pk:
-			
 			self.balance = settings.INIT_MERCHANT_BALANCE
-			
-
-        	super(Merchant, self).save(*args, **kwargs)
+			super(Merchant, self).save(*args, **kwargs)
 		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 	def __unicode__(self):
 #		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
-	  return "%s, %s [%s]" % (self.business_name, self.print_address(), self.phone)
+		return "%s, %s [%s]" % (self.business_name, self.print_address(), self.phone)
+
 	def get_banner(self):
 		if self.banner:
 			return self.banner.url
@@ -176,18 +174,32 @@ class Merchant(ShoppleyUser):
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
 		return [ i.pk for i in Customer.objects.all() if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
+	def get_active_customers_miles(self, x=5):
+		from geopy.distance import distance as geopy_distance
+		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
+		#for i in Customer.objects.all():
+			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
+		return [ i.pk for i in Customer.objects.filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
+
 	# faster than get_customers_within_miles().count() because dont have to create a new list
 	def count_customers_within_miles(self, x=5):
 		from geopy.distance import distance as geopy_distance
 
 		count = 0
-		for i in  Customer.objects.all():
+		for i in	Customer.objects.all():
 			if i.location and self.location:
 				if geopy_distance(i.location.location,self.location.location).mi<=x:
 					count = count + 1
 		return count
 			
 class Customer(ShoppleyUser):
+	EVERY_HR = 0
+	EVERY_TWO_HRS = 1
+	THREE_PER_DAY = 2
+	TWICE_A_DAY = 3
+	ONCE_A_DAY = 4
+	ONCE_A_WEEK = 5
+
 	FREQUENCY_CHOICES = (
 			( 0, 'Every Hour'),
 			( 1, 'Every 2 hrs'),
@@ -196,6 +208,11 @@ class Customer(ShoppleyUser):
 			( 4, 'Once a day'),
 			( 5, 'Once a week'),
 			)
+
+	STOP_RECEIVE = 0
+	ONE_TO_FIVE = 5
+	UP_TO_TEN = 10
+	UNLIMITED = 100000
 
 	LIMIT_CHOICES= (
 			( 0, 'None'),
@@ -246,7 +263,7 @@ class Customer(ShoppleyUser):
 					count = count + 1
 		return count 
 
-        # return a list of pk's of merchants within x miles from the customer's lat/lon
+				# return a list of pk's of merchants within x miles from the customer's lat/lon
 	def get_merchants_within_miles(self,x=5):
 		from geopy.distance import distance as geopy_distance
 		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
@@ -281,37 +298,54 @@ class Customer(ShoppleyUser):
 		self.offer_count=0
 		self.save()
 
-
 	def save(self, *args, **kwargs):
 		if not self.pk:
-
 			self.balance = settings.INIT_CUSTOMER_BALANCE
-			
-        	super(Customer, self).save(*args, **kwargs)
+			super(Customer, self).save(*args, **kwargs)
 		if self.zipcode:
 			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
-#class Vote(models.Model):
-#        customer                = models.ForeignKey(Customer)
-#	from offer.models import Offer
-#        offer               = models.ForeignKey(Offer)
-#        VOTE_CHOICES = (
-#                (1, "yay"),
-#                (-1,"nay"),
-#                (0, "pending"),
-#        )
-#        vote                    = models.IntegerField(default=0, choices = VOTE_CHOICES)
 
-#       def __unicode__(self):
-#                return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
+#class Vote(models.Model):
+#				customer								= models.ForeignKey(Customer)
+#	from offer.models import Offer
+#				offer							 = models.ForeignKey(Offer)
+#				VOTE_CHOICES = (
+#								(1, "yay"),
+#								(-1,"nay"),
+#								(0, "pending"),
+#				)
+#				vote										= models.IntegerField(default=0, choices = VOTE_CHOICES)
+
+#			 def __unicode__(self):
+#								return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
 
 
 class IWantRequest(models.Model):
 	customer		= models.ForeignKey(Customer)
 	time_stamp 		= models.DateTimeField()
 	request			= models.TextField()
+	processed = models.BooleanField()
+	category = models.ForeignKey(Category, null=True)
 
 	def __unicode__(self):
 		return "%s, customer %s wants: %s" % (self.time_stamp, self.customer, self.request)
+
+	def match_category(self):
+		"""
+			Analyzes the category and matches one
+		"""
+
+		# if an admin manually assigned category
+		if self.category:
+			return self.category
+
+		categories = Category.objects.all()
+		if categories.count() > 0:
+			# TODO: need to come up with intelligent algorithm to category iwants
+			match_cat = random.sample(categories, 1)
+			self.category = match_cat
+			self.save()
+		return None
 
 class MerchantOfTheDay(models.Model):
 	merchant		= models.ForeignKey(Merchant)

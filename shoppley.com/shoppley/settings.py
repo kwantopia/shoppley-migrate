@@ -21,6 +21,8 @@ PINAX_THEME = "default"
 # Following DEBUG flags get overridden in local_settings.py in dev and deployment
 # SMS_DEBUG, DEBUG, TEMPLATE_DEBUG, SERVE_MEDIA
 
+DEFAULT_RADIUS = 3 # 6 mile diameter
+
 # set SMS_DEBUG=True when running django tests so that
 # it doesn't send out unnecessary txt messages
 SMS_DEBUG = True 
@@ -236,6 +238,7 @@ INSTALLED_APPS = [
 	'worldbank',
 	'premium',
   'common',
+  'logicaldelete',
 ]
 
 FIXTURE_DIRS = [

@@ -86,6 +86,7 @@ class SimpleTest(TestCase):
 			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 			if created:
 				c.set_location_from_address()
+
 	def create_offers(self):
 
 		offer_reader = [["617-000-0001", "Kwan's Pizza1","$5 off everything in our menu","kool1@mit.edu",5,10,10,"00001",],

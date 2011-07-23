@@ -101,6 +101,7 @@ class TxtTemplates:
 			"BALANCE": "You have {{ points }} points.",
 			"OFFER_COMMAND_ERROR": "Command Error! To start an offer, please use this command: #offer offer_description",
 			"OFFER_NO_CUSTOMER" : "There were no customers that could be reached at this moment. Txt \"#status {{ code }}\" to track offer.",
+			"OFFER_BLACKLIST" : "You will be black listed if your offer contain unacceptable language.  Unacceptable words used: {{ unacceptable }}",
 		
 			"OFFER_NOTENOUGH_BALANCE": "Your balance is {{ points }} points. At this time, you do not have enough points to reach customers.",
 			"OFFER_SUCCESS": "We have received your offer at {{ time }}, {{ number }} users have been reached. Txt \"#status {{ code }}\" to track offer: {{ offer }}",
@@ -122,7 +123,9 @@ class TxtTemplates:
 			"EXPIRE_INFO": "{{ offer }} expired [sent to {{ sentto }}] [forwarded {{ forwarded }}] [redeemed {{ redeem }}]"	,
 			"HELP": "- #redeem offercode number: redeem a customer's offercode\n-#offer description: start an offer with its description.\n-#zip new_zipcode: change to a new zipcode\n -#status trackingcode: check the status of an offer you started\n-#balance: check point balance"	,
 			"SIGNUP_COMMAND_ERROR":"Sign up error. To sign up, txt \"#merchant email zipcode business_name\""	,
-			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}, password: {{ password }}. Currently, {{ number }} people in your area are signed up to receive offers. Tell your customers to sign up at Shoppley to receive last minute offers for free."
+			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}, password: {{ password }}. Currently, {{ number }} people in your area are signed up to receive offers. Tell your customers to sign up at Shoppley to receive last minute offers for free.",
+
+			"CUSTOMER_WANTS": "Customer wants {{ requests }}",
 		
 		},
 		"CUSTOMER": {

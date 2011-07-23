@@ -8,6 +8,8 @@ class Command(NoArgsCommand):
 		s = SimpleTest()
 		s.setUp()
 		s.create_test_offers()
+		s.create_spam_offers()
+		s.create_blacklist_words()
 
 		shoppley, created = Site.objects.get_or_create(name="Shoppley", domain="shoppley.com") 
 		webuy, created = Site.objects.get_or_create(name="Shoppley", domain="webuy-dev.mit.edu")
