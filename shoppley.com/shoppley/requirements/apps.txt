@@ -71,3 +71,4 @@ django-wakawaka
 Celery
 django-celery
 Fabric
+django-socialregistration
