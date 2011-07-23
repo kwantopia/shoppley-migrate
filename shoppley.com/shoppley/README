@@ -155,3 +155,4 @@ sudo su postgres
 dropdb flashon
 createdb flashon -T template_postgis -E unicode -O flashon
 python manage.py syncdb
+python manage.py test_offer_mobile # to create sample users and test offers
