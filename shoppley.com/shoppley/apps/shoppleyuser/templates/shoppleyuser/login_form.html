@@ -4,12 +4,6 @@
 {% load uni_form_tags %}
    
         <!--p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p-->
-	{% if lform %}
-	<div id="fb_login_button">
-        {% facebook_button "../../../../site_media/static/images/fb_login.gif" %}  {% trans "or" %}
-	</div>
-                               {% facebook_js %}
-	{% endif %}
         <form class="login-header-form uniForm" id="login_form" method="post" action="{% url shoppleyuser_login %}" style="border_style:none;">
 			{% csrf_token %}
             <fieldset class="inlineLabels">
@@ -23,6 +17,11 @@
 			 <a href="{% url acct_passwd_reset %}">{% trans "Forgot your password?" %}</a>
 	                    <input type="submit" value="{% trans "Log In &raquo;" %}" /> 
 
+	<div id="fb_login_button">
+		{% trans "or" %} {% facebook_button "../../../../site_media/static/images/fb_login.gif" %}
+	</div>
+                               {% facebook_js %}
+									
 		{% endif %}
 	</div>	
 	</fieldset>
