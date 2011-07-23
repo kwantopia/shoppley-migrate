@@ -19,6 +19,10 @@ STATICFILES_DIRS = [
 	os.path.join(PYTHON_ROOT, "uni_form", "media"),
 ]
 
+FACEBOOK_APP_ID = "334812553169"
+FACEBOOK_API_KEY = "334812553169"
+FACEBOOK_SECRET_KEY = "cc8e1e8822e73d44451a8cbde73a354f"
+
 # override DEBUG flags
 DEBUG = True 
 SMS_DEBUG = True 
