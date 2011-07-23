@@ -71,4 +71,6 @@ django-wakawaka
 Celery
 django-celery
 Fabric
+django-facebook
 django-socialregistration
+-e git+https://github.com/facebook/python-sdk.git#egg=facebook
