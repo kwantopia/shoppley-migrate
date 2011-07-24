@@ -5,7 +5,7 @@
 
 {% block head_title %}{% trans "Extra info" %}{% endblock %}
 
-{% block body %}i
+{% block body %}
     <h2>{% trans "You are very close!" %}</h2>
 		<h3>{% trans "Are you a business owner sending offers?" %}</h3>
     <div class="fb-extra-info button-wrapper">   
