@@ -1,6 +1,6 @@
-from offer.models import Offer, OfferCode, Transaction, BlackListWord
+from offer.models import Offer, OfferCode, Transaction, BlackListWord, BlackListOffer
 from django.contrib import admin
-import logicaldelete
+import logicaldelete.admin
 
 
 class OfferAdmin(logicaldelete.admin.ModelAdmin):

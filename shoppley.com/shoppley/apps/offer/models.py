@@ -671,7 +671,12 @@ class Vote(models.Model):
 class BlackListWord(logicaldelete.models.Model):
 	word = models.CharField(max_length=128)
 
+	def __unicode__(self):
+		return word
+
 class BlackListOffer(logicaldelete.models.Model):
 	offer = models.ForeignKey(Offer)
 	words = models.ManyToManyField(BlackListWord)
 
+	def __unicode__(self):
+		return offer
