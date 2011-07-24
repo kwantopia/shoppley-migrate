@@ -45,13 +45,17 @@
                                                 <span class="email-verified" style="color:#ED5F87;">unverified</span>
                                                 {% endifequal %}</li>
 				</ul>
+
                                 <a class="shoppley-btn" href="{% url acct_email %}">{% trans "Update Email" %}</a><br/>
+        {% ifequal is_fb_connected "1" %}
+
 				<ul>
 					<li>Password</li>
 					<li>***********</li>
 				</ul>
 				<a class="shoppley-btn" href="{% url acct_passwd %}">{% trans "Change Password" %}</a><br/>
-				</div>
+	{% endifequal %}
+		</div>
     	</div>
     	<div class="clear" style="height: 40px;">&nbsp;</div>
          	<div class="clear">&nbsp;</div>

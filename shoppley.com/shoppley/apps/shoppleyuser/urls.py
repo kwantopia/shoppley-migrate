@@ -27,7 +27,9 @@ urlpatterns = patterns('',
 	url(r'^fb-connect-init/$', fb_connect_init, name="fb_connect_init"),
 	url(r'^fb-login/$', fb_login, name="fb_login"),
 	url(r'^fb-connect-success/$', fb_connect_success, name="fb_connect_success"),
-	url(r'^fb-extra-info/$', fb_extra_info, name="fb_extra_info"),
+	url(r'^fb-extra-info/$', direct_to_template, {"template": "shoppleyuser/fb_extra_info_html"}, name="fb_extra_info"),
+	url(r'^customer/zip-phone/$', fb_customer_extra_info, name="fb_customer_extra_info"),
+	url(r'^merchant/biz-loc-phone/$', fb_merchant_extra_info, name="fb_merchant_extra_info"),
 
 )
 

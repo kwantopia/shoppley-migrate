@@ -30,7 +30,7 @@ from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm,ExtraInfoForm
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm
 from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode
 from django.views.decorators.csrf import csrf_exempt
 from socialregistration import signals
@@ -47,11 +47,9 @@ def fb_connect_init(request):
 		su = user.shoppleyuser
 		return HttpResponseRedirect(reverse("fb_login"))
 	except ShoppleyUser.DoesNotExist:
-	#	user.is_autenticated = False
-	#	user.save()
+
+
 		fbuser = request.facebook.graph.get_object("me")
-		#user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
-		#user.save()
 		if fbuser['email']:
 			try:
 				EmailAddress.objects.get(email=fbuser['email'])
@@ -59,10 +57,7 @@ def fb_connect_init(request):
 			
 				return HttpResponseRedirect(reverse("home_fb_fail")) ## user already have an account with us with the email.
 			except EmailAddress.DoesNotExist:
-				user.username = "fb|" + request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
-				user.save()	
-				EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
-		su = Customer.objects.create(user = request.user, is_fb_connected=True)
+				pass
 		return 	HttpResponseRedirect(reverse("fb_extra_info"))
 
 def home_fb_fail (request):
@@ -71,17 +66,36 @@ def home_fb_fail (request):
 def fb_login (request):
 	return HttpResponseRedirect(reverse("home"))
 
-def fb_extra_info(request, form_class=ExtraInfoForm, template_name="shoppleyuser/fb_extra_info_html", success_url =None):
+
+def fb_customer_extra_info(request, success_url =None):
 	if request.method=="POST":
-		form = form_class(request.POST)
+		form = CustomerExtraInfoForm(request.POST,request=request)
 		if form.is_valid():
 			form.save()
+
 			return HttpResponseRedirect(reverse("fb_connect_success"))
 	else:
-		user=request.user
-		form = form_class(initial = {'user_id': request.user.id,})
-	ctx = { "form": form ,}
-	return render_to_response(template_name, ctx, context_instance=RequestContext(request))
+		print "In view -", request.user
+		form = CustomerExtraInfoForm(request= request)
+	fbuser= request.facebook.graph.get_object("me")
+	print fbuser['email'], fbuser['first_name'], fbuser['last_name']
+	
+	ctx = { "form": form, }
+	
+	return render_to_response("shoppleyuser/cfb_extra_info_html",ctx , context_instance=RequestContext(request))
+
+def fb_merchant_extra_info(request, success_url =None):
+        if request.method=="POST":
+                form = MerchantExtraInfoForm(request.POST,request=request)
+                if form.is_valid():
+                        form.save()
+                        return HttpResponseRedirect(reverse("fb_connect_success"))
+        else:
+		
+                form = MerchantExtraInfoForm(request= request)
+        ctx = { "form": form, }
+
+        return render_to_response("shoppleyuser/mfb_extra_info_html",ctx , context_instance=RequestContext(request))
 
 def fb_connect_success(request):
 	friends = request.facebook.graph.get_connections("me", "friends")
@@ -93,6 +107,7 @@ def home(request,  template_name="front-page.html"):
 	user = request.user
 	if user.is_authenticated():
 		try:
+			su= user.shoppleyuser
 			if user.shoppleyuser.is_customer():
 				if request.user.emailaddress_set.count()==0:
 
@@ -128,8 +143,10 @@ def home(request,  template_name="front-page.html"):
 									},
 							context_instance=RequestContext(request))
 		except ShoppleyUser.DoesNotExist:
+			print "No shoppleyuser"
 			return  render_to_response(template_name,{
                                         "lform":LoginForm,
+					"no_shoppleyuser_linked": "1",
                                 },context_instance=RequestContext(request))
 	else:
 
@@ -256,21 +273,21 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	user = request.user
 	customer = user.shoppleyuser.customer
 	#customer = Customer.objects.get(user__id=user.id)
-	username = user.username
+	username = user.shoppleyuser.print_name()
 	if customer.zipcode:
 		zipcode = customer.zipcode.code
 	else:
-		zipcode = "None"
+		zipcode = "Not given"
 	address = customer.address_1
 	if not address:
 		address = "No address given"
 	if customer.phone:
 		phone = customer.phone
 	else:
-		phone = "None"
-	print customer.print_daily_limit()
+		phone = "Not given"
+	#print customer.print_daily_limit()
 	frequency = customer.print_daily_limit()
-	print frequency
+	#print frequency
 	if customer.is_fb_connected:
 		is_fb_connected = "1"
 	else:
@@ -307,13 +324,26 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	user = request.user
 	#merchant = Merchant.objects.get(user__id=user.id)
 	merchant = user.shoppleyuser.merchant
-	username = user.username
-	zipcode = merchant.zipcode.code
+	username = user.shoppleyuser.print_name()
+#	zipcode = merchant.zipcode.code
 	address = merchant.address_1
+	if merchant.zipcode:
+		zipcode =merchant.zipcode.code
+	else:
+		zipcode = "Not given"
+
+	if merchant.phone:
+		phone = merchant.phone
+	else:
+		phone = "Not given"
+
 	if not address:
 		address = "No address given"
-	phone = merchant.phone
-	business_name = merchant.business_name
+
+	if merchant.business_name:
+		business_name = merchant.business_name
+	else:
+		business_name = "Not given"
 	if user.emailaddress_set.count()>0:
 		email = user.emailaddress_set.all()[0].email
 		
@@ -326,6 +356,11 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	else:
 		email=None
 		verified=None
+	if merchant.is_fb_connected:
+		is_fb_connected = "1"
+	else:
+		is_fb_connected = "0"
+
 	return render_to_response(template, 
 				{
 					"username":username,

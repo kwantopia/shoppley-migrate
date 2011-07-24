@@ -10,10 +10,6 @@
   
 {% block body %}
 
-	{% if user.is_authenticated %}
-
-	{% else %}
-
 
     <div class="container">
 	{% ifequal error "1" %}
@@ -136,7 +132,7 @@
 		</div>
 			<div class="clear">&nbsp;</div>
 	</div>
-{% endif %}<!-- else if user.is_authenticated -->
+
       	
       </div>
 	

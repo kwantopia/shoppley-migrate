@@ -141,7 +141,7 @@ class TxtTemplates:
 			"INFO" : "Redeem [{{ offercode }}] at {{ merchant }} \"{{ description }}\" [expires: {{ expiration }}]",
 			"IWANT": "We have received your request: {{ request }}. Our dragons are hard at work finding the perfect deals for you.",
 			"IWANT_COMMAND_ERROR": "Command Error! To request a deal, please reply with #iwant your_request",
-			"STOP" : "You have elected to temporarily stop receiving offer messages. Please txt #start to {{ DEFAULT_SHOPPLEY }} to restart your service.",
+			"STOP" : "You have elected to temporarily stop receiving offer messages. Simply txt #start to {{ DEFAULT_SHOPPLEY }} at any time to restart your service.",
 			"RESTOP": "You already elected to stop receiving offer messages. Please txt #start to {{ DEFAULT_SHOPPLEY }} to restart your service."
 ,
 			"START": "Welcome back! Dragons will re-start finding perfect deals for you.",

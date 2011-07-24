@@ -139,6 +139,21 @@ class MerchantProfileEditForm(forms.Form):
 	phone			= forms.CharField(max_length=20)
 #	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 
+	def __init__(self , *args,**kwargs):
+		super(MerchantProfileEditForm, self).__init__(*args, **kwargs)
+
+
+		if kwargs:
+			user_id = kwargs["initial"]["user_id"]
+		if args:
+			user_id = args[0]["user_id"]
+		user = User.objects.get(id=user_id)
+		try :
+			su = user.shoppleyuser
+			if su.is_fb_connected:
+				self.fields['username'].widget = forms.HiddenInput()
+		except ShoppleyUser.DoesNotExist:
+			pass
 
 	def clean_zip_code(self):
 		try:
@@ -216,10 +231,63 @@ class MerchantProfileEditForm(forms.Form):
 		m.save()
 		m.set_location_from_address()
 
-class ExtraInfoForm(forms.Form):
-	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
-	phone = forms.CharField(max_length=20)
-	zip_code = forms.CharField(max_length=10, widget = forms.TextInput(attrs={'class':'zip_code'}))
+class MerchantExtraInfoForm(forms.Form):
+#	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
+	business_name           = forms.CharField(label=_("Business Name"), max_length=64, required=True)
+        address1                = forms.CharField(label=_("Street Address"), max_length=64, required=True)
+	phone = forms.CharField(max_length=20, required=True)
+	zip_code = forms.CharField(max_length=10, widget = forms.TextInput(attrs={'class':'zip_code'}), required=True)
+
+	def __init__(self, *args, **kwargs):
+		self.request = kwargs.pop('request', None)
+		print "in form: " ,  self.request.facebook.graph.get_object("me")['email']
+		super(MerchantExtraInfoForm, self).__init__(*args, **kwargs)
+
+	def clean_zip_code(self):
+		try:
+			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+			return self.cleaned_data["zip_code"]
+		except ZipCode.DoesNotExist:
+			raise forms.ValidationError(_("Not a valid zip code."))
+	def clean_phone(self):
+		if not phone_red.search(self.cleaned_data["phone"]):
+			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
+		phone = parse_phone_number(self.cleaned_data["phone"])
+
+		if ShoppleyUser.objects.filter(phone=phone).exists():
+	
+			raise forms.ValidationError(_("This phone number is being used by another user"))
+		else:
+			return self.cleaned_data["phone"]
+	def save(self):
+
+		user =self.request.user
+		fbuser = self.request.facebook.graph.get_object("me")
+		user.username = "fb|" + self.request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
+		
+		user.save()
+		
+		email = fbuser['email']
+		EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
+	
+	
+		phone = parse_phone_number(self.cleaned_data["phone"])
+		code = self.cleaned_data["zip_code"]
+		zipcode = ZipCode.objects.get(code=code)
+		address_1 = self.cleaned_data["address1"]
+		business_name = self.cleaned_data["business_name"]
+		Merchant(user = user, is_fb_connected=True, phone=phone, zipcode=zipcode,address_1=address_1, business_name=business_name).save()
+
+class CustomerExtraInfoForm(forms.Form):
+#	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
+	phone = forms.CharField(max_length=20, required=True)
+	zip_code = forms.CharField(max_length=10, widget = forms.TextInput(attrs={'class':'zip_code'}), required=True)
+
+	def __init__(self, *args, **kwargs):
+		self.request = kwargs.pop('request', None)
+		print "in form: " ,  self.request.facebook.graph.get_object("me")['email']
+		super(CustomerExtraInfoForm, self).__init__(*args, **kwargs)
+		
 	def clean_zip_code(self):
 		try:
 			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
@@ -231,19 +299,26 @@ class ExtraInfoForm(forms.Form):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		
-		su = ShoppleyUser.objects.filter(phone=phone)
-		if su.count()>0:
+		if ShoppleyUser.objects.filter(phone=phone).exists():
+		
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
 
 	def save(self):
-		user = User.objects.get(pk = self.cleaned_data["user_id"])
-		su = user.shoppleyuser
-		su.phone = parse_phone_number(self.cleaned_data["phone"])
+		user = self.request.user
+		fbuser = self.request.facebook.graph.get_object("me")
+		user.username = "fb|" + self.request.facebook.uid + "|" +fbuser['first_name'] + " " + fbuser['last_name']
+		print user, user.username
+		user.save()
+
+		email = fbuser['email']
+		EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
+
+		phone = parse_phone_number(self.cleaned_data["phone"])
 		code = self.cleaned_data["zip_code"]
-		su.zipcode = ZipCode.objects.get(code=code)
-		su.save()
+		zipcode = ZipCode.objects.get(code=code)
+		Customer(user=user, is_fb_connected=True, phone=phone, zipcode=zipcode).save()
 
 class CustomerProfileEditForm(forms.Form):
 	LIMIT_CHOICES = (
