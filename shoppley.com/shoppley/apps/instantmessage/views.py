@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from tropo import Tropo, Result
 
 def index(request):
@@ -7,7 +8,7 @@ def index(request):
 	t.on(event = "incomplete", next ="verify_no")
 	json = t.RenderJson()
 	print json
-	return json
+	return HttpResponse(json)
 	
 def verify_yes(request):
 	r = Result(request.body)
@@ -24,12 +25,12 @@ def verify_yes(request):
 
 	json = t.RenderJson()
 	print json
-	return json
+	return HttpResponse(json)
 
 def verify_no(request):
 	t = Tropo()
 	t.say("Sorry, that wasn't on of the options.")
 	json = t.RenderJson()
 	print json
-	return json
+	return HttpResponse(json)
 	
