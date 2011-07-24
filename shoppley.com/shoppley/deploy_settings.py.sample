@@ -82,7 +82,7 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
-	#'django.middleware.csrf.CsrfResponseMiddleware',
+	'django.middleware.csrf.CsrfResponseMiddleware',
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	#"django_openid.consumer.SessionConsumer",
 	"django.contrib.messages.middleware.MessageMiddleware",
@@ -92,5 +92,13 @@ MIDDLEWARE_CLASSES = [
 	"django.middleware.cache.FetchFromCacheMiddleware",
 	"pagination.middleware.PaginationMiddleware",
 	"django_sorting.middleware.SortingMiddleware",
+	"socialregistration.middleware.FacebookMiddleware",
 ]
+FACEBOOK_APP_ID = '238567536166913'
+FACEBOOK_API_KEY = '238567536166913'
+FACEBOOK_SECRET_KEY = '2b146f1c5ae0c2c95c91cdfe878be7f7'
+
+SOCIALREGISTRATION_GENERATE_USERNAME = True
+LOGIN_REDIRECT_URL = "/shoppleyuser/fb-connect-init/"
+FACEBOOK_REQUEST_PERMISSIONS = 'email'
 
