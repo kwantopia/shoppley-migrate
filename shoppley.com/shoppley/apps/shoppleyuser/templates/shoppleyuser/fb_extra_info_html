@@ -1,0 +1,16 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+
+{% block head_title %}{% trans "Extra info" %}{% endblock %}
+
+{% block body %}
+    <h2>{% trans "You are very close! Are you a " %}</h2>
+    
+	<a href="{% url fb_customer_extra_info %}"><button id="customer_extra_btn">{% trans "Customer" %}</button></a> 
+       <a href="{% url fb_merchant_extra_info %}"> <button id="merchant_extra_btn">{% trans "Merchant" %}</button></a>                       
+
+{% endblock %}
+
+

@@ -1,0 +1,30 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+
+{% block head_title %}{% trans "Extra info" %}{% endblock %}
+
+{% block body %}
+    <h2>{% trans "You are very close!" %}</h2>
+
+
+
+
+	<div id="customer_extra_info_form">
+        <form class="extra-info-form uniForm" id="extra-info-form" method="post" action="{% url fb_customer_extra_info %}">{% csrf_token %}
+
+            <fieldset class="inlineLabels">
+                {{ form|as_uni_form }}
+                <div  class="form_blick">
+                    <input type="submit" value="{% trans "Done &raquo;" %}" />
+                </div>
+            </fieldset>
+        </form>
+        </div>
+
+
+    
+{% endblock %}
+
+
