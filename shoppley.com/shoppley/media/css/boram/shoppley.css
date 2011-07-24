@@ -395,6 +395,9 @@ div.login .form_block {
 	margin-top: -20px;
 }
 
+.button-wrapper {
+	padding-bottom: 50px;
+}
 
 
 /* /account/login/ , templates/account/login.html */
