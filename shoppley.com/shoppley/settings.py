@@ -237,6 +237,7 @@ INSTALLED_APPS = [
 	'mobile',
 	'worldbank',
 	'premium',
+	'instantmessage',
   'common',
   'logicaldelete',
 ]

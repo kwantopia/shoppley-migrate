@@ -83,6 +83,7 @@ urlpatterns = patterns('',
 	(r'^shoppleyuser/', include('shoppleyuser.urls')),
 	(r'^m/', include('mobile.urls')),
 	(r'^buxfer/', include('buxfer.urls')),
+	(r'^im/', include('instantmessage.urls')),
     
     (r'^feeds/tweets/(.*)/$', 'django.contrib.syndication.views.feed', tweets_feed_dict),
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
