@@ -1,3 +1,5 @@
+-- sudo psql flashon -U flashon < sql/want_offer_processing_495.sql
+
 -- iwantrequest
 alter table shoppleyuser_iwantrequest add column processed boolean;
 
