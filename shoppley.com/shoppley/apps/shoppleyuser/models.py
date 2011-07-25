@@ -139,8 +139,8 @@ class ShoppleyUser(models.Model):
 			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
 			self.save()
 		
-	def set_location_from_latlon(self,lat , lon):
-		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat,lon))))
+	def set_location_from_latlon(self, lat , lon):
+		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon, lat))))
 		self.save()
 
 
