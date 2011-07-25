@@ -8,6 +8,10 @@ import re
 from emailconfirmation.models import EmailAddress
 from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City
 from shoppleyuser.utils import parse_phone_number
+from offer.utils import TxtTemplates
+
+from shoppleyuser.utils import sms_notify
+
 alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
 #phone_red = re.compile('^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
 # add white spaces
@@ -119,6 +123,10 @@ class MerchantSignupForm(forms.Form):
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
+
+
+
+
 		new_merchant = Merchant.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
@@ -316,6 +324,10 @@ class CustomerExtraInfoForm(forms.Form):
 		EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
 
 		phone = parse_phone_number(self.cleaned_data["phone"])
+		t = TxtTemplates()
+		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
+		sms_notify(phone, msg)
+
 		code = self.cleaned_data["zip_code"]
 		zipcode = ZipCode.objects.get(code=code)
 		Customer(user=user, is_fb_connected=True, phone=phone, zipcode=zipcode).save()
@@ -556,6 +568,10 @@ class CustomerSignupForm(forms.Form):
 
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
+		t = TxtTemplates()
+		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
+		sms_notify(phone, msg)
+
 		new_customer = Customer.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],

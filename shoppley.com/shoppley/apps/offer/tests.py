@@ -70,6 +70,7 @@ class SimpleTest(TestCase):
 			#m = Command()
 			m.test_handle(msg)
 			u = Customer.objects.get(phone = "%s" % c[3])
+			print u.location
 			print u.location.location.x , u.location.location.y
 			
 	def create_more_customers(self): #for resent

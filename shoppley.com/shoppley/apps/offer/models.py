@@ -261,7 +261,7 @@ class Offer(logicaldelete.models.Model):
 			u.set_password(rand_passwd)	
 			u.save()
 			
-			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone, balance=1000)
+			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone)
 			if created:
 				friend.set_location_from_address()	
 			# send out a new offercode
@@ -311,15 +311,15 @@ class Offer(logicaldelete.models.Model):
 		merchant = self.merchant
 		
 		nearby_customers = self.merchant.get_customers_within_miles(radius)
-		fans = merchant.fans.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).order_by('?').values_list('pk', flat=True)
+		fans = merchant.fans.filter(pk__in=nearby_customers, verified_phone=0).exclude(active=False).exclude(verified=False).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
 		# TODO: geographically filter
 		
-		nonfans = Customer.objects.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).values_list('pk',flat=True)
+		nonfans = Customer.objects.filter(pk__in=nearby_customers, verified_phone=0).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).values_list('pk',flat=True)
 		#nonfans = Customer.objects.exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
-		#print "Num fans:",fans.count()
-		#print "Num nonfans:",nonfans.count()
+		print "Num fans:",fans.count()
+		print "Num nonfans:",nonfans.count()
 		fan_target = set(list(fans))
 		nonfan_target = set(list(nonfans))	
 		target = fan_target | nonfan_target
@@ -418,12 +418,12 @@ class Offer(logicaldelete.models.Model):
 		old_pks = old_offercodes.values_list('customer',flat=True)
 		#print "old_pks", old_pks
 		nearby_customers = self.merchant.get_customers_within_miles(radius)
-		fans = merchant.fans.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
+		fans = merchant.fans.filter(pk__in=nearby_customers, verified_phone=0).exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
 		#fans = merchant.fans.exclude(active=False).exclude(verified=False).exclude(pk__in=old_pks).order_by('?').values_list('pk', flat=True)
 		antifans = merchant.antifans.all().values_list('pk', flat=True)
 
 		# TODO: geographically filter
-		nonfans = Customer.objects.filter(pk__in=nearby_customers).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).exclude(pk__in=old_pks).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
+		nonfans = Customer.objects.filter(pk__in=nearby_customers, verified_phone=0).exclude(active=False).exclude(verified=False).exclude(pk__in=fans).exclude(pk__in=antifans).exclude(pk__in=old_pks).filter(zipcode=merchant.zipcode).values_list('pk', flat=True)
 
 		#print "Num fans:",fans.count()
 		#print "Num nonfans:",nonfans.count()

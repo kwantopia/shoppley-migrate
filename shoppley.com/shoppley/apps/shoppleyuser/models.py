@@ -87,7 +87,7 @@ class ShoppleyUser(models.Model):
 			(VERIFIED_NO, 'No'),
 		(VERIFIED_PENDING, 'Pending'),
 	)
-	verified_phone	= models.IntegerField(default=VERIFIED_PENDING, choices=VERIFIED_CHOICES)
+	verified_phone	= models.IntegerField(default=2, choices=VERIFIED_CHOICES)
 	
 	def is_customer(self):
 		return hasattr(self, "customer")
@@ -128,8 +128,10 @@ class ShoppleyUser(models.Model):
 		latlon = get_lat_long(address)
 		#print address, latlon
 		if latlon!=-1:
+			#print self.location
 			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
 			self.save()
+			#print self.location
 			return
 		
 		latlon = get_lat_long(self.get_zipcode_address())

@@ -11,6 +11,7 @@ from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCo
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode, Vote
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
 from worldbank.models import Transaction
+from common.user import verify_phone
 from googlevoice import Voice
 from googlevoice.util import input
 from googlevoice.extractsms import extractsms
@@ -193,7 +194,15 @@ class Command(NoArgsCommand):
 		#print "logged"
 		if msg["from"] != "Me" and msg["from"] != "":
 			su = map_phone_to_user(msg["from"])
-
+			if su and (su.verified_phone==2 or su.verified_phone == 1):
+				text = msg["text"].strip()
+				if text == "1":
+					verify_phone(su, True)
+				elif text== "0":
+					verify_phone(su, False)
+				return
+				#else:
+				#	verify_phone(su,True)			
 			# ****************************** MERCHANT COMMANDS ***********************
 			if su and su.is_merchant():
 				text = msg["text"].strip()
@@ -727,7 +736,7 @@ class Command(NoArgsCommand):
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 							#print "creating new merchant..."
 							new_merchant = Merchant.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
-										business_name = business, verified=True)
+										business_name = business, verified=True, verified_phone=True)
 							new_merchant.set_location_from_address()
 							#print "merchant created!"
 
@@ -761,8 +770,10 @@ class Command(NoArgsCommand):
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 									
-							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True)
+							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True, verified_phone=True)
 							new_customer.set_location_from_address()
+							print new_customer
+							print new_customer.location.location.x, new_customer.location.location.y
 							number = new_customer.count_merchants_within_miles()
                                                         receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
                                                                 "email": email,
@@ -770,7 +781,7 @@ class Command(NoArgsCommand):
                                                                 "password": randompassword,
                                                                 })
                                                         self.notify(phone,receipt_msg)
-
+							print "x=",new_customer.location.location.x
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
 							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
