@@ -155,7 +155,7 @@ class Merchant(ShoppleyUser):
 	def save(self, *args, **kwargs):
 		if not self.pk:
 			self.balance = settings.INIT_MERCHANT_BALANCE
-			super(Merchant, self).save(*args, **kwargs)
+		super(Merchant, self).save(*args, **kwargs)
 		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 	def __unicode__(self):
@@ -303,7 +303,7 @@ class Customer(ShoppleyUser):
 	def save(self, *args, **kwargs):
 		if not self.pk:
 			self.balance = settings.INIT_CUSTOMER_BALANCE
-			super(Customer, self).save(*args, **kwargs)
+		super(Customer, self).save(*args, **kwargs)
 		if self.zipcode:
 			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
