@@ -160,7 +160,8 @@ class Offer(logicaldelete.models.Model):
 			"lat": location.y,
 			"lon": location.x,
 			"img": self.get_image(),
-			"banner": self.merchant.get_banner()
+			"banner": self.merchant.get_banner(),
+			"can_forward": (self.expired_time > datetime.now()),
 		}
 		if self.percentage:
 			offer_detail["percentage"] = self.percentage
