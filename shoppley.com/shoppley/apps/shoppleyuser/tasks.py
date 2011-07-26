@@ -16,6 +16,13 @@ def process_sms():
 		cmd = Command()
 		cmd.handle_noargs()
 
+@periodic_task(run_every=timedelta(minutes=2))
+def distribute_offers():
+		from offer.management.commands.distribute import Command
+		print("Distributing offers: running 2-minute task...\n")
+		cmd = Command()
+		cmd.handle_noargs()
+
 @periodic_task(run_every=crontab(hour=7, minute=0))
 def reset_offer_count():
 		from offer.management.commands.reset_offer_counts import Command
