@@ -161,7 +161,6 @@ class Offer(logicaldelete.models.Model):
 			"lon": location.x,
 			"img": self.get_image(),
 			"banner": self.merchant.get_banner(),
-			"can_forward": int(self.expired_time > datetime.now()),
 		}
 		if self.percentage:
 			offer_detail["percentage"] = self.percentage
@@ -579,6 +578,7 @@ class OfferCode(models.Model):
 		"""
 		offer_detail = {"offer_code_id": self.id,
 				"offer_id": self.offer.id,
+				"code": self.code,
 				"name": self.offer.title,
 				"merchant_name": self.offer.merchant.business_name,
 				"description": self.offer.description,
@@ -594,7 +594,7 @@ class OfferCode(models.Model):
 				"lon": -71.103329, 
 				"img": self.offer.get_image(),
 				"banner": self.offer.merchant.get_banner(),
-				"can_forward": int(self.offer.expired_time > datetime.now()),
+				"expires_time": int(time.mktime(self.expiration_time.timetuple())),
 				}
 		if self.offer.percentage:
 			offer_detail["percentage"] = self.offer.percentage
