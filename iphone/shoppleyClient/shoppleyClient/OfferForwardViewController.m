@@ -25,7 +25,7 @@
         self.autoresizesForKeyboard = NO;
         self.variableHeightRows = YES;
         
-        self.title = @"Feedback";
+        self.title = @"Forward";
         
         _doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(submit)];
         _cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(dismiss)];
