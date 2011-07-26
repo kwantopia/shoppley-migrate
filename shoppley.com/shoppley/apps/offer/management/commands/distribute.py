@@ -73,7 +73,7 @@ class Command(NoArgsCommand):
 						# no target users that have not received offer
 						# select users again among those previously received but haven't
 						# filled their quota
-						users=Customer.objects.filter(active=True, zipcode=z['merchant__zipcode']).values_list('pk', flat=True)
+						users=Customer.objects.filter(verified=True, active=True, zipcode=z['merchant__zipcode']).values_list('pk', flat=True)
 
 						num_users = users.count()
 						if num_users > target_size:
