@@ -49,7 +49,7 @@
     
     if (!_isCurrentOffer) {
         NSMutableArray* transactions = [[[NSMutableArray alloc] init] autorelease];
-        [transactions addObject:[SLRightValueTableItem itemWithText:@"Transaction Cost" value:[NSString stringWithFormat:@"$%@", ((SLRedeemedOffer*)_offer).txnAmount]]];
+        [transactions addObject:[SLRightValueTableItem itemWithText:@"Price Paid" value:[NSString stringWithFormat:@"$%@", ((SLRedeemedOffer*)_offer).txnAmount]]];
         [items addObject:transactions];
         [sections addObject:@""];
         
