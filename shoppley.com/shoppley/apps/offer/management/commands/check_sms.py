@@ -55,10 +55,10 @@ sms_logger = logging.getLogger("offer.management.commands.check_sms")
 
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
-	DEBUG = True
+	DEBUG = settings.SMS_DEBUG
 	def notify(self, phone, msg):
 		if self.DEBUG:
-			print _("\"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
+			print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
 		else:
 			sms_notify(phone,msg)
 
@@ -194,12 +194,13 @@ class Command(NoArgsCommand):
 		#print "logged"
 		if msg["from"] != "Me" and msg["from"] != "":
 			su = map_phone_to_user(msg["from"])
-			if su and (su.verified_phone==2 or su.verified_phone == 1):
+			if su and su.is_customer() and (su.verified_phone==2 or su.verified_phone == 1):
 				text = msg["text"].strip()
 				if text == "1":
 					verify_phone(su, True)
 				elif text== "0":
 					verify_phone(su, False)
+				print "entre pre-command"
 				return
 				#else:
 				#	verify_phone(su,True)			
@@ -559,7 +560,7 @@ class Command(NoArgsCommand):
 						else:
 							vote_num = -1
 						if len(parsed) == 1:
-							offers = su.customer.offercode_set.filter(redeem_time__isnull=False).order_by("-redeem_time")
+							offers = su.customer.offercode_set.order_by("-time_stamp")
 							if offers.count()==0:
 								receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_NO_OFFER"], {})
 								self.notify(su.phone, receipt_msg)
@@ -581,7 +582,7 @@ class Command(NoArgsCommand):
 								raise CommandError("Incorrectly formed vote command")
 							else:
 								offercode = parsed[1]
-								offers = su.customer.offercode_set.filter(redeem_time__isnull=False).filter(code__contains=parsed[1]).order_by("-redeem_time")
+								offers = su.customer.offercode_set.filter(code__contains=parsed[1]).order_by("-time_stamp")
 								if offers.count() == 0:
 									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_UNOWNED_OFFER"], {"offercode": offercode, })
 									self.notify(su.phone, receipt_msg)
