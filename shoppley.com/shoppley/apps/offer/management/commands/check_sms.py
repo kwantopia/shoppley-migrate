@@ -51,7 +51,10 @@ HELP = ["help","h"]
 ZIPCODE = ["zip", "zipcode","z"]
 
 import logging
+FORMAT = '%(asctime)-15s: %(message)s'
+logging.basicConfig(format=FORMAT)
 sms_logger = logging.getLogger("offer.management.commands.check_sms")
+reg_logger = logging.getLogger("txt_registration")
 
 class Command(NoArgsCommand):
 	help = "Check Google Voice inbox for posted offers from merchants"
@@ -200,7 +203,10 @@ class Command(NoArgsCommand):
 					verify_phone(su, True)
 				elif text== "0":
 					verify_phone(su, False)
-				print "entre pre-command"
+				
+				else:
+					msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
+					self.notify(su.phone, msg)
 				return
 				#else:
 				#	verify_phone(su,True)			
@@ -213,6 +219,7 @@ class Command(NoArgsCommand):
 					# offer code being redeemed by the customer
 					# merchant sends offer code and the customer's phone number
 					del parsed[0]
+
 					# --------------------------- BALANCE: "balance"---------------
 					if parsed[0].lower() in BALANCE:
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["BALANCE"],{"points": su.balance})
@@ -452,7 +459,7 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() in MERCHANT_SIGNUP:
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["RESIGNUP"], {})
 						self.notify(su.phone, receipt_msg)
-		
+						reg_logger.info("merchant-signup: %s -- failure (same number)" % phone)
 					# --------------------- HELP: "help" -------------------------
 					elif parsed[0].lower() in HELP:
 						commands = self.merchant_help()
@@ -681,7 +688,7 @@ class Command(NoArgsCommand):
 					elif parsed[0].lower() in SIGNUP:
 						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESIGNUP"],{})
 						self.notify(su.phone, receipt_msg)
-				
+						reg_logger.info("customer-signup: %s -- failure (same number)" % phone)
 					# ---------------------------- INCORRECT COMMAND : give them help -----------
 					else:
 						customer_msg=t.render(TxtTemplates.templates["CUSTOMER"]["INCORRECT_COMMAND"], {"command": parsed[0], "help": self.customer_help()})
@@ -719,7 +726,7 @@ class Command(NoArgsCommand):
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 							#print "creating new merchant..."
 							new_merchant = Merchant.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
-										business_name = business, verified=True, verified_phone=True)
+										business_name = business, verified=True, verified_phone=0)
 							new_merchant.set_location_from_address()
 							#print "merchant created!"
 
@@ -732,7 +739,7 @@ class Command(NoArgsCommand):
 								})
 
 							self.notify(phone,receipt_msg)	
-
+							reg_logger.info("merchant-signup: %s -- success" % phone)
 						# ----------------------------------- SIGNUP: "signup<SPACE>email<SPACE>zipcode" ----------------
 						elif parsed[0].lower() in SIGNUP:
 							if (len(parsed) <3):
@@ -753,7 +760,7 @@ class Command(NoArgsCommand):
 							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
 							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
 									
-							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True, verified_phone=True)
+							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True, verified_phone=0)
 							new_customer.set_location_from_address()
 							print new_customer
 							print new_customer.location.location.x, new_customer.location.location.y
@@ -765,6 +772,7 @@ class Command(NoArgsCommand):
                                                                 })
                                                         self.notify(phone,receipt_msg)
 							print "x=",new_customer.location.location.x
+							reg_logger.info("customer-signup: %s -- success" % phone)
 						else:
 						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
 							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
