@@ -129,20 +129,19 @@ class ShoppleyUser(models.Model):
 		#print address, latlon
 		if latlon!=-1:
 			#print self.location
-			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
+			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[1], latlon[0]))))
 			self.save()
 			#print self.location
 			return
 		
 		latlon = get_lat_long(self.get_zipcode_address())
 		if latlon!=-1:
-			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[0], latlon[1]))))
+			self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (latlon[1], latlon[0]))))
 			self.save()
 		
 	def set_location_from_latlon(self, lat , lon):
-		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat, lon))))
+		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon, lat))))
 		self.save()
-
 
 
 class Merchant(ShoppleyUser):
