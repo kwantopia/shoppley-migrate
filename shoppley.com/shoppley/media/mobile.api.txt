@@ -29,8 +29,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "code": "691603", 
-      "expires_time": 1314149241, 
+      "code": "419245", 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -46,8 +46,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "code": "620538", 
-      "expires_time": 1314149241, 
+      "code": "086353", 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -63,8 +63,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "code": "059058", 
-      "expires_time": 1314149241, 
+      "code": "822293", 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -80,8 +80,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "code": "408644", 
-      "expires_time": 1314149241, 
+      "code": "102460", 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -97,8 +97,8 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "code": "610801", 
-      "expires_time": 1314149241, 
+      "code": "384769", 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -113,7 +113,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -128,7 +128,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -158,8 +158,8 @@ RESPONSE:
     "expires": "3 weeks", 
     "lon": 21.3858333, 
     "phone": "6174538665", 
-    "code": "735239", 
-    "expires_time": 1314149241, 
+    "code": "307983", 
+    "expires_time": 1314151587, 
     "citystatezip": "Aiea, HI 96701", 
     "lat": -157.9308333, 
     "merchant_name": "Jane's Shoe Store", 
@@ -184,15 +184,15 @@ RESPONSE:
       "offer_code_id": 6, 
       "name": "Free drink when you order $10 or more", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-26-11 21:57", 
-      "redeemed_time": 1311731842, 
+      "redeemed": "07-26-11 22:36", 
+      "redeemed_time": 1311734188, 
       "address1": "190 Mass Av.", 
       "offer_id": 6, 
       "feedback": "", 
       "lon": -71.103329, 
       "phone": "6178710710", 
-      "code": "620538", 
-      "expires_time": 1314149241, 
+      "code": "086353", 
+      "expires_time": 1314151588, 
       "merchant_name": "Flour Bakery", 
       "citystatezip": "Aiea, HI 96701", 
       "lat": 42.365005, 
@@ -202,24 +202,24 @@ RESPONSE:
     }, 
     {
       "rating": 0, 
-      "offer_code_id": 14, 
-      "name": "10% off Abercrombie flip flops", 
+      "offer_code_id": 8, 
+      "name": "$1 off Chicken Sandwiches", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-26-11 21:57", 
-      "redeemed_time": 1311731842, 
-      "address1": "", 
-      "offer_id": 2, 
+      "redeemed": "07-26-11 22:36", 
+      "redeemed_time": 1311734188, 
+      "address1": "190 Mass Av.", 
+      "offer_id": 5, 
       "feedback": "", 
       "lon": -71.103329, 
-      "phone": "6174538665", 
-      "code": "735239", 
-      "expires_time": 1314149241, 
-      "merchant_name": "Jane's Shoe Store", 
+      "phone": "6178710710", 
+      "code": "822293", 
+      "expires_time": 1314151588, 
+      "merchant_name": "Flour Bakery", 
       "citystatezip": "Aiea, HI 96701", 
       "lat": 42.365005, 
       "txn_amount": "0.00", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "description": "10% off Abercrombie flip flops"
+      "description": "$1 off Chicken Sandwiches"
     }
   ], 
   "num_offers": 2, 
@@ -232,14 +232,14 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'735239',
+  'offer_code': u'307983',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'],
   'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1, 
-  "confirm_msg": "Offer by \"735239\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"307983\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
@@ -308,7 +308,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -323,7 +323,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -338,7 +338,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151588, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
@@ -353,7 +353,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -368,7 +368,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -383,7 +383,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -398,7 +398,7 @@ RESPONSE:
       "expires": "3 weeks", 
       "lon": 21.3858333, 
       "phone": "6174538665", 
-      "expires_time": 1314149241, 
+      "expires_time": 1314151587, 
       "citystatezip": "Aiea, HI 96701", 
       "lat": -157.9308333, 
       "merchant_name": "Jane's Shoe Store", 
@@ -467,7 +467,7 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "Buy dress shoes today & get free socks", 
       "offer_id": 4, 
-      "expires": 1314149241, 
+      "expires": 1314151587, 
       "redistributable": true, 
       "redeemed": 0, 
       "redistribute_processing": false, 
@@ -481,7 +481,7 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "Save $15 on your purchase of dress shoes", 
       "offer_id": 3, 
-      "expires": 1314149241, 
+      "expires": 1314151587, 
       "redistributable": true, 
       "redeemed": 0, 
       "redistribute_processing": false, 
@@ -495,9 +495,9 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "10% off Abercrombie flip flops", 
       "offer_id": 2, 
-      "expires": 1314149241, 
+      "expires": 1314151587, 
       "redistributable": true, 
-      "redeemed": 1, 
+      "redeemed": 0, 
       "redistribute_processing": false, 
       "duration": 40320, 
       "is_processing": false
@@ -509,7 +509,7 @@ RESPONSE:
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$5 off shoes brands, Nike, Reebok", 
       "offer_id": 1, 
-      "expires": 1314149241, 
+      "expires": 1314151587, 
       "redistributable": true, 
       "redeemed": 0, 
       "redistribute_processing": false, 
@@ -544,7 +544,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "10% off on entree", 
     "offer_id": 11, 
-    "expires": 1311735442, 
+    "expires": 1311737789, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -554,7 +554,7 @@ RESPONSE:
     "is_processing": true
   }, 
   "result": 0, 
-  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
+  "result_msg": "Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Start a $ off offer (units=1), duration if not specified will be next 90 minutes
@@ -580,7 +580,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 12, 
-    "expires": 1311733643, 
+    "expires": 1311735989, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -590,7 +590,7 @@ RESPONSE:
     "is_processing": true
   }, 
   "result": 0, 
-  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
+  "result_msg": "Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Start a $ off offer NOW (units=1), duration if not specified will be next 90 minutes
@@ -614,7 +614,7 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 13, 
-    "expires": 1311737243, 
+    "expires": 1311739589, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
@@ -624,7 +624,7 @@ RESPONSE:
     "is_processing": true
   }, 
   "result": 0, 
-  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
+  "result_msg": "Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Send more of the same offer (URL param: offer_id)
@@ -642,17 +642,17 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 13, 
-    "expires": 1311737243, 
-    "redistributable": true, 
+    "expires": 1311739589, 
+    "redistributable": false, 
     "amount": 10, 
     "redeemed": 0, 
-    "redistribute_processing": false, 
+    "redistribute_processing": true, 
     "duration": 90, 
     "unit": 2, 
     "is_processing": true
   }, 
   "result": 0, 
-  "result_msg": "Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes."
+  "result_msg": "Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Result when offer cannot be sent more because already sent more (URL param: offer_id)
@@ -670,35 +670,35 @@ RESPONSE:
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
     "offer_id": 13, 
-    "expires": 1311737243, 
-    "redistributable": true, 
+    "expires": 1311739589, 
+    "redistributable": false, 
     "amount": 10, 
     "redeemed": 0, 
-    "redistribute_processing": false, 
+    "redistribute_processing": true, 
     "duration": 90, 
     "unit": 2, 
     "is_processing": true
   }, 
-  "result": 0, 
-  "result_msg": "Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes."
+  "result": -5, 
+  "result_msg": "Offer has already been redistributed so you cannot resend."
 }
 ****************************************************************************************************
 Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/restart/4/
+GET URL: /m/merchant/offer/restart/1/
 PARAMS:
 { 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer": {
-    "received": 2, 
-    "redeem_rate": 0.0, 
-    "description": "Buy dress shoes today & get free socks", 
+    "received": 0, 
+    "redeem_rate": 0, 
+    "description": "$5 off shoes brands, Nike, Reebok", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
-    "title": "Buy dress shoes today & get free socks", 
-    "offer_id": 4, 
-    "expires": 1311730041, 
+    "title": "$5 off shoes brands, Nike, Reebok", 
+    "offer_id": 1, 
+    "expires": 1311732387, 
     "redistributable": true, 
     "redeemed": 0, 
     "redistribute_processing": false, 
@@ -713,29 +713,30 @@ Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': u'848414', 'v': 1}
+{ 'amount': 38.05, 'code': u'245425', 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer_code": {
-    "code": "848414", 
-    "description": "Save $15 on your purchase of dress shoes", 
+    "code": "245425", 
+    "description": "10% off Abercrombie flip flops", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "address1": "", 
-    "offer_id": 3, 
+    "offer_id": 2, 
     "expires": "3 weeks", 
     "lon": -71.103329, 
     "phone": "6174538665", 
-    "offer_code_id": 13, 
-    "expires_time": 1314149241, 
+    "offer_code_id": 15, 
+    "expires_time": 1314151587, 
     "citystatezip": "Aiea, HI 96701", 
     "lat": 42.365005, 
+    "forwarder": "user1@customer.com", 
     "merchant_name": "Jane's Shoe Store", 
     "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "Save $15 on your purchase of dress shoes"
+    "name": "10% off Abercrombie flip flops"
   }, 
   "result": 1, 
-  "result_msg": "Offer redemption (code: 848414) successful."
+  "result_msg": "Offer redemption (code: 245425) successful."
 }
 ****************************************************************************************************
 Show list of past offers and details (URL param: 0)
@@ -773,8 +774,8 @@ PARAMS:
 RESPONSE:
 {
   "total_forwarded": 5, 
-  "total_redeemed": 2, 
-  "redeem_rate": 50.0, 
+  "total_redeemed": 1, 
+  "redeem_rate": 25.0, 
   "result_msg": "Summary data about the merchant's offers.", 
   "total_received": 9, 
   "result": 1, 

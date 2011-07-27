@@ -38,8 +38,9 @@ class Command(NoArgsCommand):
 		for z in process_areas: 
 			# for each offer in current area
 			for o in Offer.objects.filter(merchant__zipcode=z['merchant__zipcode'], is_processing=True):
-
+				"""
 				# check if merchant has enough credits
+				"""
 				from worldbank.models import Transaction
 				allowed_number =int( o.merchant.balance/abs(Transaction.points_table["MOD"]))
 				#print "balance=" ,self.merchant.balance
@@ -50,12 +51,16 @@ class Command(NoArgsCommand):
 					o.delete()
 					continue
 
+				"""
 				# check if offer has words in the black list
+				"""
 				blacked = set(o.title.lower().split()).intersection(black_words) 
 				if len(blacked) == 0:
-					# valid content
+					# if valid content
 
+					"""
 					# select target size
+					"""
 					target_size = 20 if allowed_number > 20 else allowed_number 
 
 					# TODO: need to select 80% of followers and 20% of non-followers
@@ -94,15 +99,21 @@ class Command(NoArgsCommand):
 										ttype = "MOD")
 						transaction.execute()
 
-					o.num_init_sentto =sentto
+					"""
+					# Update offer parameters
+					"""
+					o.num_init_sentto = sentto
 					o.expired_time = o.starting_time + timedelta(minutes=o.duration)
 					o.save()
 
 					if o.num_init_sentto==0 :
+						# no customers
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_NO_CUSTOMER"], {"code":o.gen_tracking_code()})
 
 					else:
+						"""
 						# successfully sent offers
+						"""
 						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_SUCCESS"], {
 							"time": pretty_datetime(o.time_stamp),
 							"offer": o,
@@ -111,7 +122,9 @@ class Command(NoArgsCommand):
 						})
 
 				else:
+					"""
 					# black list the offer
+					"""
 					bo = BlackListOffer(offer=o)
 					bo.save()
 					for b_word in blacked:
@@ -124,6 +137,23 @@ class Command(NoArgsCommand):
 				o.is_processing = False
 				o.save()
 
+
+		# process offer redistribute
+		"""
+
+								if resentto == 0:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
+								elif resentto==-2:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
+								elif resentto==-3:
+								else:
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
+
+										"title" : offer.title,
+										"resentto": resentto,
+										})
+
+		"""
 
 		# process iwant requests by trying to send the request to merchants of
 		# category that matches the request

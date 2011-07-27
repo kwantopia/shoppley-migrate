@@ -590,7 +590,7 @@ class SimpleTest(TestCase):
 		comment = "Result when offer cannot be sent more because already sent more (URL param: offer_id)"
 		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
 
-		self.assertEqual(response["result"], 0)
+		self.assertEqual(response["result"], -5)
 
 		# TODO: Need to expire some offers and send new offers
 		exp_offer = self.expire_offer(email=email)

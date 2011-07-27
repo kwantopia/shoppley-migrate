@@ -579,7 +579,7 @@ def offer_start(request):
 		offer.save()
 
 		num_reached = 0
-		receipt_msg = _("Your offer has been submitted.  Check back in a few minutes for status update.")
+		receipt_msg = _("Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update.")
 		data["offer"] = offer.offer_detail()
 		data["result"] = num_reached 
 		data["result_msg"] = receipt_msg 
@@ -602,7 +602,7 @@ def offer_send_more(request, offer_id):
 	# check parameters 
 	if offer_id is None:
 		data["result"] = -2
-		data["result_msg"] = "Parameter offer_id has not been specified."
+		data["result_msg"] = _("Parameter offer_id has not been specified.")
 		return JSONHttpResponse(data)
 
 	if u.shoppleyuser.is_merchant():
@@ -611,9 +611,12 @@ def offer_send_more(request, offer_id):
 
 		try:
 			offer = Offer.objects.get(merchant=merchant, id=offer_id)
-			num_reached = 0 
-
-			receipt_msg = _("Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes.")
+			if offer.redistribute():
+				num_reached = 0 
+				receipt_msg = _("Offer has been submitted.  We are actively looking for customers.  Check back in a few minutes for status update.")
+			else:
+				num_reached = -5
+				receipt_msg = _("Offer has already been redistributed so you cannot resend.")
 
 			data["offer"] = offer.offer_detail()
 			data["result"] = num_reached 
@@ -621,11 +624,11 @@ def offer_send_more(request, offer_id):
 
 		except Offer.DoesNotExist:
 			data["result"] = -3
-			data["result_msg"] = "Parameter offer_id specified is not a valid offer."
+			data["result_msg"] = _("Parameter offer_id specified is not a valid offer.")
 
 	else:
 		data["result"] = -1
-		data["result_msg"] = "Not a valid merchant user."
+		data["result_msg"] = _("Not a valid merchant user.")
 
 	return JSONHttpResponse(data)	
 

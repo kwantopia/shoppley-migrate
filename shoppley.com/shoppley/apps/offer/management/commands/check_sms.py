@@ -353,34 +353,25 @@ class Command(NoArgsCommand):
 					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
 					elif parsed[0].lower() in REOFFER:
 						if len(parsed)==1:
+							# resend latest offer (no tracking code)
 							offers = su.merchant.offers_published.filter(expired_time__gt=datetime.now())
 							#offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
 							#offers = su.merchant.offers_published.filter(expired=False)
 							if offers.exists():
 								offer = offers.order_by("-time_stamp")[0]
-								resentto = offer.redistribute()
-
-								#print "redistributed -- DONE", resentto
-								if resentto == 0:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
-								elif resentto==-2:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
-								elif resentto==-3:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
-
+								if offer.redistribute():
+									# offer queued for redistribute
+									pass
 								else:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
+									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
+									self.notify(su.phone,merchant_msg)
 
-										"title" : offer.title,
-										"resentto": resentto,
-										})
-								self.notify(su.phone,merchant_msg)
 							else:
 								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NO_OFFER"],{})
 								self.notify(su.phone,merchant_msg)
 						else:
+							# tracking code submitted with offer resend
 							code = parsed[1].strip().lower()
-					
 
 							try:
 								trackingcode = TrackingCode.objects.get(code__iexact=code)
@@ -393,22 +384,13 @@ class Command(NoArgsCommand):
 								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_WRONG_MERCHANT"],{"code":trackingcode.code})
 								self.notify(su.phone,merchant_msg)
 							else:
-								
-								resentto = offer.redistribute()
-
-								if resentto == 0:
-									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_ZERO_CUSTOMER"], {"code": offer.trackingcode.code})
-								elif resentto == -2:
-									merchant_msg =t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOTENOUGH_BALANCE"], {"points": su.balance})
-								elif resentto == -3:
+								if offer.redistribute():
+									# offer queued for redistribute
+									pass
+								else:
 									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
+									self.notify(su.phone,merchant_msg)
 
-								else:			
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_SUCCESS"], {
-											"title" : offer.title,
-											"resentto": resentto,
-											})
-								self.notify(su.phone,merchant_msg)
 						# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
 					elif parsed[0].lower() in STATUS:
 						if (len(parsed)==1):
