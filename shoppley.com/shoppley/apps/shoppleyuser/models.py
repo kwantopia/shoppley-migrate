@@ -177,12 +177,15 @@ class Merchant(ShoppleyUser):
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
 		return [ i.pk for i in Customer.objects.all() if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
-	def get_active_customers_miles(self, x=5):
+	def get_active_customers_miles(self, x=5, filter_pks=[]):
 		from geopy.distance import distance as geopy_distance
 		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
 		#for i in Customer.objects.all():
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
-		return [ i.pk for i in Customer.objects.filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
+		if len(filter_pks) > 0:
+			return [ i.pk for i in Customer.objects.exclude(pk__in=filter_pks).filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
+		else:
+			return [ i.pk for i in Customer.objects.filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
 	# faster than get_customers_within_miles().count() because dont have to create a new list
 	def count_customers_within_miles(self, x=5):

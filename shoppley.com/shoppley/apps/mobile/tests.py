@@ -587,6 +587,13 @@ class SimpleTest(TestCase):
 		comment = "Send more of the same offer (URL param: offer_id)"
 		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
 
+		resent_offer = Offer.objects.get(id=response["offer"]["offer_id"])
+		self.assertEqual(resent_offer.redistribute_processing, True)
+		self.assertEqual(response["result"], 0)
+		self.distributor.handle_noargs()
+		resent_offer = Offer.objects.get(id=response["offer"]["offer_id"])
+		self.assertEqual(resent_offer.redistribute_processing, False)
+
 		comment = "Result when offer cannot be sent more because already sent more (URL param: offer_id)"
 		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
 
