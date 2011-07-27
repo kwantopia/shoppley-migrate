@@ -20,6 +20,9 @@ from shoppleyuser.utils import parse_phone_number
 from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category
 from offer.models import Offer, OfferCode, BlackListWord
 
+
+from offer.management.commands import distribute 
+
 API_VERSION = 1;
 
 class SimpleTest(TestCase):
@@ -64,8 +67,8 @@ class SimpleTest(TestCase):
 			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone=num, balance=1000)
 			c.active = True
 			c.verified = True
-			c.set_location_from_address()
 			c.save()
+			c.set_location_from_address()
 
 		u, created = User.objects.get_or_create(username="user3@customer.com")
 		u.email="user3@customer.com"
@@ -78,8 +81,8 @@ class SimpleTest(TestCase):
 			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone=num, balance=1000)
 			c.active = True
 			c.verified = True
-			c.set_location_from_address()
 			c.save()
+			c.set_location_from_address()
 
 		u, created = User.objects.get_or_create(username="user1@merchant.com")
 		u.email="user1@merchant.com"
@@ -94,6 +97,7 @@ class SimpleTest(TestCase):
 			m.verified = True
 			m.save()
 			m.set_location_from_address()
+			print "Merchant location set:", m.location
 
 		u, created = User.objects.get_or_create(username="user2@merchant.com")
 		u.email="user2@merchant.com"
@@ -119,6 +123,7 @@ class SimpleTest(TestCase):
 			m.active = True
 			m.verified = True
 			m.save()
+			m.set_location_from_address()
 
 
 
@@ -130,6 +135,11 @@ class SimpleTest(TestCase):
 		categories = [("Dining & Nightlife", "dining"), ("Health & Beauty", "health"), ("Fitness","fitness"), ("Retail & Services", "retail"), ("Activities & Events", "activities"), ("Special Interests", "special")]
 		for cat in categories:
 			category, created = Category.objects.get_or_create(name=cat[0], tag=cat[1])
+
+
+		self.distributor = distribute.Command()
+
+
 	
 	def iphone_review(self):
 
@@ -150,6 +160,7 @@ class SimpleTest(TestCase):
 			c.active = True
 			c.verified = True
 			c.save()
+			c.set_location_from_address()
 	
 		u, created = User.objects.get_or_create(username="user1@merchant.com")
 		u.email="user1@merchant.com"
@@ -163,6 +174,7 @@ class SimpleTest(TestCase):
 			m.active = True
 			m.verified = True
 			m.save()
+			m.set_location_from_address()
 
 		shop_user = Customer.objects.get(user__email="user1@customer.com")
 		shop_merch = Merchant.objects.get(user__email="user1@merchant.com")
@@ -179,8 +191,8 @@ class SimpleTest(TestCase):
 			input_time = datetime.now()-timedelta(minutes=30)
 			offer = Offer(merchant=m, title=o[:40], description=o, time_stamp=input_time, duration=40320, starting_time=input_time) 
 			offer.save()
-			offer.distribute()
 
+		self.distributor.handle_noargs()
 
 	def post_json(self, command, params={}, comment="No comment", redirect=False, shouldPrint=True):
 		params["v"] = API_VERSION
@@ -311,6 +323,9 @@ class SimpleTest(TestCase):
 			offer.save()
 			#offer.distribute()
 
+		self.distributor.handle_noargs()
+    
+
 		if not settings.SMS_DEBUG:
 			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
 
@@ -364,6 +379,8 @@ class SimpleTest(TestCase):
 			offer.save()
 			#offer.distribute()
 
+		self.distributor.handle_noargs()
+
 		if not settings.SMS_DEBUG:
 			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
 
@@ -405,7 +422,7 @@ class SimpleTest(TestCase):
 			return random.sample( expired_offers, 1 )[0]
 		
 		#valid_offers =  Offer.objects.filter(merchant=m, expired=False)
-		valid_offers= Offer.objects.filter(merchant=m, expired_time__gt=datetime.now())
+		valid_offers= Offer.objects.filter(merchant=m, expired_time__gt=datetime.now(), is_processing=False)
 		if valid_offers.exists():
 			o = random.sample(valid_offers, 1)[0]
 			o.expire(True)
@@ -422,7 +439,7 @@ class SimpleTest(TestCase):
 		u = User.objects.get(email=email)
 		m = u.shoppleyuser.merchant
 		
-		offers = Offer.objects.filter(merchant=m, expired_time__gt=datetime.now())
+		offers = Offer.objects.filter(merchant=m, expired_time__gt=datetime.now(), is_processing=False)
 		codes = []	
 		for o in offers:
 			for c in o.offercode_set.all():
@@ -455,7 +472,8 @@ class SimpleTest(TestCase):
 		"""
 		
 		comment = "Show current offers, it also returns offer details"
-		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
+		response = self.post_json( reverse("m_offers_current"), {'lat':21.38583, 'lon':-157.93083}, comment)
+		# for 96701 21.3858333000000016 -157.9308332999999891 
 
 		print "Num offers: %d" % len(response["offers"])
 
@@ -505,7 +523,7 @@ class SimpleTest(TestCase):
 													'password': password}, comment)
 
 		comment = "Show current offers, it also returns offer details (This one contains offer forwarded by another customer)"
-		response = self.post_json( reverse("m_offers_current"), {'lat':42.3647559, 'lon':-71.1032591}, comment)
+		response = self.post_json( reverse("m_offers_current"), {'lat':21.38583, 'lon':-157.93083}, comment)
 
 
 		comment = "Customer logout"
@@ -515,7 +533,7 @@ class SimpleTest(TestCase):
 		password = "hello"
 
 		comment = "Customer registration"
-		response = self.post_json( reverse("m_register_customer"), {'email': email, 'phone': '6178852347', 'zipcode': '02139', 'password':password}, comment)
+		response = self.post_json( reverse("m_register_customer"), {'email': email, 'phone': '6178852347', 'zipcode': '96701', 'password':password}, comment)
 	
 		comment = "Customer logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)
@@ -572,7 +590,7 @@ class SimpleTest(TestCase):
 		comment = "Result when offer cannot be sent more because already sent more (URL param: offer_id)"
 		response = self.get_json( reverse("m_offer_send_more", args=[response['offer']['offer_id']]), {}, comment) 
 
-		self.assertEqual(response["result"], -4)
+		self.assertEqual(response["result"], 0)
 
 		# TODO: Need to expire some offers and send new offers
 		exp_offer = self.expire_offer(email=email)
@@ -637,7 +655,7 @@ class SimpleTest(TestCase):
 		password = "hello"
 
 		comment = "Merchant registration"
-		response = self.post_json( reverse("m_register_merchant"), {'business': "Costumes from Mars", 'phone': '917-242-4243', 'email': email, 'password': password, 'zipcode': '02139'}, comment)
+		response = self.post_json( reverse("m_register_merchant"), {'business': "Costumes from Mars", 'phone': '917-242-4243', 'email': email, 'password': password, 'zipcode': '96701'}, comment)
 
 		comment = "Merchant logout"
 		response = self.get_json( reverse("m_logout"), {}, comment, redirect=True)

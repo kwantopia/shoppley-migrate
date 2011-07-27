@@ -15,125 +15,125 @@ Show current offers, it also returns offer details
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offers/current/
 PARAMS:
-{ 'lat': 42.3647559, 'lon': -71.1032591, 'v': 1}
+{ 'lat': 21.38583, 'lon': -157.93083, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offers": [
     {
-      "offer_code_id": 1, 
-      "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 1, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "053628", 
-      "expires_time": 1313632353, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$5 off shoes brands, Nike, Reebok"
-    }, 
-    {
       "offer_code_id": 4, 
-      "description": "15% off big steak and 10% off small steak", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 2, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "274055", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "15% off big steak and 10% off small stea"
-    }, 
-    {
-      "offer_code_id": 7, 
-      "description": "Save $15 on your purchase of suit", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 3, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "666400", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Save $15 on your purchase of suit"
-    }, 
-    {
-      "offer_code_id": 10, 
-      "description": "$125 for tonight only at Marriott", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 4, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "927789", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$125 for tonight only at Marriott"
-    }, 
-    {
-      "offer_code_id": 13, 
-      "description": "$1 off Chicken Sandwiches", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 5, 
-      "expires": "3 weeks", 
-      "lon": 42.3609484, 
-      "phone": "6178710710", 
-      "code": "888497", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$1 off Chicken Sandwiches"
-    }, 
-    {
-      "description": "Free drink when you order $10 or more", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "190 Mass Av.", 
-      "offer_id": 6, 
-      "expires": "3 weeks", 
-      "lon": 42.3609484, 
-      "phone": "6178710710", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
-      "merchant_name": "Flour Bakery", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Free drink when you order $10 or more"
-    }, 
-    {
       "description": "Half priced cookies", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
       "offer_id": 7, 
       "expires": "3 weeks", 
-      "lon": 42.3609484, 
+      "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
+      "code": "691603", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Half priced cookies"
+    }, 
+    {
+      "offer_code_id": 6, 
+      "description": "Free drink when you order $10 or more", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 6, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6178710710", 
+      "code": "620538", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Free drink when you order $10 or more"
+    }, 
+    {
+      "offer_code_id": 8, 
+      "description": "$1 off Chicken Sandwiches", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "190 Mass Av.", 
+      "offer_id": 5, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6178710710", 
+      "code": "059058", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Flour Bakery", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "$1 off Chicken Sandwiches"
+    }, 
+    {
+      "offer_code_id": 10, 
+      "description": "Buy dress shoes today & get free socks", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 4, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "code": "408644", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Buy dress shoes today & get free socks"
+    }, 
+    {
+      "offer_code_id": 12, 
+      "description": "Save $15 on your purchase of dress shoes", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 3, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "code": "610801", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Save $15 on your purchase of dress shoes"
+    }, 
+    {
+      "description": "10% off Abercrombie flip flops", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 2, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "10% off Abercrombie flip flops"
+    }, 
+    {
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 1, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "$5 off shoes brands, Nike, Reebok"
     }
   ], 
   "num_offers": 7, 
@@ -145,26 +145,26 @@ Request offercode for offer.
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/offercode/
 PARAMS:
-{ 'offer_id': 6, 'v': 1}
+{ 'offer_id': 2, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer": {
-    "offer_code_id": 16, 
-    "description": "Free drink when you order $10 or more", 
+    "offer_code_id": 14, 
+    "description": "10% off Abercrombie flip flops", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
-    "address1": "190 Mass Av.", 
-    "offer_id": 6, 
+    "address1": "", 
+    "offer_id": 2, 
     "expires": "3 weeks", 
-    "lon": 42.3609484, 
-    "phone": "6178710710", 
-    "code": "054080", 
-    "expires_time": 1313632355, 
-    "citystatezip": "Cambridge, MA 02139", 
-    "lat": -71.0962386, 
-    "merchant_name": "Flour Bakery", 
+    "lon": 21.3858333, 
+    "phone": "6174538665", 
+    "code": "735239", 
+    "expires_time": 1314149241, 
+    "citystatezip": "Aiea, HI 96701", 
+    "lat": -157.9308333, 
+    "merchant_name": "Jane's Shoe Store", 
     "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "Free drink when you order $10 or more"
+    "name": "10% off Abercrombie flip flops"
   }, 
   "result": 1, 
   "result_msg": "^_^"
@@ -181,41 +181,45 @@ RESPONSE:
   "offers": [
     {
       "rating": 0, 
-      "offer_code_id": 1, 
-      "name": "$5 off shoes brands, Nike, Reebok", 
+      "offer_code_id": 6, 
+      "name": "Free drink when you order $10 or more", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-20-11 22:22", 
-      "redeemed_time": 1311214962, 
-      "address1": "", 
-      "offer_id": 1, 
+      "redeemed": "07-26-11 21:57", 
+      "redeemed_time": 1311731842, 
+      "address1": "190 Mass Av.", 
+      "offer_id": 6, 
       "feedback": "", 
       "lon": -71.103329, 
-      "phone": "6174538665", 
-      "merchant_name": "Jane's Shoe Store", 
-      "citystatezip": "Cambridge, MA 02139", 
+      "phone": "6178710710", 
+      "code": "620538", 
+      "expires_time": 1314149241, 
+      "merchant_name": "Flour Bakery", 
+      "citystatezip": "Aiea, HI 96701", 
       "lat": 42.365005, 
       "txn_amount": "0.00", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "description": "$5 off shoes brands, Nike, Reebok"
+      "description": "Free drink when you order $10 or more"
     }, 
     {
       "rating": 0, 
-      "offer_code_id": 7, 
-      "name": "Save $15 on your purchase of suit", 
+      "offer_code_id": 14, 
+      "name": "10% off Abercrombie flip flops", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "redeemed": "07-20-11 22:22", 
-      "redeemed_time": 1311214962, 
+      "redeemed": "07-26-11 21:57", 
+      "redeemed_time": 1311731842, 
       "address1": "", 
-      "offer_id": 3, 
+      "offer_id": 2, 
       "feedback": "", 
       "lon": -71.103329, 
       "phone": "6174538665", 
+      "code": "735239", 
+      "expires_time": 1314149241, 
       "merchant_name": "Jane's Shoe Store", 
-      "citystatezip": "Cambridge, MA 02139", 
+      "citystatezip": "Aiea, HI 96701", 
       "lat": 42.365005, 
       "txn_amount": "0.00", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "description": "Save $15 on your purchase of suit"
+      "description": "10% off Abercrombie flip flops"
     }
   ], 
   "num_offers": 2, 
@@ -228,14 +232,14 @@ Forward offer to a list of phone numbers (text messages are sent to them and new
 POST URL: /m/customer/offer/forward/
 PARAMS:
 { 'note': 'This offer might interest you.',
-  'offer_code': u'054080',
+  'offer_code': u'735239',
   'phones': ['617-877-2345', '857-678-7897', '617-871-0710', '617-453-8665'],
   'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "result": 1, 
-  "confirm_msg": "Offer by \"054080\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
+  "confirm_msg": "Offer by \"735239\" was forwarded to 617-877-2345 857-678-7897 617-871-0710 617-453-8665 \nYou will receive points when they redeem their offers.", 
   "result_msg": "Offers have been forwarded."
 }
 ****************************************************************************************************
@@ -243,7 +247,7 @@ Provide feedback on an offer
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/feedback/
 PARAMS:
-{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 1, 'v': 1}
+{ 'feedback': 'The fish dish was amazing', 'offer_code_id': 6, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -255,7 +259,7 @@ Rate an offer 1-5, 0 if unrated
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offer/rate/
 PARAMS:
-{ 'offer_code_id': 1, 'rating': 5, 'v': 1}
+{ 'offer_code_id': 6, 'rating': 5, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -291,95 +295,25 @@ Show current offers, it also returns offer details (This one contains offer forw
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/customer/offers/current/
 PARAMS:
-{ 'lat': 42.3647559, 'lon': -71.1032591, 'v': 1}
+{ 'lat': 21.38583, 'lon': -157.93083, 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offers": [
     {
-      "offer_code_id": 3, 
-      "description": "$5 off shoes brands, Nike, Reebok", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 1, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "234375", 
-      "expires_time": 1313632353, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$5 off shoes brands, Nike, Reebok"
-    }, 
-    {
-      "offer_code_id": 6, 
-      "description": "15% off big steak and 10% off small steak", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 2, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "648060", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "15% off big steak and 10% off small stea"
-    }, 
-    {
-      "offer_code_id": 9, 
-      "description": "Save $15 on your purchase of suit", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 3, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "345607", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Save $15 on your purchase of suit"
-    }, 
-    {
-      "offer_code_id": 12, 
-      "description": "$125 for tonight only at Marriott", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "address1": "", 
-      "offer_id": 4, 
-      "expires": "3 weeks", 
-      "lon": 42.3647559, 
-      "phone": "6174538665", 
-      "code": "203868", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.1032591, 
-      "merchant_name": "Jane's Shoe Store", 
-      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$125 for tonight only at Marriott"
-    }, 
-    {
-      "offer_code_id": 15, 
-      "description": "$1 off Chicken Sandwiches", 
+      "description": "Half priced cookies", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 5, 
+      "offer_id": 7, 
       "expires": "3 weeks", 
-      "lon": 42.3609484, 
+      "lon": 21.3858333, 
       "phone": "6178710710", 
-      "code": "879335", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "$1 off Chicken Sandwiches"
+      "name": "Half priced cookies"
     }, 
     {
       "description": "Free drink when you order $10 or more", 
@@ -387,29 +321,89 @@ RESPONSE:
       "address1": "190 Mass Av.", 
       "offer_id": 6, 
       "expires": "3 weeks", 
-      "lon": 42.3609484, 
+      "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
       "name": "Free drink when you order $10 or more"
     }, 
     {
-      "description": "Half priced cookies", 
+      "description": "$1 off Chicken Sandwiches", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "address1": "190 Mass Av.", 
-      "offer_id": 7, 
+      "offer_id": 5, 
       "expires": "3 weeks", 
-      "lon": 42.3609484, 
+      "lon": 21.3858333, 
       "phone": "6178710710", 
-      "expires_time": 1313632355, 
-      "citystatezip": "Cambridge, MA 02139", 
-      "lat": -71.0962386, 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
       "merchant_name": "Flour Bakery", 
       "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-      "name": "Half priced cookies"
+      "name": "$1 off Chicken Sandwiches"
+    }, 
+    {
+      "description": "Buy dress shoes today & get free socks", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 4, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Buy dress shoes today & get free socks"
+    }, 
+    {
+      "description": "Save $15 on your purchase of dress shoes", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 3, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "Save $15 on your purchase of dress shoes"
+    }, 
+    {
+      "description": "10% off Abercrombie flip flops", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 2, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "10% off Abercrombie flip flops"
+    }, 
+    {
+      "description": "$5 off shoes brands, Nike, Reebok", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "address1": "", 
+      "offer_id": 1, 
+      "expires": "3 weeks", 
+      "lon": 21.3858333, 
+      "phone": "6174538665", 
+      "expires_time": 1314149241, 
+      "citystatezip": "Aiea, HI 96701", 
+      "lat": -157.9308333, 
+      "merchant_name": "Jane's Shoe Store", 
+      "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
+      "name": "$5 off shoes brands, Nike, Reebok"
     }
   ], 
   "num_offers": 7, 
@@ -437,7 +431,7 @@ PARAMS:
   'password': 'hello',
   'phone': '6178852347',
   'v': 1,
-  'zipcode': '02139'}
+  'zipcode': '96701'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
@@ -467,13 +461,13 @@ RESPONSE:
 {
   "offers": [
     {
-      "received": 3, 
+      "received": 2, 
       "redeem_rate": 0.0, 
-      "description": "$125 for tonight only at Marriott", 
+      "description": "Buy dress shoes today & get free socks", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "$125 for tonight only at Marriott", 
+      "title": "Buy dress shoes today & get free socks", 
       "offer_id": 4, 
-      "expires": 1313632355, 
+      "expires": 1314149241, 
       "redistributable": true, 
       "redeemed": 0, 
       "redistribute_processing": false, 
@@ -481,13 +475,27 @@ RESPONSE:
       "is_processing": false
     }, 
     {
-      "received": 3, 
-      "redeem_rate": 33.33333333333333, 
-      "description": "Save $15 on your purchase of suit", 
+      "received": 2, 
+      "redeem_rate": 0.0, 
+      "description": "Save $15 on your purchase of dress shoes", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "Save $15 on your purchase of suit", 
+      "title": "Save $15 on your purchase of dress shoes", 
       "offer_id": 3, 
-      "expires": 1313632355, 
+      "expires": 1314149241, 
+      "redistributable": true, 
+      "redeemed": 0, 
+      "redistribute_processing": false, 
+      "duration": 40320, 
+      "is_processing": false
+    }, 
+    {
+      "received": 0, 
+      "redeem_rate": 0, 
+      "description": "10% off Abercrombie flip flops", 
+      "img": "/site_media/static/images/offers/offer-default.jpg", 
+      "title": "10% off Abercrombie flip flops", 
+      "offer_id": 2, 
+      "expires": 1314149241, 
       "redistributable": true, 
       "redeemed": 1, 
       "redistribute_processing": false, 
@@ -495,29 +503,15 @@ RESPONSE:
       "is_processing": false
     }, 
     {
-      "received": 3, 
-      "redeem_rate": 0.0, 
-      "description": "15% off big steak and 10% off small steak", 
-      "img": "/site_media/static/images/offers/offer-default.jpg", 
-      "title": "15% off big steak and 10% off small stea", 
-      "offer_id": 2, 
-      "expires": 1313632355, 
-      "redistributable": true, 
-      "redeemed": 0, 
-      "redistribute_processing": false, 
-      "duration": 40320, 
-      "is_processing": false
-    }, 
-    {
-      "received": 3, 
-      "redeem_rate": 33.33333333333333, 
+      "received": 0, 
+      "redeem_rate": 0, 
       "description": "$5 off shoes brands, Nike, Reebok", 
       "img": "/site_media/static/images/offers/offer-default.jpg", 
       "title": "$5 off shoes brands, Nike, Reebok", 
       "offer_id": 1, 
-      "expires": 1313632353, 
+      "expires": 1314149241, 
       "redistributable": true, 
-      "redeemed": 1, 
+      "redeemed": 0, 
       "redistribute_processing": false, 
       "duration": 40320, 
       "is_processing": false
@@ -544,23 +538,23 @@ PARAMS:
 RESPONSE:
 {
   "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "10% off on entree", 
-    "offer_id": 8, 
-    "expires": 1311218569, 
+    "offer_id": 11, 
+    "expires": 1311735442, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
     "redistribute_processing": false, 
     "duration": 60, 
     "unit": 2, 
-    "is_processing": false
+    "is_processing": true
   }, 
-  "result": 1, 
-  "result_msg": "Offers were sent but not clear how many people reached."
+  "result": 0, 
+  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Start a $ off offer (units=1), duration if not specified will be next 90 minutes
@@ -580,23 +574,23 @@ PARAMS:
 RESPONSE:
 {
   "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
-    "offer_id": 9, 
-    "expires": 1311216770, 
+    "offer_id": 12, 
+    "expires": 1311733643, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
     "redistribute_processing": false, 
     "duration": 30, 
     "unit": 2, 
-    "is_processing": false
+    "is_processing": true
   }, 
-  "result": 1, 
-  "result_msg": "Offers were sent but not clear how many people reached."
+  "result": 0, 
+  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Start a $ off offer NOW (units=1), duration if not specified will be next 90 minutes
@@ -614,103 +608,101 @@ PARAMS:
 RESPONSE:
 {
   "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
-    "offer_id": 10, 
-    "expires": 1311220370, 
+    "offer_id": 13, 
+    "expires": 1311737243, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
     "redistribute_processing": false, 
     "duration": 90, 
     "unit": 2, 
-    "is_processing": false
+    "is_processing": true
   }, 
-  "result": 1, 
-  "result_msg": "Offers were sent but not clear how many people reached."
+  "result": 0, 
+  "result_msg": "Your offer has been submitted.  Check back in a few minutes for status update."
 }
 ****************************************************************************************************
 Send more of the same offer (URL param: offer_id)
 ----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/send/more/10/
+GET URL: /m/merchant/offer/send/more/13/
 PARAMS:
 { 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
+    "received": 0, 
+    "redeem_rate": 0, 
     "description": "Come taste some great greek food next 30 minutes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "title": "$10 off on entree", 
-    "offer_id": 10, 
-    "expires": 1311220370, 
-    "redistributable": false, 
-    "amount": 10, 
-    "redeemed": 0, 
-    "redistribute_processing": false, 
-    "duration": 90, 
-    "unit": 2, 
-    "is_processing": false
-  }, 
-  "result": 0, 
-  "result_msg": "There were no customers that could be reached at this moment."
-}
-****************************************************************************************************
-Result when offer cannot be sent more because already sent more (URL param: offer_id)
-----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/send/more/10/
-PARAMS:
-{ 'v': 1}
-----------------------------------------------------------------------------------------------------
-RESPONSE:
-{
-  "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
-    "description": "Come taste some great greek food next 30 minutes", 
-    "img": "/site_media/static/images/offers/offer-default.jpg", 
-    "title": "$10 off on entree", 
-    "offer_id": 10, 
-    "expires": 1311220370, 
-    "redistributable": false, 
-    "amount": 10, 
-    "redeemed": 0, 
-    "redistribute_processing": false, 
-    "duration": 90, 
-    "unit": 2, 
-    "is_processing": false
-  }, 
-  "result": -4, 
-  "result_msg": "You have already redistributed this offer.  Create a new offer to reach more customers."
-}
-****************************************************************************************************
-Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
-----------------------------------------------------------------------------------------------------
-GET URL: /m/merchant/offer/restart/8/
-PARAMS:
-{ 'v': 1}
-----------------------------------------------------------------------------------------------------
-RESPONSE:
-{
-  "offer": {
-    "received": 1, 
-    "redeem_rate": 0.0, 
-    "description": "Come taste some great greek food next 30 minutes", 
-    "img": "/site_media/static/images/offers/offer-default.jpg", 
-    "title": "10% off on entree", 
-    "offer_id": 8, 
-    "expires": 1311214969, 
+    "offer_id": 13, 
+    "expires": 1311737243, 
     "redistributable": true, 
     "amount": 10, 
     "redeemed": 0, 
     "redistribute_processing": false, 
-    "duration": 0, 
+    "duration": 90, 
     "unit": 2, 
+    "is_processing": true
+  }, 
+  "result": 0, 
+  "result_msg": "Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes."
+}
+****************************************************************************************************
+Result when offer cannot be sent more because already sent more (URL param: offer_id)
+----------------------------------------------------------------------------------------------------
+GET URL: /m/merchant/offer/send/more/13/
+PARAMS:
+{ 'v': 1}
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offer": {
+    "received": 0, 
+    "redeem_rate": 0, 
+    "description": "Come taste some great greek food next 30 minutes", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
+    "title": "$10 off on entree", 
+    "offer_id": 13, 
+    "expires": 1311737243, 
+    "redistributable": true, 
+    "amount": 10, 
+    "redeemed": 0, 
+    "redistribute_processing": false, 
+    "duration": 90, 
+    "unit": 2, 
+    "is_processing": true
+  }, 
+  "result": 0, 
+  "result_msg": "Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes."
+}
+****************************************************************************************************
+Restart from a previous offer (it allows change of parameters), gets parameters from the older offer, then call /m/merchant/offer/start/ to start the offer (URL param: offer_id)
+----------------------------------------------------------------------------------------------------
+GET URL: /m/merchant/offer/restart/4/
+PARAMS:
+{ 'v': 1}
+----------------------------------------------------------------------------------------------------
+RESPONSE:
+{
+  "offer": {
+    "received": 2, 
+    "redeem_rate": 0.0, 
+    "description": "Buy dress shoes today & get free socks", 
+    "img": "/site_media/static/images/offers/offer-default.jpg", 
+    "title": "Buy dress shoes today & get free socks", 
+    "offer_id": 4, 
+    "expires": 1311730041, 
+    "redistributable": true, 
+    "redeemed": 0, 
+    "redistribute_processing": false, 
+    "duration": 0, 
     "is_processing": false
   }, 
   "result": 1, 
@@ -721,29 +713,29 @@ Redeem an offer and show total dollar spent
 ----------------------------------------------------------------------------------------------------
 POST URL: /m/merchant/offer/redeem/
 PARAMS:
-{ 'amount': 38.05, 'code': u'274055', 'v': 1}
+{ 'amount': 38.05, 'code': u'848414', 'v': 1}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
   "offer_code": {
-    "code": "274055", 
-    "description": "15% off big steak and 10% off small steak", 
+    "code": "848414", 
+    "description": "Save $15 on your purchase of dress shoes", 
     "img": "/site_media/static/images/offers/offer-default.jpg", 
     "address1": "", 
-    "offer_id": 2, 
+    "offer_id": 3, 
     "expires": "3 weeks", 
     "lon": -71.103329, 
     "phone": "6174538665", 
-    "offer_code_id": 4, 
-    "expires_time": 1313632355, 
-    "citystatezip": "Cambridge, MA 02139", 
+    "offer_code_id": 13, 
+    "expires_time": 1314149241, 
+    "citystatezip": "Aiea, HI 96701", 
     "lat": 42.365005, 
     "merchant_name": "Jane's Shoe Store", 
     "banner": "/site_media/static/images/merchant/restaurant_banner.png", 
-    "name": "15% off big steak and 10% off small stea"
+    "name": "Save $15 on your purchase of dress shoes"
   }, 
   "result": 1, 
-  "result_msg": "Offer redemption (code: 274055) successful."
+  "result_msg": "Offer redemption (code: 848414) successful."
 }
 ****************************************************************************************************
 Show list of past offers and details (URL param: 0)
@@ -780,11 +772,11 @@ PARAMS:
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {
-  "total_forwarded": 0, 
-  "total_redeemed": 3, 
-  "redeem_rate": 20.0, 
+  "total_forwarded": 5, 
+  "total_redeemed": 2, 
+  "redeem_rate": 50.0, 
   "result_msg": "Summary data about the merchant's offers.", 
-  "total_received": 15, 
+  "total_received": 9, 
   "result": 1, 
   "num_offers": 7
 }
@@ -895,7 +887,7 @@ PARAMS:
   'password': 'hello',
   'phone': '917-242-4243',
   'v': 1,
-  'zipcode': '02139'}
+  'zipcode': '96701'}
 ----------------------------------------------------------------------------------------------------
 RESPONSE:
 {

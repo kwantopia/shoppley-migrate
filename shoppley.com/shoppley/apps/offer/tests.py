@@ -28,6 +28,13 @@ from pyparsing import *
 
 class CustomerFixture(AutoFixture):
 	class Values:
+
+		us, created = Country.objects.get_or_create(name="United States", code="US")
+		region, created = Region.objects.get_or_create(name="Massachusetts", code="MA", country=us)
+		city, created = City.objects.get_or_create(name="Cambridge", region=region)
+		zipcode1, created = ZipCode.objects.get_or_create(code="02139", city=city)
+
+
 		cambridge = ZipCode.objects.filter(code="02139")[0]
 		phone = generators.IntegerGenerator(min_value=1000000000, max_value=9999999999)
 		zipcode = cambridge
@@ -38,6 +45,7 @@ class MerchantFixture(AutoFixture):
 
 
 class SimpleTest(TestCase):
+
 
 	def runTest(self):
 		self.client = Client()
@@ -53,9 +61,12 @@ class SimpleTest(TestCase):
 			u.save()
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
-			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
+			c, created= Customer.objects.get_or_create(user=u,address_1="15 Pearl St.",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
 			if created:
 				c.set_location_from_address()
+
+			print "Created customer location:", c.location
+
 	def create_geo_customers(self):
 		customers=[["a1@mit.edu", "94002", "12345", "1000000000"],
 #				["a2@mit.edu", "02135", "12345", "1000000001"],
@@ -70,8 +81,8 @@ class SimpleTest(TestCase):
 			#m = Command()
 			m.test_handle(msg)
 			u = Customer.objects.get(phone = "%s" % c[3])
-			print u.location
-			print u.location.location.x , u.location.location.y
+			print "Customer location:", u.location
+			print "X,Y of location:", u.location.location.x , u.location.location.y
 			
 	def create_more_customers(self): #for resent
 		customers=[["c5@mit.edu","12345", "0000000005"],

@@ -140,7 +140,7 @@ class ShoppleyUser(models.Model):
 			self.save()
 		
 	def set_location_from_latlon(self, lat , lon):
-		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon, lat))))
+		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lat, lon))))
 		self.save()
 
 
@@ -156,7 +156,8 @@ class Merchant(ShoppleyUser):
 		if not self.pk:
 			self.balance = settings.INIT_MERCHANT_BALANCE
 		super(Merchant, self).save(*args, **kwargs)
-		ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
+		if self.zipcode:
+			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 	def __unicode__(self):
 #		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
@@ -250,10 +251,16 @@ class Customer(ShoppleyUser):
 	def get_offers_within_miles(self,x=5):
 		from offer.models import Offer
 		from geopy.distance import distance as geopy_distance
-		#for i in Offer.objects.all():
-			#print geopy_distance(self.location.location,i.merchant.location.location).mi
+		"""
+		# for testing
+		print "All offers: %d"%Offer.objects.all().count()
+		for i in Offer.objects.all():
+			print "Customer location:", self.location.location
+			print "Merchant location:", i.merchant.location.location
+			print "Distance:", geopy_distance(self.location.location, i.merchant.location.location).mi
+		"""
 
-		return [i for i in Offer.objects.all() if self.location and i.merchant.location and geopy_distance(self.location.location,i.merchant.location.location).mi<=x]
+		return [i for i in Offer.objects.all() if self.location and i.merchant.location and geopy_distance(self.location.location, i.merchant.location.location).mi<=x]
 
 	def count_offers_within_miles (self, x=5):
 		from offer.models import Offer

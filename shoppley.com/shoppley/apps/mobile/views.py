@@ -109,6 +109,8 @@ def offers_current(request):
 		v = request.POST.get("v", 0)
 		if v == 0:
 			user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
+			#print "******** checking offers ************"
+			#print user_offers.count()
 			data["num_offers"] = user_offers.count()
 			data["offers"] = []
 
@@ -120,6 +122,11 @@ def offers_current(request):
 		else:
 			# (yod) 5 is magic number
 			user_offers = customer.get_offers_within_miles(5)
+
+			#print "******** checking offers within 5 miles ************"
+			#print "User offers:", user_offers
+			#print len(user_offers) 
+
 			data["num_offers"] = len(user_offers)
 			data["offers"] = []
 
@@ -571,13 +578,8 @@ def offer_start(request):
 					starting_time=start_time)
 		offer.save()
 
-		num_reached = offer.distribute()
-		receipt_msg = _("Offers were sent but not clear how many people reached.")
-		if num_reached ==0 :
-			receipt_msg = _("There were no customers that could be reached at this moment.") 
-		elif num_reached == -2:
-			receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % merchant.balance
-
+		num_reached = 0
+		receipt_msg = _("Your offer has been submitted.  Check back in a few minutes for status update.")
 		data["offer"] = offer.offer_detail()
 		data["result"] = num_reached 
 		data["result_msg"] = receipt_msg 
@@ -609,16 +611,9 @@ def offer_send_more(request, offer_id):
 
 		try:
 			offer = Offer.objects.get(merchant=merchant, id=offer_id)
-			num_reached = offer.redistribute()
+			num_reached = 0 
 
-			receipt_msg = _("Offers were sent but not clear how many people reached.")
-			if num_reached ==0 :
-				receipt_msg = _("There were no customers that could be reached at this moment.") 
-			elif num_reached == -2:
-				receipt_msg = _("Your balance is %d. You do not have enough to reach customers.") % merchant.balance
-			elif num_reached == -3:
-				num_reached = -4
-				receipt_msg = _("You have already redistributed this offer.  Create a new offer to reach more customers.")
+			receipt_msg = _("Offer was submitted.  We will be actively looking for customers.  Check back in a few minutes.")
 
 			data["offer"] = offer.offer_detail()
 			data["result"] = num_reached 
