@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from emailconfirmation.models import EmailAddress
+from offer.models import OfferCode
 from offer.utils import TxtTemplates
 from shoppleyuser.models import Customer, IWantRequest
 from shoppleyuser.utils import sms_notify
@@ -112,4 +113,6 @@ def customer_register(email, username, zipcode, phone, password, address, method
 	
 def customer_iwant(customer, request_text):
 	return IWantRequest.objects.create(customer=customer,request=request_text,time_stamp=datetime.now())
-	
+
+def customer_get_current_forward_offers(customer):
+	return OfferCode.objects.filter(forwarder__isnull=False, expiration_time__gt=datetime.now())

@@ -22,7 +22,7 @@ else:
 		from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from common.customer import customer_authenticate, customer_register, customer_iwant
+from common.customer import customer_authenticate, customer_register, customer_iwant, customer_get_current_forward_offers
 from shoppleyuser.utils import sms_notify, parse_phone_number, pretty_date
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
@@ -132,7 +132,13 @@ def offers_current(request):
 
 			#"expiration": str(time.mktime(o.expiration_time.timetuple())),
 			for o in user_offers:
-				data["offers"].append(o.customer_offer_detail(customer))	
+				data["offers"].append(o.customer_offer_detail(customer))
+				
+			data["forward_offers"] = []
+			forward_offers = customer_get_current_forward_offers(customer)
+			for o in forward_offers:
+				data["forward_offers"].append(o.offer_detail())
+				
 			data["result"] = 1
 			data["result_msg"] = "Returning offer details."
 	else:

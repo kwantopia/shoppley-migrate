@@ -353,6 +353,8 @@ class OfferCode(models.Model):
 		"""
 			Used to report to customer mobile phone
 		"""
+		location = self.offer.merchant.location.location
+		
 		offer_detail = {"offer_code_id": self.id,
 				"offer_id": self.offer.id,
 				"code": self.code,
@@ -364,8 +366,8 @@ class OfferCode(models.Model):
 				"phone": self.offer.merchant.phone,
 				"address1": self.offer.merchant.address_1,
 				"citystatezip": self.offer.merchant.zipcode.citystate(),
-				"lat": 42.365005, 
-				"lon": -71.103329, 
+				"lat": location.y, 
+				"lon": location.x, 
 				"img": self.offer.get_image(),
 				"banner": self.offer.merchant.get_banner()
 				}
@@ -382,6 +384,8 @@ class OfferCode(models.Model):
 		"""
 			Used to report to customer mobile phone
 		"""
+		location = self.offer.merchant.location.location
+		
 		offer_detail = {"offer_code_id": self.id,
 				"offer_id": self.offer.id,
 				"code": self.code,
@@ -396,8 +400,8 @@ class OfferCode(models.Model):
 				"phone": self.offer.merchant.phone,
 				"address1": self.offer.merchant.address_1,
 				"citystatezip": self.offer.merchant.zipcode.citystate(),
-				"lat": 42.365005, 
-				"lon": -71.103329, 
+				"lat": location.y, 
+				"lon": location.x, 
 				"img": self.offer.get_image(),
 				"banner": self.offer.merchant.get_banner(),
 				"expires_time": int(time.mktime(self.expiration_time.timetuple())),

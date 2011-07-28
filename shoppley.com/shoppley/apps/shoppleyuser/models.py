@@ -263,13 +263,13 @@ class Customer(ShoppleyUser):
 			print "Distance:", geopy_distance(self.location.location, i.merchant.location.location).mi
 		"""
 
-		return [i for i in Offer.objects.all() if self.location and i.merchant.location and geopy_distance(self.location.location, i.merchant.location.location).mi<=x]
+		return [i for i in Offer.objects.filter(expired_time__gt=datetime.now()) if self.location and i.merchant.location and geopy_distance(self.location.location, i.merchant.location.location).mi<=x]
 
 	def count_offers_within_miles (self, x=5):
 		from offer.models import Offer
 		from geopy.distance import distance as geopy_distance
 		count = 0
-		for i in Offer.objects.all():
+		for i in Offer.objects.filter(expired_time__gt=datetime.now()):
 			if self.location and i.merchant.location:
 				if geopy_distance(self.location.location,i.merchant.location.location).mi<=x:
 					count = count + 1
