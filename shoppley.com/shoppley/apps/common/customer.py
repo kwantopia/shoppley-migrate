@@ -1,11 +1,12 @@
 from common.user import clean_phone_number, check_email, check_zipcode, check_phone
+from datetime import datetime
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from emailconfirmation.models import EmailAddress
 from offer.utils import TxtTemplates
-from shoppleyuser.models import Customer
+from shoppleyuser.models import Customer, IWantRequest
 from shoppleyuser.utils import sms_notify
 
 def customer_authenticate(request, username, password):
@@ -109,4 +110,6 @@ def customer_register(email, username, zipcode, phone, password, address, method
 	
 	return data;
 	
+def customer_iwant(customer, request_text):
+	return IWantRequest.objects.create(customer=customer,request=request_text,time_stamp=datetime.now())
 	

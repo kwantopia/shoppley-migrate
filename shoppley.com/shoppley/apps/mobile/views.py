@@ -22,7 +22,7 @@ else:
 		from django.core.mail import send_mail
 
 from common.helpers import JSONHttpResponse, JSHttpResponse
-from common.customer import customer_authenticate, customer_register
+from common.customer import customer_authenticate, customer_register, customer_iwant
 from shoppleyuser.utils import sms_notify, parse_phone_number, pretty_date
 from shoppleyuser.models import ZipCode, Merchant, Customer
 from offer.models import Offer, OfferCode
@@ -150,38 +150,6 @@ def offers_current_filter(request):
 	data["result"] = -999
 	data["result_msg"] = "Don't call me."
 	return JSONHttpResponse(data)
-
-	# u = request.user
-	# if u.shoppleyuser.is_customer():
-	# 
-	# 	# TODO: need to also dynamically generate offers based on current location
-	# 	# TODO: notify the merchant that another user has seen (update sent offers)
-	# 	# TODO: log the location it was seen from lat/lon, timestamp
-	# 
-	# 	lat = request.POST.get("lat", None)
-	# 	lon = request.POST.get("lon", None)
-	# 		
-	# 	if lat == None or lon == None:
-	# 		# invalid location specified
-	# 		data["result"] = -2
-	# 		data["result_msg"] = "No latitude and longitude specified."
-	# 		return JSONHttpResponse(data) 
-	# 		
-	# 	customer = u.shoppleyuser.customer
-	# 	# need to narrow this query to just return those very close to lat, lon
-	# 	user_offers = OfferCode.objects.filter(customer=customer, expiration_time__gt=datetime.now())
-	# 	data["num_offers"] = user_offers.count()
-	# 	data["offers"] = []
-	# 
-	# 	#"expiration": str(time.mktime(o.expiration_time.timetuple())),
-	# 	for o in user_offers:
-	# 		data["offers"].append(o.offer_detail())	
-	# 	data["result"] = 1
-	# 	data["result_msg"] = "Returning offer details."
-	# else:
-	# 	data["result"] = -1
-	# 	data["result_msg"] = "User is not a customer."
-	# return JSONHttpResponse(data)	
 
 @csrf_exempt
 @login_required
@@ -384,7 +352,25 @@ def offer_rate(request):
 
 	return JSONHttpResponse(data)	
 
+@csrf_exempt
+@login_required
+def iwant(request):
+	data = {}
+	
+	request_text = request.POST.get("request", None)
+	if request_text is None:
+		data["result"] = -1
+		data["result_msg"] = "missing key: 'request'"
+		return JSONHttpResponse(data)
+	
+	u = request.user
+	customer = u.shoppleyuser.customer
+	customer_iwant(customer, request_text)
 
+	data["result"] = 1
+	data["result_msg"] = "Success"
+	return JSONHttpResponse(data)
+	
 #####################################
 # Merchant mobile API
 #####################################

@@ -325,6 +325,7 @@ class SimpleTest(TestCase):
 
 		self.distributor.handle_noargs()
     
+		self.redeem_offer()
 
 		if not settings.SMS_DEBUG:
 			self.assertGreaterEqual(offer.offercode_set.all().count(), 0)
@@ -489,7 +490,6 @@ class SimpleTest(TestCase):
 				
 		offer_code_to_forward = response["offer"]["code"]
 
-		self.redeem_offer()
 		comment = "Show redeemed offers, it also returns offer details"
 		response = self.get_json( reverse("m_offers_redeemed"), {}, comment)
 
@@ -504,6 +504,9 @@ class SimpleTest(TestCase):
 
 		comment = "Rate an offer 1-5, 0 if unrated"
 		response = self.post_json( reverse("m_offer_rate"), {'offer_code_id': review_offer_id, 'rating':5}, comment)
+		
+		comment = "Send iwant message"
+		response = self.post_json( reverse("m_iwant"), {'request':'yodlor'}, comment)
 
 		# test points
 		# comment = "Shows a summary of accumulated points for customer"

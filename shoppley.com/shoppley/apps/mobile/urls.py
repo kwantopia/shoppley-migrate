@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 	url(r'^customer/offer/forward/$', offer_forward, name="m_offer_forward"),
 	url(r'^customer/offer/feedback/$', offer_feedback, name="m_offer_feedback"),
 	url(r'^customer/offer/rate/$', offer_rate, name="m_offer_rate"),
+	url(r'^customer/iwant/$', iwant, name="m_iwant"),
 
 	# points 
 	url(r'^customer/point/summary/$', customer_point_summary, name="m_customer_point_summary"),

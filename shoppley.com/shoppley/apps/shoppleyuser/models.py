@@ -7,6 +7,7 @@ from sorl.thumbnail import ImageField
 from timezones.forms import PRETTY_TIMEZONE_CHOICES
 from django.contrib.gis.geos import fromstr
 
+import random
 
 # Create your models here.
 class Location(models.Model):
@@ -354,7 +355,7 @@ class IWantRequest(models.Model):
 		if categories.count() > 0:
 			# TODO: need to come up with intelligent algorithm to category iwants
 			match_cat = random.sample(categories, 1)
-			self.category = match_cat
+			self.category = match_cat[0]
 			self.save()
 		return None
 
