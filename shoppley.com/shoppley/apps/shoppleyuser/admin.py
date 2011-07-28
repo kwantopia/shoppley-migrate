@@ -1,6 +1,6 @@
 from shoppleyuser.models import City, Region, Category, ShoppleyUser, Country
 from shoppleyuser.models import Merchant, Customer, MerchantOfTheDay, ZipCode
-from shoppleyuser.models import Location
+from shoppleyuser.models import Location, IWantRequest
 from django.contrib import admin
 
 class MerchantAdmin(admin.ModelAdmin):
@@ -37,6 +37,7 @@ admin.site.register(Region)
 admin.site.register(Category)
 admin.site.register(ZipCode)
 admin.site.register(ShoppleyUser)
+admin.site.register(IWantRequest)
 admin.site.register(Merchant, MerchantAdmin)
 admin.site.register(MerchantOfTheDay)
 admin.site.register(Customer, CustomerAdmin)
