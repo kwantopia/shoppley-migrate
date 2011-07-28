@@ -478,43 +478,43 @@ form.login .form_block input {
 }
 
 .about-person-header {
-  border-bottom:1px solid #D4DA30;  
+ /* border-bottom:1px solid #D4DA30; */ 
   font-size: 1.2em;
 	color: #333333;
 	padding: 10px 10px 5px 10px;
 	font-weight: bold;
 	background-color: #FFFFFF;
-	margin-bottom: 10px;
+	/*margin-bottom: 10px;*/
 }
 
 
 .about-person-body {
-  padding: 0 20px 10px 141px;
+  padding: 0 20px 10px 151px;
 	min-height: 131px;
 }
 
 #kwan {
-	background: url(../../images/boram/kwan.png) no-repeat;
+	background: url(../../images/boram/kwan.png) 10px 5px no-repeat;
 }
 
 #dawei {
-	background: #FDFDFD url(../../images/boram/dawei.png) no-repeat; 
+	background: url(../../images/boram/dawei.png) 10px 5px no-repeat; 
 }
 
 #doug {
-	background: #FDFDFD url(../../images/boram/doug.png) no-repeat;
+	background: url(../../images/boram/doug.png) 10px 5px no-repeat;
 }
 #boram {
-	background: #FDFDFD url(../../images/boram/boram.png) no-repeat;
+	background: url(../../images/boram/boram.png) 10px 5px no-repeat;
 }
 #meng {
-	background: #FDFDFD url(../../images/boram/meng.png) no-repeat;
+	background: url(../../images/boram/meng.png) 10px 5px no-repeat;
 }
 #yod {
-	background: #FDFDFD url(../../images/boram/yod.png) no-repeat;
+	background: url(../../images/boram/yod.png) 10px 5px no-repeat;
 }
 #eunice {
-	background: url(../../images/boram/eunice.png) no-repeat;
+	background: url(../../images/boram/eunice.png) 10px 5px no-repeat;
 }
 /* for FAQ page */
 .faq-section {
