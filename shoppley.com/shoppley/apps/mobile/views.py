@@ -109,24 +109,21 @@ def offers_current(request):
 			data["result"] = 1
 			data["result_msg"] = "Returning offer details."
 		else:
-			# (yod) 5 is magic number
-			user_offers = customer.get_offers_within_miles(5)
-
-			#print "******** checking offers within 5 miles ************"
-			#print "User offers:", user_offers
-			#print len(user_offers) 
-
-			data["num_offers"] = len(user_offers)
-			data["offers"] = []
-
-			#"expiration": str(time.mktime(o.expiration_time.timetuple())),
-			for o in user_offers:
-				data["offers"].append(o.customer_offer_detail(customer))
-				
 			data["forward_offers"] = []
 			forward_offers = customer_get_current_forward_offers(customer)
+			forward_offers_ids = []
+			
 			for o in forward_offers:
-				data["forward_offers"].append(o.offer_detail())
+				if o.offer.id not in forward_offers_ids:
+					data["forward_offers"].append(o.offer_detail())
+					forward_offers_ids.append(o.offer.id)
+
+			# (yod) 5 is magic number
+			data["offers"] = []
+			user_offers = customer.get_offers_within_miles(5)
+			for o in user_offers:
+				if o.id not in forward_offers_ids:
+					data["offers"].append(o.customer_offer_detail(customer))
 				
 			data["result"] = 1
 			data["result_msg"] = "Returning offer details."
