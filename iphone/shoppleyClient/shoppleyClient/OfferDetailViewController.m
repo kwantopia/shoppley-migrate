@@ -80,13 +80,23 @@
         }
         [items addObject:redeemCode];
         [sections addObject:@""];
-        
+    }
+    
+    
+    if (([_offer.expires compare:[NSDate date]] == NSOrderedDescending) && (_offer.code)) {
         NSMutableArray* forward = [[[NSMutableArray alloc] init] autorelease];
         [forward addObject:[TTTableTextItem itemWithText:@"Forward to Friends (10 points)" URL:[self forwardURL]]];
         [items addObject:forward];
         [sections addObject:@""];
     }
     
+    if (_offer.forwarder) {
+        NSMutableArray* forward = [[[NSMutableArray alloc] init] autorelease];
+        [forward addObject:[TTTableLongTextItem itemWithText:[NSString stringWithFormat:@"Forwarded to you by %@", _offer.forwarder]]];
+        [items addObject:forward];
+        [sections addObject:@""];
+    }
+        
     self.dataSource = [SLSectionedDataSource dataSourceWithItems:items sections:sections];
 }
 

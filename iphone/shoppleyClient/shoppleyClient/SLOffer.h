@@ -24,6 +24,8 @@
 @property (nonatomic, retain) NSString* phone;
 @property (nonatomic, retain) NSNumber* lat;
 @property (nonatomic, retain) NSNumber* lon;
+@property (nonatomic, retain) NSString* forwarder;
+@property (nonatomic, retain) NSDate* expires;
 
 - (void)populateFromDictionary:(NSDictionary*)data;
 

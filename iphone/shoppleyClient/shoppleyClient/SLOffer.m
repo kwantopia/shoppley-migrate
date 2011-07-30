@@ -10,7 +10,7 @@
 
 
 @implementation SLOffer
-@synthesize offerId, name, merchantName, description, code, offerCodeId, img, banner, phone, lat, lon;
+@synthesize offerId, name, merchantName, description, code, offerCodeId, img, banner, phone, lat, lon, forwarder, expires;
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(offerId);
@@ -24,6 +24,8 @@
     TT_RELEASE_SAFELY(phone);
     TT_RELEASE_SAFELY(lat);
     TT_RELEASE_SAFELY(lon);
+    TT_RELEASE_SAFELY(forwarder);
+    TT_RELEASE_SAFELY(expires);
     [super dealloc];
 }
 
@@ -39,6 +41,8 @@
     self.phone = [data objectForKey:@"phone"];
     self.lat = [data objectForKey:@"lat"];
     self.lon = [data objectForKey:@"lon"];
+    self.forwarder = [data objectForKey:@"forwarder"];
+    self.expires = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"expires_time"] intValue]];
 }
 
 #pragma mark -
@@ -57,6 +61,8 @@
         self.phone = [decoder decodeObjectForKey:@"phone"];
         self.lat = [decoder decodeObjectForKey:@"lat"];
         self.lon = [decoder decodeObjectForKey:@"lon"];
+        self.forwarder = [decoder decodeObjectForKey:@"forwarder"];
+        self.expires = [decoder decodeObjectForKey:@"expires"];
     }
     
     return self;
@@ -95,6 +101,12 @@
     }
     if (self.lon) {
         [encoder encodeObject:self.lon forKey:@"lon"];
+    }
+    if (self.forwarder) {
+        [encoder encodeObject:self.forwarder forKey:@"forwarder"];
+    }
+    if (self.expires) {
+        [encoder encodeObject:self.expires forKey:@"expires"];
     }
 }
 

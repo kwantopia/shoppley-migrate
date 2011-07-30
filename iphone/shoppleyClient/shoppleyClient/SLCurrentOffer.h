@@ -13,8 +13,6 @@
     
 }
 
-@property (nonatomic, retain) NSDate* expires;
-
 + (NSArray*)offersArrayfromDictionary:(NSDictionary*)data;
 + (NSArray*)forwardedOffersArrayfromDictionary:(NSDictionary*)data;
 

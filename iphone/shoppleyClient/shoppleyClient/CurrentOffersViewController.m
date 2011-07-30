@@ -52,7 +52,7 @@
         NSArray* dataSourcesSections;
         
         if ([forwardedItems count] > 0) {
-            dataSourcesSections = [NSArray arrayWithObjects:@"Forwarded to you", @"Near by", nil];
+            dataSourcesSections = [NSArray arrayWithObjects:@"Forwarded to you", @"Near you", nil];
         } else {
             dataSourcesSections = [NSArray arrayWithObjects:@"", @"", nil];
         }

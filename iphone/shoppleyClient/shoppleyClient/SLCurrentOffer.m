@@ -12,7 +12,6 @@
 @synthesize expires;
 
 - (void)dealloc {
-    TT_RELEASE_SAFELY(expires);
     [super dealloc];
 }
 
@@ -44,7 +43,6 @@
 
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
-    self.expires = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"expires_time"] intValue]];
 }
 
 #pragma mark -
@@ -52,16 +50,13 @@
 
 - (id)initWithCoder:(NSCoder*)decoder {
     if ((self = [super initWithCoder:decoder])) {
-        self.expires = [decoder decodeObjectForKey:@"expires"];
+        
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder*)encoder {
     [super encodeWithCoder:encoder];
-    if (self.expires) {
-        [encoder encodeObject:self.expires forKey:@"expires"];
-    }
 }
 
 @end
