@@ -199,14 +199,17 @@ def set_user_timezone(request):
 		print "hello"
 		timezone = request.POST["tz"]
 		print "timezone" , timezone
-		u= request.user.shoppleyuser
-		if u:
-			#u = request.user.shoppleyuser
-			u.timezone = timezone
-			u.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")
+		try:
+			u= request.user.shoppleyuser
+			if u:
+				#u = request.user.shoppleyuser
+				u.timezone = timezone
+				u.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		except ShoppleyUser.DoesNotExist:
+			pass
 
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,

@@ -426,8 +426,14 @@ class CustomerProfileEditForm(forms.Form):
 		u.username = username
 		u.save()
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
+
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		c = Customer.objects.get(user__pk = user_id)
+		if phone!= u.shoppleyuser.customer.phone:
+			t = TxtTemplates()
+			msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
+			sms_notify(phone, msg)
+			
+		c = u.shoppleyuser.customer
 		c.address_1 = address
 		c.phone = phone
 		c.daily_limit = self.cleaned_data["daily_limit"]

@@ -95,7 +95,7 @@ class SimpleTest(TestCase):
 			u.save()
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
-			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
+			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True, "verified_phone":True,})
 			if created:
 				c.set_location_from_address()
 
@@ -518,7 +518,8 @@ class SimpleTest(TestCase):
 		print "current balance =", offer.merchant.balance
 		print "merchant id = ", offer.merchant.id
 		self.assertEqual(offer.merchant.balance, initial_balance - offer.offercode_set.all().count()*20)
-		
+		print offer
+		print TrackingCode.objects.get(offer=offer)	
 		self.assertEqual(offer.merchant, merchant)
 		track = TrackingCode.objects.get(offer = offer).code
 		print track

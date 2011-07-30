@@ -156,10 +156,10 @@ class TxtTemplates:
 			"FORWARD_INFO":"{{ merchant }} \"{{ description }}\" [expires: {{ expires }}]",
 			"FORWARD_NON_CUSTOMER_LOGIN": "Welcome to Shoppley! Here is your shoppley.com login info:\n - username: {{ name }}\n - password: {{ password }}" ,
 			"VOTE_SUCCESS": "Thank you for voting {{ vote }} for offer: {{ offer }}. Your votes will help our dragons find the perfect deals for you!",
-			"VOTE_COMMAND_ERROR": "Failure to vote! Please txt \"#yay/nay\" to vote the last redeemed offer or \"#yay/nay offercode\" to vote a past offer.",
+			"VOTE_COMMAND_ERROR": "Failure to vote! Please txt \"#yay/nay\" to vote the last received offer or \"#yay/nay offercode\" to vote a past offer.",
 			"VOTE_REVOTE": "Thank you for voting! Unfortunately, you already voted offer: {{ offer }} once before.",
-			"VOTE_NO_OFFER": "Thank you for voting! Unfortunately, you can only vote on an offer you have redeemed.", 
-			"VOTE_UNOWNED_OFFER": "Thank you for voting! Unfortunately, you can only vote on an offer redeemed by you.",
+			"VOTE_NO_OFFER": "Thank you for voting! Unfortunately, you have not received any offer yet. Try again after you receive an offer!", 
+			"VOTE_UNOWNED_OFFER": "Thank you for voting! Unfortunately, you can only vote on an offer sent to you.",
 
 			"RESIGNUP": "You are already a Shoppley customer",
 			"INCORRECT_COMMAND": "{{ command }} command is not available. Available commands are:\n {{ help }}",
@@ -169,7 +169,7 @@ class TxtTemplates:
 			"SIGNUP_SUCCESS": "Sign up successful! Please use this info to log in. Username: {{ email }}; password: {{ password }}. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free. Txt #help for all commands, #stop to stop receiving msgs from us.",
 			"SIGNUP_SUCCESS_NO_PASSWORD": "Sign up successful! You can use Username: {{ email }} to log in with your password. Currently, {{ number }} stores are signed up in your area. Tell your favorite stores to use Shoppley to send you any last minute offers for free. Txt #help for all commands, #stop to stop receiving msgs from us.",  
 			"VERIFY_PHONE": "Thank you for using Shoppley. Please reply with '1' to verify this phone, or '0' if you do not wish to receive messeges from us.",
-			"VERIFY_SUCCESS": "Thank you for verifying your phone number. We will start sending you offers form your favorite stores.",
+			"VERIFY_SUCCESS": "Thank you for verifying your phone number. We will start sending you offers from your favorite stores.",
 			"VERIFY_NO_SUCCESS": "We will not send any more messages to you.",
 		},
 		"SHARED": {
