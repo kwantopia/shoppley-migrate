@@ -23,7 +23,7 @@ def customer_authenticate(request, credential, password):
 	else:
 		# ERROR: problem authenticating user
 		data["result"] = -3
-		data["result_msg"] = "Authentication error, possibly the user is not activated."
+		data["result_msg"] = "Incorrect email/password."
 		return data
 
 # Caller must check for existence of all required fields, and
