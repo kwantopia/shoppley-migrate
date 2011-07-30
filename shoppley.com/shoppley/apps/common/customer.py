@@ -116,4 +116,4 @@ def customer_iwant(customer, request_text):
 	return IWantRequest.objects.create(customer=customer,request=request_text,time_stamp=datetime.now())
 
 def customer_get_current_forward_offers(customer):
-	return OfferCode.objects.filter(forwarder__isnull=False, expiration_time__gt=datetime.now())
+	return OfferCode.objects.filter(customer=customer, forwarder__isnull=False, expiration_time__gt=datetime.now())
