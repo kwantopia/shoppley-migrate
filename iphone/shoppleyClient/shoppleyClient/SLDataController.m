@@ -13,9 +13,9 @@
 #import "SLCurrentOffer.h"
 #import "SLRedeemedOffer.h"
 
-static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+//static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 //static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
-//static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
+static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 static int kAPIVersion = 1;
 
@@ -344,6 +344,15 @@ static int kAPIVersion = 1;
     } else {
         return NO;
     }
+}
+
+#pragma mark -
+#pragma mark I want
+
+- (BOOL)sendIWant:(NSString*)message {
+    NSMutableDictionary* parameters = [[[NSMutableDictionary alloc] init] autorelease];
+    [parameters setValue:message forKey:@"request"];
+    return ([self sendPostRequestWithParameters:parameters endpoint:@"customer/iwant/"] != NULL);
 }
 
 #pragma mark -

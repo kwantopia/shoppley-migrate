@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "CurrentOffersViewController.h"
+#import "IWantViewController.h"
 #import "LoginViewController.h"
 #import "OfferDetailViewController.h"
 #import "OfferFeedbackViewController.h"
@@ -59,6 +60,7 @@
     [map from:@"shoppley://tabbar" toSharedViewController:[TabBarController class]];
     [map from:@"shoppley://current_offers" toSharedViewController:[CurrentOffersViewController class]];
     [map from:@"shoppley://redeemed_offers" toSharedViewController:[RedeemedOffersViewController class]];
+    [map from:@"shoppley://iwant" toSharedViewController:[IWantViewController class]];
     [map from:@"shoppley://settings" toSharedViewController:[SettingsViewController class]];
     [map from:@"shoppley://summary" toSharedViewController:[SummaryViewController class]];
     

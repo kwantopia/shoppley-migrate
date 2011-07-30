@@ -81,5 +81,10 @@
 - (BOOL)sendRating:(NSNumber*)rate offerCodeId:(NSNumber*)offerCodeId;
 - (BOOL)sendForwardToPhones:(NSArray*)phones emails:(NSArray*)emails note:(NSString*)note offerCode:(NSString*)offerCode;
 - (BOOL)getOfferCodeForOffer:(SLOffer*)offer;
-    
+
+#pragma mark -
+#pragma mark I want
+
+- (BOOL)sendIWant:(NSString*)message;
+
 @end

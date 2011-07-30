@@ -18,6 +18,7 @@
 	[self setTabURLs:[NSArray arrayWithObjects:
 					  @"shoppley://current_offers",
 					  @"shoppley://redeemed_offers",
+                      @"shoppley://iwant",
 					  @"shoppley://settings",
                       nil]];
 }
