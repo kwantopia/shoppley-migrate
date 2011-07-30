@@ -28,7 +28,7 @@
         _textEditor.font = TTSTYLEVAR(font);
         _textEditor.autoresizesToText = NO;
         _textEditor.minNumberOfLines = 5;
-        _textEditor.placeholder = @"Tell us anything you want...";
+        _textEditor.placeholder = @"Tell us the type of offers, brands or stores you want.";
         
         TTButton* button = [TTButton buttonWithStyle:@"greenButton:" title:@"Send"];
         [button addTarget:self action:@selector(submit) forControlEvents:UIControlEventTouchUpInside];

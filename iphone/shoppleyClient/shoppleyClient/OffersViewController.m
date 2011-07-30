@@ -12,7 +12,7 @@
 @implementation OffersViewController
 
 - (void)dealloc {
-    TT_RELEASE_SAFELY(_offers);
+    TT_RELEASE_SAFELY(_offersSections);
     [super dealloc];
 }
 
@@ -26,7 +26,7 @@
 
 - (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath {
     TTURLAction *urlAction = [[[TTURLAction alloc] initWithURLPath:@"shoppley://offer"] autorelease];
-    urlAction.query = [NSDictionary dictionaryWithObject:[_offers objectAtIndex:[indexPath row]] forKey:@"offer"];
+    urlAction.query = [NSDictionary dictionaryWithObject:[[_offersSections objectAtIndex:[indexPath section]] objectAtIndex:[indexPath row]] forKey:@"offer"];
     urlAction.animated = YES;
     [[TTNavigator navigator] openURLAction:urlAction];
 }

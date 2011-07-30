@@ -84,6 +84,7 @@ static int kAPIVersion = 1;
     if ([request.httpMethod isEqualToString:@"POST"]) {
         // current offers
         [[SLDataController sharedInstance] setCurrentOffers:[SLCurrentOffer offersArrayfromDictionary:response]];
+        [[SLDataController sharedInstance] setForwardedOffers:[SLCurrentOffer forwardedOffersArrayfromDictionary:response]];
     } else {
         [[SLDataController sharedInstance] setRedeemedOffers:[SLRedeemedOffer offersArrayfromDictionary:response]];
     }
@@ -108,7 +109,7 @@ static int kAPIVersion = 1;
 #pragma mark SLDataController
 
 @implementation SLDataController
-@synthesize errorString = _errorString, currentOffers = _currentOffers, redeemedOffers = _redeemedOffers, latitude = _latitude, longitude = _longitude;
+@synthesize errorString = _errorString, currentOffers = _currentOffers, forwardedOffers = _forwardedOffers, redeemedOffers = _redeemedOffers, latitude = _latitude, longitude = _longitude;
 
 + (SLDataController*)sharedInstance {
 	static SLDataController *instance = nil;
@@ -136,6 +137,7 @@ static int kAPIVersion = 1;
 
 - (void)clean {
     TT_RELEASE_SAFELY(_currentOffers);
+    TT_RELEASE_SAFELY(_forwardedOffers);
     TT_RELEASE_SAFELY(_redeemedOffers);
     TT_RELEASE_SAFELY(_currentOffersDownloader);
     TT_RELEASE_SAFELY(_redeemedOffersDownloader);
@@ -144,6 +146,7 @@ static int kAPIVersion = 1;
 - (void)reloadData {
     [self updateLocation];
     TT_RELEASE_SAFELY(_currentOffers);
+    TT_RELEASE_SAFELY(_forwardedOffers);
     TT_RELEASE_SAFELY(_redeemedOffers);
     [_currentOffersDownloader download];
     [_redeemedOffersDownloader download];
@@ -304,6 +307,10 @@ static int kAPIVersion = 1;
     } else {
         return _redeemedOffers;
     }
+}
+
+- (NSArray*)obtainForwardedOffers {
+    return _forwardedOffers;
 }
 
 #pragma mark -

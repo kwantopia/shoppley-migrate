@@ -216,7 +216,6 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    TTDPRINT(@"%e %e", self.contentView.height, _starsView.size.height);
     _starsView.frame = CGRectMake(self.contentView.width - _starsViewWidth, (self.contentView.height - 15) / 2, _starsViewWidth, 15);
 }
 

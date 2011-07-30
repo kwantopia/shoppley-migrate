@@ -11,7 +11,7 @@
 #import "SLDataController.h"
 
 @interface OffersViewController : TTTableViewController <SLDataDownloaderDelegate>  {
-    NSArray* _offers;
+    NSArray* _offersSections;
 }
 
 @end

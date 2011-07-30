@@ -25,13 +25,14 @@
 }
 
 - (void)createModel {
-    _offers = [[[SLDataController sharedInstance] obtainRedeemedOffersWithDelegate:self forcedDownload:NO] retain];
+    NSArray* offers = [[SLDataController sharedInstance] obtainRedeemedOffersWithDelegate:self forcedDownload:NO];
+    _offersSections = [[NSArray arrayWithObjects:offers, nil] retain];
     
-    if (_offers) {
-        TTDPRINT(@"%@", _offers);
+    if (offers) {
+        TTDPRINT(@"%@", offers);
         NSMutableArray* items = [[[NSMutableArray alloc] init] autorelease];
-        for (int i = 0; i < [_offers count]; i++) {
-            SLRedeemedOffer* offer = [_offers objectAtIndex:i];
+        for (int i = 0; i < [offers count]; i++) {
+            SLRedeemedOffer* offer = [offers objectAtIndex:i];
             [items addObject:[SLRedeemedOfferTableItem itemWithOffer:offer URL:nil]];
         }
         self.dataSource = [SLListDataSource dataSourceWithItems:items];

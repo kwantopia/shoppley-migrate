@@ -29,6 +29,19 @@
     return outputArray;
 }
 
++ (NSArray*)forwardedOffersArrayfromDictionary:(NSDictionary*)data {
+    NSMutableArray* outputArray = [[[NSMutableArray alloc] init] autorelease];
+    
+    NSArray* offers = [data objectForKey:@"forward_offers"];
+    for (int i = 0; i < [offers count]; i++) {
+        SLCurrentOffer* offer = [[[SLCurrentOffer alloc] init] autorelease];
+        [offer populateFromDictionary:[offers objectAtIndex:i]];
+        [outputArray addObject:offer];
+    }
+    
+    return outputArray;
+}
+
 - (void)populateFromDictionary:(NSDictionary*)data {
     [super populateFromDictionary:data];
     self.expires = [NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"expires_time"] intValue]];
