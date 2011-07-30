@@ -1,4 +1,4 @@
-from common.user import clean_phone_number, check_email, check_zipcode, check_phone
+from common.user import user_authenticate, clean_phone_number, check_email, check_zipcode, check_phone
 from datetime import datetime
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
@@ -10,12 +10,13 @@ from offer.utils import TxtTemplates
 from shoppleyuser.models import Customer, IWantRequest
 from shoppleyuser.utils import sms_notify
 
-def customer_authenticate(request, username, password):
+def customer_authenticate(request, credential, password):
+	user = user_authenticate(request, credential, password)
+
+	#TODO: check that user is a customer
+
 	data = {}
-	
-	user = authenticate(username=username, password=password)
 	if user is not None:
-		login(request, user)
 		data["result"] = 1
 		data["result_msg"] = "User authenticated successfully."
 		return data

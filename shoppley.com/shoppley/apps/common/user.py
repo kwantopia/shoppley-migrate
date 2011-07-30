@@ -1,8 +1,29 @@
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
 from offer.utils import TxtTemplates
 from shoppleyuser.models import ZipCode, ShoppleyUser, Merchant
 from shoppleyuser.utils import sms_notify
+
+# return None if cannot log in
+def user_authenticate(request, credential, password):
+	data = {}
+	
+	user = authenticate(username=credential, password=password)
+	if user is None:
+		user = authenticate(phone=credential, password=password)
+	if user is None:
+		e = EmailAddress.objects.filter(email=credential)
+		# FIXME: (yod) I don't know how to compare pwd. we hashed it somehow
+		if e.user.password == password:
+			user = e.user
+	
+	if user is not None:
+		login(request, user)
+		return user
+	else:
+		# ERROR: problem authenticating user
+		return None
 
 def clean_phone_number(raw_number, country_code="US"):
 	cleaned_number = filter(lambda x: x.isdigit(), raw_number)
