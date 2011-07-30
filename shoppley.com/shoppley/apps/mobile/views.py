@@ -35,21 +35,10 @@ SMS_DEBUG = True
 
 @csrf_exempt
 def mobile_login(request):
-	data = {}
-
 	email = request.POST['email'].lower()
 	password = request.POST['password']
-	user = authenticate(username=email, password=password)
-	if user is not None:
-		login(request, user)
-		#logger.debug( "User %s authenticated and logged in"%email )
-		data["result"] = 1
-		data["result_msg"] = "Login successful."
-		return JSONHttpResponse(data)	 
-	else:	
-		data["result"] = -1
-		data["result_msg"] = "Wrong email/password."
-		return JSONHttpResponse(data)
+	data = customer_authenticate(request, email, password)
+	return JSONHttpResponse(data)
 
 @csrf_exempt
 @login_required

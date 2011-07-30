@@ -8,15 +8,18 @@ from shoppleyuser.utils import sms_notify
 # return None if cannot log in
 def user_authenticate(request, credential, password):
 	data = {}
-	
+		
 	user = authenticate(username=credential, password=password)
+	
 	if user is None:
 		user = authenticate(phone=credential, password=password)
+		
 	if user is None:
-		e = EmailAddress.objects.filter(email=credential)
-		# FIXME: (yod) I don't know how to compare pwd. we hashed it somehow
-		if e.user.password == password:
-			user = e.user
+		emails = EmailAddress.objects.filter(email=credential)
+		print emails
+		if len(emails) > 0:
+			print emails[0].user.username
+			user = authenticate(username=emails[0].user.username, password=password)
 	
 	if user is not None:
 		login(request, user)
