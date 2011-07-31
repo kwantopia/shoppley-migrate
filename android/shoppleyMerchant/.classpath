@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry excluding="com/shopply/android/api/customer/*" including="com/shoppley/android/api/*|com/shoppley/android/utils/*|com/shoppley/android/view/*" kind="src" path="shoppleyClient_src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/shoppleyClient/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="/shoppleyClient/libs/droid-fu-1.0-SNAPSHOT-2011-04-17.jar"/>
+	<classpathentry kind="lib" path="/shoppleyClient/libs/gson-1.7.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

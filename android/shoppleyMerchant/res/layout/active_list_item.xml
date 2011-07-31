@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:gravity="center_horizontal|center_vertical"
+>
+	<com.github.droidfu.widgets.WebImageView
+		android:id="@+id/icon"
+		android:padding="10px"
+		android:layout_width="128px"
+		android:layout_height="128px" />
+	<!-- <ImageView android:id="@+id/icon" android:padding="10px" android:layout_marginTop="-15px" 
+		android:layout_marginBottom="-15px" android:layout_width="128px" android:layout_height="128px" 
+		/> -->
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingRight="10px"
+	>
+		<com.shoppley.android.view.EllipsizingTextView
+			android:id="@+id/txtNm"
+			android:maxLines="2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextListHeader1" />
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:id="@+id/linearLayout1"
+			android:layout_height="wrap_content"
+		>
+			<TextView
+				android:id="@+id/textView1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Expires:  "
+			></TextView>
+			<TextView
+				android:id="@+id/txtXprs"
+				android:scrollHorizontally="true"
+				android:layout_width="match_parent"
+				android:lines="1"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				style="@style/TextListAlert"
+			></TextView>
+		</LinearLayout>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:id="@+id/linearLayout10"
+			android:layout_height="wrap_content"
+		>
+			<TextView
+				android:id="@+id/textView10"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Reached:  "
+			></TextView>
+			<TextView
+				android:id="@+id/txtReached"
+				android:scrollHorizontally="true"
+				android:layout_width="match_parent"
+				android:lines="1"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				style="@style/TextListAlert"
+			></TextView>
+		</LinearLayout>
+		<com.shoppley.android.view.EllipsizingTextView
+			android:id="@+id/txtDsc"
+			android:maxLines="2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:text="" />
+	</LinearLayout>
+</LinearLayout>

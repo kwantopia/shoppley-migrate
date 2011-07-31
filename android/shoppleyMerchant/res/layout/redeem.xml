@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@android:color/background_dark"
+	android:orientation="vertical"
+	android:padding="10dip"
+>
+	<TextView
+		android:text="Enter customer's code to redeem"
+		android:id="@+id/textView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+	></TextView>
+	<EditText
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:id="@+id/edtCode"
+		android:hint="Offer Code"
+		android:imeOptions="actionNext"
+	>
+	</EditText>
+	<EditText
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:id="@+id/edtPaid"
+		android:inputType="numberDecimal"
+		android:hint="Total Paid"
+		android:imeOptions="actionSend"
+	></EditText>
+	<Button
+		android:text="Redeem"
+		android:layout_height="wrap_content"
+		android:id="@+id/btnRedeem"
+		android:layout_width="match_parent"
+	></Button>
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+>
+	<TextView
+		android:id="@id/android:empty"
+		android:gravity="center"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:text="No offers" />
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:id="@+id/layout"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+	>
+		<Button
+			android:text="Create a new offer"
+			android:id="@+id/btnNewOffer"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+		></Button>
+	</LinearLayout>
+	<ListView
+		android:id="@id/android:list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/layout"
+		android:drawSelectorOnTop="false" />
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:id="@+id/progressBar1"
+		android:layout_height="wrap_content"
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+	></ProgressBar>
+</RelativeLayout>

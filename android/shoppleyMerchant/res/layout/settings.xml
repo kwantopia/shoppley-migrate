@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center_horizontal"
+	android:background="@android:color/background_dark"
+	android:orientation="vertical"
+	android:padding="10dip"
+>
+	<EditText
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:hint="@string/email"
+		android:inputType="textEmailAddress"
+		android:enabled="false"
+		android:gravity="center_horizontal"
+		android:id="@+id/edtTxtUsn"
+	>
+		<requestFocus></requestFocus>
+	</EditText>
+	<Button
+		android:text="@string/logout"
+		android:layout_height="wrap_content"
+		android:id="@+id/btnLgt"
+		android:layout_width="match_parent"
+	></Button>
+</LinearLayout>

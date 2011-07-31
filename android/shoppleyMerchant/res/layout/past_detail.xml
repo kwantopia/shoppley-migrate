@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/background"
+	android:padding="10dip"
+	android:scrollbarStyle="outsideOverlay"
+	android:id="@+id/scrollView1"
+>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_horizontal"
+	>
+		<TextView
+			android:text="Name"
+			android:id="@+id/txtTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			style="@style/TextHeader1"
+		></TextView>
+		<LinearLayout
+			android:id="@+id/linearLayout3"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+		>
+		</LinearLayout>
+		<RatingBar
+			android:id="@+id/ratingBarIndicator"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			style="?android:attr/ratingBarStyleSmall"
+		></RatingBar>
+		<com.github.droidfu.widgets.WebImageView
+			android:id="@+id/img"
+			android:padding="10px"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+		<!-- <ImageView android:id="@+id/img" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:paddingLeft="6dip" android:paddingTop="4dip" 
+			android:paddingRight="8dip" android:paddingBottom="9dip" android:background="@drawable/drop_shadow" 
+			></ImageView> -->
+		<ImageView
+			android:id="@+id/imgBanner"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:visibility="gone"
+		></ImageView>
+		<TextView
+			android:text="Desc"
+			android:id="@+id/txtDesc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@style/TextDesc"
+			android:gravity="center"
+			android:paddingLeft="10dip"
+			android:paddingRight="10dip"
+		></TextView>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:id="@+id/linearLayout60"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingLeft="10dip"
+			android:paddingRight="10dip"
+		>
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+			>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="Expired: "
+					android:layout_width="wrap_content"
+					android:layout_alignParentLeft="true"
+					style="@style/TextInfo"
+				></TextView>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="10:00:00 PM"
+					android:layout_width="wrap_content"
+					android:id="@+id/txtExpires"
+					android:layout_alignParentRight="true"
+					style="@style/TextAlert"
+				></TextView>
+			</RelativeLayout>
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+			>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="Send to "
+					android:layout_width="wrap_content"
+					android:layout_alignParentLeft="true"
+					style="@style/TextInfoHead"
+				></TextView>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="10"
+					android:layout_width="wrap_content"
+					android:id="@+id/txtSendTo"
+					android:layout_alignParentRight="true"
+					style="@style/TextInfoDetail"
+				></TextView>
+			</RelativeLayout>
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+			>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="Redeemed "
+					android:layout_width="wrap_content"
+					android:layout_alignParentLeft="true"
+					style="@style/TextInfoHead"
+				></TextView>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="1"
+					android:layout_width="wrap_content"
+					android:id="@+id/txtRedeem"
+					android:layout_alignParentRight="true"
+					style="@style/TextInfoDetail"
+				></TextView>
+			</RelativeLayout>
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+			>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="Percentage "
+					android:layout_width="wrap_content"
+					android:layout_alignParentLeft="true"
+					style="@style/TextInfoHead"
+				></TextView>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="10.00%"
+					android:layout_width="wrap_content"
+					android:id="@+id/txtPercentage"
+					android:layout_alignParentRight="true"
+					style="@style/TextInfoDetail"
+				></TextView>
+			</RelativeLayout>
+		</LinearLayout>
+		<Button
+			android:id="@+id/btnRestart"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="Restart Offer"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+		></Button>
+	</LinearLayout>
+</ScrollView>
