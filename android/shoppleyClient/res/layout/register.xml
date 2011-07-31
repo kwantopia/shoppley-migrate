@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+	>
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:hint="@string/email"
+			android:inputType="textEmailAddress"
+			android:id="@+id/edtTxtUsn"
+			android:imeOptions="actionNext"
+		>
+			<requestFocus></requestFocus>
+		</EditText>
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:hint="@string/password"
+			android:imeOptions="actionNext"
+			android:inputType="textPassword"
+			android:id="@+id/edtTxtPwd"
+		></EditText>
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:hint="@string/phone"
+			android:imeOptions="actionNext"
+			android:inputType="number"
+			android:id="@+id/edtTxtPhone"
+		></EditText>
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:hint="@string/zipcode"
+			android:imeOptions="actionGo"
+			android:inputType="number"
+			android:id="@+id/edtTxtZipcode"
+		></EditText>
+	</LinearLayout>
+	<Button
+		android:text="@string/sign_up"
+		android:id="@+id/btnRegister"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+	></Button>
+</LinearLayout>

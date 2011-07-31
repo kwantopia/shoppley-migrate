@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/background"
+	android:padding="10dip"
+>
+	<TextView
+		android:id="@+id/txtMerchantFeedback"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		android:text="Feedback for "
+	></TextView>
+	<EditText
+		android:hint="@string/messages"
+		android:id="@+id/edtTxtFeedback"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="top|left"
+		android:minLines="6"
+		android:maxLines="6"
+		android:imeOptions="actionSend"
+	>
+	</EditText>
+	<Button
+		android:text="Submit"
+		android:id="@+id/btnSubmit"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+	></Button>
+</LinearLayout>
