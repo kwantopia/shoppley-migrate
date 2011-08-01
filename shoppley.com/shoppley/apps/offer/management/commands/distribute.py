@@ -264,12 +264,12 @@ class Command(NoArgsCommand):
 		# process iwant requests by trying to send the request to merchants of
 		# category that matches the request
 		####################################
-		for w in IWantRequest.objects.filter(processed=False):
-			category = w.match_category()
-			# send out the request to those stores in the category
-			for m in Merchant.objects.filter(zipcode=w.customer.zipcode, categories=category):
-				msg = t.render(TxtTemplates.templates["MERCHANT"]["CUSTOMER_WANTS"],
-					{
-								"request": w.request,
-					})
-				self.notify(m.phone, msg)
+		# for w in IWantRequest.objects.filter(processed=False):
+		# 	category = w.match_category()
+		# 	# send out the request to those stores in the category
+		# 	for m in Merchant.objects.filter(zipcode=w.customer.zipcode, categories=category):
+		# 		msg = t.render(TxtTemplates.templates["MERCHANT"]["CUSTOMER_WANTS"],
+		# 			{
+		# 						"request": w.request,
+		# 			})
+		# 		self.notify(m.phone, msg)
