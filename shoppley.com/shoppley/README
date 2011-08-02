@@ -156,3 +156,12 @@ dropdb flashon
 createdb flashon -T template_postgis -E unicode -O flashon
 python manage.py syncdb
 python manage.py test_offer_mobile # to create sample users and test offers
+
+== For Staging Server fcn-dev.mit.edu ==
+$ cp local_settings.py.sample local_settings.py
+# change DB NAME from flashon to flashon_stage
+# change PYTHON_ROOT = os.path.abspath("/home/virtual/shoppley-env/lib/python2.7/site-packages")
+
+$ sudo su postgres
+$ createdb flashon -T template_postgis -E unicode -O flashon
+
