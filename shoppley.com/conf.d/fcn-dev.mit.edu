@@ -1,0 +1,37 @@
+# TODO: Remove this when all switched to logging.
+WSGIRestrictStdout Off
+
+<VirtualHost 127.0.0.1:8089>
+    ServerName fcn-dev.mit.edu 
+    ServerAlias fcn-dev.mit.edu 
+    ServerAdmin webmaster@shoppley.com
+
+    #<Directory /home/www/shoppley.com/shoppley/static>
+    #	Order deny,allow
+    #	Allow from all
+    #</Directory>
+
+    #<Directory /usr/share/phppgadmin/>
+    #    Order allow,deny
+    #    Allow from all
+    #</Directory>
+
+	WSGIDaemonProcess fcn-dev.mit.edu processes=2 threads=15 display-name=${GROUP} python-path=/home/virtual/shoppley-env/lib/python2.7/site-packages
+	WSGIProcessGroup fcn-dev.mit.edu 
+
+    #WSGIScriptAlias / /home/www/shoppley.com/shoppley/apache/shoppley.wsgi
+    WSGIScriptAlias / /home/www/fcn-dev.mit.edu/shoppley/deploy/pinax.wsgi
+
+	<Directory /home/www/fcn-dev.mit.edu/shoppley/deploy>
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+    ErrorLog /home/www/fcn-dev.mit.edu/logs/error.log	
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog /home/www/fcn-dev.mit.edu/logs/access.log combined
+
+</VirtualHost>
