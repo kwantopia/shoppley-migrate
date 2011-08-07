@@ -88,9 +88,9 @@ def customer_offer_home(request, days = "7"):
 @login_required
 def merchant_offer_home(request, days= "7"):
 	u = request.user
-	merchant = u.shoppleyuser.merchant
-
+	
 	try:
+		merchant = u.shoppleyuser.merchant
 		total_stats = [(i.num_init_sentto, i.offercode_set.filter(forwarder__isnull=False).count(), i.offercode_set.filter(redeem_time__isnull=False).count()) for i in merchant.offers_published.all()]
 	#unique_customers
 		d = date.today()
