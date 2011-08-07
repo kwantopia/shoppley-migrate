@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="offer-block">
+
+
+	<div class="offer-img" style="float:left;width: 20%;">
+		<div style="height:100px;">&nbsp;</div>
+		thumb</br>
+		make it recurring
+	</div>
+
+
+ 
+
+	<div class="offer-info" style="float: left;width: 50%;">
+		<p>{{ title }}</p>
+		<p>{{ time_left }}</p>
+		<p>{% trans "Shoppley reached out " %}
+			<span class="strong">{{ init_sentto }} {% trans " initial customers" %}</span>
+			{% trans " and 5 of them " %}<span class="strong">{% trans "forwarded to " %}{{ forwarded }}</span>
+			{% trans " of their friends. Total of " %}<span class="strong">{{ redeemed }}{% trans " customers redeemed " %}</span>
+			{% trans "your offer. Not bad!" %}
+		</p>
+
+	</div>
+
+
+	<div class="offer-snapshot" style="float: left;width: 20%;">
+		<h4>{% trans "Quick Snapshot" %}</h4>
+		<span class="offer-snapshot-stat">2</span>{% trans " hour(s)" %}</br>
+		<span class="offer-snapshot-stat">16</span>{% trans " initial customers" %}</br>
+		<span class="offer-snapshot-stat">8</span>{% trans " forwarded" %}</br>
+		<span class="offer-snapshot-stat">24</span>{% trans " reached total" %}</br>
+		<span class="offer-snapshot-stat">9</span>{% trans " redeemed" %}
+	</div>
+
+	<div class="clear">&nbsp;</div>
+</div>
+

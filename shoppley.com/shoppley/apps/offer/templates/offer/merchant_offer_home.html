@@ -1,0 +1,61 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+{% load offer_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+{% block body %}
+
+        <div class="span-17">
+                        <div class="merchant-stats main-box">
+                                <h3>{{ biz_name }} {% trans " summary for past 7 days" %}</h3>
+				<div class="merchant-stats">
+                                	<p><span class="redeemed-count">18</span>{% trans " redeemed " %} 
+					<span class="sent-count">44</span>{% trans " sent " %}
+					<span class="forwarded-count">16</span>{% trans " forwarded " %}
+					<span class="reached-count">60</span>{% trans " customers reached " %}
+					<span class="unique-count">30</span>{% trans " unique" %}
+					</p>
+				</div>
+                        </div>
+                        <div class="clear">&nbsp;</div>
+                        <div class="current-offers-box main-box">
+                                {% if all_offers %}
+                                        {% for offer in all_offers %}
+                                                {% merchant_offer_tag offer %} </br>
+                                        {% endfor %}
+                                {% endif %}
+                        </div>
+       </div>
+
+
+        <div class="span-7 last">
+
+
+			<div class="current-offers-box main-box">
+				<h3>{% trans "Current offers" %}</h3>
+				{% if current_offers %}
+					{% for offer in current_offers %}
+						{% merchant_offer_side_tag offer %}
+					{% endfor %}
+				{% endif %}
+			</div>
+                        <div class="clear">&nbsp;</div>
+                        <div class="scheduled-offers-box main-box">
+				<h3>{% trans "Scheduled offers" %}</h3>
+                                {% if scheduled_offers %}
+                                        {% for offer in scheduled_offers %}
+                                                {% merchant_offer_side_tag offer %}
+                                        {% endfor %}
+                                {% endif %}
+                        </div>
+
+        </div>
+
+        <div class="clear" style="height: 40px;">&nbsp;</div>
+
+        <div class="clear">&nbsp;</div>
+
+{% endblock %}
+

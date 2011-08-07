@@ -1,0 +1,59 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+{% load offer_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+{% block body %}
+
+        <div class="span-17">
+                        <div class="customer-stats-box main-box">
+				<h3>Your offer summary for past 7 days</h3>
+				 <div class="customer-stats">
+                                        <p><span class="used-count">18</span>{% trans " used " %}
+                                        <span class="expired-count">44</span>{% trans " expired " %}
+                                        <span class="recvd-count">16</span>{% trans " recvd " %}
+                                        <span class="total-pt">60</span>{% trans " pt total" %}
+                                        </p>
+                                </div>
+                        </div>
+			<div class="clear">&nbsp;</div>			
+			<div class="current-offers-box main-box">
+
+				{% if other_active_offers %}
+					
+					{% for offer in other_active_offers %}
+						 
+						{% customer_offer_tag offer %}
+					{% endfor %}
+				{% endif %}
+			</div>
+       </div>
+	
+
+        <div class="span-7 last">
+                        <div class="offer-settings main-box">
+                                <h3>{% trans "My offer settings" %}</h3>
+				<p>{% trans "daily  weekly" %}</p>
+
+                        </div>
+			<div class="clear">&nbsp;</div>
+			<div class="used-offers-box main-box">
+				<h3>{% trans "Used offer summary" %}</h3>
+				{% if used_offercodes %}
+
+
+					{% for offercode in used_offercodes %}
+						{% customer_offercode_side_tag offercode %}
+					{% endfor %}
+				{% endif %}
+			</div>
+
+        </div>
+
+        <div class="clear" style="height: 40px;">&nbsp;</div>
+
+	<div class="clear">&nbsp;</div>
+
+{% endblock %}
