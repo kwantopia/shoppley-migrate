@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 import re
 
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City, CustomerPhone, MerchantPhone
+from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City, CustomerPhone, MerchantPhone, ShoppleyPhone
 from shoppleyuser.utils import parse_phone_number
 from offer.utils import TxtTemplates
 
@@ -227,7 +227,7 @@ class MerchantProfileEditForm(forms.Form):
 		if merchant.merchantphone_set.filter(number= phone).exists():
 			return self.cleaned_data["phone"]	 
 		#su = ShoppleyUser.objects.filter(phone=phone)
-		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
+		if ShoppleyPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -428,11 +428,11 @@ class CustomerProfileEditForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		user = User.objects.get(id=self.cleaned_data["user_id"])
 		customer = Customer.objects.get(user__id=user.id)
-                if customer.phone_set.filter(number= phone).exists():
+                if customer.customerphone and customer.customerphone.number== phone:
                         return self.cleaned_data["phone"]
  
 		#su = ShoppleyUser.objects.filter(phone=phone)
-		if CustomerPhone.objects.filter(number=phone).exists() or  MerchantPhone.objects.filter(number=phone).exists():
+		if ShoppleyPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -449,7 +449,8 @@ class CustomerProfileEditForm(forms.Form):
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		if not u.shoppleyuser.phone_set.filter(number=phone).exists():
+		customer = u.shoppleyuser.customer
+		if (not customer.customerphone) or (not customer.customerphone.number==phone):
 		#phone!= u.shoppleyuser.customer.phone:
 			t = TxtTemplates()
 			msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
@@ -457,7 +458,7 @@ class CustomerProfileEditForm(forms.Form):
 			
 		c = u.shoppleyuser.customer
 		c.address_1 = address
-		p.created = CustomerPhone.objects.get_or_create(customer=c, defaults={"number":phone,})
+		p,created = CustomerPhone.objects.get_or_create(customer=c, defaults={"number":phone,})
 		if not created:
 			p.number = phone
 			p.save()
