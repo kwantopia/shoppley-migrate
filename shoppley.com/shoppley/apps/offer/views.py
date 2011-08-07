@@ -80,8 +80,8 @@ def customer_offer_home(request, days = "7"):
 							
 						},
                                                 context_instance=RequestContext(request))
-	except ShoppleyUser.DoesNotExist:
-		return HttpResponseRedirect(reverse("shoppleyuser.views.home"))
+	#except ShoppleyUser.DoesNotExist:
+	#	return HttpResponseRedirect(reverse("shoppleyuser.views.home"))
 	except Customer.DoesNotExist:
 		return HttpResponseRedirect(reverse("offer.views.offer_home"))
 
@@ -90,22 +90,23 @@ def merchant_offer_home(request, days= "7"):
 	u = request.user
 	merchant = u.shoppleyuser.merchant
 
-	total_stats = [(i.num_init_sentto, i.offercode_set.filter(forwarder__isnull=False).count(), i.offercode_set.filter(redeem_time__isnull=False).count()) for i in merchant.offers_published.all()]
+	try:
+		total_stats = [(i.num_init_sentto, i.offercode_set.filter(forwarder__isnull=False).count(), i.offercode_set.filter(redeem_time__isnull=False).count()) for i in merchant.offers_published.all()]
 	#unique_customers
-	d = date.today()
-	
-	days_ago = d + timedelta(days=-1*int(days))
+		d = date.today()
+		
+		days_ago = d + timedelta(days=-1*int(days))
 
-	offercodes = OfferCode.objects.filter(Q(offer__merchant = merchant), Q(offer__time_stamp__gt=days_ago))
-	unique_customers = offercodes.values("customer").distinct()
-	total_forwards =offercodes.filter(forwarder__isnull=False).count()
-	total_redeemed = offercodes.filter(redeem_time__isnull=False).count()
-	total_sent = merchant.offers_published.aggregate(Sum('num_init_sentto'))
-	past_offers = merchant.offers_published.filter(expired_time__lt=datetime.now())
-	current_offers = merchant.offers_published.filter(expired_time__gt=datetime.now())
-	scheduled_offers = merchant.offers_published.filter(time_stamp__gt=datetime.now())
+		offercodes = OfferCode.objects.filter(Q(offer__merchant = merchant), Q(offer__time_stamp__gt=days_ago))
+		unique_customers = offercodes.values("customer").distinct()
+		total_forwards =offercodes.filter(forwarder__isnull=False).count()
+		total_redeemed = offercodes.filter(redeem_time__isnull=False).count()
+		total_sent = merchant.offers_published.aggregate(Sum('num_init_sentto'))
+		past_offers = merchant.offers_published.filter(expired_time__lt=datetime.now())
+		current_offers = merchant.offers_published.filter(expired_time__gt=datetime.now())
+		scheduled_offers = merchant.offers_published.filter(time_stamp__gt=datetime.now())
 
-	return render_to_response("offer/merchant_offer_home.html",
+		return render_to_response("offer/merchant_offer_home.html",
 					{
 						"all_offers": merchant.offers_published.all(),
 						"past_offers": past_offers,
@@ -116,9 +117,10 @@ def merchant_offer_home(request, days= "7"):
 						"total_sent": total_sent,
 						"balance": merchant.balance,
 						"biz_name": merchant.business_name,
-					},
+						},
                                                 context_instance=RequestContext(request))
-
+	except Merchant.DoesNotExist:
+		return HttpResponseRedirect(reverse("offer.views.offer_home"))
 
 @login_required
 def merchant_start_offer(request):
