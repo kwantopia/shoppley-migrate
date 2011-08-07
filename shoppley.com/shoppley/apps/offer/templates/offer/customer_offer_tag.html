@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="offer-block">
+	<div class="offer-title" style="float:left;width: 30%;">
+		{{ title|truncatewords:20 }}
+	</div>
+ 
+	<div class="offer-biz-name" style="float: left;width: 17%;">
+		{{ biz_name }}
+	</div>
+	<div class="offer-location" style="float: left;width: 18%;">
+		<p>
+		{{ location }}	
+		</p>
+	</div>
+	<div class="offer-time-left" style="float: left;width: 10%;">
+                <p>
+		{{ time_left }}
+                </p>
+        </div>
+	<div class="offer-type" style="float: left;width: 10%;">
+                <p>
+		{% trans "food" %}
+                </p>
+        </div>
+	<div class="offer-get-it" style="float: left;width: 10%;">
+                <p>
+		{% trans "287421" %}
+                </p>
+        </di>
+	<div class="offer-misc" style="float: left;width: 5%;">
+                <p>
+		
+                </p>
+        </div>
+	<div class="clear">&nbsp;</div>
+
+</div>
+
