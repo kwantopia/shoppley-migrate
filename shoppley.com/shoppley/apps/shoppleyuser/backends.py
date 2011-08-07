@@ -1,7 +1,7 @@
 from django.contrib.auth import  login, logout
 from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.models import ShoppleyUser
+from shoppleyuser.models import ShoppleyUser, CustomerPhone, MerchantPhone, ShoppleyPhone
 
 class ShoppleyBackend:
 
@@ -16,13 +16,12 @@ class ShoppleyBackend:
 			user = User.objects.get(username=username)
 					
 		except User.DoesNotExist:
-			shoppleys = ShoppleyUser.objects.filter(phone=username)
-			if shoppleys.count()>0:
-				su = shoppleys[0]
-				try:
-					user = User.objects.get(username = su.user.username)
-				except User.DoesNotExist:
-					pass
+			if ShoppleyPhone.objects.filter(number = username).exists():
+				p = ShoppleyPhone.objects.filter(number = username)[0]
+				if p.is_customerphone():
+					user = p.customer.user
+				else:
+					user = p.merchant.user
 			else:
 				emails = EmailAddress.objects.filter(email= username)
 				print "email:", username
@@ -40,10 +39,11 @@ class ShoppleyBackend:
 					return None
 			except ShoppleyUser.DoesNotExist:
 				pass
-			user.check_password(user)
+			if user.check_password(password):
+
 			
-			print "user:" , user
-			return user
+		#		print "user:" , user
+				return user
 		return None
 
 
