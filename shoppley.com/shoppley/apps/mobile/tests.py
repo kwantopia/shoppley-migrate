@@ -610,6 +610,20 @@ class SimpleTest(TestCase):
 
 		self.assertEqual(response["result"], -5)
 
+		# send offer from a different latitude/longitude
+		comment = "Start a % off offer (units=0), from a [specified lat/lon], duration if not specified will be next 120 minutes"
+		response = self.post_json( reverse("m_offer_start"), {
+								'title':'20% off on entree',
+								'description': 'Late night mediterranean food, free sangria',
+								'now': False,
+								'date': '2011-05-18',
+								'time': '10:00:00 PM',
+								'duration': 120,
+								'units': 0,
+								'lat': 38.2322,
+								'lon': -42.2342,
+								'amount': 10 }, comment)
+	
 		# TODO: Need to expire some offers and send new offers
 		exp_offer = self.expire_offer(email=email)
 		self.assertNotEqual(exp_offer, None)

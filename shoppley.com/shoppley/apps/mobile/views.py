@@ -500,7 +500,9 @@ def offer_start(request):
 		'time': '06:00:00 PM',
 		'duration': 30,
 		'units': 1,
-		'amount': 10 
+		'amount': 10,
+		'lat': 42.1134,
+		'lon': -23.2342
 
 	"""
 
@@ -512,12 +514,13 @@ def offer_start(request):
 	duration = int(request.POST.get('duration', 90))
 	amount = int(request.POST.get('amount', 0))
 	unit = int(request.POST.get('unit', 0))
-	
+	lat = float(request.POST.get('lat', 0))
+	lat = float(request.POST.get('lon', 0))
+
 	if (title is None or title == "") and (description is None or description == ""):
 	    data["result"] = -1
 	    data["result_msg"] = "Please provide title and description."
 	    return JSONHttpResponse(data)
-
 
 	if title is None:
 		title = description[:128]

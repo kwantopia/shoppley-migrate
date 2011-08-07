@@ -77,3 +77,4 @@ django-socialregistration
 python-memcached
 django-logicaldelete
 #-e git+https://github.com/paltman/django-logicaldelete.git#egg=django-logicaldelete
+psycopg2==2.4.1
