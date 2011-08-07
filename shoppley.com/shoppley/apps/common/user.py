@@ -2,25 +2,28 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
 from offer.utils import TxtTemplates
-from shoppleyuser.models import ZipCode, ShoppleyUser, Merchant
+from shoppleyuser.models import ZipCode, ShoppleyUser, Merchant, ShoppleyPhone
 from shoppleyuser.utils import sms_notify
 
 # return None if cannot log in
-def user_authenticate(request, credential, password):
+def user_authenticate(request, username, password):
 	data = {}
-		
-	user = authenticate(username=credential, password=password)
-	
+
+	user = authenticate(username=username, password=password)
+
 	if user is None:
-		user = authenticate(phone=credential, password=password)
-		
+
+		su = ShoppleyUser.objects.filter(phone=username)
+		if su.count() >0 :
+
+			user = authenticate(username=su[0].username, password=password)
 	if user is None:
-		emails = EmailAddress.objects.filter(email=credential)
+		emails = EmailAddress.objects.filter(email=username)
 		print emails
-		if len(emails) > 0:
+		if emails.count() > 0:
 			print emails[0].user.username
 			user = authenticate(username=emails[0].user.username, password=password)
-	
+
 	if user is not None:
 		login(request, user)
 		return user
@@ -60,7 +63,8 @@ def check_zipcode(zipcode):
 			
 def check_phone(phone):
 	phone = clean_phone_number(phone)
-	if ShoppleyUser.objects.filter(phone__icontains=phone).exists():
+	#if ShoppleyUser.objects.filter(phone__icontains=phone).exists():
+	if ShoppleyPhone.objects.filter(number__icontains=phone).exists():
 		return None
 	return phone
 
@@ -76,5 +80,7 @@ def verify_phone(shoppleyUser, isVerify):
 		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_NO_SUCCESS"], {})
 		
 	shoppleyUser.save()
-	sms_notify(shoppleyUser.phone, msg)
-	
+	if shoppleyUser.is_merchant():
+		sms_notify(shoppleyUser.phone, msg)
+	else:
+		sms_notify(shoppleyUser.customer.customerphone.number, msg)

@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
-from shoppleyuser.models import Customer, Merchant, ShoppleyUser#, Location
+from shoppleyuser.models import Customer, Merchant, ShoppleyUser, CustomerPhone, MerchantPhone#, Location
 from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
 import logicaldelete.models
@@ -56,6 +56,7 @@ class Offer(logicaldelete.models.Model):
 	redistribute_processing = models.BooleanField(default=False)
 	#locations = models.ManyToManyField(Location)
 
+	starter_phone = models.ForeignKey(MerchantPhone, null =True)
 	def __unicode__(self):
 		return self.title
 
@@ -233,48 +234,51 @@ class Offer(logicaldelete.models.Model):
 		while (OfferCode.objects.filter(code__iexact=gen_code).count()>0):
 			gen_code = gen_offer_code()
 		forwarder=original_code.customer
-		try: 
-			friend = Customer.objects.get(phone=(phone))
-			#print phone
-			
+	
+		#friend = Customer.objects.get(phone=(phone))
+		print phone
+		if CustomerPhone.objects.filter(number=phone).exists():
+			p = CustomerPhone.objects.get(number=phone)
+			#if p.shoppleyuser.is_customer():
+			friend = p.customer
 			o=self.offercode_set.create(
-				customer=friend,
-				code = gen_code,
-				forwarder=forwarder,
-				time_stamp=datetime.now(),
-				expiration_time=original_code.expiration_time)
+					customer=friend,
+					code = gen_code,
+					forwarder=forwarder,
+					time_stamp=datetime.now(),
+					expiration_time=original_code.expiration_time)
 			o.save()
-			
-			forwarder.customer_friends.add(friend)
+			forwarder.customer_friends.add(p.customer)
 			return o, None # for existing customer
 
-		except Customer.DoesNotExist:
+#		except Customer.DoesNotExist:
 			# TODO: Need to replace the following with code below
 			# create a customer
 			# create a username with phone num and create random password
 
 			#print "Creating NEW user with username:", phone
-			u, created = User.objects.get_or_create(username=phone)
-			u.email=""
-			s = string.letters+string.digits
-			rand_passwd = ''.join(random.sample(s,6))
-			u.set_password(rand_passwd)	
-			u.save()
-			
-			friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode, phone=phone)
-			if created:
-				friend.set_location_from_address()	
-			# send out a new offercode
-			o=self.offercode_set.create(
+		u, created = User.objects.get_or_create(username=phone)
+		u.email=""
+		s = string.letters+string.digits
+		rand_passwd = ''.join(random.sample(s,6))
+		u.set_password(rand_passwd)	
+		u.save()
+		
+		friend, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=original_code.customer.zipcode)
+		p= CustomerPhone.objects.create(number = phone, customer = friend)
+		if created:
+			friend.set_location_from_address()	
+		# send out a new offercode
+		o=self.offercode_set.create(
 				customer = friend,
 				code = gen_code,
 				forwarder=forwarder,
 				time_stamp=datetime.now(),
 				expiration_time=original_code.expiration_time)
-			o.save()
+		o.save()
 			
-			forwarder.customer_friends.add(friend)
-			return o, rand_passwd  # for new customer
+		forwarder.customer_friends.add(friend)
+		return o, rand_passwd  # for new customer
 
 	
 	def redistribute(self):

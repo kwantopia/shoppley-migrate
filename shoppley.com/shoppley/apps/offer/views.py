@@ -17,7 +17,7 @@ from django.utils.translation import ungettext, string_concat
 from django.core.exceptions import MultipleObjectsReturned
 
 from random import randint
-from shoppleyuser.models import Customer 
+from shoppleyuser.models import Customer , Merchant, CustomerPhone, MerchantPhone
 
 if "mailer" in settings.INSTALLED_APPS:
     from mailer import send_mail
@@ -27,20 +27,109 @@ else:
 # Python libraries
 import os
 import logging
-from datetime import datetime, timedelta
+
+from datetime import datetime, date, time, timedelta
 from offer.forms import StartOfferForm
+from offer.models import Offer, OfferCode
 from buxfer.forms import BuxferLoginForm
+
 from offer.models import *
 from common.helpers import JSONHttpResponse
-
+from django.db.models import Sum
 
 def index(request):
 	data = {}
 
 	return render_to_response("offer/homepage.html", data, context_instance=RequestContext(request))
 
+
 @login_required
 def offer_home(request):
+	u = request.user
+	if u.shoppleyuser:
+		if u.shoppleyuser.is_merchant():
+			return HttpResponseRedirect(reverse("offer.views.merchant_offer_home"))
+		else:
+			return HttpResponseRedirect(reverse("offer.views.customer_offer_home"))
+	return HttpResponseRedirect(reverse("home"))
+
+@login_required
+def customer_offer_home(request, days = "7"):
+	u = request.user
+	try:
+		customer = u.shoppleyuser.customer
+		data = {}
+		all_active_offers = Offer.objects.filter(expired_time__gt=datetime.now())
+		all_exp_offers = Offer.objects.filter(expired_time__lt=datetime.now())
+
+		rcv_offercodes = customer.offercode_set.order_by("-redeem_time")
+		rcv_active_offercodes = customer.offercode_set.filter(expiration_time__gt=datetime.now()).order_by("-redeem_time")
+		other_active_offers = all_active_offers.exclude(pk__in =customer.offercode_set.all())
+		used_offercodes = customer.offercode_set.order_by("-redeem_time").filter(redeem_time__isnull=False)
+		exp_rcv_offercodes = customer.offercode_set.filter(expiration_time__lt=datetime.now()).order_by("-expiration_time")
+		return render_to_response("offer/customer_offer_home.html", 
+						{
+							"used_offercodes": used_offercodes,
+							"rcv_offercodes": rcv_offercodes,
+							"other_active_offers": other_active_offers,
+							"total_points": customer.balance,
+							"daily_limits": customer.daily_limit,
+							"num_used_offercodes": used_offercodes.count(),
+							"num_rcv_offercodes": rcv_offercodes.count() ,
+							"num_exp_rcv_offercodes": exp_rcv_offercodes.count(),
+							
+						},
+                                                context_instance=RequestContext(request))
+	except ShoppleyUser.DoesNotExist:
+		return HttpResponseRedirect(reverse("shoppleyuser.views.home"))
+	except Customer.DoesNotExist:
+		return HttpResponseRedirect(reverse("offer.views.offer_home"))
+
+@login_required
+def merchant_offer_home(request, days= "7"):
+	u = request.user
+	merchant = u.shoppleyuser.merchant
+
+	total_stats = [(i.num_init_sentto, i.offercode_set.filter(forwarder__isnull=False).count(), i.offercode_set.filter(redeem_time__isnull=False).count()) for i in merchant.offers_published.all()]
+	#unique_customers
+	d = date.today()
+	
+	days_ago = d + timedelta(days=-1*int(days))
+
+	offercodes = OfferCode.objects.filter(Q(offer__merchant = merchant), Q(offer__time_stamp__gt=days_ago))
+	unique_customers = offercodes.values("customer").distinct()
+	total_forwards =offercodes.filter(forwarder__isnull=False).count()
+	total_redeemed = offercodes.filter(redeem_time__isnull=False).count()
+	total_sent = merchant.offers_published.aggregate(Sum('num_init_sentto'))
+	past_offers = merchant.offers_published.filter(expired_time__lt=datetime.now())
+	current_offers = merchant.offers_published.filter(expired_time__gt=datetime.now())
+	scheduled_offers = merchant.offers_published.filter(time_stamp__gt=datetime.now())
+
+	return render_to_response("offer/merchant_offer_home.html",
+					{
+						"all_offers": merchant.offers_published.all(),
+						"past_offers": past_offers,
+						"current_offers": current_offers,
+						"scheduled_offers": scheduled_offers,
+						"total_forwards": total_forwards,
+						"total_redeemed": total_redeemed,
+						"total_sent": total_sent,
+						"balance": merchant.balance,
+						"biz_name": merchant.business_name,
+					},
+                                                context_instance=RequestContext(request))
+
+
+@login_required
+def merchant_start_offer(request):
+	pass
+
+@login_required
+def merchant_track_offer(request):
+	pass
+
+@login_required
+def offer_home_1(request):
 	"""
 		Allow customer to view list of received offers
 	"""

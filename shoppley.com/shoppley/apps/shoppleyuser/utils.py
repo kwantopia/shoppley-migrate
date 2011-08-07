@@ -1,4 +1,4 @@
-from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser
+from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser, CustomerPhone, MerchantPhone
 
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
@@ -130,10 +130,15 @@ def parse_phone_number(raw_number, country_code="US"):
 
 def map_phone_to_user(raw_number):
 	cleaned_phone = parse_phone_number(raw_number)
-	try:
-		su = ShoppleyUser.objects.filter(phone=cleaned_phone)[0]
+	if CustomerPhone.objects.filter(number=cleaned_phone).exists():
+		return CustomerPhone.objects.get(number=cleaned_phone).customer
+	if MerchantPhone.objects.filter(number=cleaned_phone).exists():
+		return MerchantPhone.objects.get(number=cleaned_phone).merchant
+	return None
+#	try:
+#		su = ShoppleyUser.objects.filter(phone=cleaned_phone)[0]
 		# What's returned is a ShoppleyUser, not a User
-		return su
-	except Exception, e:
-		return None
+#		return su
+#	except Exception, e:
+#		return None
 

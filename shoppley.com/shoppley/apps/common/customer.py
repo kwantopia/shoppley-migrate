@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from emailconfirmation.models import EmailAddress
 from offer.models import OfferCode
 from offer.utils import TxtTemplates
-from shoppleyuser.models import Customer, IWantRequest
+from shoppleyuser.models import Customer, IWantRequest, CustomerPhone
 from shoppleyuser.utils import sms_notify
 
 def customer_authenticate(request, credential, password):
@@ -78,8 +78,10 @@ def customer_register(email, username, zipcode, phone, password, address, method
 		return data
 	
 	# create customer information
-	c = Customer(user=user, zipcode=zipcode, phone=phone, verified=True)
+	c = Customer(user=user, zipcode=zipcode,  verified=True)
 	c.save()
+
+	CustomerPhone.objects.create(customer=c, number = phone)
 	c.set_location_from_address()
 	
 	num_merchants = c.count_merchants_within_miles()

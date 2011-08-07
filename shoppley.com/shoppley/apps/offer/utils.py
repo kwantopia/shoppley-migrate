@@ -183,6 +183,6 @@ class TxtTemplates:
 		}
 	}
 
-	def render(self,tstring,c):
+	def render(self,tstring,c={}):
 		t=Template(tstring)
 		return unescape(t.render(Context(c)))

@@ -43,6 +43,7 @@ class Command(NoArgsCommand):
 				"""
 				# check if merchant has enough credits
 				"""
+				print "processing: ", o
 				from worldbank.models import Transaction
 				allowed_number =int( o.merchant.balance/abs(Transaction.points_table["MOD"]))
 				#print "balance=" ,self.merchant.balance
@@ -73,6 +74,7 @@ class Command(NoArgsCommand):
 
 					# divide up user base in this area and distribute
 					users=o.merchant.get_active_customers_miles(RADIUS)
+
 					num_users = len(users)
 					if num_users > target_size:
 						target_list = random.sample(users, target_size)
@@ -89,13 +91,14 @@ class Command(NoArgsCommand):
 							target_list = random.sample(users, target_size)
 						elif num_users > 0:
 							target_list = list(users)
+					print "target", target_list
 
 					# distribute offer
 					sentto = o.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 					#print "count=" , self.offercode_set.all().count()
 					for c in o.offercode_set.all():
 						offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["OFFER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":c.code })		
-						self.notify(c.customer.phone, offer_msg)
+						self.notify(c.customer.customerphone.number, offer_msg)
 						transaction = Transaction.objects.create(time_stamp=datetime.now(),
 										offer = o,
 										offercode = c,
@@ -129,8 +132,11 @@ class Command(NoArgsCommand):
 					bo.save()
 					receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["OFFER_BLACKLIST"], {						"unacceptable": ','.join(blacked)
 					})
-
-				self.notify(o.merchant.phone, receipt_msg)
+				if o.starter_phone:
+				
+					self.notify(o.starter_phone.number, receipt_msg)
+				else:
+					self.notify(o.merchant.phone, receipt_msg)
 
 				"""
 				# Update offer parameters
@@ -224,7 +230,7 @@ class Command(NoArgsCommand):
 					oc.save()
 					offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_NEWCUSTOMER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":oc.code })
 					
-					self.notify(oc.customer.phone, offer_msg)
+					self.notify(oc.customer.customerphone.number, offer_msg)
 					transaction = Transaction.objects.create(time_stamp=datetime.now(),
 									offer = o,
 									offercode = c,
@@ -245,8 +251,10 @@ class Command(NoArgsCommand):
 						"resentto": resentto,
 						})
 
-
-				self.notify(o.merchant.phone, receipt_msg)
+				if o.starter_phone:
+					self.notify(o.starter_phone.number, receipt_msg)
+				else:
+					self.notify(o.merchant.phone, receipt_msg)
 
 				"""
 				# Update offer parameters

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 from emailconfirmation.models import EmailAddress
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user, pretty_date
-from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest
+from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest, ShoppleyPhone, CustomerPhone, MerchantPhone
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode, Vote
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
 from worldbank.models import Transaction
@@ -24,7 +24,7 @@ import string
 pattern = "([\w]{%d})[ ]+\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})" % (settings.OFFER_CODE_LENGTH)
 redemption_code_re = re.compile(pattern)
 
-# Pattern used to parse text 
+# Pattern used to parse text
 customer_pattern = "#" + Word(alphas+"_") + ZeroOrMore(Word(alphanums+"!@#$%^&*()_+=-`~,./<>?:;\'\"{}[]\\|"))
 merchant_pattern = customer_pattern
 phone_pattern =Optional("(") + Word(nums, exact=3) +Optional(")") + Optional("-") + Word(nums,exact=3)+ Optional("-")+ Word(nums,exact=4)
@@ -55,762 +55,758 @@ FORMAT = '%(asctime)-15s: %(message)s'
 logging.basicConfig(format=FORMAT)
 sms_logger = logging.getLogger("offer.management.commands.check_sms")
 reg_logger = logging.getLogger("txt_registration")
-
+DEBUG = settings.SMS_DEBUG
+t = TxtTemplates()
+templates = TxtTemplates.templates
 class Command(NoArgsCommand):
-	help = "Check Google Voice inbox for posted offers from merchants"
-	DEBUG = settings.SMS_DEBUG
-	def notify(self, phone, msg):
-		if self.DEBUG:
-			print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
-		else:
-			sms_notify(phone,msg)
-
-	def validate_number(self, number, phone):
-		try:
-			a = phone_pattern.parseString(number)
-			return parse_phone_number(number)
-		except ParseException:
-			t = TxtTemplates()
-			msg = t.render(TxtTemplates.templates["SHARED"]["INVALID_NUMBER"],
-					{
-								"number": number,
-					})
-			self.notify(phone, msg)
-			raise CommandError("INVALID NUMBER: %s is not a valid number." % number)
-
-	def info(self, offercode):
-			t = TxtTemplates()
-			return t.render(TxtTemplates.templates["CUSTOMER"]["INFO"],
-					{
-								"offercode": offercode.code,
-								"description": offercode.offer.description,
-								"merchant": offercode.offer.merchant,
-								"expiration": pretty_date(offercode.expiration_time, True) 
-						})
-
-			#return _("[%(code)s]\nmerchant: %(merchant)s; \nexpiration: %(expiration)s; \ndescription: %(description)s;\naddress: %(address)s") %{
-		#						"code" : (offercode.code) ,
-		#						"merchant" : offercode.offer.merchant,
-			#					"expiration":pretty_datetime(offercode.expiration_time)	,
-			#					"description":offercode.offer.description ,
-			#					"address":offercode.offer.merchant.print_address(),
-			#				}
-
-	def forward_info(self, offercode):
-			t = TxtTemplates()
-			return t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_INFO"],{
-								"description": offercode.offer.description,
-								"merchant": offercode.offer.merchant,
-								"expires": pretty_date(offercode.expiration_time, True) 
-						})
-
-	def update_expired(self):
-		expired_offers = Offer.objects.filter(is_merchant_txted=False, expired_time__lt=datetime.now())
-		#expired_offers = [x for x in Offer.objects.all() if not x.is_active() and not x.is_merchant_txted]
-		t = TxtTemplates()
-		for offer in expired_offers:
-			offer.is_merchant_txted=True
-			offer.save()
-			offer.update_expired_codes()
-			#print "tracking:", offer.trackingcode.code
-			#print offer.offercode_set.values_list('code',flat=True)
-			sentto = offer.num_init_sentto + offer.num_resent_to
-			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
-			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
-			merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["EXPIRE_INFO"],{ "offer":offer,"sentto":sentto,"forwarded":forwarded,"redeem":redeem})
-			self.notify(offer.merchant.phone,merchant_msg)
-		return len(expired_offers)
-
-	def customer_help(self):
-		t = TxtTemplates()
-		avail_commands = t.render(TxtTemplates.templates["CUSTOMER"]["HELP"],{})
-		return avail_commands
-
-	def merchant_help(self):
-		t = TxtTemplates()
-		avail_commands = t.render(TxtTemplates.templates["MERCHANT"]["HELP"],{})
-		return avail_commands
-		
-	def check_email(self,email,phone):
-		try:
-			t = TxtTemplates()
-			if not validateEmail(email):
-				receipt_msg=t.render(TxtTemplates.templates["SHARED"]["INVALID_EMAIL"],{"email":email,})
-				self.notify(phone,receipt_msg)
-				raise CommandError("Invalid email address")			
-			user = User.objects.get(username__iexact =email)
-			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["EMAIL_TAKEN"],{"email":email,})
-			self.notify(phone,receipt_msg)
-			raise CommandError("Email was already used")
-		except User.DoesNotExist:
-			return email
-		
-		### raise user already exist error
-	def check_zipcode(self,code,phone):
-		try:
-			
-			zipcode= ZipCode.objects.get(code=code)
-			return code
-		except ZipCode.DoesNotExist:
-			t = TxtTemplates()
-			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["INVALID_ZIPCODE"],{"zipcode": code,})
-			self.notify(phone,receipt_msg)
-			raise CommandError("Zipcode does not exist")
-		except MultipleObjectsReturned:
-			return code
-
-	def check_phone(self,phone):
-		try:
-			phone = parse_phone_number(phone)
-			#print phone			
-			customer = ShoppleyUser.objects.get(phone__icontains=phone)
-			receipt_msg = t.render(TxtTemplates.templates["SHARED"]["PHONE_TAKEN"],{"phone":phone,})
-			self.notify(phone,receipt_msg)
-			raise CommandError("Phone number was already used")
-		except ShoppleyUser.DoesNotExist:
-			return phone
-	
-	def check_offercode(self,code,phone):
-		code = code.lower()
-		t = TxtTemplates()
-		offercodes = OfferCode.objects.filter(code__icontains = code)
-		actives = [o for o in offercodes if o.offer.is_active() == True]
-		if offercodes.count() == 1:
-			#actives = [ o for o in offercodes if o.offer.is_active() == True]
-			if not offercodes[0].offer.is_active():
-				return -1
-			else:
-				return offercodes[0]
-		elif offercodes.count() == 0:
-			receipt_msg=t.render(TxtTemplates.templates["SHARED"]["OFFERCODE_NOT_EXIST"], {"code":code})
-			self.notify(phone,receipt_msg)
-			OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV",invalid_code=code).save()
-			raise CommandError("Offercode does not exist")
-		else:
-			return -1
-		
-	def test_handle(self,msg): # take msg: dict("from":phonenumber, "text":text)
-		t= TxtTemplates()
-		#print "new message %s" % msg
-		msg["from"] = parse_phone_number(msg["from"])
-		#sms_logger.info("from %s : %s" % (msg["from"],msg["text"]))
-		#print "logged"
-		if msg["from"] != "Me" and msg["from"] != "":
-			su = map_phone_to_user(msg["from"])
-			if su and su.is_customer() and (su.verified_phone==2 or su.verified_phone == 1):
-				text = msg["text"].strip()
-				if text == "1":
-					verify_phone(su, True)
-				elif text== "0":
-					verify_phone(su, False)
-				
-				else:
-					msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
-					self.notify(su.phone, msg)
-				return
-				#else:
-				#	verify_phone(su,True)			
-			# ****************************** MERCHANT COMMANDS ***********************
-			if su and su.is_merchant():
-				text = msg["text"].strip()
-				try:
-					parsed = merchant_pattern.parseString(text)
-					
-					# offer code being redeemed by the customer
-					# merchant sends offer code and the customer's phone number
-					del parsed[0]
-
-					# --------------------------- BALANCE: "balance"---------------
-					if parsed[0].lower() in BALANCE:
-						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["BALANCE"],{"points": su.balance})
-						self.notify(su.phone, receipt_msg)
-
-					# --------------------------- REDEEM: "redeem<SPACE>offercode<SPACE>phone number here"---------------
-					elif parsed[0].lower() in REDEEM:
-						if len(parsed) < 3:
-							# non enough parameters
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_PARAM_ERRORS"], {})
-							self.notify(su.phone,receipt_msg)
-							raise CommandError ("Merchant attempted redeem command without offer code or phone number: %s"%msg["text"])
-							
-						offer_code = self.check_offercode(parsed[1],su.phone)
-						phone = self.validate_number(parsed[2],su.phone)
-						if offer_code == -1 : # offercode expired
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_EXPIRED"], {"offer": parsed[1]})
-							self.notify(su.phone,receipt_msg)
-						else:
-							if offer_code.offer.merchant != su.merchant:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_WRONG_MERCHANT"],{"code": offer_code.code})
-								self.notify(su.phone,receipt_msg)
-								raise CommandError ("Merchant attempts to redeem an offer he does not own")
-					
-							try:
-								current_time = datetime.now()
-								#print "total =" , OfferCode.objects.filter(code__iexact=offer_code.code)
-								offercode_obj = OfferCode.objects.filter(expiration_time__gt=current_time, 
-									time_stamp__lt=current_time).get(code__iexact=offer_code.code)
-								# The offer code is a valid code, but it might come from referrals
-								try:
-									# Does the phone belong to a registered customer?
-									customer = Customer.objects.get(phone__contains=phone)
-									if offercode_obj.customer == customer:
-										if not offercode_obj.redeem_time:
-											offercode_obj.redeem_time = current_time
-											offercode_obj.save()
-											receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_SUCCESS"], {
-												"offer_code": offer_code.code,
-												"customer": offercode_obj.customer
-											})
-											mtransaction = Transaction.objects.create(time_stamp = current_time,
-																dst = su.merchant,
-																offercode = offercode_obj,
-																offer = offercode_obj.offer,
-																ttype = "MOR")
-											mtransaction.execute()
-											self.notify(su.phone, receipt_msg)
-											customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REDEEM_SUCCESS"],{
-												"merchant": su.merchant.business_name
-											})
-											ctransaction = Transaction.objects.create(time_stamp = current_time,
-																dst=offercode_obj.customer,
-																offercode = offercode_obj,
-																offer = offercode_obj.offer,
-																ttype = "COR")
-
-											ctransaction.execute()
-											self.notify(phone, customer_msg)
-											if offercode_obj.forwarder:
-												ftransaction=Transaction.objects.create(time_stamp=current_time,
-																	dst=offercode_obj.forwarder,
-																	offercode = offercode_obj,
-																	offer = offercode_obj.offer,
-																	ttype="CFR")	
-
-												ftransaction.execute()
-										else:
-											receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_CODE_REUSE"], {
-												"offer_code": offer_code.code,
-												"customer": offercode_obj.customer,
-												"time": pretty_datetime(offercode_obj.redeem_time),
-											})
-											#print "sent msg"
-											self.notify(su.phone, receipt_msg)
-											OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="DR", offercode=offercode_obj).save()
-											raise CommandError("Customer attempts to reuse a code")
-									else:
-										receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_WRONG_CUSTOMER"],  {
-											"offer_code":offer_code.code,
-											"customer":offercode_obj.customer,
-										})
-										self.notify(su.phone, receipt_msg)
-										raise CommandError("Customer attempts to redeem a code he doesnt own")
-								except ObjectDoesNotExist:
-									# Such phone number doesn't exist in customers' profiles, save it
-									receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_INVALID_CUSTOMER_NUM"], {
-										"offer_code": offer_code.code,
-										"phone": phone,
-									})
-									self.notify(su.phone, receipt_msg)
-								except MultipleObjectsReturned, e:
-									# Multiple customers registered with the same phone number, should be prevented
-									#print e
-									sms_logger.exception ("\"%s\" causes an error:" % msg)
-							
-							except ObjectDoesNotExist:
-								# The offer code is not found, or an invalid one
-								receipt_msg =t.render(TxtTemplates.templates["MERCHANT"]["REDEEM_INVALID_CODE"], {
-									"offer_code": offer_code.code,
-								})
-								self.notify(su.phone, receipt_msg)
-								OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offer_code.code).save()
-							except MultipleObjectsReturned, e:																	# Multiple offer codes found, which indicates a programming error
-								#print e
-								sms_logger.exception ("\"%s\" causes an error:" % msg)
-
-					# --------------------------- ZIPCODE: "zipcode "---------------
-					elif parsed[0].lower() in ZIPCODE:
-						if len(parsed)<2:
-							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])
-							self.notify(su.phone,receipt_msg)
-							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
-						code = self.check_zipcode(parsed[1],su.phone)
-						zipcode = ZipCode.objects.filter(code=code)[0]
-						ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
-						su.merchant.zipcode=zipcode
-						su.merchant.save()
-						su.merchant.set_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
-
-						number = su.merchant.count_customers_within_miles()
-						receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code,"number":number})
-						self.notify(su.phone,receipt_msg)
-					# ------------------------OFFER : "offer<SPACE>description" ---------------
-					elif parsed[0].lower() in OFFER:
-						if len(parsed)<2:
-							receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["OFFER_COMMAND_ERROR"])
-							self.notify(phone,receipt_msg)
-							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
-						# This is an offer made by the merchant, not a redemption code
-
-						description = ''.join([i+' ' for i in parsed[1:]]).strip()
-						offer = Offer(merchant=su.merchant, title=description[:80],
-								description=description, time_stamp=datetime.now(),
-								starting_time=datetime.now())
-						offer.save()
-					
-					# --------------------------REOFFER: "reoffer<SPACE>TRACKINGCODE" ----------------
-					elif parsed[0].lower() in REOFFER:
-						if len(parsed)==1:
-							# resend latest offer (no tracking code)
-							offers = su.merchant.offers_published.filter(expired_time__gt=datetime.now())
-							#offers = [o for o in su.merchant.offers_published.all() if o.is_active()==True]
-							#offers = su.merchant.offers_published.filter(expired=False)
-							if offers.exists():
-								offer = offers.order_by("-time_stamp")[0]
-								if offer.redistribute():
-									# offer queued for redistribute
-									pass
-								else:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
-									self.notify(su.phone,merchant_msg)
-
-							else:
-								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NO_OFFER"],{})
-								self.notify(su.phone,merchant_msg)
-						else:
-							# tracking code submitted with offer resend
-							code = parsed[1].strip().lower()
-
-							try:
-								trackingcode = TrackingCode.objects.get(code__iexact=code)
-							except TrackingCode.DoesNotExist:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_INVALID_TRACKING"],{"code":code})
-								self.notify(su.phone,receipt_msg)
-								raise CommandError ("Tracking code not found")
-							offer = trackingcode.offer
-							if offer.merchant.id != su.merchant.id:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_WRONG_MERCHANT"],{"code":trackingcode.code})
-								self.notify(su.phone,merchant_msg)
-							else:
-								if offer.redistribute():
-									# offer queued for redistribute
-									pass
-								else:
-									merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer})
-									self.notify(su.phone,merchant_msg)
-
-						# --------------------- STATUS : "#status<SPACE>trackingcode" ---------------
-					elif parsed[0].lower() in STATUS:
-						if (len(parsed)==1):
-				
-							offers = su.merchant.offers_published.order_by("-time_stamp")
-							#offers = Offer.objects.filter(merchant__id=su.merchant.id).order_by("-time_stamp")
-							if offers.count()>0:
-								offer=offers[0]
-								#print offer
-								trackingcode =offer.trackingcode
-								sentto  = offer.num_init_sentto + offer.num_resent_to
-								forwarded = OfferCode.objects.filter(offer=offer,forwarder__isnull=False).count()
-
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
-								"code":trackingcode.code,
-								"sentto":sentto,
-		                                        	"forwarded":forwarded,
-								"offer": offer,
-								"redeemer": offer.redeemers().count()
-
-		                                        	})
-							
-								self.notify(su.phone,receipt_msg)
-							else:
-								receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["STATUS_NO_OFFER"], {})
-								self.notify(su.phone,receipt_msg)
-								#raise CommandError("Incorrectly formed status command: %s" % msg["text"])
-						else:
-							code = parsed[1].strip().lower()
-					
-							try:
-								trackingcode = TrackingCode.objects.get(code__iexact=code)
-								
-							except TrackingCode.DoesNotExist:
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_INVALID_CODE"],{"code":code})
-								self.notify(su.phone,receipt_msg)
-								#sms_logger.exception("Tracking code not found:")
-								raise CommandError ("Tracking code not found")
-							offer = trackingcode.offer
-							if offer.merchant.id != su.merchant.id:
-								merchant_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_WRONG_MERCHANT"],{"code":trackingcode.code	})
-								self.notify(su.phone,merchant_msg)
-							else:
-								offer = trackingcode.offer
-								people_sentto = offer.num_init_sentto + offer.num_resent_to
-								people_forwarded = OfferCode.objects.filter(offer=trackingcode.offer,forwarder__isnull=False).count()
-
-								receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["STATUS_SUCCESS"], {
-
-														"code":code,"sentto":people_sentto,
-														"forwarded":people_forwarded,
-
-														"redeemer": offer.redeemers().count(),
-														"offer":offer
-								})
-
-								self.notify(su.phone,receipt_msg)
-					# --------------------- RESIGNUP -------------------------
-					elif parsed[0].lower() in MERCHANT_SIGNUP:
-						receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["RESIGNUP"], {})
-						self.notify(su.phone, receipt_msg)
-						reg_logger.info("merchant-signup: %s -- failure (same number)" % phone)
-					# --------------------- HELP: "help" -------------------------
-					elif parsed[0].lower() in HELP:
-						commands = self.merchant_help()
-						self.notify(su.phone, commands)
-
-
-					# --------------------- INCORRECT COMMAND: give them helps --------------
-					else:
-						receipt_msg= t.render(TxtTemplates.templates["MERCHANT"]["INCORRECT_COMMAND"], {"command":parsed[0], "help": self.merchant_help()})
-						self.notify(su.phone,receipt_msg)
-				except ParseException:
-					sender_msg = _("%s is not a valid command. Our commands start with \"#\". Txt #help for all commands") % text
-					self.notify(su.phone,sender_msg)
-
-
-			#****************** COMMANDS FOR CUSTOMERS ********************************
-			elif su and su.is_customer():
-				text = msg["text"].strip()
-				try:
-					parsed = customer_pattern.parseString(text)
-					del parsed[0]
-					phone = su.phone
-					# --------------------------- REDEEM: "#balance"---------------
-					if parsed[0].lower() in BALANCE:
-						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["BALANCE"], {"points":su.balance})
-						self.notify(su.phone, receipt_msg)		
-					# ----------------- INFO : "#info<SPACE>offercode+"----------------
-					elif parsed[0].lower() in  INFO:
-						if (len(parsed)==1):
-							offercodes = OfferCode.objects.filter(customer=su.customer).order_by("-time_stamp")
-							if offercodes.count()>0:
-								offercode = offercodes[0]
-								customer_msg = self.info(offercode)
-								self.notify(phone,customer_msg)
-							else:
-								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["INFO_NO_OFFER"],{})
-								self.notify(phone,receipt_msg)
-								#raise CommandError('Incorrectly formed info command: "%s"' % msg["text"])
-
-						else:
-							customer_msg=""
-							for i in parsed[1:]:
-								parsed_offercode =i
-								try:
-									offercode = self.check_offercode(parsed_offercode,phone)			
-									#print "offercode",offercode		
-									if offercode == -1:
-										offercodes = su.customer.offercode_set.filter(code__icontains=parsed_offercode)
-										if offercodes.count()==1:
-											t = TxtTemplates()
-											offercode = offercodes[0]
-											customer_msg = customer_msg +  t.render(TxtTemplates.templates["CUSTOMER"]["INFO"],
-                                        							{	
-                                                               						 "offercode": offercode.code[0:settings.OFFER_CODE_LENGTH],
-                                                                					"description": offercode.offer.description,
-                                                                					"merchant": offercode.offer.merchant,
-                                                                					"expiration": "expired",
-                                                						})
-
-										
-										else:
-											customer_msg = customer_msg + "[%s] already expired;" % i
-									else:
-										customer_msg = customer_msg+ self.info(offercode) + ";"
-								except CommandError:		
-									continue
-							#print "customer_msg" ,customer_msg
-							if customer_msg != "":
-								self.notify(phone,customer_msg)
-					# ------------------- IWANT: "#iwant ..."----------------------
-					elif parsed[0].lower() in IWANT:
-						if len(parsed)<2:
-							receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["IWANT_COMMAND_ERROR"], {})
-							self.notify(su.phone,receipt_msg)
-							raise CommandError("Incorrectly formed iwant command: %s" % msg["text"])
-						# This is an offer made by the merchant, not a redemption code
-
-						request = ''.join([i+' ' for i in parsed[1:]]).strip()
-						iwant = IWantRequest.objects.create(customer=su.customer,request=request,time_stamp=datetime.now())
-						customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["IWANT"],{"request": request})
-						self.notify(su.phone, customer_msg)
-					#---------------------- VOTE: "#yay/nay offercode"-------------
-					elif parsed[0].lower() in VOTE:
-						vote = parsed[0].lower()
-						if vote=="yay":
-							vote_num = 1
-						else:
-							vote_num = -1
-						if len(parsed) == 1:
-							offers = su.customer.offercode_set.order_by("-time_stamp")
-							if offers.count()==0:
-								receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_NO_OFFER"], {})
-								self.notify(su.phone, receipt_msg)
-								raise CommandError("Customer tried to vote but has no offer yet")
-							else:
-								offer = offers[0].offer
-								#print "votes=", offer.vote_set.all()
-								if offer.vote_set.filter(customer = su.customer).exists():
-									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title, })
-									self.notify(su.phone, receipt_msg)
-								else:	
-									v = Vote.objects.create(customer = su.customer, offer= offers[0].offer, vote=vote_num, time_stamp = datetime.now())
-									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer": offers[0].offer.title, "vote":vote, })
-									self.notify(su.phone, receipt_msg)
-						else:
-							if len(parsed) >2:
-								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_COMMAND_ERROR"],{})
-								self.notify(su.phone, receipt_msg)
-								raise CommandError("Incorrectly formed vote command")
-							else:
-								offercode = parsed[1]
-								offers = su.customer.offercode_set.filter(code__contains=parsed[1]).order_by("-time_stamp")
-								if offers.count() == 0:
-									receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_UNOWNED_OFFER"], {"offercode": offercode, })
-									self.notify(su.phone, receipt_msg)
-
-								elif offers.count()> 0:
-									offer = offers[0].offer
-									if offer.vote_set.filter(customer = su.customer).exists():
-										receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title, })
-										self.notify(su.phone, receipt_msg)
-									else:
-										v = Vote.objects.create(customer = su.customer, offer= offer, vote=vote_num, time_stamp = datetime.now())
-										receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer":offer.title, "vote":vote, })
-										self.notify(su.phone, receipt_msg)
-
-					# ------------------- STOP: "stop"----------------------
-					elif parsed[0].lower() in STOP:
-					
-						if su.active:
-							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
-							self.notify(phone,customer_msg)
-							su.active = False
-							su.save()
-
-						else:
-					 		customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM })
-							self.notify(phone,customer_msg)
-					# ------------------- START: "start"-----------------------
-					elif parsed[0].lower() in START :
-					
-						if not su.active:
-							su.active = True
-							su.save()
-							customer_msg =t.render(TxtTemplates.templates["CUSTOMER"]["START"], {})
-							self.notify(phone, customer_msg)	
-						else:
-							customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESTART"], {})
-							self.notify(phone, customer_msg)
-					# --------------------------- ZIPCODE: "zipcode "---------------
-					elif parsed[0].lower() in ZIPCODE:
-						if len(parsed)<2:
-							receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE_COMMAND_ERROR"], {})
-							self.notify(su.phone,receipt_msg)
-							raise CommandError("Incorrectly formed offer command: %s" % msg["text"])
-						code = self.check_zipcode(parsed[1], su.phone)
-						zipcode = ZipCode.objects.filter(code=code)[0]
-						ZipCodeChange.objects.create(user=su.customer, time_stamp=datetime.now(), zipcode=zipcode)
-						su.customer.zipcode=zipcode
-						su.customer.save()
-						su.customer.set_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
-						number = su.customer.count_merchants_within_miles()
-						receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["ZIPCODE"],{"zipcode": zipcode.code,"number":number})
-						self.notify(su.phone,receipt_msg)
-					#-------------------- FORWARD: "#forward<SPACE>offercode<SPACE>number+"---------------------
-					elif parsed[0].lower() in FORWARD:
-						# TODO add sender to dst's friend list
-						if (len(parsed) < 3):
-							forwarder_msg=t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_COMMAND_ERROR"], {})
-							self.notify(su.phone,forwarder_msg)
-							raise CommandError('Incorrectly formed forward command: "%s"' % msg["text"])
-						ori_code = self.check_offercode(parsed[1],phone)
-						if ori_code ==-1:
-							forwarder_msg = "Sorry, %s already expired." % parsed[1]
-							self.notify(phone,forwarder_msg)
-						else:
-							ori_offer = ori_code.offer
-
-							if (ori_code.customer!=su.customer):
-								forwarder_msg= t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_WRONG_FORWARDER"], {"code":ori_code.code})
-								self.notify(phone,forwarder_msg)
-								raise CommandError("Fail to forward! Customer attempts to forward an offercode he doesnt own")
-
-							#f_state,created = ForwardState.objects.get_or_create(customer=su.customer,offer=ori_offer)
-							parsed_numbers = [self.validate_number(i,su.phone) for i in parsed[2:]]
-							#print "created:" , created
-							#print "remaining:", f_state.remaining
-							valid_receivers=set([ i for i in parsed_numbers if ori_offer.offercode_set.filter(customer__phone=i).count()==0 or Customer.objects.filter(phone=i).count()==0]) # those who havenot received the offer: new customers or customers who have not got the offer before
-							invalid_receivers= set(parsed_numbers) - valid_receivers - set([su.phone]) # those who have
-							#allowed_forwards = f_state.allowed_forwards(len(valid_receivers))
-							for r in invalid_receivers:
-								su.customer.customer_friends.add(Customer.objects.get(phone=r))
-							if len(valid_receivers)==0:
-								forwarder_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_ALL_RECEIVED"], {"code":ori_code.code	})
-								self.notify(su.phone,forwarder_msg)
-					
-							else:
-								#forwarder_msg= _('[%s] was forwarded to ') % ori_code.code
-								for r in valid_receivers:
-									#f_state.update()
-									friend_num = r
-									friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)	
-									customer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_CUSTOMER_MSG"],{
-										"customer":su.customer,
-										"info": self.forward_info(ori_code),
-										"code": friend_code.code,
-									})
-							
-									self.notify(friend_num,customer_msg)
-									# the phone number is not one of our customers
-									if random_pw:
-										new_customer = friend_code.customer
-										#print "created a customer for %s" % friend_num
-										number = new_customer.count_merchants_within_miles()
-										account_msg = t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_NON_CUSTOMER_LOGIN"],{"name":new_customer.user.username,"password":random_pw,"number": number})
-										self.notify(friend_num,account_msg)
-
-								forwarder_msg= t.render(TxtTemplates.templates["CUSTOMER"]["FORWARD_SUCCESS"], {"code": ori_code.code, "numbers": ', '.join([str(i) for i in valid_receivers])}) 
-								#% f_state.remaining
-								self.notify(su.phone,forwarder_msg)
-					# --------------------- HELP: "help" -------------------------
-					elif parsed[0].lower() in HELP:
-						commands = self.customer_help()
-						self.notify(su.phone, commands)
-					# --------------------- RESIGNUP -------------------------
-					elif parsed[0].lower() in SIGNUP:
-						receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["RESIGNUP"],{})
-						self.notify(su.phone, receipt_msg)
-						reg_logger.info("customer-signup: %s -- failure (same number)" % phone)
-					# ---------------------------- INCORRECT COMMAND : give them help -----------
-					else:
-						customer_msg=t.render(TxtTemplates.templates["CUSTOMER"]["INCORRECT_COMMAND"], {"command": parsed[0], "help": self.customer_help()})
-						self.notify(su.phone,customer_msg)
-				except ParseException:
-					sender_msg = t.render(TxtTemplates.templates["CUSTOMER"]["COMMAND_NOT_STARTED_W_#"],{"command":text})
-					self.notify(su.phone,sender_msg)
-
-			else:
-				# TODO: We should save all messages
-				if not su:
-					text = msg["text"].strip()
-					phone= msg["from"]
-					try:
-						parsed = customer_pattern.parseString(text)
-						del parsed[0]
-						#------------------------------- MERCHANT SIGNUP: "merchant<SPACE>email<SPACE>zipcode<SPACE>business_name"-----------
-						if  parsed[0].lower() in MERCHANT_SIGNUP:
-							if (len(parsed)<4):
-								receipt_msg=t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"],{})
-								self.notify(phone,receipt_msg)      
-								raise CommandError('Incorrectly formed merchant signup command: "%s"' % msg["text"])
-
-							parsed_email = parsed[1].lower()
-							parsed_zip = parsed[2]
-						
-							business = ''.join(i+" " for i in parsed[3:]).strip()
-							email = self.check_email(parsed_email,phone)
-							zipcode= self.check_zipcode(parsed[2],phone)
-							phone=self.check_phone(phone)
-							randompassword = gen_random_pw()
-							new_user = User.objects.create_user(email,email,randompassword)
-							EmailAddress.objects.add_email(new_user,email)
-							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
-							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
-							#print "creating new merchant..."
-							new_merchant = Merchant.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,
-										business_name = business, verified=True, verified_phone=0)
-							new_merchant.set_location_from_address()
-							#print "merchant created!"
-
-							number = new_merchant.count_customers_within_miles()
-							receipt_msg = t.render(TxtTemplates.templates["MERCHANT"]["SIGNUP_SUCCESS"], {
-
-								"email": email,
-								"password": randompassword,
-								"number": number,
-								})
-
-							self.notify(phone,receipt_msg)	
-							reg_logger.info("merchant-signup: %s -- success" % phone)
-						# ----------------------------------- SIGNUP: "signup<SPACE>email<SPACE>zipcode" ----------------
-						elif parsed[0].lower() in SIGNUP:
-							if (len(parsed) <3):
-								receipt_msg=t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_COMMAND_ERROR"],{})
-								self.notify(phone,receipt_msg)
-								raise CommandError('Incorrectly formed signup command: "%s"' % msg["text"])
-
-							parsed_email = parsed[1].lower()
-							parsed_zip = parsed[2]	
-							email = self.check_email(parsed_email,phone)
-							zipcode= self.check_zipcode(parsed[2],phone)
-							phone =self.check_phone(phone)
-							randompassword = gen_random_pw()
-
-
-							new_user = User.objects.create_user(parsed_email,parsed_email,randompassword)
-							EmailAddress.objects.add_email(new_user,parsed_email)
-							zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
-							clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
-									
-							new_customer = Customer.objects.create(user=new_user,phone = clean_phone,zipcode= zipcode_obj,verified=True, verified_phone=0)
-							new_customer.set_location_from_address()
-							print new_customer
-							print new_customer.location.location.x, new_customer.location.location.y
-							number = new_customer.count_merchants_within_miles()
-                                                        receipt_msg = t.render(TxtTemplates.templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
-                                                                "email": email,
-                                                                "number": number,
-                                                                "password": randompassword,
-                                                                })
-                                                        self.notify(phone,receipt_msg)
-							print "x=",new_customer.location.location.x
-							reg_logger.info("customer-signup: %s -- success" % phone)
-						else:
-						# -------------------------------- UNSUPPORTED NON-CUSTOMER COMMAND: ask them to sign up with us --------------
-							receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
-							self.notify(phone,receipt_msg)
-					except ParseException:
-						receipt_msg=t.render(TxtTemplates.templates["SHARED"]["NON_USER"],{"site":DEFAULT_SITE, "shoppley_num": settings.SHOPPLEY_NUM })
-							
-						self.notify(parse_phone_number(msg["from"]),receipt_msg)
-
 	def handle_noargs(self, **options):
 		voice = Voice()
 		voice.login()
 		smses = voice.sms()
 		self.update_expired()
-		#skipped_sms=[]
-		#index = -1
 		for msg in extractsms(voice.sms.html):
-			#sms_notify(msg["from"], "hello")
-			#print datetime.now(), "- processing: ", msg
+			if len(msg["from"]) == 0:
+				continue
+			if msg["from"] == "Me:":
+				continue
 			try:
 				self.test_handle(msg)
 				sms_logger.info("success: %s" % msg)
 			except CommandError:
-				continue
+					continue
 			except ObjectDoesNotExist, e:
-				#print str(e)
-				sms_logger.exception ("\"%s\" causes an error:" % msg)
-				continue
+					sms_logger.exception ("\"%s\" causes an error:" % msg)
+					continue
 			except MultipleObjectsReturned, e:
-				#print str(e)
-				sms_logger.exception ("\"%s\" causes an error:" % msg)
-
-				continue
+					sms_logger.exception ("\"%s\" causes an error:" % msg)
+					continue
 			except Exception, e:
-				#	skipped_sms.append(index)
-				#print str(e)
-				sms_logger.exception ("\"%s\" causes an error:" % msg)
-				continue
+					sms_logger.exception ("\"%s\" causes an error:" % msg)
+					continue
+			continue
 		
 		for message in voice.sms().messages:
 			message.delete()
+
+	def notify(self, phone, msg):
+		if DEBUG:
+			print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
+		else:
+			sms_notify(phone,msg)
+			
+	def validate_number(self,number, phone):
+		try:
+			a = phone_pattern.parseString(number)
+			return parse_phone_number(number)
+		except ParseException:
+			msg = t.render(templates["SHARED"]["INVALID_NUMBER"], 
+						{"number": number, })
+			self.notify(phone, msg)
+			raise CommandError("INVALID NUMBER: %s is an invalid number." % number)
+		
+	def info(self,offercode):
+		return t.render(templates["CUSTOMER"]["INFO"],
+					{
+						"offercode": offercode.code,
+						"description": offercode.offer.description,
+						"merchant": offercode.offer.merchant,
+						"expiration": pretty_date(offercode.expiration_time, True),
+					})
+		
+	def forward_info(self, offercode):
+		print "forward expiration:", offercode.expiration_time
+		return t.render(templates["CUSTOMER"]["FORWARD_INFO"],
+					{
+						"description": offercode.offer.description,
+						"merchant": offercode.offer.merchant,
+						"expiration": pretty_date(offercode.expiration_time, True),
+					})
+		
+	def update_expired(self):
+		expired_offers = Offer.objects.filter(is_merchant_txted=False, expired_time__lt=datetime.now())
+		for offer in expired_offers:
+
+			sentto = offer.num_init_sentto + offer.num_resent_to
+			forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
+			redeem = offer.offercode_set.filter(redeem_time__isnull=False).count()
+			merchant_msg = t.render(templates["MERCHANT"]["EXPIRE_INFO"], 
+								{
+									"offer": offer,
+									"sentto": sentto,
+									"forwarded": forwarded,
+									"redeem": redeem,
+								})
+
+			phone = offer.merchant.merchantphone_set.all()[0]
+			if offer.starter_phone:
+				self.notify(offer.starter_phone.number, merchant_msg)
+			else:	
+				self.notify(phone, merchant_msg)
+			# update offer's stats
+			offer.is_merchant_txted = True
+			offer.save()
+			offer.update_expired_codes()
+		return expired_offers.count()
+	
+	def customer_help(self):
+		avai_commands = t.render(templates["CUSTOMER"]["HELP"], {})
+		return avai_commands
+	
+	def merchant_help(self):
+		avai_commands = t.render(templates["MERCHANT"]["HELP"], {})
+		return avai_commands		
+	
+	def check_email(self, email, phone):
+		try :
+			if not validateEmail(email):
+				receipt_msg=t.render(templates["SHARED"]["INVALID_EMAIL"], {"email":email,})
+				self.notify(phone,receipt_msg)
+				raise CommandError("Invalid Email Address")
+			user = User.objects.get(username__iexact=email)
+			receipt_msg = t.render(templates["SHARED"]["EMAIL_TAKEN"], {"email":email,})
+			self.notify(phone, receipt_msg)
+			raise CommandError("Email was already used")
+		except User.DoesNotExist:
+			return email
+		
+	def check_zipcode(self,code,phone):
+		try:
+			zipcode = ZipCode.objects.get(code=code)
+			return code
+		except ZipCode.DoesNotExist:
+			receipt_msg = t.render(templates["SHARED"]["INVALID_ZIPCODE"], {"zipcode":code})
+			self.notify(phone, receipt_msg)
+			raise CommandError("Zipcode does not exist")
+		except MultipleObjectsReturned:
+			return code
+		
+	def check_phone(self, phone):
+		phone = parse_phone_number(phone)
+		
+		if ShoppleyPhone.objects.filter(number__icontains=phone).exists():
+			receipt_msg = t.render(templates["SHARED"]["PHONE_TAKEN"], {"phone":phone,})
+			self.notify(phone, receipt_msg)
+			raise CommandError("Phone number was already used")
+		else:
+			return phone
+		
+	def check_offercode(self,code,phone):
+		code=code.lower()
+		offercodes = OfferCode.objects.filter(code__icontains=code)
+		if offercodes.count()==1:
+			if not offercodes[0].offer.is_active():
+				return -1
+			else:
+				return offercodes[0]
+		elif offercodes.count()==0:
+			receipt_msg = t.render(templates["SHARED"]["OFFERCODE_NOT_EXIST"], {"code":code,})
+			self.notify(phone,receipt_msg)
+			OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=code).save()
+			raise CommandError("OfferCode does not exist")
+		else:
+			actives = [o for o in offercodes.order_by("-time_stamp") if o.offer.is_active()==True]
+			if len(actives)==0:
+				return -1
+			return actives[0]
+	
+	def handle_unverified_number(self, su, from_number, text):
+		if su and su.is_customer() and su.verified_phone!=0:
+			if text=="1":
+				verify_phone(su, True)
+			elif text=="0":
+				verify_phone(su. False)
+			else:
+				msg = t.render(templates["CUSTOMER"]["VERIFY_PHONE"],{})
+				self.notify(from_number, msg)
+			raise CommandError ("Unverified phone")
+		
+
+	PARAMS = {
+			REDEEM[0]: (3, t.render(templates["MERCHANT"]["REDEEM_PARAM_ERRORS"])),
+                        REDEEM[1]: (3, t.render(templates["MERCHANT"]["REDEEM_PARAM_ERRORS"])),
+
+			ZIPCODE[0]: (2, t.render(templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])),
+                        ZIPCODE[1]: (2, t.render(templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])),
+
+			OFFER[0]: (2, t.render(templates["MERCHANT"]["OFFER_COMMAND_ERROR"])),
+                        OFFER[1]: (2, t.render(templates["MERCHANT"]["OFFER_COMMAND_ERROR"])),
+
+			IWANT[0]: (2, t.render(templates["CUSTOMER"]["IWANT_COMMAND_ERROR"])),
+                        IWANT[1]: (2, t.render(templates["CUSTOMER"]["IWANT_COMMAND_ERROR"])),
+
+			FORWARD[0]: (3, t.render(templates["CUSTOMER"]["FORWARD_COMMAND_ERROR"])),
+                        FORWARD[1]: (3, t.render(templates["CUSTOMER"]["FORWARD_COMMAND_ERROR"])),
+
+			SIGNUP[0]: (3, t.render(templates["CUSTOMER"]["SIGNUP_COMMAND_ERROR"])),
+                        SIGNUP[1]: (3, t.render(templates["CUSTOMER"]["SIGNUP_COMMAND_ERROR"])),
+
+			MERCHANT_SIGNUP[0]: (4, t.render(templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"])),
+                        MERCHANT_SIGNUP[1]: (4, t.render(templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"])),
+
+	}
+		
+	def handle_lack_params(self, from_number, command, text, parsed):
+		if len(parsed)< self.PARAMS[command][0]:
+			send_msg = self.PARAMS[command][1]
+			self.notify(from_number, send_msg)
+			raise CommandError("Command lacking params: %s" % text)
+	
+	# -------------- MERCHANT COMMANDS HANDLING FUNCTIONS --------------------#
+	def handle_balance(self, su, from_number, parsed):
+		msg = t.render(templates["MERCHANT"]["BALANCE"], {"points": su.balance,})
+		self.notify(from_number, msg)
+	
+	def handle_redeem(self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		code = parsed[1]
+		client_number = parsed[2]
+		offercode = self.check_offercode(code, from_number)
+		phone = self.validate_number(client_number, from_number)
+		# offercode expired
+		if offercode == -1:
+			sender_msg = t.render(templates["MERCHANT"]["REDEEM_EXPIRED"], {"offer": code,})
+			self.notify(from_number, sender_msg)
+		else:
+			if offercode.offer.merchant != su.merchant:
+				msg   = t.render(templates["MERCHANT"]["REDEEM_WRONG_MERCHANT"], {"code": code,})
+				self.notify(from_number, msg)
+				raise CommandError("Merchant attempts to redeem an offer he does not own")
+			try:
+				current_time = datetime.now()
+				offercode_obj = OfferCode.objects.filter(expiration_time__gt=current_time, time_stamp__lt=current_time).get(code__iexact=offercode.code)
+				try:
+					p = CustomerPhone.objects.get(number__icontains=phone)
+					customer = p.customer
+					
+					if offercode_obj.customer==customer:
+						if not offercode_obj.redeem_time:
+							offercode_obj.redeem_time=current_time
+							offercode_obj.save()
+							# informing merchant + trans
+							sender_msg = t.render(templates["MERCHANT"]["REDEEM_SUCCESS"], {
+																													"offer_code": offercode_obj.code,
+									"customer": offercode_obj.customer
+																														})
+							mtransaction = Transaction.objects.create(time_stamp = current_time,
+																dst = su.merchant, 														offercode = offercode_obj,
+												offer = offercode_obj.offer,
+												ttype = "MOR")
+							mtransaction.execute()
+							self.notify(from_number,sender_msg)
+							
+							# informing customer + trans
+							customer_msg = t.render(templates["CUSTOMER"]["REDEEM_SUCCESS"], {
+											"merchant": su.merchant.business_name
+												})
+							ctransaction = Transaction.objects.create(time_stamp = current_time,
+												dst = offercode_obj.customer,															offercode = offercode_obj,
+													offer = offercode_obj.offer,
+												ttype = "COR")
+							ctransaction.execute()
+							self.notify(phone, customer_msg)
+							
+							# informing forwarders
+							if offercode_obj.forwarder:
+								ftransaction = Transaction.objects.create(time_stamp = current_time,
+												dst = offercode_obj.forwarder,																offercode = offercode_obj,
+													offer = offercode_obj.offer,
+													ttype = "CFR")
+								ftransaction.execute()
+						else:
+							sender_msg = t.render(templates["MERCHANT"]["REDEEM_CODE_REUSE"], {
+										"offer_code": offercode_obj.code,
+										"customer": offercode_obj.customer,
+										"time": pretty_datetime(offercode_obj.redeem_time),
+												})
+							self.notify(from_number, sender_msg)
+							OfferCodeAbnormal(time_stamp=current_time, ab_type="DR", offercode=offercode_obj).save()
+							raise CommandError("Customer attempts to reuse a code")
+					else:
+						sender_msg = t.render(templates["MERCHANT"]["REDEEM_WRONG_CUSTOMER"],{
+										"offer_code":offercode_obj.code,
+										"customer": offercode_obj.customer,})
+						self.notify(from_number, sender_msg)
+						raise CommandError("Customer attempts to redeem a code he does not own")
+				except ObjectDoesNotExist:
+					sender_msg = t.render(templates["MERCHANT"]["REDEEM_INVALID_CUSTOMER_NUM"], {
+									"offer_code": offercode.code,
+									"phone" : phone,})
+					self.notify(from_number, sender_msg)
+					
+				except MultipleObjectsReturned, e:
+					sms_logger.exception("\"%s\" causes an error: " % text)
+			except ObjectDoesNotExist:
+				sender_msg = t.render(templates["MERCHANT"]["REDEEM_INVALID_CODE"], {
+								"offer_code": offercode.code,})
+				self.notify(from_number, sender_msg)
+				OfferCodeAbnormal(time_stamp=datetime.now(), ab_type="IV", invalid_code=offercode.code).save()
+			except MultipleObjectsReturned, e:
+				sms_logger.exception("\"%s\" causes an error: " % text)
+					
+	def handle_merchant_zipcode (self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		code = self.check_zipcode(parsed[1], from_number)
+		zipcode = ZipCode.objects.filter(code=code)[0]
+		ZipCodeChange.objects.create(user=su.merchant, time_stamp=datetime.now(), zipcode=zipcode)
+		su.merchant.zipcode = zipcode
+		su.merchant.save()
+		su.merchant.set_location_from_address(address=zipcode.city.name+" " + zipcode.city.region.name + " " + zipcode.code)
+		number = su.merchant.count_customers_within_miles()
+		receipt_msg = t.render(templates["MERCHANT"]["ZIPCODE_CHANGE_SUCCESS"], {"zipcode": zipcode.code, "number": number,})
+		self.notify(from_number, receipt_msg)
+		
+	def handle_offer(self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		description = ''.join([i + ' ' for i in parsed[1:]]).strip()
+		try:
+			starter_phone = MerchantPhone.objects.get(number=from_number)
+			offer = Offer(merchant=su.merchant, title = description[:80],
+                                        description = description, time_stamp = datetime.now(),
+                                        starting_time=datetime.now(), starter_phone = starter_phone).save()
+		except MerchantPhone.DoesNotExist:
+			
+			offer = Offer(merchant=su.merchant, title = description[:80], 
+					description = description, time_stamp = datetime.now(), 
+					starting_time=datetime.now()).save()
+	
+	def handle_reoffer(self, su, from_number, command, text, parsed):
+		if len(parsed)==1:
+			# resend latest offer (no tracking code)
+			offers = su.merchant.offers_published.filter(expired_time__gt=datetime.now())
+			if offers.exists():
+				offer = offers.order_by("-time_stamp")[0]
+				if offer.redistribute():
+					pass
+				else:
+					merchant_msg = t.render(templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer,})
+					self.notify(from_number, merchant_msg)
+					
+		else:
+			code = parsed[1].strip().lower()
+			try:
+				trackingcode = TrackingCode.objects.get(code__iexact=code)
+			except TrackingCode.DoesNotExist:
+				receipt_msg = t.render(templates["MERCHANT"]["REOFFER_INVALID_TRACKING"], {"code": code,})
+				self.notify(from_number, receipt_msg)
+				raise CommandError ("Tracking code not found")
+			offer = trackingcode.offer
+			if offer.merchant.id != su.merchant.id:
+				receipt_msg = t.render(templates["MERCHANT"]["REOFFER_WRONG_MERCHANT"], {"code": trackingcode.code})
+				self.notify(from_number, receipt_msg)
+				raise CommandError ("Reoffer trackingcode wrong merchant")
+			else:
+				if offer.redistribute():
+					pass
+				else:
+					merchant_msg = t.render(templates["MERCHANT"]["REOFFER_NOT_ALLOWED"], {"offer": offer,})
+					self.notify(from_number, merchant_msg)
+					
+	def handle_status (self, su, from_number, command, text, parsed):
+		if len(parsed)==1:
+			offers = su.merchant.offers_published.order_by("-time_stamp")
+			if offers.count()>0:
+				offer = offers[0]
+				trackingcode = offer.trackingcode
+				sentto = offer.num_init_sentto + offer.num_resent_to
+				forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
+				sender_msg = t.render(templates["MERCHANT"]["STATUS_SUCCESS"], {
+								"code": trackingcode.code,
+								"sentto": sentto,
+								"forwarded": forwarded,
+								"offer": offer,
+								"redeemer": offer.redeemers().count(),
+								})
+				self.notify(from_number, sender_msg)
+			else:
+				sender_msg = t.render(templates["MERCHANT"]["STATUS_NO_OFFER"], {})
+				self.notify(from_number, sender_msg)
+		else:
+			code = parsed[1].strip().lower()
+			try:
+				trackingcode = TrackingCode.objects.get(code__iexact=code)
+			except TrackingCode.DoesNotExist:
+				sender_msg = t.render(templates["MERCHANT"]["STATUS_INVALID_CODE"], {"code":code})
+				self.notify(from_number, sender_msg)
+				raise CommandError("tracking code not found")
+			offer = trackingcode.offer
+			if offer.merchant.id != su.merchant.id:
+				merchant_msg = t.render(templates["MERCHANT"]["STATUS_WRONG_MERCHANT"], {"code": trackingcode.code})
+				self.notify(from_number, merchant_msg)
+			else:
+				sentto = offer.num_init_sentto + offer.num_resent_to
+				forwarded = offer.offercode_set.filter(forwarder__isnull=False).count()
+				merchant_msg = t.render(templates["MERCHANT"]["STATUS_SUCCESS"], {
+									"code": trackingcode.code,
+									"forwarded" : forwarded,
+									"sentto": sentto,
+									"redeemer": offer.redeemers().count(),
+									"offer": offer,})
+				self.notify(from_number, merchant_msg)
+				
+	def handle_info(self, su, from_number, command, text, parsed):
+		if len(parsed)==1:
+			offercodes  = su.customer.offercode_set.order_by("-time_stamp")
+			if offercodes.count()>0:
+				offercode = offercodes[0]
+				customer_msg = self.info(offercode)
+				self.notify(from_number, customer_msg)
+			else:
+				customer_msg = t.render(templates["CUSTOMER"]["INFO_NO_OFFER"], {})
+				self.notify(from_number, customer_msg)
+				
+		else:
+			customer_msg = ""
+			for i in parsed[1:]:
+				parsed_offercode= i
+				try:
+					offercode = self.check_offercode(parsed_offercode, from_number)
+					if offercode == -1:
+						offercodes = su.customer.offercode_set.filter(code__icontains=parsed_offercode).order_by("-time_stamp")
+						if offercodes.count()>0:
+							offercode = offercodes[0]
+							customer_msg = customer_msg + t.render(templates["CUSTOMER"]["INFO"], {
+										"offercode": offercode.code[0:settings.OFFER_CODE_LENGTH],
+										"description": offercode.offer.title,
+										"merchant": offercode.offer.merchant,
+										"expiration": "expired",}) + "; "
+						
+					else:
+						customer_msg = customer_msg + self.info(offercode) + "; "
+				except CommandError:
+					continue
+			if len(customer_msg) >0:
+				self.notify(from_number, customer_msg)
+
+	def handle_iwant(self,su,from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		request = ''.join([i+' ' for i in parsed[1:]]).strip()
+		iwant = IWantRequest.objects.create(customer=su.customer, request=request, time_stamp=datetime.now())
+		customer_msg = t.render(templates["CUSTOMER"]["IWANT"], {"request": request})
+		self.notify(from_number, customer_msg)
+		
+		
+	def handle_vote(self, su, from_number, command, text, parsed):
+		vote = parsed[0].lower()
+		if vote=="yay":
+			vote_num = 1
+		else:
+			vote_num = -1
+			
+		if len(parsed) == 1:
+			offers = su.customer.offercode_set.order_by("-time_stamp")
+			if offers.count()==0:
+				receipt_mg = t.render(templates["CUSTOMER"]["VOTE_NO_OFFER"], {})
+				self.notify(from_number, receipt_msg)
+				raise CommandError("Customer tried to vote but has no offer yet")
+			else:
+				offer = offers[0].offer
+				if offer.vote_set.filter(customer=su.customer).exists():
+					receipt_msg = t.render(templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title,})
+					self.notify(from_number, receipt_msg)
+				else:
+					v = Vote.objects.create(customer=su.customer, offer=offer, vote=vote_num, time_stamp=datetime.now())
+					receipt_msg = t.render(templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer": offer.title, "vote":vote,})
+					self.notify(from_number, receipt_msg)
+		else:
+			if len(parsed)>2:
+				receipt_msg = t.render(templates["CUSTOMER"]["VOTE_COMMAND_ERROR"])
+				self.notify(from_number, receipt_msg)
+				raise CommandError("Incorrectly formed vote command")
+			else:
+				offercode = parsed[1]
+				offers = su.customer.offercode_set.filter(code__contains=parsed[1]).order_by("-time_stamp")
+				if offers.count() ==0:
+					receipt_msg = t.render(templates["CUSTOMER"]["VOTE_UNOWNED_OFFER"], {"offercode": offercode,})
+					self.notify(from_number, receipt_msg)
+				elif offers.count()>0:
+					offer = offers[0].offer
+					if offer.vote_set.filter(customer=su.customer).exists():
+						receipt_msg = t.render(templates["CUSTOMER"]["VOTE_REVOTE"], {"offer": offer.title,})
+						self.notify(from_number, receipt_msg)
+					else:
+						v = Vote.objects.create(customer = su.customer, offer=offer, vote=vote_num, time_stamp=datetime.now())
+						receipt_msg = t.render(templates["CUSTOMER"]["VOTE_SUCCESS"], {"offer":offer.title, "vote": vote,})
+						self.notify(from_number, receipt_msg)
+						
+	def handle_stop(self, su, from_number):
+		if su.active:
+			customer_msg = t.render(templates["CUSTOMER"]["STOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM,})
+			self.notify(from_number, customer_msg)
+			su.active = False
+			su.save()
+		else:
+			customer_msg = t.render(templates["CUSTOMER"]["RESTOP"], {"DEFAULT_SHOPPLEY": settings.SHOPPLEY_NUM,})
+			self.notify(from_number, customer_msg)
+			
+	def handle_start(self, su, from_number):
+		if not su.active:
+			customer_msg = t.render(templates["CUSTOMER"]["START"],{})
+			self.notify(from_number, customer_msg)
+			su.active = True
+			su.save()
+		else:
+			customer_msg = t.render(templates["CUSTOMER"]["RESTART"], {})
+			self.notify(from_number, customer_msg)
+			
+			
+	def handle_customer_zipcode(self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		code = self.check_zipcode(parsed[1], from_number)
+		zipcode = ZipCode.objects.filter(code=code)[0]
+		ZipCodeChange.objects.create(user=su.customer, time_stamp = datetime.now(), zipcode= zipcode)
+		su.customer.zipcode = zipcode
+		su.customer.save()
+		su.customer.set_location_from_address(address=zipcode.city.name + " " + zipcode.city.region.name + " " + zipcode.code)
+		number = su.customer.count_merchants_within_miles()
+		receipt_msg  = t.render(templates["CUSTOMER"]["ZIPCODE"], {"zipcode": zipcode.code, "number": number,})
+		self.notify(from_number, receipt_msg)
+		
+	def handle_forward (self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		ori_code = self.check_offercode(parsed[1], from_number)
+		if ori_code == -1:
+			forwarder_msg = "Sorry, %s already expired." % parsed[1]
+			self.notify(from_number, forwarder_msg)
+		else:
+			ori_offer = ori_code.offer
+			if ori_code.customer!=su.customer:
+				forwarder_msg = t.render(templates["CUSTOMER"]["FORWARD_WRONG_FORWARDER"], {"code": ori_code.code,})
+				self.notify(from_number, forwarder_msg)
+				raise CommandError("Fail to forward! Customer attempts to forward an offercode he doesnt own")
+
+			parsed_numbers = [self.validate_number(i, from_number) for i in parsed[2:]]
+			receivers_pk = ori_offer.offercode_set.values_list("customer", flat=True)
+
+			valid_receivers = set([i for i in parsed_numbers 
+								if	(not CustomerPhone.objects.filter(number=i).exists())
+								 or (not CustomerPhone.objects.get(number=i).customer.offercode_set.filter(offer=ori_offer).exists())])
+			invalid_receivers = set(parsed_numbers) -valid_receivers - set([from_number])
+			
+			for r in invalid_receivers:
+				if CustomerPhone.objects.filter(number=r).exists():
+					su.customer.customer_friends.add(CustomerPhone.objects.get(number=r).customer)
+			if len(valid_receivers)==0:
+				forwarder_msg = t.render(templates["CUSTOMER"]["FORWARD_ALL_RECEIVED"], {"code": ori_code.code,})
+				self.notify(from_number, forwarder_msg)
+			else:
+				for r in valid_receivers:
+					friend_num = r
+					friend_code, random_pw = ori_offer.gen_forward_offercode(ori_code,friend_num)
+					customer_msg = t.render(templates["CUSTOMER"]["FORWARD_CUSTOMER_MSG"], {
+											"customer":su.customer,
+											"info": self.forward_info(ori_code),
+											"code": friend_code.code,})
+					self.notify(friend_num, customer_msg)
+					
+					if random_pw:
+						new_customer = friend_code.customer
+						number = new_customer.count_merchants_within_miles()
+						account_msg = t.render(templates["CUSTOMER"]["FORWARD_NON_CUSTOMER_LOGIN"], {
+											"name":new_customer.user.username,
+											"password": random_pw,
+											"number": number,})
+						self.notify(friend_num, account_msg)
+				forwarder_msg = t.render(templates["CUSTOMER"]["FORWARD_SUCCESS"], {
+											"code":ori_code.code,
+											"numbers": ', '.join([str(i) for i in valid_receivers])})
+				self.notify(from_number, forwarder_msg)
+				
+	def handle_customer_help(self, from_number):
+		commands = self.customer_help()
+		self.notify(from_number, commands)
+						
+	def handle_customer_resignup(self, from_number):
+		sender_msg = t.render(templates["CUSTOMER"]["RESIGNUP"])
+		self.notify(from_number, sender_msg)
+		reg_logger.info("customer-signup: %s -- failure (resignup)" % from_number)
+	
+	def handle_merchant_signup(self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		parsed_email = parsed[1].lower()
+		parsed_zip = parsed[2]
+		business = ''.join(i+' ' for i in parsed[3:]).strip()
+		email = self.check_email(parsed_email, from_number)
+		zipcode = self.check_zipcode(parsed_zip, from_number)
+		phone = self.check_phone(from_number)
+		randompassword = gen_random_pw()
+		new_user = User.objects.create_user(email,email,randompassword)
+		EmailAddress.objects.add_email(new_user,email)
+		zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
+		clean_phone = parse_phone_number(phone, zipcode_obj.city.region.country.code)
+		new_merchant = Merchant.objects.create(user=new_user,
+											phone=clean_phone,
+											zipcode=zipcode_obj,
+											business_name=business,
+											verified=True,
+											verified_phone=0)
+		new_merchant.set_location_from_address()
+		p=MerchantPhone.objects.create(number=clean_phone,merchant=new_merchant)
+		number = new_merchant.count_customers_within_miles()
+		receipt_msg = t.render(templates["MERCHANT"]["SIGNUP_SUCCESS"], {													"emial":email,
+				"password":randompassword,
+				"number":number})
+		self.notify(from_number, receipt_msg)
+		reg_logger.info("merchant-signup: %s -- success" % from_number)
+		
+	def handle_customer_signup(self, su, from_number, command, text, parsed):	
+		self.handle_lack_params(from_number, command, text, parsed)
+		parsed_email = parsed[1].lower()
+		parsed_zip = parsed[2]
+		email = self.check_email(parsed_email, from_number)
+		zipcode = self.check_zipcode(parsed_zip, from_number)
+		phone = self.check_phone(from_number)
+		randompassword = gen_random_pw()
+		
+		new_user = User.objects.create_user(email,email,randompassword)
+		EmailAddress.objects.add_email(new_user,email)
+		zipcode_obj = ZipCode.objects.filter(code=parsed_zip)[0]
+		clean_phone = parse_phone_number(phone,zipcode_obj.city.region.country.code)
+		
+		new_customer = Customer.objects.create(user=new_user,
+											phone=clean_phone,
+											zipcode=zipcode_obj,
+											verified=True,
+											verified_phone=0)
+		new_customer.set_location_from_address()
+		p =CustomerPhone.objects.create(number=clean_phone,customer=new_customer)
+		number = new_customer.count_merchants_within_miles()
+		receipt_msg = t.render(templates["CUSTOMER"]["SIGNUP_SUCCESS"], {
+						"email":email,
+						"password":randompassword,
+						"number":number,})
+		self.notify(from_number, receipt_msg)
+		reg_logger.info("customer-signup: %s -- success" % from_number)
+		
+	#msg: dict("from":phonenumber, "text":text)
+	def test_handle(self,msg):
+		from_number = parse_phone_number(msg["from"])
+		text = msg["text"].strip()
+		su = map_phone_to_user(from_number)
+		
+		# ************* HANDLE UNVERIFIED NUMBER *****************
+		self.handle_unverified_number(su, from_number, text)
+		# ************* MERCHANT COMMANDS ******************
+		if su and su.is_merchant():
+			try:
+				parsed = merchant_pattern.parseString(text)
+				del parsed[0]
+				command = parsed[0].lower()
+				print "command" , command
+				# ************************* BALANCE ********************
+				if command in BALANCE:
+					self.handle_balance(su, from_number, parsed)
+					
+				# ************************* REDEEM *********************
+				elif command in REDEEM:
+					self.handle_redeem(su, from_number,command, text, parsed)
+					
+				# ************************* ZIPCODE *********************
+				elif command in ZIPCODE:
+					self.handle_merchant_zipcode(su, from_number,command, text, parsed)
+					
+				# ************************* OFFER *********************
+				elif command in OFFER:
+					self.handle_offer(su, from_number, command, text, parsed)
+				# ************************* REOFFER *********************
+				elif command in REOFFER:
+					self.handle_reoffer(su, from_number, command, text, parsed)
+					
+				# ************************* STATUSs *********************
+				elif command in STATUS:
+					self.handle_status(su, from_number, command, text, parsed)
+					
+				# ************************* RESIGNUP *********************
+				elif command in MERCHANT_SIGNUP:
+					sender_msg = t.render(templates["MERCHANT"]["RESIGNUP"], {})
+					self.notify(from_number, sender_msg)
+					reg_logger.info("merchant-signup: %s -- failure (resignup)" % from_number)
+				# ************************* HELP *********************
+				elif command in HELP:
+					commands = self.merchant_help()
+					self.notify(from_number, commands)
+					
+				# ************************* UNHANDLED COMMAND *********************
+				else:
+					receipt_msg = t.render(templates["MERCHANT"]["INCORRECT_COMMAND"], {
+										"command": command,
+										"help": self.merchant_help()})
+					self.notify(from_number, receipt_msg)
+					
+			except ParseException:
+				sender_msg = _("%s is not a valid command. Our commands start with # sign. Txt #help for all commands.") % text
+				self.notify(from_number, sender_msg)
+				
+		# ************* CUSTOMER COMMANDS ******************
+		elif su and su.is_customer():
+			try:
+				parsed = customer_pattern.parseString(text)
+				del parsed[0]
+				command = parsed[0].lower()
+				# ************************* BALANCE *********************
+				if command in BALANCE:
+					self.handle_balance(su, from_number, parsed)
+				# ************************* INFO *********************
+				elif command in INFO:
+					self.handle_info(su, from_number, command, text, parsed)
+				# ************************* IWANT *********************
+				elif command in IWANT:
+					self.handle_iwant(su, from_number, command, text, parsed)
+				# ************************* YAY/NAY *********************
+				elif command in VOTE:
+					self.handle_vote(su, from_number, command, text, parsed)
+				# ************************* STOP *********************
+				elif command in STOP:
+					self.handle_stop(su, from_number)
+				# ************************* START *********************
+				elif command in START:
+					self.handle_start(su, from_number)
+				# ************************* ZIPCODE *********************
+				elif command in ZIPCODE:
+					self.handle_customer_zipcode(su, from_number,command, text, parsed)
+				# ************************* FORWARD *********************
+				elif command in FORWARD:
+					self.handle_forward(su, from_number, command, text, parsed)
+				# ************************* HELP *********************
+				elif command in HELP:
+					self.handle_customer_help(su, from_number)
+				# ************************* RESIGNUP *********************
+				elif command in SIGNUP:
+					self.handle_customer_resignup(su, from_number)
+				# ************************* UNHANDLED COMMAND *********************
+				else:
+					receipt_msg = t.render(templates["CUSTOMER"]["INCORRECT_COMMAND"], {
+										"command": command,
+										"help": self.customer_help()})
+					self.notify(from_number, receipt_msg)
+					
+					
+			except ParseException:
+				
+				sender_msg = _("%s is not a valid command. Our commands start with # sign. Txt #help for all commands.") % text
+				self.notify(from_number, sender_msg)				
+				
+		else:
+			if not su:
+				try:
+					parsed = customer_pattern.parseString(text)
+					del parsed[0]
+					command = parsed[0].lower()
+					# ************************* MERCHANT SIGNUP *********************
+					if command in MERCHANT_SIGNUP:
+						self.handle_merchant_signup(su, from_number, command, text, parsed)
+					# ************************* CUSTOMER SIGNUP *********************
+	
+					elif command in SIGNUP:
+						self.handle_customer_signup(su, from_number, command, text, parsed)
+						
+					else:
+						sender_msg = t.render(templates["SHARED"]["NON_USER"], {
+										"site":DEFAULT_SITE,
+										"shoppley_num": settings.SHOPPLEY_NUM,})
+						self.notify(from_number, sender_msg)
+						
+				except ParseException:
+					sender_msg = t.render(templates["SHARED"]["NON_USER"], {
+										"site":DEFAULT_SITE,
+										"shoppley_num": settings.SHOPPLEY_NUM,})
+					self.notify(from_number, sender_msg)

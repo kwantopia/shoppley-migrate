@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 import re
 
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City
+from shoppleyuser.models import ShoppleyUser, Merchant, Customer, ZipCode, City, CustomerPhone, MerchantPhone
 from shoppleyuser.utils import parse_phone_number
 from offer.utils import TxtTemplates
 
@@ -67,8 +67,8 @@ class MerchantSignupForm(forms.Form):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
 		phone = parse_phone_number(self.cleaned_data["phone"]) 
-		su=ShoppleyUser.objects.filter(phone=phone)
-		if su.count()>0:
+		#su=ShoppleyUser.objects.filter(phone=phone)
+		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists() :
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		#except Exception, e:
 		#	pass
@@ -124,9 +124,6 @@ class MerchantSignupForm(forms.Form):
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 
-
-
-
 		new_merchant = Merchant.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
@@ -134,6 +131,7 @@ class MerchantSignupForm(forms.Form):
 						zipcode=zipcode_obj,
 						business_name=self.cleaned_data["business_name"]
 					)
+		p = MerchantPhone.objects.create(merchant=new_merchant, number = phone)
 		new_merchant.set_location_from_address()
 		return username, password # required for authenticate()
 
@@ -144,7 +142,8 @@ class MerchantProfileEditForm(forms.Form):
 	business_name		= forms.CharField(label=_("Business Name"), max_length=64, required=True)	
 	address1		= forms.CharField(label=_("Street Address"), max_length=64, required=True)
 	zip_code		= forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class':'zip_code'}))
-	phone			= forms.CharField(max_length=20)
+	phone			= forms.CharField(label=_("Business Number"), max_length=20)
+	phones			= forms.CharField(label=_("Manager's Numbers"), widget = forms.widgets.Textarea())
 #	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 
 	def __init__(self , *args,**kwargs):
@@ -169,6 +168,19 @@ class MerchantProfileEditForm(forms.Form):
 			return self.cleaned_data["zip_code"]
 		except ZipCode.DoesNotExist:
 			raise forms.ValidationError(_("Not a valid zip code."))
+
+	def clean_phones(self):
+		phones = self.cleaned_data["phones"]
+		phone_list = phones.split(",")
+		merchant = Merchant.objects.get(user__id=self.cleaned_data["user_id"])
+		for phone in phone_list:
+			if not phone_red.search(phone):
+				 raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
+			phone = parse_phone_number(self.cleaned_data["phone"])
+			if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
+				if MerchantPhone.objects.filter(number=phone).exists() and MerchantPhone.objects.filter(number=phone)[0].merchant != merchant:
+					raise forms.ValidationError(_("This phone number is being used by another user"))
+		return self.cleaned_data["phones"]
 
 	def clean_username(self):
 		username = self.cleaned_data["username"]
@@ -212,13 +224,14 @@ class MerchantProfileEditForm(forms.Form):
 		user = User.objects.get(id=self.cleaned_data["user_id"])
 
 		merchant = Merchant.objects.get(user__id=user.id)
-		if merchant.phone == phone:
+		if merchant.merchantphone_set.filter(number= phone).exists():
 			return self.cleaned_data["phone"]	 
-		su = ShoppleyUser.objects.filter(phone=phone)
-		if su.count()>0:
+		#su = ShoppleyUser.objects.filter(phone=phone)
+		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
+
 		#except Customer.DoesNotExist:
 		#	return self.cleaned_data["phone"]
 		#raise forms.ValidationError(_("This phone number is being used by another customer"))
@@ -226,12 +239,13 @@ class MerchantProfileEditForm(forms.Form):
 	def save(self, user_id):
 		username = self.cleaned_data["username"].lower()	
 		address = self.cleaned_data["address1"].lower()
-		u = User.objects.get(pk = user_id)
+		u = User.objects.get(pk = self.cleaned_data["user_id"])
 		u.username = username
 		u.save()
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		m = Merchant.objects.get(user__pk = user_id)
+		m = Merchant.objects.get(user__pk = self.cleaned_data["user_id"])
+		p, created = MerchantPhone.objects.get_or_create(merchant=m, number = phone)
 		m.address_1 = self.cleaned_data["address1"]
 		m.business_name = self.cleaned_data["business_name"]
 		m.zipcode= zipcode_obj
@@ -239,11 +253,16 @@ class MerchantProfileEditForm(forms.Form):
 		m.save()
 		m.set_location_from_address()
 
+		phones = self.cleaned_data["phones"]
+		phone_list = phones.split(",")
+		for p in phone_list:
+			p_obj, created = MerchantPhone.objects.get_or_create(merchant=m, number = parse_phone_number(p))
+
 class MerchantExtraInfoForm(forms.Form):
 #	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
 	business_name           = forms.CharField(label=_("Business Name"), max_length=64, required=True)
         address1                = forms.CharField(label=_("Street Address"), max_length=64, required=True)
-	phone = forms.CharField(max_length=20, required=True)
+	phone = forms.CharField(label=_("Business Number"), max_length=20, required=True)
 	zip_code = forms.CharField(max_length=10, widget = forms.TextInput(attrs={'class':'zip_code'}), required=True)
 
 	def __init__(self, *args, **kwargs):
@@ -262,8 +281,8 @@ class MerchantExtraInfoForm(forms.Form):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 		phone = parse_phone_number(self.cleaned_data["phone"])
 
-		if ShoppleyUser.objects.filter(phone=phone).exists():
-	
+		#if ShoppleyUser.objects.filter(phone=phone).exists():
+		if CustomerPhone.objects.filter(number=phone).exists() or  MerchantPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -284,7 +303,8 @@ class MerchantExtraInfoForm(forms.Form):
 		zipcode = ZipCode.objects.get(code=code)
 		address_1 = self.cleaned_data["address1"]
 		business_name = self.cleaned_data["business_name"]
-		Merchant(user = user, is_fb_connected=True, phone=phone, zipcode=zipcode,address_1=address_1, business_name=business_name).save()
+		m = Merchant.objects.create(user = user, is_fb_connected=True, phone=phone, zipcode=zipcode,address_1=address_1, business_name=business_name)
+		p = MerchantPhone.objects.create(merchant = m, number = phone)
 
 class CustomerExtraInfoForm(forms.Form):
 #	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
@@ -307,8 +327,8 @@ class CustomerExtraInfoForm(forms.Form):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		
-		if ShoppleyUser.objects.filter(phone=phone).exists():
-		
+		#if ShoppleyUser.objects.filter(phone=phone).exists():
+		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -330,7 +350,8 @@ class CustomerExtraInfoForm(forms.Form):
 
 		code = self.cleaned_data["zip_code"]
 		zipcode = ZipCode.objects.get(code=code)
-		Customer(user=user, is_fb_connected=True, phone=phone, zipcode=zipcode).save()
+		c = Customer.objects.create(user=user, is_fb_connected=True, zipcode=zipcode)
+		p = CustomerPhone.objects.create(customer=c, number=phone)
 
 class CustomerProfileEditForm(forms.Form):
 	LIMIT_CHOICES = (
@@ -407,11 +428,11 @@ class CustomerProfileEditForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		user = User.objects.get(id=self.cleaned_data["user_id"])
 		customer = Customer.objects.get(user__id=user.id)
-                if customer.phone == phone:
+                if customer.phone_set.filter(number= phone).exists():
                         return self.cleaned_data["phone"]
  
-		su = ShoppleyUser.objects.filter(phone=phone)
-		if su.count()>0:
+		#su = ShoppleyUser.objects.filter(phone=phone)
+		if CustomerPhone.objects.filter(number=phone).exists() or  MerchantPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -428,14 +449,19 @@ class CustomerProfileEditForm(forms.Form):
 		zipcode_obj = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
 
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
-		if phone!= u.shoppleyuser.customer.phone:
+		if not u.shoppleyuser.phone_set.filter(number=phone).exists():
+		#phone!= u.shoppleyuser.customer.phone:
 			t = TxtTemplates()
 			msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
 			sms_notify(phone, msg)
 			
 		c = u.shoppleyuser.customer
 		c.address_1 = address
-		c.phone = phone
+		p.created = CustomerPhone.objects.get_or_create(customer=c, defaults={"number":phone,})
+		if not created:
+			p.number = phone
+			p.save()
+
 		c.daily_limit = self.cleaned_data["daily_limit"]
 		c.zipcode = zipcode_obj
 		c.save()
@@ -516,8 +542,8 @@ class CustomerSignupForm(forms.Form):
 		if not phone_red.search(self.cleaned_data["phone"]):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 		phone = parse_phone_number(self.cleaned_data["phone"]) 
-		su = ShoppleyUser.objects.filter(phone__icontains=phone)
-		if su.count()>0:
+		#su = ShoppleyUser.objects.filter(phone__icontains=phone)
+		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -581,56 +607,11 @@ class CustomerSignupForm(forms.Form):
 		new_customer = Customer.objects.create(user=new_user,
 						address_1=self.cleaned_data["address_1"],
 						# address_2=self.cleaned_data["address_2"],
-						phone=phone,
+				#		phone=phone,
 						zipcode=zipcode_obj,
 						verified=True,
 					)
 		new_customer.set_location_from_address()
+		p = CustomerPhone.objects.create(number=phone ,customer = new_customer)
 		return username, password # required for authenticate()
-
-##############
-# FOR BETA
-#############
-class CustomerBetaSubscribeForm( forms.Form ):
-	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())
-	address_1		= forms.CharField(label=_("Street Address"), max_length=64, required=False)
-	zip_code		= forms.CharField(max_length=10)
-	phone			= forms.CharField(max_length=20)
-
-	def clean_zip_code(self):
-		try:
-			zipcode = ZipCode.objects.get(code=self.cleaned_data["zip_code"])
-			return self.cleaned_data["zip_code"]
-		except ZipCode.DoesNotExist:
-			raise forms.ValidationError(_("Not a valid zip code."))
-
-	def clean_email(self):
-		email = self.cleaned_data["email"]
-		try:
-			BetaCustomer = BetaCustomer.objects.get(email__iexact=email)
-		except User.DoesNotExist:
-			return self.cleaned_data["email"]
-		raise forms.ValidationError(_("This email address is already registered. Please choose another."))
-		
-
-	def clean_phone(self):
-		if not phone_red.search(self.cleaned_data["phone"]):
-			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
-		try: 
-			BetaCustomer = BetaCustomer.objects.get(phone__icontains=self.cleaned_data["phone"])
-		except Customer.DoesNotExist:
-			return self.cleaned_data["phone"]
-		raise forms.ValidationError(_("This phone number is being used by another customer"))
-
-
-	#create a new beta customer and return the customer object
-	def save(self):
-		zipcode = self.clean_zip_code()
-		email = self.clean_email()
-		phone = self.clean_phone()
-		newbCustomer=BetaCustomer.objects.create(email = email, 
-							phone= phone,
-							address_1 = self.cleaned_data["address_1"], 
-							zipcode=ZipCode.objects.get(code=zipcode))
-		return newbCustomer
 

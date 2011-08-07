@@ -30,8 +30,8 @@ from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerBetaSubscribeForm, CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm
-from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm
+from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode, CustomerPhone, MerchantPhone
 from django.views.decorators.csrf import csrf_exempt
 from socialregistration import signals
 from socialregistration import models
@@ -284,8 +284,8 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 	address = customer.address_1
 	if not address:
 		address = "No address given"
-	if customer.phone:
-		phone = customer.phone
+	if customer.customerphone:
+		phone = customer.customerphone.number
 	else:
 		phone = "Not given"
 	#print customer.print_daily_limit()
@@ -335,7 +335,7 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	else:
 		zipcode = "Not given"
 
-	if merchant.phone:
+	if merchant.merchantphone_set.exists():
 		phone = merchant.phone
 	else:
 		phone = "Not given"
@@ -394,8 +394,8 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 			zip_code = customer.zipcode.code
 		else:
 			zip_code = ""
-		if customer.phone:
-			phone = customer.phone
+		if customer.customerphone:
+			phone = customer.customerphone.number
 		else:
 			phone = ""
 		
@@ -445,7 +445,8 @@ def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 					'zip_code': merchant.zipcode.code,
 					'phone': merchant.phone, 
 					'business_name' :merchant.business_name,
-					'user_id': request.user.id,})
+					'user_id': request.user.id,
+					'phones': ','.join([ i.number for i in merchant.merchantphone_set.all()])})
 
 	ctx= {
 		"form": form,		
@@ -557,33 +558,5 @@ def login_modal(request):
 
 	return JSONHttpResponse(data) 
 
-
-#########################################
-## FOR BETA USAGE
-#########################################
-def customer_beta_subscribe(request, form_class=CustomerBetaSubscribeForm,
-	template_name="shoppleyuser/customer_signup.html"):
-	if request.method == "POST":
-		redirect_url = "shoppleyuser/customer_beta_subscribe_success.html"
-		form = form_class(request.POST)
-		if form.is_valid():
-			customer=form.save()
-			data = request.POST["data"]
-			try:	
-				for category in data:
-					customer.categories.add(Category.objects.get(tag=category))
-			except:
-				## signup first before choose preferences		
-				pass	
-			return HttpResponseRedirect(redirect_url)
-
-	else:
-		form = form_class()
-
-	print ">>>>>>>>create form"
-	return render_to_response(template_name, {
-		"form": form,
-		"categories": all_categories,
-	}, context_instance=RequestContext(request))
 
 

@@ -68,7 +68,10 @@ class ShoppleyUser(models.Model):
 	address_2		= models.CharField(max_length=64, blank=True)
 	zipcode			= models.ForeignKey(ZipCode, null=True, blank=True, on_delete=models.SET_NULL) # current zipcode
 	#zipcode												= models.ForeignKey(ZipCode, blank=True)
-	phone			= models.CharField(max_length=20, blank=True)
+	# this phone should be used for merchants only ( this is the business phone number )
+	# To support multiple numbers, create a ShoppleyPhone object for each manager's phone
+	# Dont' use this for customers; instead create a ShoppleyPhone object for each customer. (shoppleyuser.phone will never be queried)
+	phone			= models.CharField(max_length=20, blank=True) 
 	categories		= models.ManyToManyField(Category, null=True, blank=True)
 	balance			= models.IntegerField(default=0)
 
@@ -183,9 +186,9 @@ class Merchant(ShoppleyUser):
 		#for i in Customer.objects.all():
 			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
 		if len(filter_pks) > 0:
-			return [ i.pk for i in Customer.objects.exclude(pk__in=filter_pks).filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
+			return [ i.pk for i in Customer.objects.exclude(pk__in=filter_pks).filter(verified=True, active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 		else:
-			return [ i.pk for i in Customer.objects.filter(active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
+			return [ i.pk for i in Customer.objects.filter(verified=True, active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
 	# faster than get_customers_within_miles().count() because dont have to create a new list
 	def count_customers_within_miles(self, x=5):
@@ -317,20 +320,30 @@ class Customer(ShoppleyUser):
 		if self.zipcode:
 			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
-#class Vote(models.Model):
-#				customer								= models.ForeignKey(Customer)
-#	from offer.models import Offer
-#				offer							 = models.ForeignKey(Offer)
-#				VOTE_CHOICES = (
-#								(1, "yay"),
-#								(-1,"nay"),
-#								(0, "pending"),
-#				)
-#				vote										= models.IntegerField(default=0, choices = VOTE_CHOICES)
+class ShoppleyPhone(models.Model):
+	number		= models.CharField(max_length=20, blank = True)
 
-#			 def __unicode__(self):
-#								return "%s: %s -> %s" % (self.vote, self.customer, self.offer)
+	def save(self, *args, **kwargs):
+		from shoppleyuser.utils import parse_phone_number
+		self.number = parse_phone_number(self.number)
+		super(ShoppleyPhone, self).save(*args, **kwargs)
 
+# separate merchant from customer's phones . 
+# phone number used by shoppleyuser to start offers ...
+class MerchantPhone (ShoppleyPhone):
+	merchant		= models.ForeignKey(Merchant)
+#	number			=models.CharField(max_length=20, blank=True)
+
+	def __unicode__(self):
+		return "%s" % self.number
+
+class CustomerPhone(ShoppleyPhone):
+	customer		= models.OneToOneField(Customer)
+#	number			= models.CharField(max_length=20, blank=True)
+
+
+	def __unicode__(self):
+		return "%s" % self.number
 
 class IWantRequest(models.Model):
 	customer		= models.ForeignKey(Customer)
@@ -375,57 +388,4 @@ class ZipCodeChange(models.Model):
 		return "%s, user %s switched his zipcode from %s to %s" % (self.time_stamp, self.user, self.user.zipcode, self.zipcode)
 
 
-
-#capture relationship between users
-#class Relationship(models.Model):
-#	types=(
-#		(0,"Friend forwarding offer"),
-#		)
-#	rtype = models.IntegerField(choices=types,default=0)
-#	user1 = models.ForeignField(ShoppleyUser,related_name="relationship_user1")
-#	user2 = models.ForeignField(ShoppleyUser,related_name="relationship_user2")
-#	offer = models.ManyToManyField(Offer)
-
-#	def __unicode__(self):
-#		if self.rtype=0:
-#			return "%s forwarded offers to %s" % self.user1, self.user2
-
-
-###############
-# FOR BETA
-##############
-class BetaUser(models.Model):
-	email			= models.CharField(max_length=64) # must have
-	address_1		= models.CharField(max_length=64, blank=True)
-	address_2		= models.CharField(max_length=64, blank=True)
-	zipcode			= models.ForeignKey(ZipCode)
-	phone			= models.CharField(max_length=20, blank=True)
-	categories		= models.ManyToManyField(Category, null=True, blank=True)
-
-	def is_betacustomer(self):
-		return hasattr(self, "betacustomer")
-
-	def is_betamerchant(self):
-		return hasattr(self, "betamerchant")
-
-	def print_address(self):
-		if self.address_1=="":
-			return "No address given"
-		else:
-			return self.address_1 + "\n" + self.address_2
-	def __unicode__(self):
-		if self.is_customer():
-			return self.email
-		else:
-			return "%s (%s)" % (self.merchant.business_name, self.email)
-
-class BetaCustomer(BetaUser):
-	pass
-
-
-class BetaMerchant(BetaUser):
-	business_name	= models.CharField(max_length=64, blank=True)
-	url				= models.URLField(null=True, blank=True)
-	def __unicode__(self):
-		return "%s (%s %s)" % (self.business_name,self.email)
 

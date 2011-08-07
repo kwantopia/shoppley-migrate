@@ -17,6 +17,7 @@ from django.contrib.auth.models import *
 from datetime import datetime, timedelta
 from django.conf import settings
 from offer.management.commands.check_sms import Command 
+from offer.management.commands.distribute import Command as DCommand
 from django.contrib.sites.models import Site
 from shoppleyuser.models import *
 from offer.models import OfferCode, Offer, ForwardState, Feature, OfferCodeAbnormal, TrackingCode
@@ -61,7 +62,8 @@ class SimpleTest(TestCase):
 			u.save()
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
-			c, created= Customer.objects.get_or_create(user=u,address_1="15 Pearl St.",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True})
+			c, created= Customer.objects.get_or_create(user=u,address_1="15 Pearl St.",address_2="", zipcode=cambridge, defaults={ "verified":True})
+			CustomerPhone.objects.create(number=o[2],customer=c)
 			if created:
 				c.set_location_from_address()
 
@@ -95,7 +97,8 @@ class SimpleTest(TestCase):
 			u.save()
 			cambridge = ZipCode.objects.filter(code="02139")[0]
 			
-			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge,phone=o[2], defaults={ "verified":True, "verified_phone":True,})
+			c, created= Customer.objects.get_or_create(user=u,address_1="",address_2="", zipcode=cambridge, defaults={ "verified":True, "verified_phone":True,})
+			CustomerPhone.objects.get(number = o[2], customer=c)
 			if created:
 				c.set_location_from_address()
 
@@ -127,6 +130,8 @@ class SimpleTest(TestCase):
 				print "Cant find Kwan's pizza"
 			
 			o, created = Offer.objects.get_or_create(merchant=m,title=name,description=description, defaults={'dollar_off':dollar_off, 'time_stamp':time_stamp,'starting_time':time_stamp,'duration':duration,'max_offers':customers})
+			o.is_processing=False
+			o.save()
 			c = Customer.objects.all()[0]
 			
 			oc, created = OfferCode.objects.get_or_create(code=code,
@@ -163,10 +168,12 @@ class SimpleTest(TestCase):
 			u.set_password("hello")
 			u.is_active=True
 			u.save()
+			phone = parse_phone_number(row[11])
 
 			zipcode = ZipCode.objects.filter(code="%s" % row[1])[0]
 			m, created = Merchant.objects.get_or_create(user=u, address_1="%s" % row[7],zipcode=zipcode, phone=phone,  business_name=row[6], admin="Kwan")
 			m.set_location_from_address()
+			MerchantPhone.objects.create(number=phone,merchant=m)
 	def create_merchants(self):
 
 		zip_reader = [
@@ -448,6 +455,216 @@ class SimpleTest(TestCase):
                 settings.DEBUG=True
 		self.create_geo_merchants()
 		self.create_geo_customers()
+
+	def test_new_txt(self):
+		cmd = Command()
+		dcmd = DCommand()
+		self.create_geo_merchants()
+		self.create_geo_customers()
+		cmd.DEBUG=True
+		settings.DEBUG=True
+
+		print Customer.objects.values_list("user__username", "customerphone__number")	
+		print Merchant.objects.values_list("user__username", "phone")
+		print MerchantPhone.objects.all()	
+		msg1= {"from": "615-000-0001", "text": "#signup "}
+		error = False
+		try:
+			cmd.test_handle(msg1)
+		except CommandError:
+			error =True
+		self.assertEqual(error, True)
+		msg1= {"from": "615-000-0001", "text": "#signup smengl@mit.edu"}
+		error = False
+		try:
+			cmd.test_handle(msg1)
+		except CommandError:
+			error =True
+		self.assertEqual(error, True)
+
+		msg1= {"from": "615-000-0001", "text": "#signup smengl@mit.edu 02139"}
+		cmd.test_handle(msg1)
+
+
+		print Customer.objects.values_list("user__username", "customerphone__number")
+		msg2= {"from": "615-000-0010", "text": "#m seakmeng_l@yahoo.com 02139"}
+		error = False
+		try:
+			cmd.test_handle(msg2)
+		except CommandError:
+			error = True
+		self.assertEqual(error , True)
+		msg2= {"from": "615-000-0010", "text": "#m seakmeng_l@yahoo.com	02139 meng's biz"}
+		cmd.test_handle(msg2)
+		print MerchantPhone.objects.all()
+
+		MerchantPhone.objects.create(number="615-000-0011", merchant=Merchant.objects.get(phone="6150000010"))
+
+		msg3={"from": "615-000-0010", "text": "#offer "}
+		error= False
+		try:
+			cmd.test_handle(msg3)
+		except CommandError:
+			error = True
+                self.assertEqual(error , True)
+		msg3= {"from": "615-000-0010", "text": "#offer meng's pizza1"}
+		cmd.test_handle(msg3)
+		dcmd.handle_noargs()
+
+		print MerchantPhone.objects.all()
+		msg3= {"from": "615-000-0011", "text": "#offer meng's pizza2"}
+		cmd.test_handle(msg3)
+		dcmd.handle_noargs()
+
+
+		msg4= { "from": "615-000-0011", "text": "#balance"}
+		cmd.test_handle(msg4)
+		msg4= {"from": "615-000-0010", "text": "#balance"}
+		cmd.test_handle(msg4)
+
+
+		o = Offer.objects.get(description="meng's pizza1")
+		o2 = Offer.objects.get(description="meng's pizza2")
+
+		msg5= {"from": "615-000-0010", "text": "#status"}
+		cmd.test_handle(msg5)
+		msg5= {"from": "615-000-0011", "text": "#status"}
+		cmd.test_handle(msg5)
+		msg5= {"from": "615-000-0011", "text": "#status %s %s" % (o.trackingcode.code, o.trackingcode.code)}
+		cmd.test_handle(msg5)
+		msg5 = {"from": "615-000-0011", "text": "#status xxxxx"}
+		error = False
+		try:
+			cmd.test_handle(msg5)
+		except CommandError:
+			error = True
+		self.assertEqual(error, True)
+		msg6= {"from": "615-000-0001", "text": "#info"}
+		cmd.test_handle(msg6)
+
+		c = Customer.objects.get(customerphone__number="6150000001")
+		msg6= {"from": "615-000-0001", "text": "#info %s" % c.offercode_set.filter(offer=o)[0].code}
+		cmd.test_handle(msg6)
+		msg6= {"from": "615-000-0001", "text": "#info %s %s" % (c.offercode_set.filter(offer=o)[0].code, c.offercode_set.filter(offer=o2)[0].code)}
+		cmd.test_handle(msg6)
+
+		msg1= {"from": "615-000-0002", "text": "#signup seakmeng90@gmail.com 02139"}
+		cmd.test_handle(msg1)
+
+		msg7= {"from": "615-000-0001", "text": "#forward %s %s" % (c.offercode_set.filter(offer=o)[0].code, "615-000-0002 615-00-0003")}
+		error= False
+		try:
+			cmd.test_handle(msg7)
+		except CommandError:
+			error=True
+		self.assertEqual(error,True)
+		self.assertEqual(c.customer_friends.count(),0)
+
+		msg7= {"from": "615-000-0001", "text": "#forward %s %s" % (c.offercode_set.filter(offer=o)[0].code, "615-000-0002 6150000003")}
+		cmd.test_handle(msg7)
+		self.assertEqual(c.customer_friends.count(),2)
+
+		msg7= {"from": "615-000-0001", "text": "#forward %s %s" % (c.offercode_set.filter(offer=o)[0].code, "615-000-0002 6150000003")}
+		cmd.test_handle(msg7)
+		self.assertEqual(c.customer_friends.count(),2)
+
+		msg7= {"from": "615-000-0002", "text": "#forward %s %s" % (c.offercode_set.filter(offer=o)[0].code, "615-000-0002 6150000003")}
+		#cmd.test_handle(msg7)
+		error = False
+		try:
+			cmd.test_handle(msg7)
+
+		except CommandError:
+			error = True
+		self.assertEqual(error, True)
+		self.assertEqual(c.customer_friends.count(),2)
+
+		print Customer.objects.values_list("customerphone__number", "offer_count")
+
+		msg8= {"from": "615-000-0010", "text": "#offer meng's pizza3"}
+		cmd.test_handle(msg8)
+		dcmd.handle_noargs()
+		print Customer.objects.values_list("customerphone__number", "offer_count")
+
+		msg8= {"from": "615-000-0002", "text": "#stop"}
+		cmd.test_handle(msg8)
+		msg9= {"from": "615-000-0010", "text": "#offer meng's pizza4"}
+		cmd.test_handle(msg9)
+		dcmd.handle_noargs()
+		print Customer.objects.values_list("customerphone__number", "offer_count")
+		msg8= {"from": "615-000-0002", "text": "#start"}
+		cmd.test_handle(msg8)
+		msg9= {"from": "615-000-0010", "text": "#offer meng's pizza5"}
+		cmd.test_handle(msg9)
+		dcmd.handle_noargs()
+		print Customer.objects.values_list("customerphone__number", "offer_count")
+
+		msg9= {"from": "615-000-0010", "text":"#balance"}
+		cmd.test_handle(msg9)
+
+		msg10={"from": "615-000-0010", "text":"#redeem xxxx 615-000-0001"  }
+		error = False
+		try:
+			cmd.test_handle(msg10)
+		except CommandError:
+			error = True	
+		self.assertEqual(error, True)
+		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-0002" %  c.offercode_set.filter(offer=o)[0].code }
+		error = False
+		try:
+
+			cmd.test_handle(msg10)
+		except CommandError:
+			error = True
+		self.assertEqual(error, True)
+
+		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-0001" %  c.offercode_set.filter(offer=o)[0].code }
+		cmd.test_handle(msg10)
+		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-0001" %  c.offercode_set.filter(offer=o)[0].code }
+		error = False
+		try:
+			cmd.test_handle(msg10)
+		except CommandError:
+			error = True
+		self.assertEqual(error, True)
+
+		msg11={"from": "615-000-0010", "text": "#balance"}
+		cmd.test_handle(msg11)
+		msg11={"from": "615-000-0001", "text": "#balance"}
+		cmd.test_handle(msg11)
+		msg11={"from": "615-000-0002", "text": "#balance"}
+		cmd.test_handle(msg11)
+		c2 = Customer.objects.get(customerphone__number="6150000002")
+		
+		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-0002" %  c2.offercode_set.filter(offer=o)[0].code }
+		cmd.test_handle(msg10)
+		msg11={"from": "615-000-0010", "text": "#balance"}
+		cmd.test_handle(msg11)
+		msg11={"from": "615-000-0001", "text": "#balance"}
+		cmd.test_handle(msg11)
+		msg11={"from": "615-000-0002", "text": "#balance"}
+		cmd.test_handle(msg11)
+
+		cmd.update_expired()
+		print "---------------done----------"
+		o.expired_time = datetime.now()
+		o.save()
+		o2.expired_time = datetime.now()
+		o2.save()
+		cmd.update_expired()
+		print o.offercode_set.values_list("code")
+
+
+		msg12={"from": "615-000-0001", "text":"#info %s" % c.offercode_set.filter(offer=o)[0].code[0:6]}
+		cmd.test_handle(msg12)
+		msg12={"from": "615-000-0001", "text":"#forward %s 615-000-0005" % c.offercode_set.filter(offer=o)[0].code[0:6]}
+		cmd.test_handle(msg12)
+		msg12={"from": "615-000-0010", "text":"#redeem %s 615-000-0001" %  c.offercode_set.filter(offer=o)[0].code[0:6]}
+		cmd.test_handle(msg12)
+
+		cmd.update_expired()
+		print o.offercode_set.values_list("code")
+
 
 	def test_txt_messages(self):
 		cmd = Command()

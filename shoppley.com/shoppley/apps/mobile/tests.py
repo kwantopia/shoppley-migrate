@@ -17,7 +17,7 @@ import sqlite3, random
 from datetime import datetime, timedelta
 
 from shoppleyuser.utils import parse_phone_number
-from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category
+from shoppleyuser.models import ShoppleyUser, Country, Region, City, ZipCode, Merchant, Customer, Category, ShoppleyPhone, CustomerPhone, MerchantPhone
 from offer.models import Offer, OfferCode, BlackListWord
 
 
@@ -51,7 +51,8 @@ class SimpleTest(TestCase):
 		
 		num = parse_phone_number("6176829602")
 		if not Customer.objects.filter(user=u).exists():
-			c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=1000)
+			c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, balance=1000)
+			p, pcreated = CustomerPhone.objects.get_or_create(customer = c, number = num)
 			c.active = True
 			c.verified = True
 			c.save()
@@ -64,7 +65,8 @@ class SimpleTest(TestCase):
 		
 		num = parse_phone_number("6174538710")
 		if not Customer.objects.filter(user=u).exists():
-			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, phone=num, balance=1000)
+			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode1, balance=1000)
+			p, pcreated = CustomerPhone.objects.get_or_create(customer = c, number = num)
 			c.active = True
 			c.verified = True
 			c.save()
@@ -78,7 +80,8 @@ class SimpleTest(TestCase):
 		#617-682-9784 Meng's other googlevoice
 		num = parse_phone_number("6176829784")
 		if not Customer.objects.filter(user=u).exists():
-			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2, phone=num, balance=1000)
+			c, created = Customer.objects.get_or_create(user=u, address_1="15 Franklin St.", address_2="", zipcode=zipcode2,balance=1000)
+			p, pcreated = CustomerPhone.objects.get_or_create(customer = c, number = num)
 			c.active = True
 			c.verified = True
 			c.save()
@@ -93,6 +96,7 @@ class SimpleTest(TestCase):
 		num = parse_phone_number("6174538665")
 		if not Merchant.objects.filter(user=u).exists():
 			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Jane's Shoe Store", admin="Jane Sullivan", url="http://www.shoppley.com")
+			p, pcreated =MerchantPhone.objects.get_or_create(merchant = m, number = num)
 			m.active = True
 			m.verified = True
 			m.save()
@@ -107,6 +111,7 @@ class SimpleTest(TestCase):
 		num = parse_phone_number("6178710710")
 		if not Merchant.objects.filter(user=u).exists():
 			m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Flour Bakery", admin="Kevin Bacon", url="http://www.shoppley.com")
+			p, pcreated =MerchantPhone.objects.get_or_create(merchant = m, number = num)
 			m.active = True
 			m.verified = True
 			m.save()
@@ -120,6 +125,7 @@ class SimpleTest(TestCase):
 		num = parse_phone_number("6177154416")
 		if not Merchant.objects.filter(user=u).exists():
 			m, created = Merchant.objects.get_or_create(user=u, address_1="190 Mass Av.", address_2="", zipcode=zipcode2, phone=num, balance=10000, business_name="John's Auto", admin="John Jacobson", url="http://www.shoppley.com")
+			p, pcreated =MerchantPhone.objects.get_or_create(merchant = m, number = num)
 			m.active = True
 			m.verified = True
 			m.save()
@@ -156,7 +162,8 @@ class SimpleTest(TestCase):
 		
 		num = parse_phone_number("6176829602")
 		if not Customer.objects.filter(user=u).exists():
-			c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=1000)
+			c, created = Customer.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, balance=1000)
+			p, pcreated = CustomerPhone.objects.get_or_create(customer = c, number = num)
 			c.active = True
 			c.verified = True
 			c.save()
@@ -171,6 +178,7 @@ class SimpleTest(TestCase):
 		num = parse_phone_number("6174538665")
 		if not Merchant.objects.filter(user=u).exists():
 			m, created = Merchant.objects.get_or_create(user=u, address_1="", address_2="", zipcode=zipcode1, phone=num, balance=10000, business_name="Dunkin Donuts", admin="Jake Sullivan", url="http://www.shoppley.com")
+			p, pcreated =MerchantPhone.objects.get_or_create(merchant = m, number = num)
 			m.active = True
 			m.verified = True
 			m.save()
