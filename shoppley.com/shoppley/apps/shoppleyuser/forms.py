@@ -68,7 +68,7 @@ class MerchantSignupForm(forms.Form):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one."))
 		phone = parse_phone_number(self.cleaned_data["phone"]) 
 		#su=ShoppleyUser.objects.filter(phone=phone)
-		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists() :
+		if ShoppleyPhone.objects.filter(number=phone).exists() :
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		#except Exception, e:
 		#	pass
@@ -177,9 +177,9 @@ class MerchantProfileEditForm(forms.Form):
 			if not phone_red.search(phone):
 				 raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 			phone = parse_phone_number(self.cleaned_data["phone"])
-			if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
+			if ShoppleyPhone.objects.filter(number=phone).exists():
 				if MerchantPhone.objects.filter(number=phone).exists() and MerchantPhone.objects.filter(number=phone)[0].merchant != merchant:
-					raise forms.ValidationError(_("This phone number is being used by another user"))
+					raise forms.ValidationError(_("%s is being used by another user") % phone)
 		return self.cleaned_data["phones"]
 
 	def clean_username(self):
@@ -282,7 +282,7 @@ class MerchantExtraInfoForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"])
 
 		#if ShoppleyUser.objects.filter(phone=phone).exists():
-		if CustomerPhone.objects.filter(number=phone).exists() or  MerchantPhone.objects.filter(number=phone).exists():
+		if ShoppleyPhone.objects.filter(number=phone).exists() :
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -295,7 +295,7 @@ class MerchantExtraInfoForm(forms.Form):
 		user.save()
 		
 		email = fbuser['email']
-		EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
+		EmailAddress.objects.get_or_create(user=user, email=fbuser['email'], verified=True, primary=True)
 	
 	
 		phone = parse_phone_number(self.cleaned_data["phone"])
@@ -328,7 +328,7 @@ class CustomerExtraInfoForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		
 		#if ShoppleyUser.objects.filter(phone=phone).exists():
-		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
+		if ShoppleyPhone.objects.filter(number=phone).exists() :
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
@@ -341,7 +341,7 @@ class CustomerExtraInfoForm(forms.Form):
 		user.save()
 
 		email = fbuser['email']
-		EmailAddress(user=user, email=fbuser['email'], verified=True, primary=True).save()
+		EmailAddress.objects.get_or_create(user=user, email=fbuser['email'], verified=True, primary=True)
 
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		t = TxtTemplates()
@@ -544,7 +544,7 @@ class CustomerSignupForm(forms.Form):
 			raise forms.ValidationError(_("This phone number is not recognized as a valid one. %s"%self.cleaned_data["phone"]))
 		phone = parse_phone_number(self.cleaned_data["phone"]) 
 		#su = ShoppleyUser.objects.filter(phone__icontains=phone)
-		if CustomerPhone.objects.filter(number=phone).exists() or MerchantPhone.objects.filter(number=phone).exists():
+		if ShoppleyPhone.objects.filter(number=phone).exists():
 			raise forms.ValidationError(_("This phone number is being used by another user"))
 		else:
 			return self.cleaned_data["phone"]
