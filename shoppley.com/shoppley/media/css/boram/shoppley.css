@@ -464,6 +464,30 @@ form.login .form_block input {
 	background: #FFF url(../../images/boram/new-merc/momogoose.png) no-repeat;
 }
 
+/* Merchant Offers*/
+.offer-block {
+	background-color: cornsilk;
+}
+.offer-title {
+	border: 1px solid pink;
+}
+.offer-biz-name {
+	border: 1px solid green;
+}
+.offer-location {
+	border: 1px solid purple;
+}
+.offer-time-left {
+	border: 1px solid yellow;
+}
+.offer-type {
+	background-image: url(http://placekitten.com/100/100)
+	padding: 100px;
+}
+.offer-get-it {
+	border: 1px solid black;
+}
+
 /* for About Us page */
 .about-header {
   margin-top: 10px;
