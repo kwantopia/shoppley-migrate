@@ -127,6 +127,9 @@ class TxtTemplates:
 
 			"CUSTOMER_WANTS": "Customer wants {{ requests }}",
 		
+			"ADD_COMMAND_ERROR":  "Command Error! To allow a new phone number to send out offers, please reply with #add new_number",
+			"ADD_SUCCESS": "Thank you for adding a new number. %(phone)s can now send out offers.",
+			
 		},
 		"CUSTOMER": {
 			"REDEEM_SUCCESS": "You have successfully redeemed your code at {{ merchant }}.",
