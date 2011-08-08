@@ -44,6 +44,7 @@ REDEEM = ["redeem","r"]
 OFFER = ["offer","o"]
 STATUS = ["status","s"]
 REOFFER = ["reoffer","re"]
+ADD = ["add", "a"]
 # others
 SIGNUP = ["signup","c"]
 MERCHANT_SIGNUP = ["merchant","m"]
@@ -243,6 +244,8 @@ class Command(NoArgsCommand):
 			MERCHANT_SIGNUP[0]: (4, t.render(templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"])),
                         MERCHANT_SIGNUP[1]: (4, t.render(templates["MERCHANT"]["SIGNUP_COMMAND_ERROR"])),
 
+			ADD[0] : (2, t.render(templates["MERCHANT"]["ADD_COMMAND_ERROR"])),
+			ADD[1] : (2, t.render(templates["MERCHANT"]["ADD_COMMAND_ERROR"])),
 	}
 		
 	def handle_lack_params(self, from_number, command, text, parsed):
@@ -677,6 +680,17 @@ class Command(NoArgsCommand):
 		self.notify(from_number, receipt_msg)
 		reg_logger.info("customer-signup: %s -- success" % from_number)
 		
+	def handle_add(self, su, from_number, command, text, parsed):
+		self.handle_lack_params(from_number, command, text, parsed)
+		parsed_number = parsed[1]
+		phone = self.check_phone(parsed_number)
+
+		sender_msg = t.render(templates["MERCHANT"]["ADD_SUCCESS"], {
+					"phone": phone, })
+
+		self.notify(from_number, sender_msg)
+
+
 	#msg: dict("from":phonenumber, "text":text)
 	def test_handle(self,msg):
 		from_number = parse_phone_number(msg["from"])
@@ -720,7 +734,11 @@ class Command(NoArgsCommand):
 					sender_msg = t.render(templates["MERCHANT"]["RESIGNUP"], {})
 					self.notify(from_number, sender_msg)
 					reg_logger.info("merchant-signup: %s -- failure (resignup)" % from_number)
+				# *************************ADD *********************
+				elif command in ADD:
+					self.handle_add(su, from_number, command, text, parsed)	
 				# ************************* HELP *********************
+
 				elif command in HELP:
 					commands = self.merchant_help()
 					self.notify(from_number, commands)
