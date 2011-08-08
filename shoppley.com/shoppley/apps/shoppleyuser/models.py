@@ -147,7 +147,6 @@ class ShoppleyUser(models.Model):
 		self.location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon, lat))))
 		self.save()
 
-
 class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)

@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
 from shoppleyuser.utils import sms_notify, pretty_date, parse_phone_number
-from shoppleyuser.models import Customer, Merchant, ShoppleyUser, CustomerPhone, MerchantPhone#, Location
+from shoppleyuser.models import Customer, Merchant, ShoppleyUser, CustomerPhone, MerchantPhone, Location
 from offer.utils import gen_offer_code, gen_random_pw, gen_tracking_code, pretty_datetime, TxtTemplates
 from sorl.thumbnail import ImageField
 import logicaldelete.models
@@ -56,7 +56,10 @@ class Offer(logicaldelete.models.Model):
 	redistribute_processing = models.BooleanField(default=False)
 	#locations = models.ManyToManyField(Location)
 
+	location_created = models.ForeignKey(Location, null=True, blank=True)
+
 	starter_phone = models.ForeignKey(MerchantPhone, null =True)
+
 	def __unicode__(self):
 		return self.title
 
@@ -98,6 +101,9 @@ class Offer(logicaldelete.models.Model):
 	def num_received(self):
 		return self.offercode_set.count()
 	
+	def set_location_from_latlon(self, lat , lon):
+		self.created_location = Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon, lat))))
+		self.save()
 
 	def offer_detail(self, past=False):
 		"""
