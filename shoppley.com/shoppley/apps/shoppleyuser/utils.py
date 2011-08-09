@@ -6,8 +6,14 @@ from django.conf import settings
 
 import os, csv
 from googlevoice import Voice
+from googlevoice.util import ValidationError
+
 import sys
 import urllib
+import logging
+FORMAT = '%(asctime)-15s: %(message)s'
+logging.basicConfig(format=FORMAT)
+sms_logger = logging.getLogger("gvoice_validation")
 
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -106,14 +112,21 @@ def load_zipcodes():
 		zip_obj, created = ZipCode.objects.get_or_create(code=zip_code, 
 				city=city_obj, latitude=latitude, longitude=longitude)
 
+#return success True or False
 def sms_notify(number, text, debug=settings.SMS_DEBUG):
 	if debug:
 		print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":text, "phone":number,}
 	else:
 		voice = Voice()
 		voice.login()
-		voice.send_sms(number, text) 
-		
+		try:
+			voice.send_sms(number, text) 
+			return True
+		except ValidationError:
+			sms_logger.exception ("(%s, %s) causes an error:" %  (number, text))
+			return False
+
+
 def sms_notify_list(number_list, text):
 	voice = Voice()
 	voice.login() 
