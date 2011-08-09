@@ -2,7 +2,7 @@ from django.core.management.base import NoArgsCommand
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 from django.conf import settings
-
+from googlevoice.util import ValidationError
 from shoppleyuser.models import *
 from offer.models import *
 from shoppleyuser.utils import sms_notify
@@ -95,10 +95,16 @@ class Command(NoArgsCommand):
 
 					# distribute offer
 					sentto = o.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
+					print "sentto:" , sentto
 					#print "count=" , self.offercode_set.all().count()
 					for c in o.offercode_set.all():
 						offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["OFFER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":c.code })		
-						self.notify(c.customer.customerphone.number, offer_msg)
+						try:
+							print c.customer.customerphone.number, offer_msg
+							self.notify(c.customer.customerphone.number, offer_msg)
+						except ValidationError:
+							print "GV ValidationError"
+							continue
 						transaction = Transaction.objects.create(time_stamp=datetime.now(),
 										offer = o,
 										offercode = c,
@@ -229,8 +235,11 @@ class Command(NoArgsCommand):
 					oc.expiration_time = datetime.now() + timedelta(minutes=o.duration)
 					oc.save()
 					offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_NEWCUSTOMER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":oc.code })
-					
-					self.notify(oc.customer.customerphone.number, offer_msg)
+					try:
+						self.notify(oc.customer.customerphone.number, offer_msg)
+					except ValidationError:
+						print "GV ValidationError"
+						continue
 					transaction = Transaction.objects.create(time_stamp=datetime.now(),
 									offer = o,
 									offercode = c,

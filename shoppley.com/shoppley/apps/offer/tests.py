@@ -464,10 +464,12 @@ class SimpleTest(TestCase):
 		cmd.DEBUG=True
 		settings.DEBUG=True
 
+		msgs= []
 		print Customer.objects.values_list("user__username", "customerphone__number")	
 		print Merchant.objects.values_list("user__username", "phone")
 		print MerchantPhone.objects.all()	
 		msg1= {"from": "615-000-0001", "text": "#signup "}
+		msgs.append(msg1)
 		error = False
 		try:
 			cmd.test_handle(msg1)
@@ -475,6 +477,7 @@ class SimpleTest(TestCase):
 			error =True
 		self.assertEqual(error, True)
 		msg1= {"from": "615-000-0001", "text": "#signup smengl@mit.edu"}
+		msgs.append(msg1)
 		error = False
 		try:
 			cmd.test_handle(msg1)
@@ -483,11 +486,13 @@ class SimpleTest(TestCase):
 		self.assertEqual(error, True)
 
 		msg1= {"from": "615-000-0001", "text": "#signup smengl@mit.edu 02139"}
+		msgs.append(msg1)
 		cmd.test_handle(msg1)
 
 
 		print Customer.objects.values_list("user__username", "customerphone__number")
 		msg2= {"from": "615-000-0010", "text": "#m seakmeng_l@yahoo.com 02139"}
+		msgs.append(msg2)
 		error = False
 		try:
 			cmd.test_handle(msg2)
@@ -496,11 +501,35 @@ class SimpleTest(TestCase):
 		self.assertEqual(error , True)
 		msg2= {"from": "615-000-0010", "text": "#m seakmeng_l@yahoo.com	02139 meng's biz"}
 		cmd.test_handle(msg2)
+		msgs.append(msg2)
 		print MerchantPhone.objects.all()
 
-		MerchantPhone.objects.create(number="615-000-0011", merchant=Merchant.objects.get(phone="6150000010"))
+		msg2= {"from": "615-000-0010", "text": "#add "}
 
+		error = False
+		try:
+			cmd.test_handle(msg2)
+		except Exception , e:
+			print e
+			error = True
+		self.assertEqual(error, True)
+		msg2= {"from": "615-000-0010", "text": "#add 615-00-0011"}
+
+		error = False
+		try:
+			cmd.test_handle(msg2)
+		except Exception , e:
+			print e
+			error = True
+		self.assertEqual(error, True)
+
+		msg2= {"from": "615-000-0010", "text": "#add 615-000-0011"}
+		cmd.test_handle(msg2)
+
+
+		msgs2 = []
 		msg3={"from": "615-000-0010", "text": "#offer "}
+	
 		error= False
 		try:
 			cmd.test_handle(msg3)
@@ -547,6 +576,12 @@ class SimpleTest(TestCase):
 		cmd.test_handle(msg6)
 		msg6= {"from": "615-000-0001", "text": "#info %s %s" % (c.offercode_set.filter(offer=o)[0].code, c.offercode_set.filter(offer=o2)[0].code)}
 		cmd.test_handle(msg6)
+		msg6= {"from": "615-000-0001", "text": "#info %s xxx" % (c.offercode_set.filter(offer=o)[0].code)}
+		error = False
+		
+		cmd.test_handle(msg6)
+		
+
 
 		msg1= {"from": "615-000-0002", "text": "#signup seakmeng90@gmail.com 02139"}
 		cmd.test_handle(msg1)
@@ -560,6 +595,7 @@ class SimpleTest(TestCase):
 		self.assertEqual(error,True)
 		self.assertEqual(c.customer_friends.count(),0)
 
+	
 		msg7= {"from": "615-000-0001", "text": "#forward %s %s" % (c.offercode_set.filter(offer=o)[0].code, "615-000-0002 6150000003")}
 		cmd.test_handle(msg7)
 		self.assertEqual(c.customer_friends.count(),2)
@@ -608,6 +644,14 @@ class SimpleTest(TestCase):
 			cmd.test_handle(msg10)
 		except CommandError:
 			error = True	
+		self.assertEqual(error, True)
+		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-002" %  c.offercode_set.filter(offer=o)[0].code }
+		error = False
+		try:
+			cmd.test_handle(msg10)
+		except Exception, e:
+			print e
+			error = True
 		self.assertEqual(error, True)
 		msg10={"from": "615-000-0010", "text":"#redeem %s 615-000-0002" %  c.offercode_set.filter(offer=o)[0].code }
 		error = False
@@ -664,7 +708,64 @@ class SimpleTest(TestCase):
 
 		cmd.update_expired()
 		print o.offercode_set.values_list("code")
+		msg13 = {"from": "615-000-0010", "text": "#help"}
+		cmd.test_handle(msg13)
+		msg14 = {"from": "615-000-0001", "text": "#help"}
+		cmd.test_handle(msg14)
 
+		msg15 = {"from": "615-000-0010", "text": "#reoffer"}
+		cmd.test_handle(msg15)
+		dcmd.handle_noargs()
+		msg15 = {"from": "615-000-0010", "text": "#reoffer %s" % o.trackingcode.code}
+		error = False
+		try:
+			cmd.test_handle(msg15)
+		except Exception, e:
+			print e
+			error = True
+		self.assertEqual(error, True)
+
+		dcmd.handle_noargs()
+		msg15 = {"from": "615-000-0010", "text": "#reoffer xxx"}
+		error  = False
+		try:
+			cmd.test_handle(msg15)
+		except Exception, e:
+			print e
+			error = True
+		self.assertEqual(error, True)
+		dcmd.handle_noargs()
+		msg15 = {"from": "615-000-0010", "text": "#m smengl@mit.edu 02139 meng's biz 2"}
+		cmd.test_handle(msg15)
+		msg15= {"from": "615-000-0001", "text": "#signup smengl@mit.edu 02139"}
+		cmd.test_handle(msg15)
+		msg15= {"from": "615-000-0001", "text": "#iwant free food"}
+		cmd.test_handle(msg15)
+		msg15= {"from": "615-000-0001", "text": "#m smengl@mit.edu 02139"}
+
+		cmd.test_handle(msg15)
+		msg15= {"from": "615-000-0010", "text": "#iwant free food"}
+		cmd.test_handle(msg15)
+
+		msg15= {"from": "615-000-0010", "text": "#zipcode 02142"}
+		cmd.test_handle(msg15)
+		m = MerchantPhone.objects.get(number="6150000010").merchant
+		self.assertEqual(m.zipcode.code , "02142")
+		msg15= {"from": "615-000-0001", "text": "#zipcode 02142"}
+		cmd.test_handle(msg15)
+		c = CustomerPhone.objects.get(number="6150000001").customer
+		self.assertEqual(c.zipcode.code, "02142")
+
+		msg16={"from":"615-000-0001", "text": "#yay"}
+		cmd.test_handle(msg16)
+		msg16={"from":"615-000-0002", "text": "#nay"}
+		cmd.test_handle(msg16)
+		msg16={"from":"615-000-0002", "text": "#yay %s" % o.offercode_set.filter(customer=c)[0].code}	
+		cmd.test_handle(msg16)
+		msg16={"from":"615-000-0001", "text": "#nay %s" % o.offercode_set.filter(customer=c)[0].code}
+		cmd.test_handle(msg16)
+		msg16={"from":"615-000-0001", "text": "#yay %s" % o.offercode_set.filter(customer=c)[0].code}
+		cmd.test_handle(msg16)
 
 	def test_txt_messages(self):
 		cmd = Command()

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 from emailconfirmation.models import EmailAddress
 from shoppleyuser.utils import sms_notify, parse_phone_number,map_phone_to_user, pretty_date
-from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest, ShoppleyPhone, CustomerPhone, MerchantPhone
+from shoppleyuser.models import ZipCode, Customer, Merchant, ShoppleyUser, ZipCodeChange, IWantRequest, ShoppleyPhone, CustomerPhone, MerchantPhone, TextMsg
 from offer.models import Offer, ForwardState, OfferCode, OfferCodeAbnormal, TrackingCode, Vote
 from offer.utils import gen_offer_code, validateEmail, gen_random_pw, pluralize, pretty_datetime, TxtTemplates
 from worldbank.models import Transaction
@@ -66,13 +66,29 @@ class Command(NoArgsCommand):
 		smses = voice.sms()
 		self.update_expired()
 		for msg in extractsms(voice.sms.html):
+			
 			if len(msg["from"]) == 0:
 				continue
 			if msg["from"] == "Me:":
 				continue
+			TextMsg.objects.create(text = msg["text"], from_number = msg["from"], start_time = datetime.now())
+		for message in voice.sms().messages:
+			message.delete()
+
+		texts=TextMsg.objects.filter(status=0)
+		for m in texts:
+			m.status = 1
+			m.save()
+			msg={}
+			msg["from"] = m.from_number
+			msg["text"] = m.text		
 			try:
 				self.test_handle(msg)
 				sms_logger.info("success: %s" % msg)
+				m.status = 2
+				m.end_time = datetime.now()
+				m.save()
+
 			except CommandError:
 					continue
 			except ObjectDoesNotExist, e:
@@ -85,9 +101,7 @@ class Command(NoArgsCommand):
 					sms_logger.exception ("\"%s\" causes an error:" % msg)
 					continue
 			continue
-		
-		for message in voice.sms().messages:
-			message.delete()
+
 
 	def notify(self, phone, msg):
 		if DEBUG:
@@ -106,6 +120,7 @@ class Command(NoArgsCommand):
 			raise CommandError("INVALID NUMBER: %s is an invalid number." % number)
 		
 	def info(self,offercode):
+		#print "description", offercode.offer.description, "title:" , offercode.offer.title
 		return t.render(templates["CUSTOMER"]["INFO"],
 					{
 						"offercode": offercode.code,
@@ -120,7 +135,7 @@ class Command(NoArgsCommand):
 					{
 						"description": offercode.offer.description,
 						"merchant": offercode.offer.merchant,
-						"expiration": pretty_date(offercode.expiration_time, True),
+						"expires": pretty_date(offercode.expiration_time, True),
 					})
 		
 	def update_expired(self):
@@ -181,12 +196,13 @@ class Command(NoArgsCommand):
 		except MultipleObjectsReturned:
 			return code
 		
-	def check_phone(self, phone):
+	def check_phone(self, from_number, phone):
+		self.validate_number(phone, from_number)
 		phone = parse_phone_number(phone)
-		
+	
 		if ShoppleyPhone.objects.filter(number__icontains=phone).exists():
 			receipt_msg = t.render(templates["SHARED"]["PHONE_TAKEN"], {"phone":phone,})
-			self.notify(phone, receipt_msg)
+			self.notify(from_number, receipt_msg)
 			raise CommandError("Phone number was already used")
 		else:
 			return phone
@@ -264,7 +280,8 @@ class Command(NoArgsCommand):
 		code = parsed[1]
 		client_number = parsed[2]
 		offercode = self.check_offercode(code, from_number)
-		phone = self.validate_number(client_number, from_number)
+		phone = self.validate_number(  client_number, from_number)
+		
 		# offercode expired
 		if offercode == -1:
 			sender_msg = t.render(templates["MERCHANT"]["REDEEM_EXPIRED"], {"offer": code,})
@@ -392,7 +409,13 @@ class Command(NoArgsCommand):
 				receipt_msg = t.render(templates["MERCHANT"]["REOFFER_INVALID_TRACKING"], {"code": code,})
 				self.notify(from_number, receipt_msg)
 				raise CommandError ("Tracking code not found")
+			
 			offer = trackingcode.offer
+			if not offer.is_active():
+				receipt_msg = t.render(templates["MERCHANT"]["REOFFER_EXPIRED_OFFER"], {"code": code,})
+				self.notify(from_number, receipt_msg)
+				raise CommandError ("Offer expired, cant reoffer")
+
 			if offer.merchant.id != su.merchant.id:
 				receipt_msg = t.render(templates["MERCHANT"]["REOFFER_WRONG_MERCHANT"], {"code": trackingcode.code})
 				self.notify(from_number, receipt_msg)
@@ -577,7 +600,7 @@ class Command(NoArgsCommand):
 				self.notify(from_number, forwarder_msg)
 				raise CommandError("Fail to forward! Customer attempts to forward an offercode he doesnt own")
 
-			parsed_numbers = [self.validate_number(i, from_number) for i in parsed[2:]]
+			parsed_numbers = [self.validate_number( i,from_number) for i in parsed[2:]]
 			receivers_pk = ori_offer.offercode_set.values_list("customer", flat=True)
 
 			valid_receivers = set([i for i in parsed_numbers 
@@ -630,7 +653,7 @@ class Command(NoArgsCommand):
 		business = ''.join(i+' ' for i in parsed[3:]).strip()
 		email = self.check_email(parsed_email, from_number)
 		zipcode = self.check_zipcode(parsed_zip, from_number)
-		phone = self.check_phone(from_number)
+		phone = self.check_phone(from_number, from_number)
 		randompassword = gen_random_pw()
 		new_user = User.objects.create_user(email,email,randompassword)
 		EmailAddress.objects.add_email(new_user,email)
@@ -645,7 +668,7 @@ class Command(NoArgsCommand):
 		new_merchant.set_location_from_address()
 		p=MerchantPhone.objects.create(number=clean_phone,merchant=new_merchant)
 		number = new_merchant.count_customers_within_miles()
-		receipt_msg = t.render(templates["MERCHANT"]["SIGNUP_SUCCESS"], {													"emial":email,
+		receipt_msg = t.render(templates["MERCHANT"]["SIGNUP_SUCCESS"], {													"email":email,
 				"password":randompassword,
 				"number":number})
 		self.notify(from_number, receipt_msg)
@@ -657,7 +680,7 @@ class Command(NoArgsCommand):
 		parsed_zip = parsed[2]
 		email = self.check_email(parsed_email, from_number)
 		zipcode = self.check_zipcode(parsed_zip, from_number)
-		phone = self.check_phone(from_number)
+		phone = self.check_phone(from_number, from_number)
 		randompassword = gen_random_pw()
 		
 		new_user = User.objects.create_user(email,email,randompassword)
@@ -683,8 +706,8 @@ class Command(NoArgsCommand):
 	def handle_add(self, su, from_number, command, text, parsed):
 		self.handle_lack_params(from_number, command, text, parsed)
 		parsed_number = parsed[1]
-		phone = self.check_phone(parsed_number)
-
+		phone = self.check_phone(from_number, parsed_number)
+		MerchantPhone.objects.create(merchant = su.merchant, number= phone)
 		sender_msg = t.render(templates["MERCHANT"]["ADD_SUCCESS"], {
 					"phone": phone, })
 
@@ -786,10 +809,10 @@ class Command(NoArgsCommand):
 					self.handle_forward(su, from_number, command, text, parsed)
 				# ************************* HELP *********************
 				elif command in HELP:
-					self.handle_customer_help(su, from_number)
+					self.handle_customer_help(from_number)
 				# ************************* RESIGNUP *********************
 				elif command in SIGNUP:
-					self.handle_customer_resignup(su, from_number)
+					self.handle_customer_resignup( from_number)
 				# ************************* UNHANDLED COMMAND *********************
 				else:
 					receipt_msg = t.render(templates["CUSTOMER"]["INCORRECT_COMMAND"], {

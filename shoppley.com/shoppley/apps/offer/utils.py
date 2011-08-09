@@ -111,6 +111,7 @@ class TxtTemplates:
 			"REOFFER_INVALID_TRACKING" : "The tracking code \"{{ code }}\" can not be found. Please re-enter a tracking code.",
 			"REOFFER_WRONG_MERCHANT" : "Sorry offer with tracking code \"{{ code }}\" was not initiated by you. Please re-input your tracking code",
 			"REOFFER_NOT_ALLOWED": "Sorry, you are not allowed to redistribute this offer, {{ offer }}, more than once.", 
+			"REOFFER_EXPIRED_OFFER": "Sorry, offer by \"{{ code }}\" already expired. Try create a new offer using our \"#offer offer_description\" command.",
 			"STATUS_SUCCESS": "[{{ code }}] Offer: {{ offer }} [sent to {{ sentto }}], [forwarded to {{ forwarded }}], [redeemed by {{ redeemer }}]. Txt #status {{ code }} to track the offer",
 			"STATUS_NO_OFFER": "Failure to get status! Offer has not yet been initiated. To start an offer, txt #offer description",
 			"STATUS_INVALID_CODE": "The tracking code \"{{ code }}\" can not be found. Please re-enter a tracking code.",
@@ -128,7 +129,7 @@ class TxtTemplates:
 			"CUSTOMER_WANTS": "Customer wants {{ requests }}",
 		
 			"ADD_COMMAND_ERROR":  "Command Error! To allow a new phone number to send out offers, please reply with #add new_number",
-			"ADD_SUCCESS": "Thank you for adding a new number. %(phone)s can now send out offers.",
+			"ADD_SUCCESS": "Thank you for adding a new number. {{ phone }} can now send out offers.",
 			
 		},
 		"CUSTOMER": {
@@ -141,7 +142,7 @@ class TxtTemplates:
 			"REOFFER_NEWCUSTOMER_RECEIVED": "[{{ code }}] {{ title }} by {{ merchant }} (reply \"info {{ code }}\" for address)",
 
 			"INFO_NO_OFFER" : "Offer not found. You have not received any offer yet.",
-			"INFO" : "Redeem [{{ offercode }}] at {{ merchant }} \"{{ description }}\" [expires: {{ expiration }}]",
+			"INFO" : "Redeem [{{ offercode }}] at {{ merchant }} -- \"{{ description }}\" [expires: {{ expiration }}]",
 			"IWANT": "We have received your request: {{ request }}. Our dragons are hard at work finding the perfect deals for you.",
 			"IWANT_COMMAND_ERROR": "Command Error! To request a deal, please reply with #iwant your_request",
 			"STOP" : "You have elected to temporarily stop receiving offer messages. Simply txt #start to {{ DEFAULT_SHOPPLEY }} at any time to restart your service.",
