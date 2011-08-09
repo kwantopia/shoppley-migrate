@@ -388,3 +388,18 @@ class ZipCodeChange(models.Model):
 
 
 
+class TextMsg(models.Model):
+	from_number =models.CharField(max_length=20, blank = True)
+	text = models.CharField(max_length = 300, blank = True)
+	STATUS= ((0, "Not processed"),
+		(1, "Processing"),
+		(2, "Processed"))
+
+	status =	models.IntegerField(choices=STATUS, default=0)
+	start_time = models.DateTimeField()
+	end_time = models.DateTimeField(blank=True, null = True)
+	def __unicode__(self):
+		if self.status == 2:
+			return "%s- %s: %s was processed at %s" % (self.start_time, self.from_number, self.text, self.end_time)
+		else:
+			return "%s- %s: %s -- %d" % (self.start_time, self.from_number,self.text, self.status)
