@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.gis.geos import fromstr
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
 
