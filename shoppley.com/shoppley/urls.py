@@ -11,7 +11,7 @@ from blog.feeds import BlogFeedAll, BlogFeedUser
 from bookmarks.feeds import BookmarkFeed
 from microblogging.feeds import TweetFeedAll, TweetFeedUser, TweetFeedUserWithFriends
 
-from shoppleyuser.forms import CustomerSignupForm,MerchantSignupForm, CustomerBetaSubscribeForm
+from shoppleyuser.forms import CustomerSignupForm,MerchantSignupForm
 
 from shoppleyuser.models import Category
 tweets_feed_dict = {"feed_dict": {
