@@ -1,9 +1,9 @@
 from django.contrib.auth import  login, logout
 from django.contrib.auth.models import User
 from emailconfirmation.models import EmailAddress
-from shoppleyuser.models import ShoppleyUser, CustomerPhone, MerchantPhone, ShoppleyPhone
+from shoppleyuser.models import ShoppleyUser,  ShoppleyPhone
 
-class ShoppleyBackend:
+class ShoppleyBackend(object):
 
 	supports_object_permissions = False
 	supports_anonymous_user = True
@@ -19,8 +19,10 @@ class ShoppleyBackend:
 			if ShoppleyPhone.objects.filter(number = username).exists():
 				p = ShoppleyPhone.objects.filter(number = username)[0]
 				if p.is_customerphone():
+					p = p.customerphone
 					user = p.customer.user
 				else:
+					p = p.merchantphone
 					user = p.merchant.user
 			else:
 				emails = EmailAddress.objects.filter(email= username)
