@@ -107,7 +107,7 @@ class Command(NoArgsCommand):
 		if DEBUG:
 			print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
 		else:
-			sms_notify(phone,msg)
+			return	sms_notify(phone,msg)
 			
 	def validate_number(self,number, phone):
 		try:

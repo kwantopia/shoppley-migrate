@@ -20,7 +20,7 @@ class Command(NoArgsCommand):
 		if SMS_DEBUG:
 			print _("\"%(msg)s\" sent to %(phone)s") % {"msg":msg, "phone":phone,}
 		else:
-			sms_notify(phone,msg)
+			return sms_notify(phone,msg)
 
 	def handle_noargs(self, **options):
 		"""
@@ -99,18 +99,17 @@ class Command(NoArgsCommand):
 					#print "count=" , self.offercode_set.all().count()
 					for c in o.offercode_set.all():
 						offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["OFFER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":c.code })		
-						try:
-							print c.customer.customerphone.number, offer_msg
-							self.notify(c.customer.customerphone.number, offer_msg)
-						except ValidationError:
-							print "GV ValidationError"
-							continue
-						transaction = Transaction.objects.create(time_stamp=datetime.now(),
+						
+						#print c.customer.customerphone.number, offer_msg
+						success = self.notify(c.customer.customerphone.number, offer_msg)
+						
+						if success :
+							transaction = Transaction.objects.create(time_stamp=datetime.now(),
 										offer = o,
 										offercode = c,
 										dst = o.merchant,
 										ttype = "MOD")
-						transaction.execute()
+							transaction.execute()
 
 					if sentto==0 :
 						# no customers
@@ -235,17 +234,16 @@ class Command(NoArgsCommand):
 					oc.expiration_time = datetime.now() + timedelta(minutes=o.duration)
 					oc.save()
 					offer_msg = t.render(TxtTemplates.templates["CUSTOMER"]["REOFFER_NEWCUSTOMER_RECEIVED"],{ "merchant":o.merchant.business_name, "title":o.title, "code":oc.code })
-					try:
-						self.notify(oc.customer.customerphone.number, offer_msg)
-					except ValidationError:
-						print "GV ValidationError"
-						continue
-					transaction = Transaction.objects.create(time_stamp=datetime.now(),
+					
+					success=	self.notify(oc.customer.customerphone.number, offer_msg)
+						
+					if success :
+						transaction = Transaction.objects.create(time_stamp=datetime.now(),
 									offer = o,
 									offercode = c,
 									dst = o.merchant,
 									ttype = "MOD")
-					transaction.execute()
+						transaction.execute()
 
 				if resentto==0 :
 					# no customers
