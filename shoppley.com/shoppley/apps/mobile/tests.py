@@ -14,6 +14,7 @@ from django.conf import settings
 import csv, json
 import pprint
 import sqlite3, random
+import time
 from datetime import datetime, timedelta
 
 from shoppleyuser.utils import parse_phone_number
@@ -586,6 +587,21 @@ class SimpleTest(TestCase):
 								'units': 1,
 								'amount': 10 }, comment)
 
+		comment = "Start a $ off offer (units=1), with start_unixtime"
+		response = self.post_json( reverse("m_offer_start"), {
+								'title':'$10 off on entree',
+								'description': 'Come taste some great greek food next 30 minutes',
+								'now': False,
+								'start_unixtime': int(time.time()),
+								'duration': 30,
+								'units': 1,
+								'amount': 10 }, comment)
+
+		# TODO: remove this after we set expired_time during Offer construction
+		self.distributor.handle_noargs()
+		comment = "Show active offers for the merchant, returns offer details"
+		response = self.get_json( reverse("m_offers_active"), {}, comment)
+								
 		comment = "Start a $ off offer NOW (units=1), duration if not specified will be next 90 minutes"
 		response = self.post_json( reverse("m_offer_start"), {
 								'title':'$10 off on entree',

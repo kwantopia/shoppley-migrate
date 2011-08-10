@@ -501,8 +501,10 @@ def offer_start(request):
 		'duration': 30,
 		'units': 1,
 		'amount': 10,
-    'lat': 42.32342,
-    'lon': -23.2342
+		'lat': 42.32342,
+		'lon': -23.2342
+		
+		(optional) 'start_unixtime' instead of date & time
 
 	"""
 
@@ -513,9 +515,9 @@ def offer_start(request):
 	description = request.POST.get('description', None)
 	duration = int(request.POST.get('duration', 90))
 	amount = int(request.POST.get('amount', 0))
-	unit = int(request.POST.get('unit', 0))
-  lat = float(request.POST.get('lat', 0))
-  lon = float(request.POST.get('lon', 0))
+	unit = int(request.POST.get('units', 0))
+	lat = float(request.POST.get('lat', 0))
+	lon = float(request.POST.get('lon', 0))
 	
 	if (title is None or title == "") and (description is None or description == ""):
 	    data["result"] = -1
@@ -525,19 +527,20 @@ def offer_start(request):
 	if title is None:
 		title = description[:128]
 	now = request.POST.get('now', False)
+	start_unixtime = request.POST.get('start_unixtime', None)
 	if now:
 		start_time = datetime.now()
+	elif start_unixtime is not None:
+		start_time = datetime.fromtimestamp(float(start_unixtime))
 	else:
 		date = request.POST.get('date', None)
 		time = request.POST.get('time', None)
-		if time == None:
-			start_time = datetime.now()
-		elif date == None:
-			today = datetime.now()
-			start_time = datetime.strptime("%s-%s-%s %s"%(today.year, today.month, today.day, time), "%Y-%m-%d %I:%M:%S %p")
-		else:
-			# start at specified date and time
-			start_time = datetime.strptime("%s %s"%(date, time), "%Y-%m-%d %I:%M:%S %p")
+		if (time is None) or (date is None):
+			data["result"] = -1
+			data["result_msg"] = "Please provide start date & time."
+			return JSONHttpResponse(data)
+
+		start_time = datetime.strptime("%s %s"%(date, time), "%Y-%m-%d %I:%M:%S %p")
 
 	u = request.user
 	if u.shoppleyuser.is_merchant():
