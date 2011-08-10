@@ -326,6 +326,11 @@ class ShoppleyPhone(models.Model):
 		from shoppleyuser.utils import parse_phone_number
 		self.number = parse_phone_number(self.number)
 		super(ShoppleyPhone, self).save(*args, **kwargs)
+	def is_customerphone(self):
+		return hasattr(self, "customerphone")
+
+        def is_merchantphone(self):
+		return hasattr(self, "merchantphone")
 
 # separate merchant from customer's phones . 
 # phone number used by shoppleyuser to start offers ...

@@ -31,10 +31,13 @@ from common.helpers import JSONHttpResponse
 from account.utils import get_default_redirect
 from account.forms import LoginForm
 from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm
-from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode, CustomerPhone, MerchantPhone
+from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode, CustomerPhone, MerchantPhone, Location, ShoppleyPhone
 from django.views.decorators.csrf import csrf_exempt
 from socialregistration import signals
 from socialregistration import models
+
+from django.contrib.gis.geos import fromstr
+
 
 SAMPLE_OFFERS = ["25% off your entree if you come in next 2 hours",
 			  "FREE orange juice with late lunch",
@@ -211,6 +214,27 @@ def set_user_timezone(request):
 		except ShoppleyUser.DoesNotExist:
 			pass
 
+@login_required
+@csrf_exempt
+def set_user_latlon(request):
+	print "set_user_latlon"
+	if request.method =="POST":
+		lat = request.POST["lat"]
+		lon = request.POST["lon"]
+#		print "before: ", lat, lon
+		try:
+			u = request.user.shoppleyuser
+			if u.is_customer():
+				u.location =Location.objects.create(location=(fromstr("POINT(%s %s)" % (lon,lat ))))
+				u.save()
+#				print "success: ", u.location.location.x, u.location.location.y
+#				print "latlon: ", lat, lon
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		except ShoppleyUser.DoesNotExist:
+			pass
+
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
 			url_required=False, extra_context=None):
@@ -326,6 +350,7 @@ def customer_profile(request, template="shoppleyuser/customer_profile.html"):
 def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 	user = request.user
 	#merchant = Merchant.objects.get(user__id=user.id)
+
 	merchant = user.shoppleyuser.merchant
 	username = user.shoppleyuser.print_name()
 #	zipcode = merchant.zipcode.code
