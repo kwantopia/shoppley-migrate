@@ -93,7 +93,7 @@ class Command(NoArgsCommand):
 							target_list = list(users)
 					print "target", target_list
 
-					# distribute offer
+					# distribute offer: generate offer codes
 					sentto = o.gen_offer_codes(Customer.objects.filter(pk__in=target_list))	
 					print "sentto:" , sentto
 					#print "count=" , self.offercode_set.all().count()
@@ -240,7 +240,7 @@ class Command(NoArgsCommand):
 					if success :
 						transaction = Transaction.objects.create(time_stamp=datetime.now(),
 									offer = o,
-									offercode = c,
+									offercode = oc,
 									dst = o.merchant,
 									ttype = "MOD")
 						transaction.execute()
