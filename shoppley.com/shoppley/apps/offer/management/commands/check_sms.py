@@ -244,6 +244,8 @@ class Command(NoArgsCommand):
 
 			ZIPCODE[0]: (2, t.render(templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])),
                         ZIPCODE[1]: (2, t.render(templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])),
+			ZIPCODE[2]: (2, t.render(templates["MERCHANT"]["ZIPCODE_COMMAND_ERROR"])),
+
 
 			OFFER[0]: (2, t.render(templates["MERCHANT"]["OFFER_COMMAND_ERROR"])),
                         OFFER[1]: (2, t.render(templates["MERCHANT"]["OFFER_COMMAND_ERROR"])),
@@ -383,12 +385,16 @@ class Command(NoArgsCommand):
 			offer = Offer(merchant=su.merchant, title = description[:80],
                                         description = description, time_stamp = datetime.now(),
                                         starting_time=datetime.now(), starter_phone = starter_phone).save()
+			offer.expired_time=offer.starting_time + timedelta(minutes=offer.duration)
+			offer.save()
 		except MerchantPhone.DoesNotExist:
 			
-			offer = Offer(merchant=su.merchant, title = description[:80], 
+			offer = Offer(merchant=su.merchant, title = description[:80],
 					description = description, time_stamp = datetime.now(), 
 					starting_time=datetime.now()).save()
-	
+			offer.expired_time=offer.starting_time + timedelta(minutes=offer.duration)
+			offer.save()
+			
 	def handle_reoffer(self, su, from_number, command, text, parsed):
 		if len(parsed)==1:
 			# resend latest offer (no tracking code)
