@@ -560,9 +560,10 @@ def offer_start(request):
 					duration=duration,
 					time_stamp=datetime.now(),
 					starting_time=start_time)
+		offer.expired_time = offer.starting_time + timedelta(minutes=offer.duration)
 		offer.save()
 
-    # save location where the offer was generated to track merchant location
+        # save location where the offer was generated to track merchant location
 		if (lat is not 0) and (lon is not 0):
 			offer.set_location_from_latlon(lat,lon)
 
