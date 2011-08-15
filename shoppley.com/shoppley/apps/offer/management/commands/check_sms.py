@@ -17,7 +17,7 @@ from googlevoice.util import input
 from googlevoice.extractsms import extractsms
 from pyparsing import *
 from random import choice
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 import string
 
@@ -382,16 +382,16 @@ class Command(NoArgsCommand):
 		description = ''.join([i + ' ' for i in parsed[1:]]).strip()
 		try:
 			starter_phone = MerchantPhone.objects.get(number=from_number)
-			offer = Offer(merchant=su.merchant, title = description[:80],
+			offer = Offer.objects.create(merchant=su.merchant, title = description[:80],
                                         description = description, time_stamp = datetime.now(),
-                                        starting_time=datetime.now(), starter_phone = starter_phone).save()
+                                        starting_time=datetime.now(), starter_phone = starter_phone)
 			offer.expired_time=offer.starting_time + timedelta(minutes=offer.duration)
 			offer.save()
 		except MerchantPhone.DoesNotExist:
 			
-			offer = Offer(merchant=su.merchant, title = description[:80],
+			offer = Offer.objects.create(merchant=su.merchant, title = description[:80],
 					description = description, time_stamp = datetime.now(), 
-					starting_time=datetime.now()).save()
+					starting_time=datetime.now())
 			offer.expired_time=offer.starting_time + timedelta(minutes=offer.duration)
 			offer.save()
 			
