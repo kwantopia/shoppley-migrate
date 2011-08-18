@@ -562,6 +562,28 @@ form.login .form_block input {
   margin-bottom: 20px;
 }
 
+/* for Privacy page */
+.privacy-section-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.privacy-effective {
+	color: #999;
+	font-style: italic;
+	margin-bottom: 15px;
+}
+
+/* for Terms page */
+.terms-section-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
 /* for Feedback tab */
 #feedback {
   position: fixed;
