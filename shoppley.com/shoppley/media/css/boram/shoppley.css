@@ -464,6 +464,10 @@ form.login .form_block input {
 	background: #FFF url(../../images/boram/new-merc/momogoose.png) no-repeat;
 }
 
+#yoshi {
+	background: #FFF url(../../images/boram/new-merc/yoshi.png) no-repeat;
+}
+
 /* Merchant Offers*/
 .offer-block {
 	background-color: cornsilk;
