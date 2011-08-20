@@ -2,9 +2,15 @@ from shoppleyuser.models import ShoppleyUser
 from django.conf import settings
 import string, random
 import uuid
-
+from datetime import datetime, date, time, timedelta
 MAX_CHARS = 160
 
+
+def get_days_ago(days):
+
+	dt = datetime.combine(date.today(), time.min)
+	return dt + timedelta(days=-1*int(days))
+	
 def to_user_timezone(time):
 	pass
 

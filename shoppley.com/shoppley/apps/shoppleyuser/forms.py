@@ -17,6 +17,10 @@ alnum_re = re.compile(r'^[a-zA-Z0-9_\.]+$')
 # add white spaces
 phone_red = re.compile('^\(?[\s]*?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}?[\s]*)$')
 
+class CustomerDataUploadForm(forms.Form):
+	data_file = forms.FileField()
+
+
 class MerchantSignupForm(forms.Form):
 	email = forms.EmailField(label = _("Email"), required = True, widget=forms.TextInput())
 
@@ -145,7 +149,11 @@ class MerchantProfileEditForm(forms.Form):
 	phone			= forms.CharField(label=_("Business Number"), max_length=20)
 	phones			= forms.CharField(label=_("Manager's Numbers"), widget = forms.widgets.Textarea())
 #	user_id			= forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
-
+	banner			= forms.ImageField(label=_("Banner"), required=False)
+	url			= forms.URLField(label=_("Business Website"), required=False)
+	yelp_url		= forms.URLField(label=_("Yelp Link"), required=False)
+	fb_url			= forms.URLField(label=_("Facebook Link"), required=False)
+	twitter_url		= forms.URLField(label=_("Twitter Link"), required=False)
 	def __init__(self , *args,**kwargs):
 		super(MerchantProfileEditForm, self).__init__(*args, **kwargs)
 
@@ -238,7 +246,7 @@ class MerchantProfileEditForm(forms.Form):
 
 	def save(self, user_id):
 		username = self.cleaned_data["username"].lower()	
-		address = self.cleaned_data["address1"].lower()
+		address = self.cleaned_data["address1"]
 		u = User.objects.get(pk = self.cleaned_data["user_id"])
 		u.username = username
 		u.save()
@@ -246,10 +254,17 @@ class MerchantProfileEditForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"], zipcode_obj.city.region.country.code)
 		m = Merchant.objects.get(user__pk = self.cleaned_data["user_id"])
 		p, created = MerchantPhone.objects.get_or_create(merchant=m, number = phone)
-		m.address_1 = self.cleaned_data["address1"]
+		m.address_1 = address
 		m.business_name = self.cleaned_data["business_name"]
 		m.zipcode= zipcode_obj
-		print m.address_1
+		url = self.cleaned_data["url"]
+		yelp_url = self.cleaned_data["yelp_url"]
+		fb_url = self.cleaned_data["fb_url"]
+		twitter_url = self.cleaned_data["twitter_url"]
+		if url: m.url = url
+		if yelp_url : m.yelp_url = yelp_url
+		if fb_url: m.fb_url = fb_url
+		if twitter_url : m.twitter_url = twitter_url
 		m.save()
 		m.set_location_from_address()
 
@@ -257,6 +272,7 @@ class MerchantProfileEditForm(forms.Form):
 		phone_list = phones.split(",")
 		for p in phone_list:
 			p_obj, created = MerchantPhone.objects.get_or_create(merchant=m, number = parse_phone_number(p))
+		
 
 class MerchantExtraInfoForm(forms.Form):
 #	user_id = forms.CharField(max_length=10, required=False, widget=forms.HiddenInput())
@@ -468,24 +484,7 @@ class CustomerProfileEditForm(forms.Form):
 		c.save()
 		c.set_location_from_address()
 
-class PasswordChangeForm(forms.Form):
-	old_password		= forms.CharField(label=_("Old Password"), widget=forms.PasswordInput(render_value=False))
-	new_password1		= forms.CharField(label=_("New Password"), widget=forms.PasswordInput(render_value=False))
-	new_password2		= forms.CharField(label=_("New Password (again)"), widget=forms.PasswordInput(render_value=False))
-	def clean(self):
-		if not "old_password" in self.cleaned_data:
-			raise forms.ValidationError(_("You must input your old password."))
-		if "new_password1" in self.cleaned_data and "new_password2" in self.cleaned_data:
-			if self.cleaned_data["new_password1"] != self.cleaned_data["new_password2"]:
-				raise forms.ValidationError(_("You must type the same password each time."))
-		return self.cleaned_data
 
-
-	def save(self, request):
-		data=self.clean()
-		old_password = data["old_password"]
-		new_password = data["new_password1"]
-		
 
 class CustomerSignupForm(forms.Form):
 	email = forms.EmailField( label = _("Email"), required = True, widget = forms.TextInput())

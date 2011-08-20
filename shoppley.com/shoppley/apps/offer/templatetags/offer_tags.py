@@ -1,5 +1,8 @@
 from django import template
 from django.conf import settings
+from django.contrib.sites.models import Site
+
+
 from offer.models import Offer, OfferCode
 from shoppleyuser.utils import pretty_date
 from offer.utils import pretty_datetime
@@ -13,7 +16,11 @@ def customer_offer_tag(offer):
 		"biz_name" : offer.merchant.business_name,
 		"time_left": pretty_date(offer.expired_time, True),
 		"STATIC_URL": settings.STATIC_URL,
+		"gmap_src": offer.merchant.get_gmap_src(),
+		"id": offer.id,
+		"site": "http://" + Site.objects.get(id=3).domain       ,
 	}
+
 
 @register.inclusion_tag("offer/customer_offer_tag.html")
 def customer_offercode_tag(offercode):
@@ -24,6 +31,8 @@ def customer_offercode_tag(offercode):
                 "biz_name" : offer.merchant.business_name,
                 "time_left": pretty_date(offer.expired_time, True),
                 "STATIC_URL": settings.STATIC_URL,
+                "gmap_src": offer.merchant.get_gmap_src(),
+
 	}
 
 @register.inclusion_tag("offer/customer_offer_side_tag.html")

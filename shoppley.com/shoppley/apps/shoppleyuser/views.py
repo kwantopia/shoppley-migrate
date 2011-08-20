@@ -16,6 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.core.exceptions import ObjectDoesNotExist
 from emailconfirmation.models import EmailAddress
 
 if "mailer" in settings.INSTALLED_APPS:
@@ -30,7 +31,7 @@ from common.helpers import JSONHttpResponse
 
 from account.utils import get_default_redirect
 from account.forms import LoginForm
-from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm
+from shoppleyuser.forms import MerchantSignupForm, CustomerSignupForm,CustomerProfileEditForm , MerchantProfileEditForm,CustomerExtraInfoForm, MerchantExtraInfoForm,CustomerDataUploadForm
 from shoppleyuser.models import Customer, ShoppleyUser, Merchant, ZipCode, CustomerPhone, MerchantPhone, Location, ShoppleyPhone
 from django.views.decorators.csrf import csrf_exempt
 from socialregistration import signals
@@ -42,6 +43,21 @@ from django.contrib.gis.geos import fromstr
 SAMPLE_OFFERS = ["25% off your entree if you come in next 2 hours",
 			  "FREE orange juice with late lunch",
 			  "Buy one get second pair of pants 50% off"]
+
+@login_required
+def upload_customer_data(request):
+
+	if request.method == 'POST':
+		form = CustomerDataUploadForm(request.POST, request.FILES)
+		if form.is_valid():
+			merchant =request.user.shoppleyuser.merchant
+			data_file = request.FILES['data_file']
+			merchant.customer_data_file=data_file
+			merchant.save()
+			return HttpResponseRedirect(reverse("offer.views.offer_home"))
+	else:
+		form = CustomerDataUploadForm()
+	return render_to_response('customer_data_upload.html', {'form': form,})
 
 
 def fb_connect_init(request):
@@ -78,10 +94,10 @@ def fb_customer_extra_info(request, success_url =None):
 
 			return HttpResponseRedirect(reverse("fb_connect_success"))
 	else:
-		print "In view -", request.user
+		#print "In view -", request.user
 		form = CustomerExtraInfoForm(request= request)
 	fbuser= request.facebook.graph.get_object("me")
-	print fbuser['email'], fbuser['first_name'], fbuser['last_name']
+	#print fbuser['email'], fbuser['first_name'], fbuser['last_name']
 	
 	ctx = { "form": form, }
 	
@@ -146,7 +162,7 @@ def home(request,  template_name="front-page.html"):
 									},
 							context_instance=RequestContext(request))
 		except ShoppleyUser.DoesNotExist:
-			print "No shoppleyuser"
+			#print "No shoppleyuser"
 			return  render_to_response(template_name,{
                                         "lform":LoginForm,
 					"no_shoppleyuser_linked": "1",
@@ -199,9 +215,9 @@ def set_user_timezone(request):
 	#print "anything here"
 	#return HttpResponse("1")
 	if request.method=="POST":
-		print "hello"
+		#print "hello"
 		timezone = request.POST["tz"]
-		print "timezone" , timezone
+		#print "timezone" , timezone
 		try:
 			u= request.user.shoppleyuser
 			if u:
@@ -238,6 +254,8 @@ def set_user_latlon(request):
 def login(request, form_class=LoginForm, template_name="account/login.html",
 			success_url=None, associate_openid=False, openid_success_url=None,
 			url_required=False, extra_context=None):
+	redirect_to = request.REQUEST.get('next', '')
+	#print "redirect to: " , redirect_to
 	if extra_context is None:
 		extra_context = {}
 	if success_url is None:
@@ -271,7 +289,11 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 					success_url = openid_success_url or success_url
 #				print ">>>>>>>>>>>>>>>>>landing here??"
 				#return render_to_response("shoppleyuser/customer_landing_page.html", context_instance=RequestContext(request))
-				return HttpResponseRedirect(reverse("home"))
+				if not redirect_to:
+					
+					redirect_to= reverse("home")
+					#print "redirect=", redirect_to
+				return HttpResponseRedirect(redirect_to)
 				#return HttpResponseRedirect(success_url)
 				#return HttpResponseRedirect(reverse('home'))
 	else:
@@ -281,6 +303,7 @@ def login(request, form_class=LoginForm, template_name="account/login.html",
 	ctx = {
 		"form": form,
 		"url_required": url_required,
+		"redirect_to": redirect_to,
 	}
 	ctx.update(extra_context)
 	return render_to_response(template_name, ctx,
@@ -388,7 +411,14 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 		is_fb_connected = "1"
 	else:
 		is_fb_connected = "0"
-
+	if merchant.url: url=merchant.url
+	else: url = "Not given"
+	if merchant.yelp_url : yelp_url = merchant.yelp_url
+	else: yelp_url = "Not given"
+	if merchant.fb_url : fb_url = merchant.fb_url
+        else: fb_url = "Not given"
+	if merchant.twitter_url : twitter_url = merchant.twitter_url
+        else: twitter_url = "Not given"
 	return render_to_response(template, 
 				{
 					"username":username,
@@ -398,6 +428,10 @@ def merchant_profile(request, template="shoppleyuser/merchant_profile.html"):
 					"business_name":business_name,
 					"email":email,
 					"verified":verified,
+					"url": url,
+					"yelp_url": yelp_url,
+					"fb_url": fb_url,
+					"twitter_url": twitter_url,
 				},
 				context_instance=RequestContext(request))
 
@@ -442,34 +476,32 @@ def customer_profile_edit (request, form_class=CustomerProfileEditForm,
 def merchant_profile_edit (request, form_class=MerchantProfileEditForm,
 	template_name="shoppleyuser/merchant_profile_edit.html", success_url=None):
 
+	try:
+		user = request.user
+		merchant = user.shoppleyuser.merchant
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect(reverse("home"))
 	if request.method=="POST":
-		form = form_class(request.POST)
+		form = form_class(request.POST, request.FILES)
 		if form.is_valid():
-			#from django import forms
-
-			#try:
 			form.save(request.user.id)
-			#except forms.ValidationError, e:
-		#		print e
-		#		user = request.user
-		#		merchant = Merchant.objects.get(user__id=user.id)
-		
-#
-#				return render_to_response(template_name, {"form": form_class(initial = {'username': user.username, 
- #                                       'address_1': merchant.address_1,
-  #                                      'zip_code': merchant.zipcode.code,
-   #                                     'phone': merchant.phone, 
-    #                                    'business_name' :merchant.business_name,}), },context_instance=RequestContext(request))
+			if form.cleaned_data["banner"]:
+				image_file = request.FILES['banner']
+				if image_file:
+					merchant.banner= image_file
+					merchant.save()
 			return HttpResponseRedirect(reverse("merchant_profile"))
 	else: 
-		user = request.user
-		#merchant = Merchant.objects.get(user__id=user.id)
-		merchant = user.shoppleyuser.merchant
+		
 		form = form_class( initial = {'username': user.username, 
 					'address1': merchant.address_1,
 					'zip_code': merchant.zipcode.code,
 					'phone': merchant.phone, 
 					'business_name' :merchant.business_name,
+					'url': merchant.url,
+					'yelp_url': merchant.yelp_url,
+					'fb_url': merchant.fb_url,
+					'twitter_url': merchant.twitter_url,
 					'user_id': request.user.id,
 					'phones': ','.join([ i.number for i in merchant.merchantphone_set.all()])})
 
@@ -549,7 +581,7 @@ def customer_signup(request, form_class=CustomerSignupForm,
 					})
 				from shoppleyuser.utils import parse_phone_number,sms_notify
 				signup_msg =unicode(_("Welcome to Shoppley! Txt \"#help\" for all commands. Enjoy!"))
-				print signup_msg
+				#print signup_msg
 				try :
 					sms_notify(parse_phone_number(form.cleaned_data["phone"]),signup_msg)
 				except ValidationError:

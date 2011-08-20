@@ -1,38 +1,75 @@
 {% load i18n %}
-<div class="offer-block">
+<div class="offer-block" id="offer_{{ id }}">
 	<div class="clear">&nbsp;</div>
 				<div class="offer-type">
 					<!--	{% trans "food" %}-->
         </div>
-				<div class="offer-title">
-					{{ title|truncatewords:20 }}
-				</div>
-				<div class="offer-biz-name">
-					{{ biz_name }}
-				</div>
-				<div class="offer-location">
-					<p>
-						{{ location }}	
-					</p>
-				</div>
-				<div class="offer-time-left">
-                <p>
-					{{ time_left }}
-                </p>
-        </div>
-				<div class="offer-get-it">
-                <p>
-						{% trans "287421" %}
-                </p>
-        </div>
-				<div class="offer-misc">
-                <p>
+		<div class="offer-title">
+			<a href="{% url customer_offer id %}">{{ title|truncatewords:20 }} </a>
+		</div>
+		<div class="offer-biz-name">
+			{{ biz_name }}
+		</div>
+		<div class="offer-location">
+			<p>
+				{{ location }}	
+			</p>
+		</div>
+		<div class="offer-time-left">
+			 <p>
+				{{ time_left }}
+			</p>
+	        </div>
+		<div class="offer-get-it">
+                	<p>
+				{% trans "287421" %}
+	        	</p>
+		</div>
+
+
+		<div class="social-share">
+
+
+				<a name="fb_share" type="button_count" share_url="{{ site }}{% url customer_offer id %}" href="http://www.facebook.com/sharer.php?u={{ site }}{% url customer_offer id %}&amp;src=sp" style="text-decoration: none; "></a>
+				<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+			</br>
+				<script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+                                <a href="http://twitter.com/share?url={{ site }}{% url customer_offer id %}"
+                               
+                                data-via="shoppley" data-text="check out this amazing Shoppley deal:"
+                                data-related="shoppley"
+                                class="twitter-share-button">Tweet</a>
 		
-                </p>
-        </div>
+
+			</br>
+				<g:plusone href="{{ site }}{% url customer_offer id %}"></g:plusone>
+			
+		</div>
+
+		<div class="map-div" style="display:none;" id="map_{{ id }}">
+			{% ifnotequal gmap_src "-1" %}
+	        	<p>
+				<img class="map" src="{{ gmap_src }}">
+			</p>
+			{% endifnotequal %}
+        	</div>
+
+
 	<div class="clear">&nbsp;</div>
 
 </div>
 	<div class="clear">&nbsp;</div>
 
+<script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+</script>
 

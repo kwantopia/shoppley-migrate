@@ -767,6 +767,33 @@ class SimpleTest(TestCase):
 		msg16={"from":"615-000-0001", "text": "#yay %s" % o.offercode_set.filter(customer=c)[0].code}
 		cmd.test_handle(msg16)
 
+		print OfferCode.objects.values_list("rtype", flat=True)
+
+		user = User.objects.create(username="hello")
+		c = Customer.objects.create(zipcode= ZipCode.objects.all()[0], user=user)
+		p = CustomerPhone.objects.create(number="6170000099", customer=c)
+		print "before", c.verified_phone
+		msg17={"from": "%s" % c.customerphone.number, "text": "1"}
+		error = False
+		try:
+			cmd.test_handle(msg17)
+		except Exception:
+			error = True
+		self.assertEqual(error, True)
+		
+		self.assertEqual(CustomerPhone.objects.get(number="6170000099").customer.verified_phone, 0)
+		
+		user = User.objects.create(username="hello2")
+                c = Customer.objects.create(zipcode= ZipCode.objects.all()[0], user=user)
+                p = CustomerPhone.objects.create(number="6170000999", customer=c)
+                msg17={"from": "%s" % c.customerphone.number, "text": "0"}
+                error = False
+                try:
+                        cmd.test_handle(msg17)
+                except Exception:
+                        error = True
+                self.assertEqual(error, True)
+                self.failIfEqual(CustomerPhone.objects.get(number="6170000099").customer.verified_phone, 2)
 	def test_txt_messages(self):
 		cmd = Command()
 		cmd.DEBUG = True

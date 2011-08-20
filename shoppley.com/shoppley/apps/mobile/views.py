@@ -24,7 +24,7 @@ else:
 from common.helpers import JSONHttpResponse, JSHttpResponse
 from common.customer import customer_authenticate, customer_register, customer_iwant, customer_get_current_forward_offers
 from shoppleyuser.utils import sms_notify, parse_phone_number, pretty_date
-from shoppleyuser.models import ZipCode, Merchant, Customer
+from shoppleyuser.models import ZipCode, Merchant, Customer, ShoppleyPhone, MerchantPhone, CustomerPhone
 from offer.models import Offer, OfferCode
 
 # for generating random password
@@ -396,6 +396,7 @@ def register_merchant(request):
 		c = Merchant(user=u, zipcode=zipcode_obj, phone=phone, business_name=business_name)
 		# TODO: handle same business name? Possibly no need to
 		c.save()
+		MerchantPhone.objects.create(number=phone, merchant=c)
 
 		# send a text message and e-mail with random password
 		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password and you will be given free points to start sending Shoppley offers.") %{ "password": rand_passwd }

@@ -13,10 +13,14 @@ def user_authenticate(request, username, password):
 
 	if user is None:
 
-		su = ShoppleyUser.objects.filter(phone=username)
-		if su.count() >0 :
+		sp = ShoppleyPhone.objects.filter(number=username)
+		if sp.count() >0 :
+			if sp.is_customerphone():
+				su = sp[0].customer
+			else:
+				su = sp[0].merchant	
+			user = authenticate(username=su.user.username, password=password)
 
-			user = authenticate(username=su[0].username, password=password)
 	if user is None:
 		emails = EmailAddress.objects.filter(email=username)
 		print emails
@@ -80,6 +84,7 @@ def verify_phone(shoppleyUser, isVerify):
 		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_NO_SUCCESS"], {})
 		
 	shoppleyUser.save()
+	print "in verify_phone", shoppleyUser.verified_phone
 	if shoppleyUser.is_merchant():
 		sms_notify(shoppleyUser.phone, msg)
 	else:

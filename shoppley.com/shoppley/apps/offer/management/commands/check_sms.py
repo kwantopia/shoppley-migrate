@@ -231,7 +231,7 @@ class Command(NoArgsCommand):
 			if text=="1":
 				verify_phone(su, True)
 			elif text=="0":
-				verify_phone(su. False)
+				verify_phone(su, False)
 			else:
 				msg = t.render(templates["CUSTOMER"]["VERIFY_PHONE"],{})
 				self.notify(from_number, msg)

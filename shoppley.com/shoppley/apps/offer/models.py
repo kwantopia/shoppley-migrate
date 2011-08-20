@@ -40,7 +40,7 @@ class Offer(logicaldelete.models.Model):
 	description		= models.TextField(blank=True)
 	percentage		= models.IntegerField(verbose_name="Percent off (%)", default=0)
 	dollar_off		= models.FloatField(verbose_name="Dollar off ($)", default=0)
-	
+	offer_value			= models.FloatField(verbose_name="Offer Value ($)", default =0)	
 	time_stamp		= models.DateTimeField()
 	starting_time	= models.DateTimeField(blank=True, null=True)
 	duration		= models.IntegerField(default=90)
@@ -202,18 +202,24 @@ class Offer(logicaldelete.models.Model):
 		)
 		return track_code
 
-	def gen_offer_code(self, customer):
+	def gen_offer_code(self, customer, rtype = 1):
 		if self.offercode_set.filter(customer=customer).exists():
 			return
 		gen_code = gen_offer_code().lower()
 		while self.offercode_set.filter(code__iexact=gen_code):
 			gen_code = gen_offer_code()
+		
+		if rtype != 4 and self.redistribute_processing == True:
+			rtype = 2
+		
 		self.offercode_set.create (
 			customer=customer,
 			code=gen_code,
 			time_stamp=self.time_stamp,
-			expiration_time=self.starting_time+timedelta(minutes=self.duration)
+			expiration_time=self.starting_time+timedelta(minutes=self.duration),
+			rtype = rtype,
 		)
+
 	
 	def gen_offer_codes(self, customers):
 		"""
@@ -223,6 +229,8 @@ class Offer(logicaldelete.models.Model):
 		count=0
 		for customer in customers:
 			if customer.is_taking_offers():
+				if self.offercode_set.filter(customer = customer).exists():
+					continue
 				self.gen_offer_code(customer)
 				count = count +1
 				#print count, customer
@@ -253,7 +261,8 @@ class Offer(logicaldelete.models.Model):
 					code = gen_code,
 					forwarder=forwarder,
 					time_stamp=datetime.now(),
-					expiration_time=original_code.expiration_time)
+					expiration_time=original_code.expiration_time,
+					rtype = 3)
 			o.save()
 			forwarder.customer_friends.add(p.customer)
 			return o, None # for existing customer
@@ -281,7 +290,8 @@ class Offer(logicaldelete.models.Model):
 				code = gen_code,
 				forwarder=forwarder,
 				time_stamp=datetime.now(),
-				expiration_time=original_code.expiration_time)
+				expiration_time=original_code.expiration_time,
+				rtype = 3)
 		o.save()
 			
 		forwarder.customer_friends.add(friend)
@@ -346,6 +356,14 @@ class OfferCode(models.Model):
 	feedback		= models.TextField()
 	# 1 through 5, 0 is unrated
 	rating			= models.IntegerField(default=0)
+
+	TYPES= (
+		(1, "Distributed"),
+		(2, "Reditributed"),
+		(3, "Forwarded"),
+		(4, "Manual"),
+		)
+	rtype		 	= models.IntegerField(default=1, choices = TYPES, null=True, blank=True)
 
 	def is_valid(self):
 		return datetime.now() < time_stamp + timedelta(minutes=self.offer.duration)

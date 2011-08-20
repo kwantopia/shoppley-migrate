@@ -17,6 +17,14 @@ sms_logger = logging.getLogger("gvoice_validation")
 
 
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
+def handle_upload_file(f, name):
+	file_dir = FILE_ROOT + "/upload/"+ name
+	dest = open(file_dir, 'wb+')
+	for chunk in f.chunks():
+		dest.write(chunk)
+	dest.close()
+
+
 def get_lat_long(location):
 	key = settings.GOOGLE_API_KEY
 	output= "csv"

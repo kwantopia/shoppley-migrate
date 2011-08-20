@@ -1,4 +1,4 @@
-{% extends "site_base.html" %}
+{% extends "offer/offer_base.html" %}
 
 {% load i18n %}
 {% load uni_form_tags %}
@@ -11,22 +11,42 @@
                         <div class="customer-stats-box main-box">
 				<h3>Your offer summary for past 7 days</h3>
 				 <div class="customer-stats">
+
+
                                         <p><span class="used-count">18</span>{% trans " used " %}
                                         <span class="expired-count">44</span>{% trans " expired " %}
                                         <span class="recvd-count">16</span>{% trans " recvd " %}
                                         <span class="total-pt">60</span>{% trans " pt total" %}
+
                                         </p>
                                 </div>
                         </div>
 			<div class="clear">&nbsp;</div>			
 			<div class="current-offers-box main-box">
-				{% if other_active_offers %}
+				{% if other_active_offers.object_list %}
 					
-					{% for offer in other_active_offers %}
+					{% for offer in other_active_offers.object_list %}
 						 
 						{% customer_offer_tag offer %}
 					{% endfor %}
 				{% endif %}
+
+				
+				<div class="pagination">
+				    <span class="step-links">
+				        {% if other_active_offers.has_previous %}
+				            <a href="?page={{ other_active_offers.previous_page_number }}">previous</a>
+				        {% endif %}
+
+				        <span class="current">
+				            Page {{ other_active_offers.number }} of {{ other_active_offers.paginator.num_pages }}.
+				        </span>
+
+				        {% if other_active_offers.has_next %}
+				            <a href="?page={{ other_active_offers.next_page_number }}">next</a>
+				        {% endif %}
+				    </span>
+				</div>
 			</div>
        </div>
 	
@@ -56,3 +76,18 @@
 	<div class="clear">&nbsp;</div>
 
 {% endblock %}
+{% block extra_scripts %}
+
+
+
+        <script type="text/javascript">
+	
+                $(function() {
+
+
+
+
+                });
+        </script>
+{% endblock %}
+

@@ -16,7 +16,7 @@
     	<!--div class="clear">&nbsp;</div-->
     	<div class="span-8 last">
 			<h2>{% trans "Profile" %}</h2>
-			<form class="merchant-profile-edit-form uniForm" id="mprofile_edit_form" method="post" action="{% url merchant_profile_edit %}" style="border_style:none;">
+			<form class="merchant-profile-edit-form uniForm" id="mprofile_edit_form" enctype="multipart/form-data" method="post" action="{% url merchant_profile_edit %}" style="border_style:none;">
 					{% csrf_token %}
 			    <fieldset class="inlineLabels">
 			        {{ form|as_uni_form }}

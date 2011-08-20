@@ -13,9 +13,6 @@ import random
 class Location(models.Model):
 	location = models.PointField( )
 	objects = models.GeoManager()
-#				name2= models.CharField(max_length=5)
-#				name = models.CharField(max_length=3)
-#				users = models.ManyToManyField(User,related_name="user_locations")
 
 class Country(models.Model):
 	name			= models.CharField(max_length=64)
@@ -67,7 +64,6 @@ class ShoppleyUser(models.Model):
 	address_1		= models.CharField(max_length=64, blank=True)
 	address_2		= models.CharField(max_length=64, blank=True)
 	zipcode			= models.ForeignKey(ZipCode, null=True, blank=True, on_delete=models.SET_NULL) # current zipcode
-	#zipcode												= models.ForeignKey(ZipCode, blank=True)
 	# this phone should be used for merchants only ( this is the business phone number )
 	# To support multiple numbers, create a ShoppleyPhone object for each manager's phone
 	# Dont' use this for customers; instead create a ShoppleyPhone object for each customer. (shoppleyuser.phone will never be queried)
@@ -119,6 +115,12 @@ class ShoppleyUser(models.Model):
 		else:
 			return "%s (%s)" % (self.merchant.business_name, self.user.username)
 
+	def get_gmap_src (self, sizex= 256, sizey = 256):
+		if self.location:
+			return "http://maps.google.com/maps/api/staticmap?center=%(lat)s,%(lon)s&zoom=14&size=%(x)dx%(y)d&maptype=roadmap&markers=size:mid|color:red|%(lat)s,%(lon)s&sensor=false" % { "lat": self.location.location.y, "lon": self.location.location.x , "x": sizex, "y":sizey, }
+		else:
+			return "-1"
+
 	def get_full_address(self):
 		return self.address_1 + " "+ self.zipcode.city.name + " " + self.zipcode.city.region.name + " " + self.zipcode.code
 
@@ -151,9 +153,12 @@ class Merchant(ShoppleyUser):
 	business_name	= models.CharField(max_length=64, blank=True)
 	admin			= models.CharField(max_length=64, blank=True)
 	banner			= ImageField(upload_to="banners/", blank=True)
-	url				= models.URLField(null=True, blank=True)
+	url			= models.URLField(null=True, blank=True)
+	yelp_url		= models.URLField(null=True, blank=True)
+	fb_url			= models.URLField(null=True, blank=True)
+	twitter_url		= models.URLField(null=True, blank=True)
+	customer_data_file	= models.FileField(null=True, blank=True, upload_to="data")	
 
-	
 	def save(self, *args, **kwargs):
 		if not self.pk:
 			self.balance = settings.INIT_MERCHANT_BALANCE
@@ -162,8 +167,13 @@ class Merchant(ShoppleyUser):
 			ZipCodeChange.objects.create(user=self,time_stamp=datetime.now(),zipcode=self.zipcode)
 
 	def __unicode__(self):
-#		return "%s (%s %s)" % (self.business_name, self.user.username,self.phone)
-		return "%s, %s [%s]" % (self.business_name, self.print_address(), self.phone)
+		return "%s (%s [%s])" % (self.business_name, self.print_address(), self.phone)
+
+	def get_data_file(self):
+		if self.customer_data_file:
+			return self.customer_data_file.url
+		else:
+			return None
 
 	def get_banner(self):
 		if self.banner:
@@ -174,16 +184,10 @@ class Merchant(ShoppleyUser):
 	# return a list of pk's of customers within x miles from the merchant's lat/lon
 	def get_customers_within_miles(self,x=5):
 		from geopy.distance import distance as geopy_distance
-		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
-		#for i in Customer.objects.all():
-			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
 		return [ i.pk for i in Customer.objects.all() if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 
 	def get_active_customers_miles(self, x=5, filter_pks=[]):
 		from geopy.distance import distance as geopy_distance
-		#print self.address_1 + " " + self.zipcode.code, self.location.location.x, self.location.location.y
-		#for i in Customer.objects.all():
-			#print i , i.location.location.x, i.location.location.y, geopy_distance(i.location.location,self.location.location).mi
 		if len(filter_pks) > 0:
 			return [ i.pk for i in Customer.objects.exclude(pk__in=filter_pks).filter(verified=True, active=True, offer_count=0) if i.location and self.location and geopy_distance(i.location.location,self.location.location).mi<=x]
 		else:
@@ -336,15 +340,12 @@ class ShoppleyPhone(models.Model):
 # phone number used by shoppleyuser to start offers ...
 class MerchantPhone (ShoppleyPhone):
 	merchant		= models.ForeignKey(Merchant)
-#	number			=models.CharField(max_length=20, blank=True)
 
 	def __unicode__(self):
 		return "%s" % self.number
 
 class CustomerPhone(ShoppleyPhone):
 	customer		= models.OneToOneField(Customer)
-#	number			= models.CharField(max_length=20, blank=True)
-
 
 	def __unicode__(self):
 		return "%s" % self.number

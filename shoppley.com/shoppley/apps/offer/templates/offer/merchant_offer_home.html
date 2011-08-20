@@ -1,4 +1,4 @@
-{% extends "site_base.html" %}
+{% extends "offer/offer_base.html" %}
 
 {% load i18n %}
 {% load uni_form_tags %}
@@ -32,7 +32,6 @@
 
         <div class="span-7 last">
 
-
 			<div class="current-offers-box main-box">
 				<h3>{% trans "Current offers" %}</h3>
 				{% if current_offers %}
@@ -57,5 +56,10 @@
 
         <div class="clear">&nbsp;</div>
 
+{% endblock %}
+{% block extra_scripts %}
+
+        <script type="text/javascript">
+        </script>
 {% endblock %}
 
