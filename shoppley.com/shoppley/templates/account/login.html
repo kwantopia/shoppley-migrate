@@ -26,7 +26,11 @@
     
 		<div class="span-24 last">
 			<div class="span-7 last">
+				{% if redirect_to %}
+				<form class="login uniForm" method="POST" action="{% url acct_login %}?next={{ redirect_to }}">
+				{% else %}
 				<form class="login uniForm" method="POST" action="{% url acct_login %}">
+				{% endif %}
 				{% csrf_token %}
 						<fieldset class="inlineLabels">
 								<div class="form_block">

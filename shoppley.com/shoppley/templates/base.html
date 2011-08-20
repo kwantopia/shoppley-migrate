@@ -146,6 +146,9 @@
   {% block extra_scripts_base %}
     <script  type="text/javascript" src="{{ STATIC_URL }}js/facebox.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/detect_timezone.js"></script>
+
+</script>
+
 <script type="text/javascript">
 $("body").ready(function() {
         var timezone = jstz.determine_timezone();
@@ -153,7 +156,8 @@ $("body").ready(function() {
 
         $.post("{% url set_user_timezone %}", {
         "tz": timezone.timezone.olson_tz
-        });
+	});
+
 });
 </script>    
     {% block extra_scripts %}
