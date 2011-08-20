@@ -42,7 +42,7 @@ class AdminStartOfferForm(forms.Form):
 
 	offer_radio     = forms.ChoiceField(choices = OFFER_TYPE, label = _("Offer Type"), required = True, widget = forms.RadioSelect)
 
-	value           = forms.CharField(label=_("Value"), max_length = 10, required = True)
+	value           = forms.CharField(label=_("Minimum purchase amount ($)"), max_length = 10, required = True)
 
 	title           = forms.CharField(label=_("What is it?"), max_length=80, widget=forms.TextInput())
 	#date            = forms.DateField(required=True, label=_("When"), widget=SelectDateWidget(years=[y for y in range(2011,2020)]))
@@ -53,18 +53,18 @@ class AdminStartOfferForm(forms.Form):
 	max_offers      = forms.IntegerField(label=_("Max quantity"), initial= "20")
 
 
-	duration        = forms.IntegerField(label=_("Duration"), initial="120")
+	duration        = forms.IntegerField(label=_("Duration (minutes)"), initial="120")
 
 
 class StartOfferForm(forms.Form):
-	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers.<br> Examples: 50% off any drink; $5 off any appetizer+entree"))
+	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers.<br>Examples:<br>FREE juice with $15 or above entree<br>$5 off any appetizer+entree<br>20% off entrees next two hours"))
 	value		= forms.CharField(
-				help_text=_("Enter the value of this offer before any discount."), 
-				label=_("Value ($)"), max_length = 10, required = True)
+				help_text=_("Keep it 0 if there's no minimum purchase requirement."), 
+				label=_("Minimum purchase amount ($)"), max_length = 10, required = True)
 
 	discount 	= InputAndChoiceField()
-	date 		= forms.DateField(required=True, label=_("Start date"), help_text=_("When do you want to start this offer?"))
-	time		= forms.TimeField(required=True, label=_("Start time"), widget = SelectTimeWidget, help_text=_("At what time?"))
+	date 		= forms.DateField(required=True, label=_("Start date"), help_text=_("What date do you want to start this offer?"))
+	time		= forms.TimeField(required=True, label=_("Start time"), widget = SelectTimeWidget, help_text=_("What time do you want to start this offer?"))
 	#now 		= forms.BooleanField(label=_("now?"))
 	description	= forms.CharField(label=_("Description"), widget=forms.widgets.Textarea(), help_text=_("Enter a long description about this offer"))
 
