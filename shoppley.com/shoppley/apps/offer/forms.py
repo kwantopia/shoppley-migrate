@@ -75,6 +75,7 @@ class StartOfferForm(forms.Form):
 					help_text=_("How long do you want this offer to last"))
 
 	def clean_time (self):
+
 		date_obj= self.cleaned_data["date"]		
 		time = self.cleaned_data["time"]
 		time_stamp= datetime.combine(date_obj, time)
@@ -92,8 +93,9 @@ class StartOfferForm(forms.Form):
 			if float(discount)>100:
 				raise forms.ValidationError("Sorry, percentage discount must be between 0 to 100")
 		elif dtype == '$':
-			if float(discount) > float(self.cleaned_data["value"]):
-				raise forms.ValidationError("Sorry, dollar discount must be between 0 to the value of the offer")
+			if "value" in self.cleaned_data:
+				if float(discount) > float(self.cleaned_data["value"]):
+					raise forms.ValidationError("Sorry, dollar discount must be between 0 to the value of the offer")
 		return self.cleaned_data["discount"]
 		#raise forms.ValidationError("hello")
 

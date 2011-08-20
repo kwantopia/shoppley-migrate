@@ -10,7 +10,8 @@
 
 {% block body %}
 <div class="offer-form">
-	<div class="span-17">
+	
+		<h3>Start an offer now!</h3>
         	<form class="offer-start-form uniform" id="offer_start_form" method="post" action="{% url merchant_start_offer %}" >{% csrf_token %}
 
 			<fieldset class="inlineLabels">
@@ -22,15 +23,6 @@
 		</form>
 	</div>
 
-</div>
-<div class="span-7 last">
-	<div class="offer-preview">
-		
-		<p id="txt-description"></p>
-		<p id="txt-offercode"></p>
-		<p id="txt-merchant"></p>
-	</div>
-</div>
  <div class="clear" style="height: 40px;">&nbsp;</div>
 
         <div class="clear">&nbsp;</div>

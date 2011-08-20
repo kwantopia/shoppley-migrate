@@ -308,7 +308,7 @@ def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
 			txt_preview =t.render(templates["CUSTOMER"]["INFO"],
                                         {
                                                 "offercode": "xxxx",
-                                                "description": description,
+                                                "description":title,
                                                 "merchant": merchant,
                                                 "expiration": expiration,
                                         })
@@ -326,7 +326,8 @@ def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
 						},context_instance=RequestContext(request))
 	else:
 
-		form = StartOfferForm()
+		form = StartOfferForm(initial={"value": '0', 
+						"date": datetime.today()})
 	return render_to_response(template,{"form": form,}, 
 				context_instance=RequestContext(request))
 

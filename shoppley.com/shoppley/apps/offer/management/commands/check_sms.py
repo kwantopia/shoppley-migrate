@@ -124,7 +124,7 @@ class Command(NoArgsCommand):
 		return t.render(templates["CUSTOMER"]["INFO"],
 					{
 						"offercode": offercode.code,
-						"description": offercode.offer.description,
+						"description": offercode.offer.title,
 						"merchant": offercode.offer.merchant,
 						"expiration": pretty_date(offercode.expiration_time, True),
 					})
