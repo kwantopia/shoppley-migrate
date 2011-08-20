@@ -297,7 +297,10 @@ def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
 			
 			elif discount_type == '$':
 				dollar_off = discount
-				percentage = int(100.0*discount / value)
+				if value ==0:
+					percentage = 0
+				else:
+					percentage = int(100.0*discount / value)
 			if discount_type != 'custom':
 				discount_str = ''.join(discount_obj)
 			expiration = time_stamp + timedelta(minutes=duration)
