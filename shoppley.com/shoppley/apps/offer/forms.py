@@ -57,7 +57,7 @@ class AdminStartOfferForm(forms.Form):
 
 
 class StartOfferForm(forms.Form):
-	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers."))
+	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers. Examples: 50% off any drink; $5 off any appitizer+entree"))
 	value		= forms.CharField(
 				help_text=_("Enter the value of this offer before any discount."), 
 				label=_("Value ($)"), max_length = 10, required = True)
