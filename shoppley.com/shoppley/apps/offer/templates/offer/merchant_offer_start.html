@@ -1,0 +1,45 @@
+{% extends "offer/offer_base.html" %}
+{% load i18n %}
+
+
+{% load uni_form_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+
+
+
+{% block body %}
+<div class="offer-form">
+	<div class="span-17">
+        	<form class="offer-start-form uniform" id="offer_start_form" method="post" action="{% url merchant_start_offer %}" >{% csrf_token %}
+
+			<fieldset class="inlineLabels">
+                                        {{ form|as_uni_form }}
+                                        <div class="form_blick">
+                                                <input type="submit" value="{% trans "Start Offer &raquo;" %}" />
+                                        </div>
+                        </fieldset>
+		</form>
+	</div>
+
+</div>
+<div class="span-7 last">
+	<div class="offer-preview">
+		
+		<p id="txt-description"></p>
+		<p id="txt-offercode"></p>
+		<p id="txt-merchant"></p>
+	</div>
+</div>
+ <div class="clear" style="height: 40px;">&nbsp;</div>
+
+        <div class="clear">&nbsp;</div>
+
+
+{% endblock %}
+{% block extra_scripts %}
+
+        <script type="text/javascript">
+		 $("#id_date").datepicker({minDate:0});
+        </script>
+{% endblock %}

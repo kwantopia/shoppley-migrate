@@ -1,0 +1,36 @@
+{% extends "offer/offer_base.html" %}
+{% load i18n %}
+
+
+{% load uni_form_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+
+
+
+{% block body %}
+
+	  
+<div class="search-form">
+
+	<div class="span-17">
+        	<form class="search-merchant-form" id="search_merchant_form" method="post" action="{% url search_merchant %}" >{% csrf_token %}
+
+			<fieldset class="inlineLabels">
+                                        {{ form|as_uni_form }}
+                                        <div class="form_blick">
+                                                <input type="submit" value="{% trans "Find businesss &raquo;" %}" />
+                                        </div>
+                        </fieldset>
+		
+
+		</form>
+	</div>
+
+</div>
+{% endblock %}
+{% block extra_scripts %}
+
+        <script type="text/javascript">
+        </script>
+{% endblock %}

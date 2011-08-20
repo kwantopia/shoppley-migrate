@@ -1,0 +1,52 @@
+{% extends "offer/offer_base.html" %}
+{% load i18n %}
+
+
+{% load uni_form_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+
+
+
+{% block body %}
+
+	  
+<div class="confirmation">
+	<div class="span-17">
+		<h3>Thank you! Your offer will reach at most {{ max_offers }} customers.</h3>	
+		<p>Business: {{ business_name }}</p>
+		<p>Address: {{ address }}</p>
+		<p>Offer: {{ offer }} </p>
+		<p>Value: {{ value }} </p>
+		<p>Discount: {{ discount }} </p>
+		<p>Description: {{ description }} </p>
+		<p>Starts: {{ starting_time }} </p>
+		
+		<p>Expiring: {{ expiration }}</p>
+		<a href="{% url home %}"><input type="submit" value="{% trans "Return home" %}"/></a>
+		<!--div id="confirm_buttons" >
+		<input id="edit_button" type="submit" value="{% trans "Edit" %}" />
+		<input id="cancel_button" type="submit" value="{% trans "Cancel" %}" />
+		<input id="confirm_button" type="submit" value="{% trans "Confirm &raquo;" %}" />
+		</div-->
+	</div>
+	<div class="span-7 last">
+      	  <div class="offer-preview">
+                <h3>Offer Preview</h3>
+		<p>{{ txt_preview }}</p>
+          </div>
+        </div>
+</div>
+</div>
+        <div class="clear" style="height: 40px;">&nbsp;</div>
+
+        <div class="clear">&nbsp;</div>
+
+
+
+{% endblock %}
+{% block extra_scripts %}
+
+        <script type="text/javascript">
+        </script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "offer/offer_base.html" %}
+{% load i18n %}
+
+
+{% load uni_form_tags %}
+{% block head_title %}{% trans "Shoppley" %}{% endblock %}
+
+
+
+
+{% block body %}
+
+	  
+<div class="form">
+
+	<div class="span-17">
+		<p> Starting an offer for</p>
+		<h3>{{ business_name }}</h3>
+		<p>{{ address }}</p>
+        	<form class="admin-offer-start-form" id="admin_offer_start_form" method="post" action="{% url admin_start_offer  id %}" >{% csrf_token %}
+
+			<fieldset class="inlineLabels">
+                                        {{ form|as_uni_form }}
+                                        <div class="form_blick">
+                                                <input type="submit" value="{% trans "Start Offer &raquo;" %}" />
+                                        </div>
+                        </fieldset>
+
+		</form>
+	</div>
+
+</div>
+
+
+{% endblock %}
+{% block extra_scripts %}
+
+        <script type="text/javascript">
+
+		$("#id_date").datepicker({minDate:0});
+
+        </script>
+{% endblock %}
