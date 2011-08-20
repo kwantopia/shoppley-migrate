@@ -46,7 +46,7 @@ class AdminStartOfferForm(forms.Form):
 
 	title           = forms.CharField(label=_("What is it?"), max_length=80, widget=forms.TextInput())
 	#date            = forms.DateField(required=True, label=_("When"), widget=SelectDateWidget(years=[y for y in range(2011,2020)]))
-	date		= forms.DateField(required=True, label=_("When"))
+	date		= forms.DateField(required=True, label=_("Start date"))
 	now             = forms.BooleanField(label=_("now?"))
 	description     = forms.CharField(label=_("Description"), widget=forms.widgets.Textarea())
 
@@ -57,14 +57,14 @@ class AdminStartOfferForm(forms.Form):
 
 
 class StartOfferForm(forms.Form):
-	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers. Examples: 50% off any drink; $5 off any appitizer+entree"))
+	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers.<br> Examples: 50% off any drink; $5 off any appetizer+entree"))
 	value		= forms.CharField(
 				help_text=_("Enter the value of this offer before any discount."), 
 				label=_("Value ($)"), max_length = 10, required = True)
 
 	discount 	= InputAndChoiceField()
-	date 		= forms.DateField(required=True, label=_("When"), help_text=_("When do you want to start this offer?"))
-	time		= forms.TimeField(required=True, label=_("What time"), widget = SelectTimeWidget, help_text=_("At what time?"))
+	date 		= forms.DateField(required=True, label=_("Start date"), help_text=_("When do you want to start this offer?"))
+	time		= forms.TimeField(required=True, label=_("Start time"), widget = SelectTimeWidget, help_text=_("At what time?"))
 	#now 		= forms.BooleanField(label=_("now?"))
 	description	= forms.CharField(label=_("Description"), widget=forms.widgets.Textarea(), help_text=_("Enter a long description about this offer"))
 

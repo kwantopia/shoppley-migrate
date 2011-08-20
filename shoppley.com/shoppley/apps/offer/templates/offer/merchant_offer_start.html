@@ -32,7 +32,20 @@
 {% endblock %}
 {% block extra_scripts %}
 
+		<style type="text/css">
+			.formHint {
+				display:none;
+			}
+		</style>
         <script type="text/javascript">
+		$(function() {
 		 $("#id_date").datepicker({minDate:0});
+		 $('#id_title').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").text(); }});
+		 $('#id_description').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").text(); }});
+		 $('#id_max_offers').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").text(); }});
+		 $('#id_discount_1').tipsy({html: true, trigger: 'focus', gravity: 'w', fallback: 'For FREE offers select custom option'});
+		 $('#id_duration').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").text(); }});
+		});
         </script>
+
 {% endblock %}
