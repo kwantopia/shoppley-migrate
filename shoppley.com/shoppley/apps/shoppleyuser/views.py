@@ -90,6 +90,8 @@ def fb_login (request):
 
 
 def fb_customer_extra_info(request, success_url =None):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect(reverse('home'))
 	try:
 		fb = request.facebook.graph
 		if request.method=="POST":
