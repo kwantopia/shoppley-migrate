@@ -62,6 +62,8 @@ def upload_customer_data(request):
 
 def fb_connect_init(request):
 	user = request.user
+	if user.is_anonymous():
+		return HttpResponseRedirect(reverse("home"))
 	try:
 		su = user.shoppleyuser
 		return HttpResponseRedirect(reverse("fb_login"))
@@ -88,22 +90,25 @@ def fb_login (request):
 
 
 def fb_customer_extra_info(request, success_url =None):
-	if request.method=="POST":
-		form = CustomerExtraInfoForm(request.POST,request=request)
-		if form.is_valid():
-			form.save()
+	try:
+		fb = request.facebook.graph
+		if request.method=="POST":
+			form = CustomerExtraInfoForm(request.POST,request=request)
+			if form.is_valid():
+				form.save()
 
-			return HttpResponseRedirect(reverse("fb_connect_success"))
-	else:
-		#print "In view -", request.user
-		form = CustomerExtraInfoForm(request= request)
-	fbuser= request.facebook.graph.get_object("me")
-	#print fbuser['email'], fbuser['first_name'], fbuser['last_name']
+				return HttpResponseRedirect(reverse("fb_connect_success"))
+		else:
+			#print "In view -", request.user
+			form = CustomerExtraInfoForm(request= request)
+		fbuser= request.facebook.graph.get_object("me")
+		#print fbuser['email'], fbuser['first_name'], fbuser['last_name']
 	
-	ctx = { "form": form, }
+		ctx = { "form": form, }
 	
-	return render_to_response("shoppleyuser/cfb_extra_info_html",ctx , context_instance=RequestContext(request))
-
+		return render_to_response("shoppleyuser/cfb_extra_info_html",ctx , context_instance=RequestContext(request))
+	except AttributeError:
+		return HttpResponseRedirect(reverse("home"))
 def fb_merchant_extra_info(request, success_url =None):
         if request.method=="POST":
                 form = MerchantExtraInfoForm(request.POST,request=request)
@@ -211,7 +216,6 @@ def offer_frequency_set(request, template_name="shoppleyuser/offer_frequency_set
 		pass
 
 @login_required
-@csrf_exempt
 def set_user_timezone(request):
 	#print "anything here"
 	#return HttpResponse("1")
