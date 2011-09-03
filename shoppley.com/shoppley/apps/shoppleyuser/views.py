@@ -112,17 +112,23 @@ def fb_customer_extra_info(request, success_url =None):
 	except AttributeError:
 		return HttpResponseRedirect(reverse("home"))
 def fb_merchant_extra_info(request, success_url =None):
-        if request.method=="POST":
-                form = MerchantExtraInfoForm(request.POST,request=request)
-                if form.is_valid():
-                        form.save()
-                        return HttpResponseRedirect(reverse("fb_connect_success"))
-        else:
+	if request.user.is_anonymous():
+		return HttpResponseRedirect(reverse('home'))
+	try:
+		fb = request.facebook.graph
+	        if request.method=="POST":
+	                form = MerchantExtraInfoForm(request.POST,request=request)
+	                if form.is_valid():
+        	                form.save()
+                	        return HttpResponseRedirect(reverse("fb_connect_success"))
+	        else:
 		
-                form = MerchantExtraInfoForm(request= request)
-        ctx = { "form": form, }
-
-        return render_to_response("shoppleyuser/mfb_extra_info_html",ctx , context_instance=RequestContext(request))
+	                form = MerchantExtraInfoForm(request= request)
+	        ctx = { "form": form, }
+	
+        	return render_to_response("shoppleyuser/mfb_extra_info_html",ctx , context_instance=RequestContext(request))
+	except AttributeError:
+		return HttpResponseRedirect(reverse('home'))
 
 def fb_connect_success(request):
 	friends = request.facebook.graph.get_connections("me", "friends")

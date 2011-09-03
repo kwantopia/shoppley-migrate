@@ -362,7 +362,7 @@ class CustomerExtraInfoForm(forms.Form):
 		phone = parse_phone_number(self.cleaned_data["phone"])
 		t = TxtTemplates()
 		msg = t.render(TxtTemplates.templates["CUSTOMER"]["VERIFY_PHONE"], {})
-		sms_notify(phone, msg)
+		#sms_notify(phone, msg)
 
 		code = self.cleaned_data["zip_code"]
 		zipcode = ZipCode.objects.get(code=code)
