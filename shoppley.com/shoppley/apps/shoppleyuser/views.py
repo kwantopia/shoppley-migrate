@@ -72,7 +72,8 @@ def fb_connect_init(request):
 		if fbuser['email']:
 			try:
 				EmailAddress.objects.get(email=fbuser['email'])
-				request.user.delete()
+				user=request.user
+				user.delete()
 			
 				return HttpResponseRedirect(reverse("home_fb_fail")) ## user already have an account with us with the email.
 			except EmailAddress.DoesNotExist:
