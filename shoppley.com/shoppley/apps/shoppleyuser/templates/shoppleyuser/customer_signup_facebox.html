@@ -2,7 +2,6 @@
 
 {% load i18n %}
 {% load uni_form_tags %}
-{% load facebook_tags %}
 
 
 <head>
@@ -15,14 +14,17 @@
 			<div class="signup-header customer">
 				Are you looking for <br/>
 				<span class="highlight">incredible deals?</span>  <br/>
-				Receive discount offer txts from your local stores on your cellphone.
-				You're only a few steps away!
+				Receive discount offer txts from your local stores on your cellphone. <br/>
+				You are only a few steps away from exclusive offers!
+
 				</div>
 				<div>&nbsp;</div>
 				<div class="fb-connect" id="fb-connect-customer">
+
 				Sign up by connecting your Facebook account <br/>	
+				{% load facebook_tags %}
 				{% facebook_button %}
-			       {% facebook_js %}
+				{% facebook_js %}
 	
 				<!--img src="http://placekitten.com/194/25"/-->
 				</div>

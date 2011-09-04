@@ -1,6 +1,6 @@
 {% load i18n %}
-{% load facebook_tags %}
 
+{% load facebook_tags %}
 {% load uni_form_tags %}
 {% facebook_js %}
 	  
@@ -18,7 +18,7 @@
 			 <a href="{% url acct_passwd_reset %}">{% trans "Forgot your password?" %}</a>
 	                    <input type="submit" value="{% trans "Log In &raquo;" %}" /> 
 
-								
+
 		{% endif %}
 	</div>	
 	</fieldset>
@@ -26,6 +26,6 @@
 	
 {% if lform %}
 	<div id="fb_login_button">
-	<!--	{% trans "or" %} -->{% facebook_button "../../../../site_media/static/images/fb_login.png" %}
+<!--		{% trans "or" %}--> {% facebook_button "http://media.shoppley.com/site_media/static/images/fb_login.png" %}
 	</div>
 {% endif %}

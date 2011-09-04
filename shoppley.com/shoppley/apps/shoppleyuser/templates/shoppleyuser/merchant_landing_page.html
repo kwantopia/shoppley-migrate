@@ -72,4 +72,26 @@
      
     </div>
   {% endblock %}
+{% block extra_scripts %}
+<script type="text/javascript">
+        $("body").ready(function() {
+                initiate_geolocation();
+
+        });
+        function initiate_geolocation() {  
+            navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
+        }  
+        
+        function handle_geolocation_query(position){   
+
+                $.post("{% url set_user_latlon %}", {
+                        "lat": position.coords.latitude,
+                        "lon": position.coords.longitude
+                });
+
+        } 
+
+</script>
+
+{% endblock %}
 

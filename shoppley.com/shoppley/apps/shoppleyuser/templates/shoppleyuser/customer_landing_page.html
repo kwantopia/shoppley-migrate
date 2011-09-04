@@ -77,20 +77,22 @@
 	</div>      
   {% endblock %}
 {% block extra_scripts %}
-
-
 <script type="text/javascript">
 	$("body").ready(function() {
-		//alert("hello");
         	initiate_geolocation();
+
 	});
 	function initiate_geolocation() {  
             navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
         }  
-  
-        function handle_geolocation_query(position){  
-           // alert('Lat: ' + position.coords.latitude + ' ' +  
-            //      'Lon: ' + position.coords.latitude);  
+  	
+        function handle_geolocation_query(position){   
+
+		$.post("{% url set_user_latlon %}", {
+                        "lat": position.coords.latitude,
+			"lon": position.coords.longitude
+                });
+
         } 
 
 </script>

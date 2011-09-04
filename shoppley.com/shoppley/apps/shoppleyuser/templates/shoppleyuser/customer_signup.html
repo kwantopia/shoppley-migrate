@@ -12,7 +12,7 @@
         <p>{% trans "You are already logged in." %}</p>
     {% else %}
         <p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a> {% trans " or " %}
-{% facebook_button  %}{% facebook_js %}</p>
+{% facebook_button %}</p>
         
         <form class="customer-signup-form uniForm" id="signup_form" method="post" action="{% url customer_signup %}">
 			{% csrf_token %}
