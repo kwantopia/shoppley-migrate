@@ -27,7 +27,7 @@ DEFAULT_RADIUS = 3 # 6 mile diameter
 # it doesn't send out unnecessary txt messages
 SMS_DEBUG = True 
 
-DEBUG = True 
+DEBUG = False 
 TEMPLATE_DEBUG = DEBUG
 
 # tells Pinax to serve media through the staticfiles app.
@@ -273,8 +273,9 @@ AUTHENTICATION_BACKENDS= [
   #  "pinax.apps.account.auth_backends.AuthenticationBackend",
 
     "socialregistration.auth.FacebookAuth",
-	"django.contrib.auth.backends.ModelBackend",   
-  
+#	"django.contrib.auth.backends.ModelBackend",   
+      "shoppleyuser.backends.ShoppleyBackend",
+ 
 ]
 
 LOGIN_URL = "/account/login/" # @@@ any way this can be a url name?
@@ -372,6 +373,10 @@ class NullHandler(logging.Handler):
 nullhandler = logger.addHandler(NullHandler())
 LOG_DIR = os.path.join(PROJECT_ROOT, "log")
 LOG_FILE = os.path.join(PROJECT_ROOT, "log", "django.log")
+LOG_FILE2 = os.path.join(PROJECT_ROOT, "log", "txt_registration.log")
+LOG_FILE3 = os.path.join(PROJECT_ROOT, "log", "gvoice_validation.log")
+PYGV_LOG = os.path.join(PROJECT_ROOT, "log", "gvoice_normal.log")
+
 if not os.path.exists(LOG_DIR):
 	try:
 		os.mkdir(LOG_DIR)
@@ -381,13 +386,17 @@ if not os.path.exists(LOG_DIR):
 if not os.path.exists(LOG_FILE):
 	fd = os.open(LOG_FILE, os.O_RDONLY|os.O_CREAT)
 	os.close(fd)
+if not os.path.exists(LOG_FILE2):
+	fd = os.open(LOG_FILE2, os.O_RDONLY|os.O_CREAT)
+	os.close(fd)
+
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s: %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -410,17 +419,49 @@ LOGGING = {
             'maxBytes': '16777216', # 16megabytes
             'formatter': 'verbose'
         },
+        'log_file2':{
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE2,
+            'maxBytes': '16777216', # 16megabytes
+            'formatter': 'verbose'
+        },
+	'log_file3':{
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE3,
+            'maxBytes': '16777216', # 16megabytes
+            'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
-        }
+        },
+        'pygv_log':{
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': PYGV_LOG,
+            'maxBytes': '16777216', # 16megabytes
+            'formatter': 'verbose'
+        },
+
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+	'txt_registration':{
+           'handlers': ['log_file2'],
+           'level': 'INFO',
+           'propagate': True,
+        },
+	'gvoice_validation':{
+           'handlers': ['log_file3'],
+           'level': 'INFO',
+           'propagate': True,
         },
 	'offer.management.commands.check_sms':{
 	   'handlers': ['log_file','mail_admins'],
@@ -432,6 +473,12 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+     'PyGoogleVoice': {
+				'handlers': ['pygv_log'],
+				'level': 'DEBUG',
+				'propagate': True,
+		 }
+
     }
 }
 # end of logging config
