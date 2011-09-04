@@ -11,13 +11,20 @@ if settings.DEBUG:
 else:
     log = None
 
+import logging
+logging.basicConfig()
+log = logging.getLogger('PyGoogleVoice')
+log.setLevel(logging.DEBUG)
+
+
 class Voice(object):
     """
     Main voice instance for interacting with the Google Voice service
     Handles login/logout and most of the baser HTTP methods
     """
     def __init__(self):
-        install_opener(build_opener(HTTPCookieProcessor(CookieJar())))
+        self.c = CookieJar()		
+        install_opener(build_opener(HTTPCookieProcessor(self.c)))
 
         for name in settings.FEEDS:
             setattr(self, name, self.__get_xml_page(name))
@@ -39,9 +46,13 @@ class Voice(object):
         except NameError:
             regex = r"('_rnr_se':) '(.+)'"
         try:
-            sp = re.search(regex, urlopen(settings.INBOX).read()).group(2)
+            inbox_result = urlopen(settings.INBOX).read()
+            #log.debug("HTML OUTPUT:\n%s"%inbox_result)
+            sp = re.search(regex, inbox_result).group(2)
         except AttributeError:
             sp = None
+        log.debug('settings.INBOX=%s'%sp)
+
         self._special = sp
         return sp
     special = property(special)
@@ -66,14 +77,19 @@ class Voice(object):
             passwd = getpass()
 
         content = self.__do_page('login').read()
+        #print "Cookie"
+        #for index, cookie in enumerate(self.c):
+          #print index, ':', cookie
         # holy hackjob
         galx = re.search(r"name=\"GALX\"\s+value=\"(.+)\"", content).group(1)
         self.__do_page('login', {'Email': email, 'Passwd': passwd, 'GALX': galx})
-        
         del email, passwd
         
         try:
+            log.debug('special=%s' % (self.special))
+
             assert self.special
+
         except (AssertionError, AttributeError):
             raise LoginError
 
