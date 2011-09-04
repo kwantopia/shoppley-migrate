@@ -11,12 +11,6 @@ if settings.DEBUG:
 else:
     log = None
 
-import logging
-logging.basicConfig()
-log = logging.getLogger('PyGoogleVoice')
-log.setLevel(logging.DEBUG)
-
-
 class Voice(object):
     """
     Main voice instance for interacting with the Google Voice service
