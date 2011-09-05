@@ -72,6 +72,38 @@ text-shadow: 0px 1px 3px #333333;
 	font-weight: bold;
 	color: #A80010;
 }
+
+.splash-wrapper {
+
+}
+
+#splash-wrapper {
+	background: #DADA30 -webkit-gradient(
+		    linear,
+				left bottom,
+				left top,
+				color-stop(0.35, rgb(184,184,40)),
+				color-stop(0.71, rgb(218,218,48))
+		);
+	background: #DADA30 -moz-linear-gradient(
+		    center bottom,
+				rgb(184,184,40) 35%,
+				rgb(218,218,48) 71%
+		);
+		/* For Internet Explorer 5.5 - 7 */
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#DADA30, endColorstr=#B8B828);
+		/* For Internet Explorer 8 */
+			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#DADA30, endColorstr=#B8B828)";
+	height: 400px;
+	color: #333333;
+	font-size: 72px;
+	text-shadow: -1px -1px 0px #FFFFFF;
+	letter-spacing:-3px;
+}
+#business-signup-wrapper {
+background-color: #333333;
+}
+
 .main-box {
 		border: 1px solid #F3F3F3;
 		background-color: #FFFFFF;
@@ -150,7 +182,11 @@ text-shadow: 0px 1px 3px #333333;
 	margin: 8px;
 }
 
-.clear .no-height {
+.height2 {
+	margin: 1px;
+}
+
+.no-height {
 	margin: 0px;
 
 }
@@ -626,6 +662,19 @@ form.login .form_block input {
 #eunice {
 	background: url(../../images/boram/eunice.png) 10px 5px no-repeat;
 }
+#matt {
+	background: url(../../images/boram/matt.png) 10px 5px no-repeat;
+}
+#au {
+	background: url(../../images/boram/au.png) 10px 5px no-repeat;
+}
+#charley {
+	background: url(../../images/boram/charley.png) 10px 5px no-repeat;
+}
+#tammy {
+	background: url(../../images/boram/tammy.png) 10px 5px no-repeat;
+}
+
 /* for FAQ page */
 .faq-section {
   margin-top: 15px;
