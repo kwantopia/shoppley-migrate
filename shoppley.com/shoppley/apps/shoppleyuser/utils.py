@@ -122,17 +122,24 @@ def load_zipcodes():
 
 #return success True or False
 def sms_notify(number, text, debug=settings.SMS_DEBUG):
-	if debug:
-		print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":text, "phone":number,}
-	else:
-		voice = Voice()
-		voice.login()
-		try:
-			voice.send_sms(number, text) 
-			return True
-		except ValidationError:
-			sms_logger.exception ("(%s, %s) causes an error:" %  (number, text))
-			return False
+  if debug:
+    print _("TXT: \"%(msg)s\" sent to %(phone)s") % {"msg":text, "phone":number,}
+  else:
+    voice = Voice()
+    
+    try:
+      voice.login()
+    except:
+      send_mail('Google Voice LoginError', number + " " + text, 'devteam@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
+      return False
+      
+    try:
+      voice.send_sms(number, text) 
+      return True
+    except ValidationError:
+      sms_logger.exception ("(%s, %s) causes an error:" %  (number, text))
+      send_mail('Google Voice ValidationError', number + " " + text, 'devteam@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
+      return False
 
 
 def sms_notify_list(number_list, text):
