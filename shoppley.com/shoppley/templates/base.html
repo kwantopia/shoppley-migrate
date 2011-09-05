@@ -190,18 +190,22 @@ jQuery.fn.counter = function() {
   });
   return this;
 }
+</script>
 
-
-$("body").ready(function() {
+	{% if user.is_authenticated %}
+	<script type="text/javascript">
+		$("body").ready(function() {
         var timezone = jstz.determine_timezone();
    //     alert(timezone.timezone.olson_tz);
 
         $.post("{% url set_user_timezone %}", {
         "tz": timezone.timezone.olson_tz
-	});
+				});
 
-});
-</script>    
+		});
+	</script>    
+	{% endif %}
+
     {% block extra_scripts %}
     {% endblock %}
   {% endblock %}
