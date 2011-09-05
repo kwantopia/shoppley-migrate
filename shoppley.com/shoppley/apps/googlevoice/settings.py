@@ -18,11 +18,15 @@ forwardingNumber=
 phoneType=2
 """
 
-DEBUG = True 
+DEBUG = False 
+#LOGIN='https://www.google.com/accounts/ServiceLoginAuth?service=grandcentral'
 LOGIN = 'https://accounts.google.com/ServiceLoginAuth?service=grandcentral'
+#LOGIN = 'https://www.google.com/accounts/ServiceLoginAuth?service=grandcentral'
+#LOGIN = 'https://www.google.com/accounts/'
 FEEDS = ('inbox', 'starred', 'all', 'spam', 'trash', 'voicemail', 'sms',
         'recorded', 'placed', 'received', 'missed')
 
+#BASE = 'https://voice.google.com/'
 BASE = 'https://www.google.com/voice/'
 LOGOUT = BASE + 'account/signout'
 INBOX = BASE + '#inbox'

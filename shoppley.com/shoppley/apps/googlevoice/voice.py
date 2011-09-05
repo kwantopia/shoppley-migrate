@@ -45,7 +45,8 @@ class Voice(object):
             sp = re.search(regex, inbox_result).group(2)
         except AttributeError:
             sp = None
-        log.debug('settings.INBOX=%s'%sp)
+        if log:
+            log.debug('settings.INBOX=%s'%sp)
 
         self._special = sp
         return sp
@@ -71,16 +72,18 @@ class Voice(object):
             passwd = getpass()
 
         content = self.__do_page('login').read()
-        #print "Cookie"
-        #for index, cookie in enumerate(self.c):
-          #print index, ':', cookie
+        if log:
+            log.debug("Cookies")
+            for index, cookie in enumerate(self.c):
+                log.debug("%s : %s"%(index, cookie))
         # holy hackjob
         galx = re.search(r"name=\"GALX\"\s+value=\"(.+)\"", content).group(1)
         self.__do_page('login', {'Email': email, 'Passwd': passwd, 'GALX': galx})
         del email, passwd
         
         try:
-            log.debug('special=%s' % (self.special))
+            if log:
+                log.debug('special=%s' % (self.special))
 
             assert self.special
 
