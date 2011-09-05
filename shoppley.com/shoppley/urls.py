@@ -43,6 +43,7 @@ urlpatterns = patterns('',
 #        "template": "front-page.html", "extra_context": {"form": CustomerSignupForm, "mform":MerchantSignupForm},
 #    }, name="home"),
     url(r'^$', 'shoppleyuser.views.home', name="home"),
+    url(r'^fb-fail', 'shoppleyuser.views.home_fb_fail', name="home_fb_fail"),
     url(r'^', include('common.urls')),
     url(r'^premium/', include('premium.urls')),
     
