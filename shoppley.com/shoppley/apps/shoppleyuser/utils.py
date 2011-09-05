@@ -2,6 +2,7 @@ from shoppleyuser.models import Country, Region, City, ZipCode, ShoppleyUser, Cu
 
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat
+from django.core.mail import send_mail
 from django.conf import settings
 
 import os, csv
@@ -130,7 +131,7 @@ def sms_notify(number, text, debug=settings.SMS_DEBUG):
     try:
       voice.login()
     except:
-      send_mail('Google Voice LoginError', number + " " + text, 'devteam@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
+      send_mail('Google Voice LoginError', number + " " + text, 'support@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
       return False
       
     try:
@@ -138,7 +139,7 @@ def sms_notify(number, text, debug=settings.SMS_DEBUG):
       return True
     except ValidationError:
       sms_logger.exception ("(%s, %s) causes an error:" %  (number, text))
-      send_mail('Google Voice ValidationError', number + " " + text, 'devteam@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
+      send_mail('Google Voice ValidationError', number + " " + text, 'support@shoppley.com', ['devteam@shoppley.com'], fail_silently=True)
       return False
 
 
