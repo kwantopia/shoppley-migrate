@@ -4,19 +4,32 @@ from datetime import datetime, date, time
 from django.forms.extras.widgets import SelectDateWidget
 from django.utils.translation import ugettext_lazy as _, ugettext
 from shoppleyuser.utils import parse_phone_number
-from shoppleyuser.models import Merchant, MerchantPhone
+from shoppleyuser.models import ZipCode,Merchant, MerchantPhone
 from django.contrib.admin.widgets import AdminTimeWidget,AdminDateWidget 
 from common.utils import InputAndChoiceField, SelectTimeWidget
 
 class MerchantSearchForm(forms.Form):
 	business_name 	= forms.CharField(label=_("Business Name"), max_length=80, required=False)
 	business_num	 = forms.CharField(label=_("Business Number"), max_length=20, required=False)
+	zipcode		= forms.CharField(label=_("Zipcode"), max_length=8, required=False)
+
+	def clean_zipcode(self):
+		if "zipcode" in self.cleaned_data:
+			try:
+				zipcode = ZipCode.objects.get(code=self.cleaned_data["zipcode"])
+				return self.cleaned_data["zipcode"]
+			except ZipCode.DoesNotExist:
+				raise forms.ValidationError(_("Not a valid zipcode."))
+		else:
+			return None
 
 	def clean(self):
 		#		raise forms.ValidationError(_("You must fill in at least one of the two fields testing."))
-		if not "business_num" not in self.cleaned_data and not "business_name" in self.cleaned_data:
-			raise	forms.ValidationError(_("You must fill in at least one of the two fields."))
+		if not "business_num" in self.cleaned_data and not "business_name" in self.cleaned_data and not "zipcode" in self.cleaned_data:
+			raise	forms.ValidationError(_("You must fill in at least one of the fields."))
 		m=None
+		if "zipcode" in self.cleaned_data:
+			return self.cleaned_data
 		if "business_num" in self.cleaned_data:
 			
 			business_num = parse_phone_number(self.cleaned_data["business_num"])
@@ -26,43 +39,19 @@ class MerchantSearchForm(forms.Form):
 			business_name = self.cleaned_data["business_name"].strip()
 			if Merchant.objects.filter(business_name__icontains= business_name).exists():
 				m = Merchant.objects.filter(business_name__icontains= business_name)[0]
+		
 		if m:
 			return self.cleaned_data
 		else:
 			raise forms.ValidationError(_("We cannot find a merchant with the following information. Please create a merchant account for the merchant."))
 
-class AdminStartOfferForm(forms.Form):
-	merchant_id 	= forms.CharField(max_length=10, required=False, label=_("merchant id"), widget=forms.HiddenInput())
-	OFFER_TYPE= (
-                        (0, '%'),
-                        (1, '$'),
-                        (2, 'free'),
-                        (3, 'custom'),
-                        )
-
-	offer_radio     = forms.ChoiceField(choices = OFFER_TYPE, label = _("Offer Type"), required = True, widget = forms.RadioSelect)
-
-	value           = forms.CharField(label=_("Minimum purchase amount ($)"), max_length = 10, required = True)
-
-	title           = forms.CharField(label=_("What is it?"), max_length=80, widget=forms.TextInput())
-	#date            = forms.DateField(required=True, label=_("When"), widget=SelectDateWidget(years=[y for y in range(2011,2020)]))
-	date		= forms.DateField(required=True, label=_("Start date"))
-	now             = forms.BooleanField(label=_("now?"))
-	description     = forms.CharField(label=_("Description"), widget=forms.widgets.Textarea())
-
-	max_offers      = forms.IntegerField(label=_("Max quantity"), initial= "20")
-
-
-	duration        = forms.IntegerField(label=_("Duration (minutes)"), initial="120")
-
-
 class StartOfferForm(forms.Form):
 	title           = forms.CharField(label=_("What is it?"), max_length=80,widget=forms.TextInput(), help_text=_("Enter a short attractive offer headline. It will appear in text msgs sent to customers.<br>Examples:<br>FREE juice with $15 or above entree<br>$5 off any appetizer+entree<br>20% off entrees next two hours"))
-	value		= forms.CharField(
-				help_text=_("Keep it 0 if there's no minimum purchase requirement."), 
-				label=_("Minimum purchase amount ($)"), max_length = 10, required = True)
-
 	discount 	= InputAndChoiceField()
+	value           = forms.CharField(
+                                help_text=_("Keep it 0 if there's no minimum purchase requirement."),
+                                label=_("Minimum purchase amount ($)"), max_length = 10, required = True)
+	now             = forms.BooleanField(label=_("Start now?"))
 	date 		= forms.DateField(required=True, label=_("Start date"), help_text=_("What date do you want to start this offer?"))
 	time		= forms.TimeField(required=True, label=_("Start time"), widget = SelectTimeWidget, help_text=_("What time do you want to start this offer?"))
 	#now 		= forms.BooleanField(label=_("now?"))

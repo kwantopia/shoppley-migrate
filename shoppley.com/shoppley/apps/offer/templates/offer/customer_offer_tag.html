@@ -1,6 +1,6 @@
 {% load i18n %}
-<div class="offer-block" id="offer_{{ id }}">
-	<div class="clear">&nbsp;</div>
+<div class="offer-block main-box" id="offer_{{ id }}">
+	<!--div class="clear">&nbsp;</div-->
 				<div class="offer-type">
 					<!--	{% trans "food" %}-->
         </div>
@@ -8,42 +8,42 @@
 			<a href="{% url customer_offer id %}">{{ title|truncatewords:20 }} </a>
 		</div>
 		<div class="offer-biz-name">
-			{{ biz_name }}
+		 <a href="#">{{ biz_name }}</a>
 		</div>
+		<div class="offer-get-it">
+		offer code	<strong>{% trans "287421" %}</strong>
+		</div>
+
 		<div class="offer-location">
-			<p>
 				{{ location }}	
-			</p>
 		</div>
 		<div class="offer-time-left">
-			 <p>
-				{{ time_left }}
-			</p>
+			 
+			time left	<strong>{{ time_left }}</strong>
+			
 	        </div>
-		<div class="offer-get-it">
-                	<p>
-				{% trans "287421" %}
-	        	</p>
-		</div>
-
-
 		<div class="social-share">
-
-
+		<table>
+			<tr>
+				<td style="padding-right: 13px;">
 				<a name="fb_share" type="button_count" share_url="{{ site }}{% url customer_offer id %}" href="http://www.facebook.com/sharer.php?u={{ site }}{% url customer_offer id %}&amp;src=sp" style="text-decoration: none; "></a>
 				<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
-			</br>
+			</td>
+			<td>
 				<script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
-                                <a href="http://twitter.com/share?url={{ site }}{% url customer_offer id %}"
+														<a href="http://twitter.com/share?url={{ site }}{% url customer_offer id %}"
                                
                                 data-via="shoppley" data-text="check out this amazing Shoppley deal:"
                                 data-related="shoppley"
                                 class="twitter-share-button">Tweet</a>
 		
 
-			</br>
-				<g:plusone href="{{ site }}{% url customer_offer id %}"></g:plusone>
-			
+			</td>
+			<td>
+				<g:plusone href="{{ site }}{% url customer_offer id %}" style="padding-top: 0px;"></g:plusone>
+			</td>
+				</tr>
+		</table>
 		</div>
 
 		<div class="map-div" style="display:none;" id="map_{{ id }}">

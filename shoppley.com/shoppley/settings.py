@@ -215,6 +215,7 @@ INSTALLED_APPS = [
 	"tagging_ext",
 	"djcelery",
 	"socialregistration",
+	"haystack",
 	#"south",		
 	# Pinax
 	"pinax.apps.account",
@@ -373,9 +374,15 @@ class NullHandler(logging.Handler):
 nullhandler = logger.addHandler(NullHandler())
 LOG_DIR = os.path.join(PROJECT_ROOT, "log")
 LOG_FILE = os.path.join(PROJECT_ROOT, "log", "django.log")
+
+
+
+
+
 LOG_FILE2 = os.path.join(PROJECT_ROOT, "log", "txt_registration.log")
 LOG_FILE3 = os.path.join(PROJECT_ROOT, "log", "gvoice_validation.log")
 PYGV_LOG = os.path.join(PROJECT_ROOT, "log", "gvoice_normal.log")
+
 
 if not os.path.exists(LOG_DIR):
 	try:
@@ -387,8 +394,8 @@ if not os.path.exists(LOG_FILE):
 	fd = os.open(LOG_FILE, os.O_RDONLY|os.O_CREAT)
 	os.close(fd)
 if not os.path.exists(LOG_FILE2):
-	fd = os.open(LOG_FILE2, os.O_RDONLY|os.O_CREAT)
-	os.close(fd)
+        fd = os.open(LOG_FILE2, os.O_RDONLY|os.O_CREAT)
+        os.close(fd)
 
 
 LOGGING = {
@@ -396,7 +403,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s: %(message)s'
+
+            'format': '%(levelname)s %(asctime)s %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -419,7 +427,7 @@ LOGGING = {
             'maxBytes': '16777216', # 16megabytes
             'formatter': 'verbose'
         },
-        'log_file2':{
+	'log_file2':{
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_FILE2,
@@ -433,6 +441,7 @@ LOGGING = {
             'maxBytes': '16777216', # 16megabytes
             'formatter': 'verbose'
         },
+
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -468,6 +477,18 @@ LOGGING = {
 	   'level': 'INFO',
 	   'propagate': True,
 	},
+	'txt_registration':{
+	   'handlers': ['log_file2'],
+	   'level': 'INFO',	
+	   'propagate': True,
+	  
+	},
+	'gvoice_validation':{
+           'handlers': ['log_file3'],
+           'level': 'INFO',
+           'propagate': True,
+        },
+
    	 'apps': {
             'handlers': ['log_file'],
             'level': 'INFO',
@@ -482,4 +503,9 @@ LOGGING = {
     }
 }
 # end of logging config
+
+#HAYSTACK CONFIG
+HAYSTACK_SITECONF = 'common.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = '/home/www/webuy.mit.edu/shoppley/apps/common/whoosh_index'
 

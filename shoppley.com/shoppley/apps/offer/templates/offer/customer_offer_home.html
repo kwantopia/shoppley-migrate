@@ -8,21 +8,17 @@
 {% block body %}
 
         <div class="span-17">
-                        <div class="customer-stats-box main-box">
-				<h3>Your offer summary for past 7 days</h3>
-				 <div class="customer-stats">
-
-
-                                        <p><span class="used-count">18</span>{% trans " used " %}
-                                        <span class="expired-count">44</span>{% trans " expired " %}
-                                        <span class="recvd-count">16</span>{% trans " recvd " %}
-                                        <span class="total-pt">60</span>{% trans " pt total" %}
-
-                                        </p>
-                                </div>
-                        </div>
+        <div class="customer-stats-box stats-box main-box">
+					<h3>Your offer summary for past <strong>7</strong> days</h3>
+						<div class="customer-stats stats">
+							<span class="used-count">18</span>{% trans " redeemed " %}
+							<span class="expired-count">44</span>{% trans " expired " %}
+							<span class="recvd-count">16</span>{% trans " received " %}
+						<span class="total-pt">60</span>{% trans " pt total" %} 
+						</div>
+				 </div>
 			<div class="clear">&nbsp;</div>			
-			<div class="current-offers-box main-box">
+			<div class="current-offers-box">
 				{% if other_active_offers.object_list %}
 					
 					{% for offer in other_active_offers.object_list %}

@@ -39,7 +39,7 @@
 		</style>
         <script type="text/javascript">
 		$(function() {
-		 $("#id_date").datepicker({minDate:0});
+		 $('id_date').datepicker({minDate:0});
 		 $('#id_title').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").html(); }});
 		 $('#id_value').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").html(); }});
 		 $('#id_description').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").html(); }});
@@ -47,6 +47,20 @@
 		 $('#id_discount_1').tipsy({html: true, trigger: 'focus', gravity: 'w', fallback: 'For FREE offers select custom option'});
 		 $('#id_duration').tipsy({html: true, trigger: 'focus', gravity: 'w', title: function() { return $(this).parent().children("p").html(); }});
 		});
+		 $('#id_title').counter();
+		 var is_now = false;
+		 $('#id_now').click(function(){
+			if (is_now) {
+				$('#div_id_date').fadeIn(600);
+				$('#div_id_time').fadeIn(600);
+				is_now = false;
+			}
+			else {
+				$('#div_id_date').fadeOut(600);
+				$('#div_id_time').fadeOut(600);
+				is_now = true;
+			}
+		 });
         </script>
 
 {% endblock %}

@@ -30,7 +30,7 @@ import os
 import logging
 
 from datetime import datetime, date, time,timedelta
-from offer.forms import StartOfferForm,AdminStartOfferForm, MerchantSearchForm
+from offer.forms import StartOfferForm, MerchantSearchForm
 from offer.models import Offer, OfferCode
 from offer.utils import get_days_ago, TxtTemplates
 from buxfer.forms import BuxferLoginForm
@@ -92,6 +92,18 @@ def offer_home(request):
 		else:
 			return HttpResponseRedirect(reverse("offer.views.customer_offer_home"))
 	return HttpResponseRedirect(reverse("home"))
+
+def merchant_public (request, merchant_id):
+	merchant  = Merchant.objects.get(id=merchant_id)
+	banner = merchant.banner
+	twitter = merchant.twitter_url
+	url 	= merchant.url
+	fb	= merchant.fb_url
+	yelp	= merchant.yelp_url
+	recent	= merchant.offers_published.order_by("-starting_time")[0:5]
+	gmap	= merchant.get_gmap_src()
+	address = merchant.get_full_address()
+	
 
 @login_required
 def customer_offer_home(request, days = "7"):
@@ -215,31 +227,77 @@ def admin_start_offer(request, merchant_id="-1", template = "offer/admin_start_o
 	if not u.is_superuser:
 		return  HttpResponseRedirect(reverse("offer.views.offer_home"))
 	if request.method=='POST':
-		form = AdminStartOfferForm(request.POST, request.FILES)
+		form = StartOfferForm(request.POST, request.FILES)
 		merchant = Merchant.objects.get(id=merchant_id)
 		if form.is_valid():
-			merchant = Merchant.objects.get(id=form.cleaned_data["merchant_id"])
-			offer_type = form.cleaned_data["offer_radio"]
-			value = form.cleaned_data["value"]
-			now = form.cleaned_data["now"]
+			merchant = Merchant.objects.get(id=merchant_id)
+			value = float(form.cleaned_data["value"])
 			description = form.cleaned_data["description"]
 			title = form.cleaned_data["title"]
-			if now :
-			        time_stamp = datetime.now()
+			if form.cleaned_data["now"]:
+				d = datetime.now()
+				d = d + timedelta(minutes=5)
+				d = d.replace(second=0, microsecond=0)
+				time_stamp = d
 			else:
-			        time_stamp = self.cleaned_data["date"]
+				d =  form.cleaned_data["date"]
+				t = form.cleaned_data["time"]
+				time_stamp = datetime.combine(d,t)
 			max_offers = form.cleaned_data["max_offers"]
 			duration = form.cleaned_data["duration"]
-			expiration = datetime.now() + timedelta(duration)
-			Offer(merchant = merchant, title = title, description = description, time_stamp = datetime.now(), starting_time = time_stamp, duration = duration , max_offers = max_offers, expired_time = expiration).save()
-			print "offer successfully created"
-			return render_to_response("offer/offer_confirmation.html", {"offer": title, "business_name": merchant.business_name, "expiration": expiration, "address": merchant.print_address() },context_instance=RequestContext(request))
+			discount_obj = form.cleaned_data["discount"]
+			discount_obj = discount_obj.split(':::')
+			discount = float(discount_obj[0])
+			discount_type = discount_obj[1]
+			dollar_off = 0
+			percentage = 0
+			discount_str = "None"
+			if discount_type == '%':
+				dollar_off = discount * value
+				percentage = int(discount)
+
+			elif discount_type == '$':
+				dollar_off = discount
+				if value ==0:
+					percentage = 0
+				else:
+					percentage = int(100.0*discount / value)
+			if discount_type != 'custom':
+				discount_str = ''.join(discount_obj)
+			expiration = time_stamp + timedelta(minutes=duration)
+			Offer(merchant = merchant, title = title, description = description, time_stamp = time_stamp, starting_time = time_stamp, duration = duration , max_offers = max_offers, expired_time =expiration , offer_value= value, dollar_off = dollar_off, percentage=percentage).save()
+			#return HttpResponseRedirect(reverse("offer.views.offer_home"))
+			t = TxtTemplates()
+			templates = TxtTemplates.templates
+			txt_preview =t.render(templates["CUSTOMER"]["INFO"],
+		                {
+		                        "offercode": "xxxx",
+		                        "description":title,
+		                        "merchant": merchant,
+		                        "expiration": expiration,
+		                })
+			return render_to_response("offer/offer_confirmation.html",
+                        		{"offer": title,
+                        		"business_name": merchant.business_name,
+                        		"expiration": expiration,
+                       			"address": merchant.print_address(),
+                        		 "value": value,
+                       		 	"discount": discount_str,
+                        		"starting_time": time_stamp,
+       	                	        "max_offers": max_offers,
+					"description" :description,
+                                        "txt_preview": txt_preview,
+                                        },context_instance=RequestContext(request))
 	else:
 		if merchant_id == "-1":
 			return HttpResponseRedirect(reverse("home"))
+		ten_min_later = datetime.now() +timedelta( minutes=5)
+		ten_min_later = ten_min_later.time().replace(second=0,microsecond=0)
+		form = StartOfferForm(initial={"value": '0',"time": ten_min_later,
+                                                "date": datetime.today()})
 		merchant = Merchant.objects.get(id=merchant_id)
 		print "creating new admin form"
-		form = AdminStartOfferForm(initial={'merchant_id': merchant_id,})
+
 	return render_to_response(template,{"form": form,"id": merchant_id, "business_name": merchant.business_name, "address": merchant.print_address(),},
                                 context_instance=RequestContext(request))
 
@@ -251,18 +309,23 @@ def search_merchant(request, template="offer/search_merchant.html"):
 	if request.method=='POST':
 		form = MerchantSearchForm(request.POST)
 		if form.is_valid():
-			business_name = form.cleaned_data["business_name"].split()
-			business_number =parse_phone_number( form.cleaned_data["business_num"])
-			m=None
-			if business_number and MerchantPhone.objects.filter(number=business_number).exists():
-				m = MerchantPhone.objects.get(number=business_number).merchant
-			elif business_name and Merchant.objects.filter(business_name__icontains=business_name).exists():
-				m = Merchant.objects.get(business_name=business_name)
-			if not m:
-				return HttpResponseRedirect(reverse("home"))
-			print "creating offer for ", m
-			#return HttpResponseRedirect(reverse("admin_start_offer",args=str(m.id)))
-			return HttpResponseRedirect(reverse("admin_start_offer", kwargs={"merchant_id":str( m.id), }))
+			if "zipcode" in form.cleaned_data:
+				zipcode = form.cleaned_data["zipcode"]
+				merchants = Merchant.objects.filter(zipcode__code=zipcode).order_by("business_name")
+				return render_to_response(template, {"form": form, "merchants": merchants,}, context_instance=RequestContext(request))
+			else:
+				business_name = form.cleaned_data["business_name"].split()
+				business_number =parse_phone_number( form.cleaned_data["business_num"])
+				m=None
+				if business_number and MerchantPhone.objects.filter(number=business_number).exists():
+					m = MerchantPhone.objects.get(number=business_number).merchant
+				elif business_name and Merchant.objects.filter(business_name__icontains=business_name).exists():
+					m = Merchant.objects.get(business_name=business_name)
+				if not m:
+					return HttpResponseRedirect(reverse("home"))
+				print "creating offer for ", m
+				#return HttpResponseRedirect(reverse("admin_start_offer",args=str(m.id)))
+				return HttpResponseRedirect(reverse("admin_start_offer", kwargs={"merchant_id":str( m.id), }))
 	else:
 
 		form = MerchantSearchForm()
@@ -270,6 +333,13 @@ def search_merchant(request, template="offer/search_merchant.html"):
 
 @login_required
 def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
+	user = request.user
+	try:
+		su = user.shoppleyuser
+		if su.is_customer():
+			return HttpResponseRedirect(reverse("offer.views.offer_home"))
+	except ShoppleyUser.DoesNotExist:
+		return HttpResponseRedirect(reverse("home"))
 	if request.method == 'POST':
 		form = StartOfferForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -279,9 +349,15 @@ def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
 			value = float(form.cleaned_data["value"])
 			description = form.cleaned_data["description"]
 			title = form.cleaned_data["title"]
-			d =  form.cleaned_data["date"]
-			t = form.cleaned_data["time"]
-			time_stamp = datetime.combine(d,t)
+			if form.cleaned_data["now"]:
+				d = datetime.now()
+				d = d + timedelta(minutes=5)
+				d = d.replace(second=0, microsecond=0)
+				time_stamp = d
+			else:
+				d =  form.cleaned_data["date"]
+				t = form.cleaned_data["time"]
+				time_stamp = datetime.combine(d,t)
 			max_offers = form.cleaned_data["max_offers"]
 			duration = form.cleaned_data["duration"]
 			discount_obj = form.cleaned_data["discount"]
@@ -328,8 +404,9 @@ def merchant_start_offer(request,template = "offer/merchant_offer_start.html"):
 						"txt_preview": txt_preview,
 						},context_instance=RequestContext(request))
 	else:
-
-		form = StartOfferForm(initial={"value": '0', 
+		ten_min_later = datetime.now() +timedelta( minutes=5)
+		ten_min_later = ten_min_later.time().replace(second=0,microsecond=0)
+		form = StartOfferForm(initial={"value": '0',"time": ten_min_later,
 						"date": datetime.today()})
 	return render_to_response(template,{"form": form,}, 
 				context_instance=RequestContext(request))

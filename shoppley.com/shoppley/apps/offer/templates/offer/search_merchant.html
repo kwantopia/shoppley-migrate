@@ -25,9 +25,30 @@
 		
 
 		</form>
+
+		<div id="merchant_lists">
+			{% if merchants %}
+				
+				<div class="clear">&nbsp;</div>
+                                <h3>Results</h3>
+
+				<ul>
+				{% for merchant in merchants %}
+					<li><a href="{% url admin_start_offer merchant.id %}">{{ merchant }}</a></li>
+
+				{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
 	</div>
 
 </div>
+
+<div class="clear" style="height: 40px;">&nbsp;</div>
+
+        <div class="clear">&nbsp;</div>
+
+
 {% endblock %}
 {% block extra_scripts %}
 

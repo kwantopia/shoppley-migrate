@@ -393,17 +393,34 @@ class ZipCodeChange(models.Model):
 		return "%s, user %s switched his zipcode from %s to %s" % (self.time_stamp, self.user, self.user.zipcode, self.zipcode)
 
 
+class YelpBusiness(models.Model):
+	yelp_id		= models.CharField(max_length=300)
+	in_shoppley	= models.BooleanField(default= False)
+	#rating		= models.FloatField(default = 0)
+	#vote_count	= models.IntegerField(default= 0)
+	
+	def __unicode__(self):
+		return self.yelp_id
+	def get_info(self):
+		from common.yelp_search import business_request
+		return business_request (id=self.yelp_id)
 
+class BusinessVote(models.Model):
+	customer        = models.ForeignKey(Customer)
+	time_stamp      = models.DateTimeField()
+	business        = models.ForeignKey(YelpBusiness)
+	def __unicode__(self):
+		return "%s, %s voted for %s", (self.time_stamp, self.customer,self.business,)
 class TextMsg(models.Model):
-	from_number =models.CharField(max_length=20, blank = True)
-	text = models.CharField(max_length = 300, blank = True)
-	STATUS= ((0, "Not processed"),
-		(1, "Processing"),
-		(2, "Processed"))
+	from_number 	= models.CharField(max_length=20, blank = True)
+	text 		= models.CharField(max_length = 300, blank = True)
+	STATUS		= ((0, "Not processed"),
+			(1, "Processing"),
+			(2, "Processed"))
 
-	status =	models.IntegerField(choices=STATUS, default=0)
-	start_time = models.DateTimeField()
-	end_time = models.DateTimeField(blank=True, null = True)
+	status		=	models.IntegerField(choices=STATUS, default=0)
+	start_time 	= models.DateTimeField()
+	end_time 	= models.DateTimeField(blank=True, null = True)
 	def __unicode__(self):
 		if self.status == 2:
 			return "%s- %s: %s was processed at %s" % (self.start_time, self.from_number, self.text, self.end_time)
