@@ -216,7 +216,7 @@
 		6EB460921183D16000685649 /* UnitTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "UnitTests-Info.plist"; path = "UnitTests/Resources/PropertyLists/UnitTests-Info.plist"; sourceTree = "<group>"; };
 		6EB460A61183D2AC00685649 /* UnitTests+SBJSON.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "UnitTests+SBJSON.xcconfig"; path = "Configurations/UnitTests+SBJSON.xcconfig"; sourceTree = "<group>"; };
 		BEF31F3A0F352DF5000DE5D2 /* libextThree20JSON+SBJSON.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libextThree20JSON+SBJSON.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB9E6C6210B6A8F800DE563C /* extJSONUnitTests+SBJSON.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "extJSONUnitTests+SBJSON.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB9E6C6210B6A8F800DE563C /* extJSONUnitTests+SBJSON.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "extJSONUnitTests+SBJSON.octest"; path = "/Users/yod/Documents/shoppley/iphone/three20/Build/Products/Release-iphoneos/extJSONUnitTests+SBJSON.octest"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,7 +252,6 @@
 			children = (
 				BEF31F3A0F352DF5000DE5D2 /* libextThree20JSON+SBJSON.a */,
 				6E645BD91187751200F08CB1 /* libextThree20JSON+YAJL.a */,
-				EB9E6C6210B6A8F800DE563C /* extJSONUnitTests+SBJSON.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";

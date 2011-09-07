@@ -13,8 +13,9 @@
 #import "SLActiveOffer.h"
 #import "SLPastOffer.h"
 
-static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
+//static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 //static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
+static NSString* kSLURLPrefix = @"http://fcn-dev.mit.edu/m/";
 //static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 #pragma mark -
@@ -186,7 +187,7 @@ static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
     
     if ([jsonResponse.rootObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary* response = jsonResponse.rootObject;
-        if ([[response valueForKey:@"result"] intValue]== 1) {
+        if ([[response valueForKey:@"result"] intValue] == 1) {
             return response;            
         }
         _errorString = [response valueForKey:@"result_msg"];

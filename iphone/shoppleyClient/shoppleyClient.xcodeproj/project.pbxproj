@@ -29,7 +29,6 @@
 		D5544A8D13AE6ACE004CABBE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5544A8C13AE6ACE004CABBE /* CoreLocation.framework */; };
 		D562E2C813A82E8900E6EDE5 /* SLOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D562E2C713A82E8900E6EDE5 /* SLOffer.m */; };
 		D562E2CB13A8309600E6EDE5 /* SLCurrentOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D562E2CA13A8309600E6EDE5 /* SLCurrentOffer.m */; };
-		D562E30813A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */; };
 		D562E30D13A8532800E6EDE5 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D562E30C13A8532700E6EDE5 /* LoginViewController.m */; };
 		D577058B13ADBFF400DBCD3A /* tab_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D577058A13ADBFF400DBCD3A /* tab_settings.png */; };
 		D577058F13ADC18500DBCD3A /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D577058E13ADC18500DBCD3A /* SettingsViewController.m */; };
@@ -48,6 +47,9 @@
 		D579366C13A6E2730047B69F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D579366A13A6E2730047B69F /* InfoPlist.strings */; };
 		D579366F13A6E2730047B69F /* shoppleyClientTests.h in Resources */ = {isa = PBXBuildFile; fileRef = D579366E13A6E2730047B69F /* shoppleyClientTests.h */; };
 		D579367113A6E2730047B69F /* shoppleyClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D579367013A6E2730047B69F /* shoppleyClientTests.m */; };
+		D57FE49F13FA148D00EE269F /* tab_iwant.png in Resources */ = {isa = PBXBuildFile; fileRef = D57FE49E13FA148D00EE269F /* tab_iwant.png */; };
+		D57FE4A113FA17EA00EE269F /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D57FE4A013FA17EA00EE269F /* Entitlements.plist */; };
+		D57FE4A613FA1C2A00EE269F /* libextThree20JSON+SBJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D57FE4A513FA1C2A00EE269F /* libextThree20JSON+SBJSON.a */; };
 		D59431F813B031ED0010EC23 /* OfferForwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D59431F713B031ED0010EC23 /* OfferForwardViewController.m */; };
 		D59431FA13B038AB0010EC23 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431F913B038AB0010EC23 /* AddressBook.framework */; };
 		D59431FC13B050D10010EC23 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59431FB13B050D10010EC23 /* AddressBookUI.framework */; };
@@ -184,13 +186,6 @@
 			remoteGlobalIDString = 6E645BD91187751200F08CB1;
 			remoteInfo = "extThree20JSON+YAJL";
 		};
-		D562E30513A83EE900E6EDE5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EB9E6C6210B6A8F800DE563C;
-			remoteInfo = "extThree20JSONUnitTests+SBJSON";
-		};
 		D562E30913A83F9300E6EDE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */;
@@ -204,6 +199,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D579363C13A6E2720047B69F;
 			remoteInfo = shoppleyClient;
+		};
+		D57FE56E13FA21F800EE269F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57FE54B13FA21F700EE269F;
+			remoteInfo = "extThree20JSONUnitTests+SBJSON";
 		};
 		D5D11CF913A6E2EE00F302D1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -287,7 +289,6 @@
 		D562E2C913A8309600E6EDE5 /* SLCurrentOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLCurrentOffer.h; sourceTree = "<group>"; };
 		D562E2CA13A8309600E6EDE5 /* SLCurrentOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLCurrentOffer.m; sourceTree = "<group>"; };
 		D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = extThree20JSON.xcodeproj; path = ../three20/src/extThree20JSON/extThree20JSON.xcodeproj; sourceTree = "<group>"; };
-		D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libextThree20JSON+SBJSON.a"; sourceTree = SOURCE_ROOT; };
 		D562E30B13A8532600E6EDE5 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D562E30C13A8532700E6EDE5 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		D577058A13ADBFF400DBCD3A /* tab_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_settings.png; path = images/tab_settings.png; sourceTree = "<group>"; };
@@ -311,6 +312,9 @@
 		D579366D13A6E2730047B69F /* shoppleyClientTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shoppleyClientTests-Prefix.pch"; sourceTree = "<group>"; };
 		D579366E13A6E2730047B69F /* shoppleyClientTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shoppleyClientTests.h; sourceTree = "<group>"; };
 		D579367013A6E2730047B69F /* shoppleyClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = shoppleyClientTests.m; sourceTree = "<group>"; };
+		D57FE49E13FA148D00EE269F /* tab_iwant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_iwant.png; path = images/tab_iwant.png; sourceTree = "<group>"; };
+		D57FE4A013FA17EA00EE269F /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		D57FE4A513FA1C2A00EE269F /* libextThree20JSON+SBJSON.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libextThree20JSON+SBJSON.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D59431F613B031EC0010EC23 /* OfferForwardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferForwardViewController.h; sourceTree = "<group>"; };
 		D59431F713B031ED0010EC23 /* OfferForwardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferForwardViewController.m; sourceTree = "<group>"; };
 		D59431F913B038AB0010EC23 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -364,7 +368,7 @@
 				320AF8492C47A4D819F7C451 /* QuartzCore.framework in Frameworks */,
 				320A5A189C235877202780D5 /* libThree20Network.a in Frameworks */,
 				320CC833B8AF0ACFD35E6225 /* libThree20Style.a in Frameworks */,
-				D562E30813A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a in Frameworks */,
+				D57FE4A613FA1C2A00EE269F /* libextThree20JSON+SBJSON.a in Frameworks */,
 				D579364213A6E2720047B69F /* UIKit.framework in Frameworks */,
 				D579364413A6E2720047B69F /* Foundation.framework in Frameworks */,
 				D579364613A6E2720047B69F /* CoreGraphics.framework in Frameworks */,
@@ -485,7 +489,7 @@
 			children = (
 				D562E30213A83EE900E6EDE5 /* libextThree20JSON+SBJSON.a */,
 				D562E30413A83EE900E6EDE5 /* libextThree20JSON+YAJL.a */,
-				D562E30613A83EE900E6EDE5 /* extJSONUnitTests+SBJSON.octest */,
+				D57FE56F13FA21F800EE269F /* extJSONUnitTests+SBJSON.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -502,6 +506,7 @@
 		D579363213A6E2720047B69F = {
 			isa = PBXGroup;
 			children = (
+				D57FE4A513FA1C2A00EE269F /* libextThree20JSON+SBJSON.a */,
 				D579364913A6E2720047B69F /* shoppleyClient */,
 				D579366713A6E2730047B69F /* shoppleyClientTests */,
 				D579364013A6E2720047B69F /* Frameworks */,
@@ -524,7 +529,6 @@
 				D59431FB13B050D10010EC23 /* AddressBookUI.framework */,
 				D59431F913B038AB0010EC23 /* AddressBook.framework */,
 				D5544A8C13AE6ACE004CABBE /* CoreLocation.framework */,
-				D562E30713A83F7400E6EDE5 /* libextThree20JSON+SBJSON.a */,
 				D562E2F613A83EE800E6EDE5 /* extThree20JSON.xcodeproj */,
 				3201088596B4756681693700 /* Three20UICommon.xcodeproj */,
 				320D7DCCE32703ACAB9A45E0 /* Three20.xcodeproj */,
@@ -568,6 +572,7 @@
 				D579364C13A6E2720047B69F /* InfoPlist.strings */,
 				D579364F13A6E2720047B69F /* shoppleyClient-Prefix.pch */,
 				D579365013A6E2720047B69F /* main.m */,
+				D57FE4A013FA17EA00EE269F /* Entitlements.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -629,6 +634,7 @@
 				D549299213B2DDE10089E34A /* star15.png */,
 				D549299313B2DDE10089E34A /* star30.png */,
 				D5FFF54E13A7331F0059702E /* tab_current_offers.png */,
+				D57FE49E13FA148D00EE269F /* tab_iwant.png */,
 				D5FFF54F13A7331F0059702E /* tab_redeemed_offers.png */,
 				D5FFF55013A7331F0059702E /* tab_summary.png */,
 				D577058A13ADBFF400DBCD3A /* tab_settings.png */,
@@ -838,11 +844,11 @@
 			remoteRef = D562E30313A83EE900E6EDE5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D562E30613A83EE900E6EDE5 /* extJSONUnitTests+SBJSON.octest */ = {
+		D57FE56F13FA21F800EE269F /* extJSONUnitTests+SBJSON.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "extJSONUnitTests+SBJSON.octest";
-			remoteRef = D562E30513A83EE900E6EDE5 /* PBXContainerItemProxy */;
+			remoteRef = D57FE56E13FA21F800EE269F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D5D11CFA13A6E2EE00F302D1 /* Three20UnitTests.octest */ = {
@@ -913,6 +919,8 @@
 				D549299413B2DDE10089E34A /* star15.png in Resources */,
 				D549299513B2DDE10089E34A /* star30.png in Resources */,
 				D5C1B2E813D7C99600572C22 /* default_banner.png in Resources */,
+				D57FE49F13FA148D00EE269F /* tab_iwant.png in Resources */,
+				D57FE4A113FA17EA00EE269F /* Entitlements.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1065,7 +1073,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1087,7 +1095,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1125,8 +1133,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = shoppleyClient/Entitlements.plist;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "shoppleyClient/shoppleyClient-Prefix.pch";
@@ -1187,6 +1196,74 @@
 			};
 			name = Release;
 		};
+		D5F5417A13FA124B00301CCC /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(BUILT_PRODUCTS_DIR)/../three20\"",
+					"\"$(BUILT_PRODUCTS_DIR)/../../three20\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "-ObjC";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+			};
+			name = "Ad Hoc";
+		};
+		D5F5417B13FA124B00301CCC /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = shoppleyClient/Entitlements.plist;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "shoppleyClient/shoppleyClient-Prefix.pch";
+				INFOPLIST_FILE = "shoppleyClient/shoppleyClient-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = Shoppley;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad Hoc";
+		};
+		D5F5417C13FA124B00301CCC /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/shoppleyClient.app/shoppleyClient";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "shoppleyClientTests/shoppleyClientTests-Prefix.pch";
+				INFOPLIST_FILE = "shoppleyClientTests/shoppleyClientTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Ad Hoc";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1195,6 +1272,7 @@
 			buildConfigurations = (
 				D579367213A6E2730047B69F /* Debug */,
 				D579367313A6E2730047B69F /* Release */,
+				D5F5417A13FA124B00301CCC /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1204,6 +1282,7 @@
 			buildConfigurations = (
 				D579367513A6E2730047B69F /* Debug */,
 				D579367613A6E2730047B69F /* Release */,
+				D5F5417B13FA124B00301CCC /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1213,6 +1292,7 @@
 			buildConfigurations = (
 				D579367813A6E2730047B69F /* Debug */,
 				D579367913A6E2730047B69F /* Release */,
+				D5F5417C13FA124B00301CCC /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

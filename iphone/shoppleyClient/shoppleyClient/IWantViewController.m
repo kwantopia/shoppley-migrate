@@ -20,7 +20,7 @@
         self.tableView.scrollEnabled = NO;
         
         self.title = @"I Want";
-        self.tabBarItem = [[[UITabBarItem alloc] initWithTitle:self.title image:[UIImage imageNamed:@"tab_settings.png"] tag:0] autorelease];
+        self.tabBarItem = [[[UITabBarItem alloc] initWithTitle:self.title image:[UIImage imageNamed:@"tab_iwant.png"] tag:0] autorelease];
         
         self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancel)] autorelease];
         

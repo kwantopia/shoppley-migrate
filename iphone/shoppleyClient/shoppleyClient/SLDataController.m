@@ -15,7 +15,8 @@
 
 //static NSString* kSLURLPrefix = @"http://www.shoppley.com/m/";
 //static NSString* kSLURLPrefix = @"http://webuy-dev.mit.edu/m/";
-static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
+static NSString* kSLURLPrefix = @"http://fcn-dev.mit.edu/m/";
+//static NSString* kSLURLPrefix = @"http://127.0.0.1:8000/m/";
 
 static int kAPIVersion = 1;
 
