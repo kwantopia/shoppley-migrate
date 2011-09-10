@@ -101,7 +101,16 @@ text-shadow: 0px 1px 3px #333333;
 	letter-spacing:-3px;
 }
 #business-signup-wrapper {
-background-color: #333333;
+	background-color: #333333;
+}
+.business-signup {
+	background: transparent url(../../images/boram/shop.png) 5px 5px no-repeat;
+	padding-left: 60px;
+	padding-top: 5px;
+	color: #FFFFFF;
+}
+.business-signup h2 {
+	color: #DADA30;
 }
 
 .main-box {
@@ -291,10 +300,6 @@ form#offer_start_form label {
 	width: 180px;
 }
 
-.signup-buttons {
-	padding-left: 110px;
-}
-
 .signup-forms {
 	/*display: None;*/
 	padding-top:20px;
@@ -309,8 +314,6 @@ form#offer_start_form label {
 	float:right;
 	margin-top:15px;
 }
-
-
 .green-text {
 /*	color: #D4DA30;*/
 	font-size: 1.5em;
