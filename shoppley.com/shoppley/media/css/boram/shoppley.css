@@ -61,8 +61,22 @@ a.shoppley-btn, input.shoppley-btn {
 	box-shadow:1px 1px 5px #9E9E9E;
 	-moz-box-shadow:1px 1px 5px #9E9E9E;
 	-webkit-box-shadow:1px 1px 5px #9E9E9E;
-
 }
+
+a.shoppley-btn:hover {
+	text-decoration: none;
+}
+
+a.signup-buttons {
+	font-size: 24px;
+	padding: 5px 16px;
+	letter-spacing: 0;
+	float: left;
+}
+#customer-signup{
+	margin-top: 20px;
+}
+
 .fancy-text {
 text-shadow: 0px 1px 3px #333333;
 }
@@ -94,7 +108,11 @@ text-shadow: 0px 1px 3px #333333;
 				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#DADA30, endColorstr=#B8B828);
 		/* For Internet Explorer 8 */
 			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#DADA30, endColorstr=#B8B828)";
-	height: 400px;
+	height: 360px;
+}
+
+#landing-text {
+	line-height: 80px;
 	color: #333333;
 	font-size: 72px;
 	text-shadow: -1px -1px 0px #FFFFFF;
@@ -108,9 +126,12 @@ text-shadow: 0px 1px 3px #333333;
 	padding-left: 60px;
 	padding-top: 5px;
 	color: #FFFFFF;
+	font-size: 1.2em;
 }
 .business-signup h2 {
 	color: #DADA30;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 .main-box {
