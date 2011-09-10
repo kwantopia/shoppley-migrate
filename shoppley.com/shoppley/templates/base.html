@@ -75,9 +75,10 @@
 
   <div id="container">
     <header>
-      <div class="container">
+      <!--div class="container"-->
 
         {% if site_wide_announcements %}
+					<div class="container">
             <div id="site_wide_announcements">
                 <ul>
                     {% for announcement in site_wide_announcements %}
@@ -88,8 +89,9 @@
                     {% endfor %}
                 </ul>
             </div>
+						</div>
         {% endif %}
-        
+      <div class="container">  
         <div id="tabhead">
             <div class="logo" dir="ltr">{% block logo_link_image %}{% endblock %}</div>
             <div class="login">{% block login %}{% endblock %}{% block locale_switcher %}{% endblock %}<div style="text-align: right;"></div></div>
@@ -99,11 +101,12 @@
         {% block logo_content_divide %}
         {% endblock %}
         <div id="subnav" class="clearfix">{% block subnav_base %}<div class="clearfix">{% block subnav %}&nbsp;{% endblock %}</div>{% endblock %}</div>
-      </div>
+				</div>
+				<!--/div-->
     </header>
 
     <div id="main" role="main">
-      <div class="container">
+      <!--div class="container"-->
       
         {% block body_outer %}
         <div id="body">
@@ -123,15 +126,15 @@
         {% endblock %}
         
       </div>
-    </div><!-- end of #main -->
+    <!--/div--><!-- end of #main -->
 
 
     <footer>
-      <div class="container">
+      <!--div class="container"-->
         <div id="footer">
         {% block footer %}{% endblock %}
         </div>
-      </div> <!-- end of .container-->
+      <!--/div--> <!-- end of .container-->
 
     </footer>
 
