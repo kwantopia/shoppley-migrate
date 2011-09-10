@@ -30,7 +30,7 @@
 
 {% block logo_link_image %}
 <a href="{% url home %}"><img src="{{ STATIC_URL }}images/new_logo2.png"/></a>
-<div class="clear">&nbsp;</div>
+<!--div class="clear">&nbsp;</div-->
 {% endblock %}
 
 {% block right_tabs %}
@@ -42,7 +42,7 @@
 {% endblock %}
 
 {% block logo_content_divide %}
-	<div class="clear">&nbsp;</div>
+	<!--div class="clear">&nbsp;</div-->
 {% endblock %}
 
 {% block subnav_base %}
@@ -53,7 +53,8 @@
 
 {% block footer %}
    	<!-- START FOOTER -->
-   	<div class="span-24 last">
+	<div class="splash-wrapper" id="footer-wrapper">
+   	<div class="container">
 		<div class="legal">
 			{% trans "&copy; 2011 shoppley.com" %}
 			- <a href="{% url about %}">{% trans "About Us" %}</a>
@@ -65,6 +66,7 @@
       - <a href="http://www.twitter.com/shoppley"><img src="{{ STATIC_URL }}images/networks/twitter-16x16.png"></a> <a href="http://www.facebook.com/pages/Shoppley/172962706094426"><img src="{{ STATIC_URL }}images/networks/facebook-16x16.png"></a> 
 
 		</div>
+	</div>
 	</div>
 	<!-- END FOOTER -->
 {% endblock %}
