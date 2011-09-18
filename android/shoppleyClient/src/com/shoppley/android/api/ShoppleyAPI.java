@@ -24,12 +24,13 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.github.droidfu.http.BetterHttp;
 import com.google.gson.Gson;
 
 public class ShoppleyAPI {
 
-	public static final String BASEURL = "http://dummyshoppley.appspot.com";
+//	public static final String BASEURL = "http://webuy-dev.mit.edu";
+//	public static final String BASEURL = "http://dummyshoppley.appspot.com";
+	public static final String BASEURL = "http://www.shoppley.com";
 	public static int NETWORK_ERROR = -1;
 	public static int NORMAL = 0;
 	protected static final String VERSION = "1";
@@ -142,7 +143,35 @@ public class ShoppleyAPI {
 		}
 		return null;
 	}
+	protected HttpResponse httpPostRequestNoCookies(String url, JSONObject data) {
+		url = BASEURL + url;
+		try {
+			data.put("v", VERSION);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		// Create a new HttpClient and Post Header
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(url);
+
+		try {
+			// Add data
+			UrlEncodedFormEntity ent = new UrlEncodedFormEntity(
+					JSONObjectToNameValuePairList(data), HTTP.UTF_8);
+			httppost.setEntity(ent);
+
+			// Execute HTTP Post Request
+			return httpclient.execute(httppost);
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		return null;
+	}
 	protected HttpResponse httpPostRequest(String url, JSONObject data) {
 		url = BASEURL + url;
 		try {

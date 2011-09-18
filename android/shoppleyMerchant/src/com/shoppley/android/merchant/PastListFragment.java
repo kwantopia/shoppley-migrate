@@ -196,8 +196,14 @@ public class PastListFragment extends ListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
+
 		ListView lv = (ListView) v.findViewById(android.R.id.list);
 
+		// TODO to implement incremental loading
+		lv.setDividerHeight(0);
+		lv.setDrawSelectorOnTop(true);
+		lv.setSelector(R.drawable.list_selector);
+		
 		// TODO: incremental loading
 		lv.setOnScrollListener(new OnScrollListener() {
 

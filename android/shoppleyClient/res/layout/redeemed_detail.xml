@@ -1,205 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/background"
-	android:padding="10dip"
-	android:scrollbarStyle="outsideOverlay"
-	android:id="@+id/scrollView1"
+	android:background="@android:color/transparent"
 >
-	<LinearLayout
-		android:orientation="vertical"
+	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:gravity="center_horizontal"
+		android:padding="10dip"
+		android:scrollbarStyle="outsideOverlay"
+		android:id="@+id/scrollView1"
+		android:background="#696865"
+		android:layout_marginBottom="55dip"
 	>
-		<TextView
-			android:text="Name"
-			android:id="@+id/txtTitle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center_horizontal"
-			style="@style/TextHeader1"
-		></TextView>
 		<LinearLayout
-			android:id="@+id/linearLayout3"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-		>
-			<TextView
-				android:text="by "
-				android:id="@+id/textView1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-			></TextView>
-			<TextView
-				android:layout_height="wrap_content"
-				android:text="Merchant"
-				android:layout_width="wrap_content"
-				android:id="@+id/txtMerchant"
-				style="@style/TextHeader2"
-			></TextView>
-		</LinearLayout>
-		<RatingBar
-			android:id="@+id/ratingBarIndicator"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:visibility="gone"
-			style="?android:attr/ratingBarStyleSmall"
-		></RatingBar>
-		<com.github.droidfu.widgets.WebImageView
-			android:id="@+id/img"
-			android:padding="10px"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		<!-- <ImageView android:id="@+id/img" android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" android:paddingLeft="6dip" android:paddingTop="4dip" 
-			android:paddingRight="8dip" android:paddingBottom="9dip" android:background="@drawable/drop_shadow" 
-			></ImageView> -->
-		<ImageView
-			android:id="@+id/imgBanner"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:visibility="gone"
-		></ImageView>
-		<TextView
-			android:text="Desc"
-			android:id="@+id/txtDesc"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			style="@style/TextDesc"
-			android:gravity="center"
-			android:paddingLeft="10dip"
-			android:paddingRight="10dip"
-		></TextView>
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:id="@+id/linearLayout6"
-			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingLeft="10dip"
-			android:paddingRight="10dip"
-		>
-			<RelativeLayout
-				android:id="@+id/linearLayout1"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-			>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_alignParentLeft="true"
-					android:text="Date: "
-					style="@style/TextInfo"
-				></TextView>
-				<TextView
-					android:layout_alignParentRight="true"
-					android:id="@+id/txtRedeemOn"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="10/10/2011 at 10pm"
-					style="@style/TextAlert"
-				></TextView>
-			</RelativeLayout>
-			<RelativeLayout
-				android:id="@+id/linearLayout2"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-			>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_alignParentLeft="true"
-					android:text="Paid: "
-					style="@style/TextInfo"
-				></TextView>
-				<TextView
-					android:layout_alignParentRight="true"
-					android:id="@+id/txtCost"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="$50"
-					style="@style/TextAlert"
-				></TextView>
-			</RelativeLayout>
-		</LinearLayout>
-		<LinearLayout
-			android:id="@+id/linearLayout5"
-			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:gravity="center_vertical|center_horizontal"
-		>
-			<TextView
-				android:layout_height="wrap_content"
-				android:layout_width="0dip"
-				android:layout_weight="3"
-				android:gravity="center_vertical|center_horizontal"
-				android:text="Address"
-				android:id="@+id/txtAddress"
-				style="@style/TextInfo"
-			></TextView>
-			<Button
-				android:layout_height="wrap_content"
-				android:layout_width="0dip"
-				android:layout_weight="1"
-				android:id="@+id/btnDirection"
-				android:text="@string/locate"
-			></Button>
-		</LinearLayout>
-		<LinearLayout
-			android:id="@+id/linearLayout4"
-			android:layout_height="wrap_content"
-			android:layout_width="match_parent"
-			android:gravity="center_vertical|center_horizontal"
-		>
-			<TextView
-				android:id="@+id/txtPhone"
-				android:layout_height="wrap_content"
-				android:layout_width="0dip"
-				android:layout_weight="3"
-				android:gravity="center_vertical|center_horizontal"
-				android:text="Phone"
-				style="@style/TextInfo"
-			></TextView>
-			<ImageButton
-				android:src="@drawable/phone_icon"
-				android:layout_height="wrap_content"
-				android:layout_width="0dip"
-				android:layout_weight="1"
-				android:id="@+id/imgBtnPhone"
-			></ImageButton>
-		</LinearLayout>
-		<LinearLayout
-			android:id="@+id/linearLayout4"
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:gravity="center_horizontal"
+			android:paddingLeft="10dip"
+			android:paddingTop="10dip"
+			android:paddingRight="10dip"
+			android:paddingBottom="10dip"
+			android:background="@drawable/detail_gradient"
 		>
+			<TextView
+				android:text="Name"
+				android:id="@+id/txtTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				style="@style/TextHeader1"
+			></TextView>
+			<LinearLayout
+				android:id="@+id/linearLayout3"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+			>
+				<TextView
+					android:text="by "
+					android:id="@+id/textView1"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:visibility="gone"
+				></TextView>
+				<TextView
+					android:layout_height="wrap_content"
+					android:text="Merchant"
+					android:layout_width="wrap_content"
+					android:id="@+id/txtMerchant"
+					style="@style/TextHeader2"
+				></TextView>
+			</LinearLayout>
 			<RatingBar
-				android:id="@+id/ratingBar"
+				android:id="@+id/ratingBarIndicator"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:visibility="gone"
+				style="?android:attr/ratingBarStyleSmall"
 			></RatingBar>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="1dip"
+				android:background="@color/black"
+			>
+				<com.github.droidfu.widgets.WebImageView
+					android:id="@+id/img"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+			<ImageView
+				android:id="@+id/imgBanner"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:visibility="gone"
+			></ImageView>
+			<TextView
+				android:text="Desc"
+				android:id="@+id/txtDesc"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="@style/TextDesc"
+				android:gravity="center"
+				android:paddingLeft="10dip"
+				android:paddingRight="10dip"
+			></TextView>
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:id="@+id/linearLayout6"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:paddingLeft="10dip"
+				android:paddingRight="10dip"
+			>
+				<LinearLayout
+					android:id="@+id/linearLayout1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Redeemed on "
+						style="@style/TextDetailInfoBold"
+					></TextView>
+					<TextView
+						android:id="@+id/txtRedeemOn"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="10/10/2011 at 10pm"
+						style="@style/TextDetailInfo"
+					></TextView>
+				</LinearLayout>
+				<LinearLayout
+					android:id="@+id/linearLayout2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="paid "
+						style="@style/TextDetailInfoBold"
+					></TextView>
+					<TextView
+						android:id="@+id/txtCost"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="$50"
+						style="@style/TextDetailInfo"
+					></TextView>
+				</LinearLayout>
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linearLayout5"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:gravity="center_vertical|center_horizontal"
+				android:visibility="gone"
+			>
+				<TextView
+					android:layout_height="wrap_content"
+					android:layout_width="0dip"
+					android:layout_weight="3"
+					android:gravity="center_vertical|center_horizontal"
+					android:text="Address"
+					android:id="@+id/txtAddress"
+					style="@style/TextInfo"
+				></TextView>
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linearLayout4"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:gravity="center_vertical|center_horizontal"
+				android:visibility="gone"
+			>
+				<TextView
+					android:id="@+id/txtPhone"
+					android:layout_height="wrap_content"
+					android:layout_width="0dip"
+					android:layout_weight="3"
+					android:gravity="center_vertical|center_horizontal"
+					android:text="Phone"
+					style="@style/TextInfo"
+				></TextView>
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linearLayout4"
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+			>
+				<RatingBar
+					android:id="@+id/ratingBar"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:visibility="gone"
+				></RatingBar>
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+	<LinearLayout
+		android:id="@+id/linearLayout7"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_alignParentBottom="true"
+		android:gravity="center"
+		android:paddingTop="4dip"
+		android:paddingLeft="2dip"
+		android:paddingRight="2dip"
+		android:background="@color/black"
+		android:orientation="vertical"
+	>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:orientation="horizontal"
+			android:gravity="center"
+			android:layout_height="wrap_content"
+		>
 			<Button
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:layout_width="0dip"
+				android:text="@string/locate"
+				android:id="@+id/btnDirection"
+			></Button>
+			<ImageButton
+				android:layout_weight="1"
+				android:src="@drawable/phone_icon"
+				android:id="@+id/imgBtnPhone"
+				android:layout_height="match_parent"
+				android:layout_width="0dip"
+			></ImageButton>
+			<Button
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:layout_width="0dip"
 				android:text="Rate it!"
 				android:id="@+id/btnRate"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
+				android:visibility="gone"
+			></Button>
+			<Button
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:layout_width="0dip"
+				android:text="Feedback"
+				android:id="@+id/btnFeedback"
+			></Button>
+			<Button
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:layout_width="0dip"
+				android:text="@string/forward_to_friends"
+				android:id="@+id/btnForward"
+			></Button>
 		</LinearLayout>
-		<Button
-			android:text="@string/forward_to_friends"
-			android:id="@+id/btnForward"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-		></Button>
-		<Button
-			android:text="Feedback"
-			android:layout_width="match_parent"
-			android:id="@+id/btnFeedback"
-			android:layout_height="wrap_content"
-		></Button>
 	</LinearLayout>
-</ScrollView>
+</RelativeLayout>

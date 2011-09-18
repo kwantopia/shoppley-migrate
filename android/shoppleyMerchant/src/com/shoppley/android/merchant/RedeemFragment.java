@@ -2,6 +2,8 @@ package com.shoppley.android.merchant;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -99,13 +101,13 @@ public class RedeemFragment extends Fragment {
 	private void redeem() {
 		if (edtCode.getText().length() == 0 || edtPaid.getText().length() == 0) {
 			Utils.createDialog(getActivity(),
-					"Offer code or total paid cannot be blank.").show();
+					getResources().getString(R.string.offer_code_total_paid_cannot_be_blank)).show();
 			return;
 		}
 
 		final ProgressDialog loading = Utils.showLoading(getActivity(),
-				"Redeeming...");
-		BetterAsyncTask<Void, Void, RedeemResponse> task = new BetterAsyncTask<Void, Void, RedeemResponse>(
+				getResources().getString(R.string.redeeming));
+		final BetterAsyncTask<Void, Void, RedeemResponse> task = new BetterAsyncTask<Void, Void, RedeemResponse>(
 				getActivity()) {
 
 			@Override
@@ -113,7 +115,7 @@ public class RedeemFragment extends Fragment {
 				loading.hide();
 				if (arg1 != null && arg1.result != null
 						&& arg1.result.equals("1")) {
-					Utils.createDialog(getActivity(), "Succesfully redeemed.")
+					Utils.createDialog(getActivity(), getResources().getString(R.string.successfully_redeemed))
 							.show();
 				} else {
 					Utils.createDialog(getActivity(), arg1.result_msg).show();
@@ -125,7 +127,7 @@ public class RedeemFragment extends Fragment {
 			protected void handleError(Context arg0, Exception arg1) {
 				loading.hide();
 				Utils.createDialog(getActivity(),
-						"An error occured. Please try again later").show();
+						getResources().getString(R.string.error_occured_please_try_again_later)).show();
 
 			}
 		};
@@ -139,6 +141,12 @@ public class RedeemFragment extends Fragment {
 
 				return api.merchantRedeemOffer(edtPaid.getText().toString(),
 						edtCode.getText().toString());
+			}
+		});
+		loading.setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface arg0) {
+				loading.hide();
+				task.cancel(true);
 			}
 		});
 		task.execute();

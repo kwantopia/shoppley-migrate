@@ -7,14 +7,20 @@
 	android:background="@color/background"
 	android:padding="10dip"
 >
-	<TextView
-		android:id="@+id/txtMerchantFeedback"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:layout_width="match_parent"
+	<LinearLayout
+		android:id="@+id/linearLayout1"
 		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
 		android:gravity="center_horizontal"
-		android:text="Feedback for "
-	></TextView>
+	>
+		<TextView
+			android:id="@+id/txtMerchantFeedback"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Feedback for "
+			style="@style/TextDesc"
+		></TextView>
+	</LinearLayout>
 	<EditText
 		android:hint="@string/messages"
 		android:id="@+id/edtTxtFeedback"

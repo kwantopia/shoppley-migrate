@@ -19,15 +19,16 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("feedback", feedback);
-			obj.put("offer_id", offer_id);
+			obj.put("offer_code_id", offer_id);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 		}
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/customer/offer/feedback/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					FeedbackOfferResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerFeedbackOffer", responseStr);
+			return gson.fromJson(responseStr, FeedbackOfferResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,8 +56,9 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/customer/offer/forward/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					ForwardOfferResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerForwardOffer", responseStr);
+			return gson.fromJson(responseStr, ForwardOfferResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,9 +83,10 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		}
 		try {
 			HttpResponse response = httpPostRequest(
-					"/m/customer/offer/feedback/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					RateOfferResponse.class);
+					"/m/customer/offer/rate/", obj);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerRateOffer", responseStr);
+			return gson.fromJson(responseStr, RateOfferResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,10 +113,11 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 			e.printStackTrace();
 		}
 		try {
-			HttpResponse response = httpPostRequest("/m/customer/register/",
+			HttpResponse response = httpPostRequestNoCookies("/m/customer/register/",
 					obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					RegisterResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerRegister", responseStr);
+			return gson.fromJson(responseStr, RegisterResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,7 +131,7 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		return null;
 	}
 
-	public OffercodeResponse customerRequestOfferCode(String offerID){
+	public OffercodeResponse customerRequestOfferCode(String offerID) {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("offer_id", offerID);
@@ -138,8 +142,10 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/customer/offer/offercode/", obj);
-			String d = EntityUtils.toString(response.getEntity());
-			return gson.fromJson(d, OffercodeResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerRequestOfferCode", responseStr);
+			return gson.fromJson(responseStr,
+					OffercodeResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -153,7 +159,7 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		return null;
 	}
 
-	public CurrentOfferResponse customerShowOffers(double lat, double lng){
+	public CurrentOfferResponse customerShowOffers(double lat, double lng) {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("lat", lat);
@@ -164,9 +170,10 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/customer/offers/current/", obj);
-			String offer = EntityUtils.toString(response.getEntity());
-			Log.d("Offer", offer);
-			return gson.fromJson(offer, CurrentOfferResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerShowOffers", responseStr);
+			return gson.fromJson(responseStr,
+					CurrentOfferResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -184,18 +191,39 @@ public class ShoppleyCustomerAPI extends ShoppleyAPI {
 			double lng) {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("lat", lat);
-			obj.put("lon", lng);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
 			HttpResponse response = httpGetRequest(
 					"/m/customer/offers/redeemed/", obj);
-			String offer = EntityUtils.toString(response.getEntity());
-			Log.d("Redeemed", offer);
-			return gson.fromJson(offer, RedeemedOfferResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("customerShowRedeemedOffers", responseStr);
+			return gson.fromJson(responseStr,
+					RedeemedOfferResponse.class);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public IWantResponse sendIWantMessage(String request) {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("request", request);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+		}
+		try {
+			HttpResponse response = httpPostRequest(
+					"/m/customer/iwant/", obj);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("sendIWantMessage", responseStr);
+			return gson.fromJson(responseStr,
+					IWantResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

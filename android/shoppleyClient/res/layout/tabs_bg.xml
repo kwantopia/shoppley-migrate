@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tabsLayout"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="10dip"
+	android:gravity="center"
+	android:orientation="vertical"
+	android:background="@drawable/tab_bg_selector"
+>
+	<ImageView
+		android:src="@drawable/tab_current_offers"
+		android:id="@+id/tabImg"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+	></ImageView>
+	<TextView
+		android:id="@+id/tabTxt"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Title"
+		android:singleLine="True"
+		android:ellipsize="marquee"
+		android:textStyle="normal"
+		android:textColor="@drawable/tab_text_selector"
+		android:textSize="12sp" />
+		<!-- android:shadowColor="#000000"
+		android:shadowRadius="0.75" /> -->
+</LinearLayout>

@@ -3,6 +3,8 @@ package com.shoppley.android.merchant;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +13,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +40,7 @@ public class RegisterFragment extends Fragment {
 	private String username = null;
 	private String password = null;
 	private EditText edtTxtBiz;
+	private Button btnCancel;
 
 	public RegisterFragment() {
 	}
@@ -92,7 +98,72 @@ public class RegisterFragment extends Fragment {
 						return false;
 					}
 				});
+		// final ScrollView scroll = (ScrollView) v.findViewById(R.id.scroll);
+		//
+		// edtTxtBiz.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 4.5));
+		// }
+		// });
+		// edtTxtUsn.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 3.5));
+		// }
+		// });
+		// edtTxtUsn.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 3.5));
+		//
+		// }
+		// });
+		// edtTxtPwd.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 2.5));
+		// }
+		// });
+		// edtTxtPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 2.5));
+		//
+		// }
+		// });
+		// edtTxtPhone.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 1.5));
+		// }
+		// });
+		// edtTxtPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 1.5));
+		//
+		// }
+		// });
+		// edtTxtZipcode.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 0.5));
+		// }
+		// });
+		// edtTxtZipcode.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// scroll.scrollTo(0,
+		// (int) (scroll.getBottom() - v.getHeight() * 0.5));
+		// }
+		// });
+
 		btnRegister = (Button) v.findViewById(R.id.btnRegister);
+		btnCancel = (Button) v.findViewById(R.id.btnCancel);
 
 		if (username != null) {
 			edtTxtUsn.append(username);
@@ -107,14 +178,22 @@ public class RegisterFragment extends Fragment {
 				}
 			}
 		});
+		btnCancel.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				InputMethodManager imm = (InputMethodManager) getActivity()
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(edtTxtUsn.getWindowToken(), 0);
+				getActivity().onBackPressed();
+			}
+		});
 		return v;
 	}
 
 	protected void performRegister() {
 		final ShoppleyMerchantAPI api = app.getAPI();
 		final ProgressDialog registering = Utils.showLoading(getActivity(),
-				"Registering...");
-		BetterAsyncTask<Void, Void, RegisterResponse> task = new BetterAsyncTask<Void, Void, RegisterResponse>(
+				getResources().getString(R.string.registering));
+		final BetterAsyncTask<Void, Void, RegisterResponse> task = new BetterAsyncTask<Void, Void, RegisterResponse>(
 				getActivity()) {
 
 			@Override
@@ -123,18 +202,26 @@ public class RegisterFragment extends Fragment {
 				if (arg1 != null && arg1.result != null
 						&& arg1.result.equals("1")) {
 					saveCredential();
-					Toast.makeText(getActivity(), "Succesfully registered.",
-							1000).show();
+					Toast.makeText(
+							getActivity(),
+							getResources().getString(
+									R.string.successfully_registered), 1000)
+							.show();
 					FragmentManager fm = getFragmentManager();
 					fm.popBackStack();
 				} else {
 					if (arg1 != null && arg1.result != null) {
-						Utils.createDialog(getActivity(),
-								"Registration failed. " + arg1.result_msg)
-								.show();
+						Utils.createDialog(
+								getActivity(),
+								getResources().getString(
+										R.string.registration_failed)
+										+ " " + arg1.result_msg).show();
 					} else {
-						Utils.createDialog(getActivity(),
-								"Registration failed. Please try again later.")
+						Utils.createDialog(
+								getActivity(),
+								getResources()
+										.getString(
+												R.string.registration_failed_please_try_again_later))
 								.show();
 					}
 				}
@@ -143,8 +230,12 @@ public class RegisterFragment extends Fragment {
 			@Override
 			protected void handleError(Context arg0, Exception arg1) {
 				registering.hide();
-				Utils.createDialog(getActivity(),
-						"Registration failed. Please try again later.").show();
+				Utils.createDialog(
+						getActivity(),
+						getResources()
+								.getString(
+										R.string.registration_failed_please_try_again_later))
+						.show();
 			}
 		};
 		task.setCallable(new BetterAsyncTaskCallable<Void, Void, RegisterResponse>() {
@@ -156,6 +247,12 @@ public class RegisterFragment extends Fragment {
 						edtTxtUsn.getText().toString(), edtTxtPwd.getText()
 								.toString(), edtTxtPhone.getText().toString(),
 						edtTxtZipcode.getText().toString());
+			}
+		});
+		registering.setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface arg0) {
+				registering.hide();
+				task.cancel(true);
 			}
 		});
 		task.execute();
@@ -170,7 +267,8 @@ public class RegisterFragment extends Fragment {
 			// Not pass
 			Utils.createDialog(
 					getActivity(),
-					("Business or email or password or phone or zipcode cannot be blank."))
+					(getResources()
+							.getString(R.string.business_email_password_phone_zipcode_cannot_be_blank)))
 					.show();
 			return false;
 		}

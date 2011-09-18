@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>shoppleyClient_gen</name>
+			<type>2</type>
+			<location>/Volumes/Shoppley/svn.opentxns.com/trunk/android/shoppleyClient/gen</location>
+		</link>
+		<link>
 			<name>shoppleyClient_src</name>
 			<type>2</type>
 			<location>/Volumes/Shoppley/svn.opentxns.com/trunk/android/shoppleyClient/src</location>

@@ -1,7 +1,6 @@
 package com.shoppley.android.merchant;
 
 import java.text.NumberFormat;
-import java.util.Date;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -63,8 +62,12 @@ public class ActiveFragment extends Fragment {
 		img.setImageUrl(offer.img);
 		img.loadImage();
 		txtDesc.setText(offer.description);
-		txtExpires.setText(Utils.secEpochToLocaleString(Long
-				.parseLong(offer.expires)));
+		String str = Utils.getExpiresIn(Long
+				.parseLong(offer.expires));
+		if (str != "")
+			txtExpires.setText(str);
+		else
+			txtExpires.setText("expired");
 		txtSendto.setText(offer.received);
 		txtRedeem.setText(offer.redeemed);
 		txtPercentage.setText(NumberFormat.getPercentInstance().format(

@@ -3,50 +3,76 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="match_parent"
 >
-	<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
+	<FrameLayout
+		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:background="@android:color/transparent"
 	>
-		<EditText
-			android:layout_height="wrap_content"
+		<ScrollView
+			android:id="@+id/scroll"
 			android:layout_width="match_parent"
-			android:hint="@string/email"
-			android:imeOptions="actionNext"
-			android:inputType="textEmailAddress"
-			android:id="@+id/edtTxtUsn"
+			android:layout_height="match_parent"
+			android:layout_marginBottom="60dip"
 		>
-		</EditText>
-		<EditText
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:padding="10dip"
+			>
+				<ImageView
+					android:id="@+id/imgLogo"
+					android:src="@drawable/logo"
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:paddingTop="10dip"
+					android:paddingBottom="10dip" />
+				<EditText
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:hint="@string/email"
+					android:imeOptions="actionNext"
+					android:inputType="textEmailAddress"
+					android:id="@+id/edtTxtUsn"
+				>
+				</EditText>
+				<EditText
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:hint="@string/password"
+					android:imeOptions="actionGo"
+					android:inputType="textPassword"
+					android:id="@+id/edtTxtPwd"
+				></EditText>
+			</LinearLayout>
+		</ScrollView>
+		<LinearLayout
+			android:id="@+id/actionBar"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:hint="@string/password"
-			android:imeOptions="actionGo"
-			android:inputType="textPassword"
-			android:id="@+id/edtTxtPwd"
-		></EditText>
-	</LinearLayout>
-	<LinearLayout
-		android:id="@+id/linearLayout1"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-	>
-		<Button
-			android:text="@string/login"
-			android:id="@+id/btnLogin"
-			android:layout_width="0dip"
-			android:layout_weight="1"
-			android:layout_height="wrap_content"
-		></Button>
-		<Button
-			android:text="@string/register"
-			android:id="@+id/btnRegister"
-			android:layout_width="0dip"
-			android:layout_weight="1"
-			android:layout_height="wrap_content"
-		></Button>
-	</LinearLayout>
+			android:layout_gravity="bottom"
+			android:background="#7771706d"
+			android:paddingTop="10dip"
+			android:paddingBottom="6dip"
+			android:paddingLeft="10dip"
+			android:paddingRight="10dip"
+		>
+			<Button
+				android:text="@string/login"
+				android:id="@+id/btnLogin"
+				android:layout_width="0dip"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+			></Button>
+			<Button
+				android:text="@string/register"
+				android:id="@+id/btnRegister"
+				android:layout_width="0dip"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+			></Button>
+		</LinearLayout>
+	</FrameLayout>
 </LinearLayout>

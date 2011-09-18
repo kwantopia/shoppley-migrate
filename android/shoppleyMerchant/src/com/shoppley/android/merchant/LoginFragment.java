@@ -12,12 +12,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.shoppley.android.api.LoginResponse;
@@ -41,6 +45,24 @@ public class LoginFragment extends Fragment {
 		Button btnLogin = (Button) v.findViewById(R.id.btnLogin);
 		Button btnRegister = (Button) v.findViewById(R.id.btnRegister);
 
+		// final ScrollView scroll = (ScrollView) v.findViewById(R.id.scroll);
+
+		// scroll.scrollTo(0, scroll.getBottom());
+		// OnTouchListener touchListener = new OnTouchListener() {
+		// public boolean onTouch(View v, MotionEvent event) {
+		// scroll.scrollTo(0, scroll.getBottom());
+		// // TODO Auto-generated method stub
+		// return false;
+		// }
+		// };
+		// OnFocusChangeListener focusListener = new OnFocusChangeListener() {
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// scroll.scrollTo(0, scroll.getBottom());
+		// }
+		// };
+		// edtTxtUsn.setOnTouchListener(touchListener);
+		// edtTxtPwd.setOnTouchListener(touchListener);
+		// edtTxtPwd.setOnFocusChangeListener(focusListener);
 		btnLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Validate

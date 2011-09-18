@@ -10,21 +10,65 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 	>
-		<TabWidget
-			android:id="@android:id/tabs"
+		<RelativeLayout
 			android:orientation="horizontal"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="0" />
+			android:background="@drawable/title_bg"
+			android:padding="4px"
+		>
+			<ImageView
+				android:src="@drawable/shoppley_title"
+				android:id="@+id/imgLogo"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true"
+			></ImageView>
+			<EditText
+				android:id="@+id/edtTxtSearch"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:layout_toLeftOf="@+id/imageBtnSearch"
+				android:visibility="gone"
+			>
+			</EditText>
+			<ImageButton
+				android:src="@drawable/search_icon"
+				android:id="@+id/imgBtnSearch"
+				android:background="@android:color/transparent"
+				android:visibility="gone"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignParentRight="true"
+			></ImageButton>
+			<Button
+				android:text="New offer"
+				android:id="@+id/btnNewOffer"
+				android:layout_alignParentRight="true"
+				android:layout_width="wrap_content"
+				android:layout_height="40dip"
+				android:layout_centerVertical="true"
+			></Button>
+		</RelativeLayout>
 		<FrameLayout
 			android:id="@android:id/tabcontent"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_weight="0" />
+			android:layout_weight="0"
+			android:background="@color/background" />
 		<android.support.v4.view.ViewPager
 			android:id="@+id/pager"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="1" />
+			android:layout_weight="1"
+			android:background="@color/background" />
+		<TabWidget
+			android:id="@android:id/tabs"
+			android:orientation="horizontal"
+			android:layout_marginBottom="-4px"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0" />
 	</LinearLayout>
 </TabHost>

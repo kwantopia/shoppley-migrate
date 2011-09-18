@@ -3,16 +3,21 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/background"
 	android:padding="10dip"
 	android:scrollbarStyle="outsideOverlay"
 	android:id="@+id/scrollView1"
+	android:background="@color/detail_background"
 >
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center_horizontal"
+		android:paddingTop="10dip"
+		android:paddingLeft="10dip"
+		android:paddingRight="10dip"
+		android:paddingBottom="10dip"
+		android:background="@drawable/detail_gradient"
 	>
 		<TextView
 			android:text="Name"
@@ -22,12 +27,6 @@
 			android:gravity="center_horizontal"
 			style="@style/TextHeader1"
 		></TextView>
-		<LinearLayout
-			android:id="@+id/linearLayout3"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-		>
-		</LinearLayout>
 		<RatingBar
 			android:id="@+id/ratingBarIndicator"
 			android:layout_width="wrap_content"
@@ -35,11 +34,17 @@
 			android:visibility="gone"
 			style="?android:attr/ratingBarStyleSmall"
 		></RatingBar>
-		<com.github.droidfu.widgets.WebImageView
-			android:id="@+id/img"
-			android:padding="10px"
+		<LinearLayout
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:padding="1dip"
+			android:background="@color/black"
+		>
+			<com.github.droidfu.widgets.WebImageView
+				android:id="@+id/img"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
 		<!-- <ImageView android:id="@+id/img" android:layout_width="wrap_content" 
 			android:layout_height="wrap_content" android:paddingLeft="6dip" android:paddingTop="4dip" 
 			android:paddingRight="8dip" android:paddingBottom="9dip" android:background="@drawable/drop_shadow" 
@@ -62,32 +67,42 @@
 		></TextView>
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:id="@+id/linearLayout60"
+			android:id="@+id/linearLayout6"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:paddingLeft="10dip"
 			android:paddingRight="10dip"
+			android:gravity="center_horizontal"
 		>
-			<RelativeLayout
+			<LinearLayout
+				android:id="@+id/linearLayout2"
 				android:layout_height="wrap_content"
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 			>
 				<TextView
 					android:layout_height="wrap_content"
-					android:text="Expires: "
+					android:text="expires in "
 					android:layout_width="wrap_content"
-					android:layout_alignParentLeft="true"
-					style="@style/TextInfo"
+					style="@style/TextDetailInfoBold"
 				></TextView>
 				<TextView
 					android:layout_height="wrap_content"
 					android:text="10:00:00 PM"
 					android:layout_width="wrap_content"
 					android:id="@+id/txtExpires"
-					android:layout_alignParentRight="true"
-					style="@style/TextAlert"
+					style="@style/TextDetailInfo"
 				></TextView>
-			</RelativeLayout>
+			</LinearLayout>
+		</LinearLayout>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:id="@+id/linearLayout60"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingLeft="10dip"
+			android:paddingTop="10dip"
+			android:paddingRight="10dip"
+		>
 			<RelativeLayout
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
@@ -97,7 +112,7 @@
 					android:text="Send to "
 					android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"
-					style="@style/TextInfoHead"
+					style="@style/TextInfoBold"
 				></TextView>
 				<TextView
 					android:layout_height="wrap_content"
@@ -105,7 +120,7 @@
 					android:layout_width="wrap_content"
 					android:id="@+id/txtSendTo"
 					android:layout_alignParentRight="true"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 			</RelativeLayout>
 			<RelativeLayout
@@ -117,7 +132,7 @@
 					android:text="Redeemed "
 					android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"
-					style="@style/TextInfoHead"
+					style="@style/TextInfoBold"
 				></TextView>
 				<TextView
 					android:layout_height="wrap_content"
@@ -125,7 +140,7 @@
 					android:layout_width="wrap_content"
 					android:id="@+id/txtRedeem"
 					android:layout_alignParentRight="true"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 			</RelativeLayout>
 			<RelativeLayout
@@ -137,7 +152,7 @@
 					android:text="Percentage "
 					android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"
-					style="@style/TextInfoHead"
+					style="@style/TextInfoBold"
 				></TextView>
 				<TextView
 					android:layout_height="wrap_content"
@@ -145,7 +160,7 @@
 					android:layout_width="wrap_content"
 					android:id="@+id/txtPercentage"
 					android:layout_alignParentRight="true"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 			</RelativeLayout>
 		</LinearLayout>

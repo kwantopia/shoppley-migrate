@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.AlertDialog;
@@ -34,25 +35,20 @@ public class Utils {
 								call.call();
 							}
 						})
-				.setNegativeButton("No",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								return;
-							}
-						}).create();
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				}).create();
 	}
 
 	public static Dialog createDialog(Context context, String msg) {
-		return new AlertDialog.Builder(context)
-				.setMessage(msg)
-				.setNeutralButton("Ok",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								return;
-							}
-						}).create();
+		return new AlertDialog.Builder(context).setMessage(msg)
+				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				}).create();
 	}
 
 	public static ProgressDialog showLoading(Context context, String msg) {
@@ -136,6 +132,51 @@ public class Utils {
 	}
 
 	public static String secEpochToLocaleString(long sec) {
-		return new Date(sec*1000).toLocaleString();
+		return new Date(sec * 1000).toLocaleString();
+	}
+
+	public static String getExpiresIn(long expire_sec) {
+		final long expire_ms = expire_sec * 1000;
+
+		long nowEpoch = System.currentTimeMillis();
+		String expiredTxt = "";
+
+		long timeRemaining = expire_ms - nowEpoch;
+		if (timeRemaining > 0) {
+			long sec = (timeRemaining / 1000) % 60;
+			long min = (timeRemaining / (1000 * 60)) % 60;
+			long hours = (timeRemaining / (1000 * 60 * 60)) % 24;
+			long days = (timeRemaining / (1000 * 60 * 60 * 24)) % 7;
+			long weeks = (timeRemaining / (1000 * 60 * 60 * 24 * 7));
+			if (weeks != 0) {
+				expiredTxt = weeks + " week";
+				if (days > 1) {
+					expiredTxt += "s";
+				}
+			} else if (days != 0) {
+				expiredTxt = days + " day";
+				if (days > 1) {
+					expiredTxt += "s";
+				}
+			} else if (hours != 0) {
+				expiredTxt = hours + " h, " + min + " m," + sec + " s";
+			} else if (min != 0) {
+				expiredTxt = min + " m, " + sec + " s";
+			} else if (sec != 0) {
+				expiredTxt = sec + " s";
+			}
+		}
+		return expiredTxt;
+	}
+
+	public static String getDate(long parseLong) {
+		Date date = new Date(parseLong * 1000);
+		SimpleDateFormat df = new SimpleDateFormat("MMMMM dd, yyyy");
+		return df.format(date);
+	}
+	public static String getDateTime(long parseLong) {
+		Date date = new Date(parseLong * 1000);
+		SimpleDateFormat df = new SimpleDateFormat("MMMMM dd, yyyy 'at' h:mm a, z");
+		return df.format(date);
 	}
 }

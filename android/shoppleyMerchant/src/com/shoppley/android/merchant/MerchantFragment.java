@@ -3,15 +3,22 @@ package com.shoppley.android.merchant;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.shoppley.android.utils.Utils;
 
@@ -30,6 +37,20 @@ public class MerchantFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View v = inflater.inflate(R.layout.tabs, container, false);
+
+		Button btnNewOffer = (Button) v.findViewById(R.id.btnNewOffer);
+		btnNewOffer.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				FragmentTransaction ft = getActivity()
+						.getSupportFragmentManager().beginTransaction();
+				ft.hide(((MerchantActivity) getActivity()).shoppleyFragment);
+				ft.add(R.id.simple_fragment, new NewOfferFragment());
+				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+
 		mTabHost = (TabHost) v.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
@@ -37,28 +58,81 @@ public class MerchantFragment extends Fragment {
 		mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mViewPager);
 		mTabsAdapter.addTab(
 				mTabHost.newTabSpec("active").setIndicator(
-						"Active Offers",
-						getResources()
-								.getDrawable(R.drawable.tab_active_offers)),
+						createTabView(
+								inflater,
+								"Active Offers",
+								getResources().getDrawable(
+										R.drawable.tab_active_offers_white),
+								getResources().getDrawable(
+										R.drawable.tab_active_offers_black))),
 				ActiveListFragment.class, null);
-		mTabsAdapter
-				.addTab(mTabHost.newTabSpec("past").setIndicator("Past Offers",
-						getResources().getDrawable(R.drawable.tab_past_offers)),
-						PastListFragment.class, null);
 		mTabsAdapter.addTab(
-				mTabHost.newTabSpec("redeem").setIndicator("Redeem",
-						getResources().getDrawable(R.drawable.tab_redeem)),
+				mTabHost.newTabSpec("past").setIndicator(
+						createTabView(
+								inflater,
+								"Past Offers",
+								getResources().getDrawable(
+										R.drawable.tab_past_offers_white),
+								getResources().getDrawable(
+										R.drawable.tab_past_offers_black))),
+				PastListFragment.class, null);
+		mTabsAdapter.addTab(
+				mTabHost.newTabSpec("redeemed").setIndicator(
+						createTabView(
+								inflater,
+								"Redeem",
+								getResources().getDrawable(
+										R.drawable.tab_redeem_white),
+								getResources().getDrawable(
+										R.drawable.tab_redeem_black))),
 				RedeemFragment.class, null);
 		mTabsAdapter.addTab(
-				mTabHost.newTabSpec("summary").setIndicator("Summary",
-						getResources().getDrawable(R.drawable.tab_summary)),
+				mTabHost.newTabSpec("summary").setIndicator(
+						createTabView(
+								inflater,
+								"Summary",
+								getResources().getDrawable(
+										R.drawable.tab_summary_white),
+								getResources().getDrawable(
+										R.drawable.tab_summary_black))),
 				SummaryFragment.class, null);
 		mTabsAdapter.addTab(
-				mTabHost.newTabSpec("settings").setIndicator("Settings",
-						getResources().getDrawable(R.drawable.tab_settings)),
+				mTabHost.newTabSpec("settings").setIndicator(
+						createTabView(
+								inflater,
+								"Settings",
+								getResources().getDrawable(
+										R.drawable.tab_settings_white),
+								getResources().getDrawable(
+										R.drawable.tab_settings_black))),
 				SettingsFragment.class, null);
 
 		return v;
+	}
+
+	private View createTabView(LayoutInflater inflater, String text,
+			Drawable icon) {
+		View tabView = inflater.inflate(R.layout.tabs_bg, null);
+		TextView tabTxtView = (TextView) tabView.findViewById(R.id.tabTxt);
+		ImageView imgView = (ImageView) tabView.findViewById(R.id.tabImg);
+		imgView.setImageDrawable(icon);
+		tabTxtView.setText(text);
+		return tabView;
+	}
+
+	private View createTabView(LayoutInflater inflater, String text,
+			Drawable iconInactive, Drawable iconActive) {
+		View tabView = inflater.inflate(R.layout.tabs_bg, null);
+		TextView tabTxtView = (TextView) tabView.findViewById(R.id.tabTxt);
+		ImageView imgView = (ImageView) tabView.findViewById(R.id.tabImg);
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] { android.R.attr.state_pressed }, iconActive);
+		states.addState(new int[] { android.R.attr.state_selected }, iconActive);
+		states.addState(new int[] { android.R.attr.state_focused }, iconActive);
+		states.addState(new int[] {}, iconInactive);
+		imgView.setImageDrawable(states);
+		tabTxtView.setText(text);
+		return tabView;
 	}
 
 	/**

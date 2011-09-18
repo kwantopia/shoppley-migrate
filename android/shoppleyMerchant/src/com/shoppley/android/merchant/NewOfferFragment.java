@@ -4,18 +4,21 @@ import java.util.Date;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.github.droidfu.concurrent.BetterAsyncTask;
 import com.github.droidfu.concurrent.BetterAsyncTaskCallable;
@@ -102,14 +105,16 @@ public class NewOfferFragment extends Fragment {
 			public void onClick(View v) {
 				if (edtTitle.getText().length() == 0
 						|| edtDuration.getText().length() == 0) {
-					Utils.createDialog(getActivity(),
-							"Title or description cannot be blank.").show();
+					Utils.createDialog(
+							getActivity(),
+							getString(R.string.title_description_cannot_be_blank))
+							.show();
 					return;
 				}
 
 				final ProgressDialog loading = Utils.showLoading(getActivity(),
-						"Submitting new offer...");
-				BetterAsyncTask<Void, Void, StartResponse> task = new BetterAsyncTask<Void, Void, StartResponse>(
+						getString(R.string.submitting_new_offer));
+				final BetterAsyncTask<Void, Void, StartResponse> task = new BetterAsyncTask<Void, Void, StartResponse>(
 						getActivity()) {
 
 					@Override
@@ -117,22 +122,26 @@ public class NewOfferFragment extends Fragment {
 						loading.hide();
 						// TODO Auto-generated method stub
 						if (arg1 != null && arg1.result != null
-								&& arg1.result.equals("1")) {
-							Utils.createDialog(getActivity(),
-									"Succesfully submitted.").show();
-						} else {
-							Utils.createDialog(getActivity(),
-									"An error occured. Please try again later")
+								&& arg1.result.equals("0")) {
+							Toast.makeText(getActivity(),
+									getString(R.string.successfully_submitted), 500)
 									.show();
-
+							FragmentManager fm = getFragmentManager();
+							fm.popBackStack();
+						} else {
+							Utils.createDialog(
+									getActivity(),
+									getString(R.string.error_occured_please_try_again_later))
+									.show();
 						}
 					}
 
 					@Override
 					protected void handleError(Context arg0, Exception arg1) {
 						loading.hide();
-						Utils.createDialog(getActivity(),
-								"An error occured. Please try again later")
+						Utils.createDialog(
+								getActivity(),
+								getString(R.string.error_occured_please_try_again_later))
 								.show();
 
 					}
@@ -155,6 +164,12 @@ public class NewOfferFragment extends Fragment {
 								edtDesc.getText().toString(), edtDuration
 										.getText().toString(), edtTitle
 										.getText().toString(), "0");
+					}
+				});
+				loading.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface arg0) {
+						loading.hide();
+						task.cancel(true);
 					}
 				});
 				task.execute();

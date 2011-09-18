@@ -1,7 +1,6 @@
 package com.shoppley.android.merchant;
 
 import java.text.NumberFormat;
-import java.util.Date;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -61,7 +60,7 @@ public class PastFragment extends Fragment {
 		img.setImageUrl(offer.img);
 		img.loadImage();
 		txtDesc.setText(offer.description);
-		txtExpires.setText(Utils.secEpochToLocaleString(Long
+		txtExpires.setText(Utils.getDateTime(Long
 				.parseLong(offer.expires)));
 		txtSendto.setText(offer.received);
 		txtRedeem.setText(offer.redeemed);

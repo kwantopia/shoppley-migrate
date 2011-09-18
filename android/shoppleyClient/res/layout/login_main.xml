@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@android:color/background_light"
+	android:background="@drawable/login_gradient"
+	android:gravity="left"
 >
-	<LinearLayout
-		android:orientation="vertical"
+	<!-- <ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="10dip"
-	>
+	> -->
 		<ImageView
 			android:id="@+id/imgLogo"
 			android:src="@drawable/logo"
+			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
+			android:paddingTop="30dip"
+			android:paddingLeft="20dip"
+			android:paddingRight="20dip"
 			android:paddingBottom="10dip"
-			android:layout_height="wrap_content" />
+			android:visibility="gone"
+			/>
 		<FrameLayout
 			android:id="@+id/form"
 			android:layout_width="match_parent"
@@ -26,18 +31,18 @@
 		<!-- <Button android:text="Login" android:id="@+id/btnLgn" android:layout_width="wrap_content" 
 			android:layout_height="wrap_content" ></Button> -->
 		<LinearLayout
-	android:gravity="center_horizontal"
-	android:orientation="horizontal"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
->
+			android:gravity="center_horizontal"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+		>
 			<TextView
 				android:paddingLeft="3dip"
 				android:id="@+id/txtVwLnk"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
 			></TextView>
 		</LinearLayout>
-	</LinearLayout>
-</ScrollView>
+	<!-- </ScrollView> -->
+</LinearLayout>

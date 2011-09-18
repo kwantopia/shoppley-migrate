@@ -30,10 +30,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest("/m/merchant/register/",
 					obj);
-			String a = EntityUtils.toString(response.getEntity());
-			Log.d("xxxxxxx", a);
-			return gson.fromJson(a,
-					RegisterResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantRegister", responseStr);
+			return gson.fromJson(responseStr, RegisterResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,8 +51,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpGetRequest(
 					"/m/merchant/offers/active/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					ActiveResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantGetActiveOffers", responseStr);
+			return gson.fromJson(responseStr, ActiveResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,8 +84,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest("/m/merchant/offer/start/",
 					obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					StartResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantStartOffer", responseStr);
+			return gson.fromJson(responseStr, StartResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,8 +115,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpGetRequest(
 					"/m/merchant/offer/send/more/" + offer_id + "/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					SendMoreResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantSendMoreOffer", responseStr);
+			return gson.fromJson(responseStr, SendMoreResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,8 +137,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/merchant/offer/restart/" + offer_id + "/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					RestartResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantGetActiveOffers", responseStr);
+			return gson.fromJson(responseStr, RestartResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,8 +166,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpPostRequest(
 					"/m/merchant/offer/redeem/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					RedeemResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantRedeemOffer", responseStr);
+			return gson.fromJson(responseStr, RedeemResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -193,8 +197,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		try {
 			HttpResponse response = httpGetRequest("/m/merchant/offers/past/"
 					+ period + "/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					PastResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantPastOffer", responseStr);
+			return gson.fromJson(responseStr, PastResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -213,8 +218,9 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 		JSONObject obj = new JSONObject();
 		try {
 			HttpResponse response = httpGetRequest("/m/merchant/summary/", obj);
-			return gson.fromJson(EntityUtils.toString(response.getEntity()),
-					SummaryResponse.class);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			Log.d("merchantSummary", responseStr);
+			return gson.fromJson(responseStr, SummaryResponse.class);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -226,6 +232,5 @@ public class ShoppleyMerchantAPI extends ShoppleyAPI {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 }

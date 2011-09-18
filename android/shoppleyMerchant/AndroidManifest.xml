@@ -2,8 +2,8 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.shoppley.android.merchant"
-	android:versionCode="1"
-	android:versionName="1.0"
+	android:versionCode="2"
+	android:versionName="0.2"
 	android:installLocation="auto"
 >
 	<uses-sdk
@@ -13,7 +13,6 @@
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<application
 		android:name=".MerchantApplication"
 		android:icon="@drawable/icon"

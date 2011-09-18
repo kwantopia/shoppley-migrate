@@ -105,6 +105,28 @@ public class ActiveListFragment extends ListFragment implements
 	private ListView list;
 	private TextView empty;
 
+//	private MyRunnable refreshable = new MyRunnable() {
+//		@Override
+//		protected void runItem() {
+//			getLoaderManager().restartLoader(0, null, ActiveListFragment.this);
+//			handler.postDelayed(this, 1000);
+//		}
+//	};
+//
+//	@Override
+//	public void onResume() {
+//		// TODO Auto-generated method stub
+//		super.onResume();
+//		handler.postDelayed(refreshable, 1000);
+//	}
+//
+//	@Override
+//	public void onPause() {
+//		// TODO Auto-generated method stub
+//		super.onPause();
+//		handler.removeCallbacks(refreshable);
+//	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -127,7 +149,7 @@ public class ActiveListFragment extends ListFragment implements
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
 		// for (int i = 0; i < 30; i++) {
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().restartLoader(0, null, this);
 		// }
 	}
 
@@ -220,6 +242,13 @@ public class ActiveListFragment extends ListFragment implements
 		handler = new Handler();
 
 		View v = inflater.inflate(R.layout.active_list, container, false);
+		
+		ListView lv = (ListView) v.findViewById(android.R.id.list);
+		// TODO to implement incremental loading
+		lv.setDividerHeight(0);
+		lv.setDrawSelectorOnTop(true);
+		lv.setSelector(R.drawable.list_selector);
+		
 		Button btnNewOffer = (Button) v.findViewById(R.id.btnNewOffer);
 		btnNewOffer.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

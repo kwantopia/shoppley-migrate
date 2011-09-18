@@ -3,7 +3,6 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@android:color/background_dark"
 	android:orientation="vertical"
 	android:padding="10dip"
 	android:gravity="center_horizontal"
@@ -14,7 +13,7 @@
 		android:id="@+id/linearLayoutSummary"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:padding="10dip"
+		android:paddingBottom="10dip"
 	>
 		<TextView
 			android:text="Weekly Summary"
@@ -22,6 +21,7 @@
 			android:id="@+id/textView1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:paddingBottom="10dip"
 		></TextView>
 		<RelativeLayout
 			android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
 				android:text="# of offers "
 				android:layout_width="wrap_content"
 				android:layout_alignParentLeft="true"
-				style="@style/TextInfoHead"
+				style="@style/TextInfoBold"
 			></TextView>
 			<LinearLayout
 				android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:text="10"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 				<ProgressBar
 					android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
 				android:text="# of people reached "
 				android:layout_width="wrap_content"
 				android:layout_alignParentLeft="true"
-				style="@style/TextInfoHead"
+				style="@style/TextInfoBold"
 			></TextView>
 			<LinearLayout
 				android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
 					android:text="3"
 					android:layout_width="wrap_content"
 					android:id="@+id/txtReached"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 				<ProgressBar
 					android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
 				android:text="# of people forwarded "
 				android:layout_width="wrap_content"
 				android:layout_alignParentLeft="true"
-				style="@style/TextInfoHead"
+				style="@style/TextInfoBold"
 			></TextView>
 			<LinearLayout
 				android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
 					android:text="2"
 					android:layout_width="wrap_content"
 					android:id="@+id/txtForwarded"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 				<ProgressBar
 					android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
 				android:text="# of people redeemed "
 				android:layout_width="wrap_content"
 				android:layout_alignParentLeft="true"
-				style="@style/TextInfoHead"
+				style="@style/TextInfoBold"
 			></TextView>
 			<LinearLayout
 				android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
 					android:text="1"
 					android:layout_width="wrap_content"
 					android:id="@+id/txtRedeemed"
-					style="@style/TextInfoDetail"
+					style="@style/TextInfo"
 				></TextView>
 				<ProgressBar
 					android:layout_width="wrap_content"
@@ -147,7 +147,6 @@
 				></ProgressBar>
 			</LinearLayout>
 		</RelativeLayout>
-		>
 	</LinearLayout>
 	<Button
 		android:id="@+id/btnRefresh"
