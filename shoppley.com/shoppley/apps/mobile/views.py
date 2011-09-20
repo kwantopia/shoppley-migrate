@@ -375,6 +375,7 @@ def register_merchant(request):
 	email = request.POST['email'].lower()
 	phone = parse_phone_number(request.POST['phone'])
 	zipcode = request.POST['zipcode']
+	password = request.POST.get(['password'], '')
 	
 	# need to clean up phone
 
@@ -388,9 +389,11 @@ def register_merchant(request):
 
 	u, created = User.objects.get_or_create(username=email, email=email)
 	if created:
-		s = string.lowercase+string.digits
-		rand_passwd = ''.join(random.sample(s,6))
-		u.set_password(rand_passwd)	
+		if len(password) == 0:
+		  s = string.lowercase+string.digits
+		  password = ''.join(random.sample(s,6))
+		
+		u.set_password(password)	
 		u.save()
 		# create customer information
 		c = Merchant(user=u, zipcode=zipcode_obj, phone=phone, business_name=business_name)
@@ -399,11 +402,11 @@ def register_merchant(request):
 		MerchantPhone.objects.create(number=phone, merchant=c)
 
 		# send a text message and e-mail with random password
-		message = _("Here's your temporary password: %(password)s.	Please login to http://shoppley.com and update your password and you will be given free points to start sending Shoppley offers.") %{ "password": rand_passwd }
+		message = _("Please login to http://www.shoppley.com and you will be given free points to start sending Shoppley offers.")
 		recipients = [email]
-		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)  
-		txt_msg = _("%(password)s is temporary password for shoppley.com. Txt #help to %(shoppley)s to get started.") % { "password": rand_passwd, "shoppley":settings.SHOPPLEY_NUM }
-		sms_notify(phone, txt_msg, SMS_DEBUG)
+		send_mail("Welcome to Shoppley", message, settings.DEFAULT_FROM_EMAIL, recipients)
+		# txt_msg = _("%(password)s is temporary password for shoppley.com. Txt #help to %(shoppley)s to get started.") % { "password": rand_passwd, "shoppley":settings.SHOPPLEY_NUM }
+		# sms_notify(phone, txt_msg, SMS_DEBUG)
 	else:
 		# ERROR: User exists, ask user to login with their password 
 		data["result"] = -1
